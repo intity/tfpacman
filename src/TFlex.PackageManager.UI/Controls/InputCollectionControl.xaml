@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="TFlex.PackageManager.Controls.InputCollectionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TFlex.PackageManager.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="20" 
+             d:DesignWidth="300">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <TextBox Name="textbox" Text="[0]"
+                 Grid.Column="0" 
+                 BorderBrush="White" 
+                 Padding="0" 
+                 IsReadOnly="True">
+            
+        </TextBox>
+        <Button Name="buton1" Content="..." Grid.Column="1" Width="Auto" Click="Button1_Click" />
+    </Grid>
+</UserControl>

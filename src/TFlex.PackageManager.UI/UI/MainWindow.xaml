@@ -1,0 +1,264 @@
+﻿<Window x:Class="TFlex.PackageManager.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:l="clr-namespace:TFlex.PackageManager.Controls"
+        xmlns:c="clr-namespace:TFlex.PackageManager.Common"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d" 
+        Width="1280"
+        Height="800"
+        Icon="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/package_manager.ico" 
+        Loaded="Window_Loaded" 
+        Closed="Window_Closed" 
+        ResizeMode="CanResizeWithGrip">
+
+    <Window.Resources>
+        <BitmapImage x:Key="icon_1_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/new_configuration.ico"/>
+        <BitmapImage x:Key="icon_1_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/import.ico"/>
+        <BitmapImage x:Key="icon_1_3" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/open_target_directory.ico"/>
+        <BitmapImage x:Key="icon_1_4" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/save.ico"/>
+        <BitmapImage x:Key="icon_1_5" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/save_all.ico"/>
+        <BitmapImage x:Key="icon_1_6" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/delete.ico"/>
+        <BitmapImage x:Key="icon_1_7" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/property.ico"/>
+        <BitmapImage x:Key="icon_2_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/start.ico"/>
+        <BitmapImage x:Key="icon_2_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/stop.ico"/>
+        <BitmapImage x:Key="icon_3_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/options.ico"/>
+    </Window.Resources>
+
+    <DockPanel TextOptions.TextFormattingMode="Display" 
+               UseLayoutRounding="True">
+        
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Name="menuItem1" 
+                      Header="File">
+                <MenuItem Name="menuItem1_1" 
+                          Header="New configuration" 
+                          Click="Event1_1_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_1_1}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuItem1_2" 
+                          Header="Import from XML" 
+                          Click="Event1_2_Click" Visibility="Collapsed">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_1_2}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuItem1_3" 
+                          Header="Open target directory" 
+                          Click="Event1_3_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_1_3}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuItem1_4" 
+                          Header="Save" 
+                          Click="Event1_4_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_1_4}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuItem1_5" 
+                          Header="Save all configurations" 
+                          Click="Event1_5_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_1_5}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuItem1_6" 
+                          Header="Delete" 
+                          Click="Event1_6_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_1_6}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Name="menuItem1_7" 
+                          Header="Properties" 
+                          Click="Event1_7_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_1_7}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Name="menuItem1_8" 
+                          Header="Exit" 
+                          Click="Event1_8_Click">
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Name="menuItem2" 
+                      Header="Processing">
+                <MenuItem Name="menuItem2_1" 
+                          Header="Start" 
+                          Click="Event2_1_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_2_1}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuItem2_2" 
+                          Header="Stop" 
+                          Click="Event2_2_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_2_2}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Name="menuItem3" 
+                      Header="Settings">
+                <MenuItem Name="menuItem3_1" 
+                          Header="Options" 
+                          Click="Event3_1_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_3_1}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Name="menuItem4" Header="?">
+                <MenuItem Name="menuItem4_1" 
+                          Header="About Us" 
+                          Click="Event4_1_Click">
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Name="button1_1" 
+                        Click="Event1_1_Click" 
+                        ToolTip="New configuration">
+                    <c:CustomImage Source="{StaticResource icon_1_1}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button1_2" 
+                        Click="Event1_2_Click" 
+                        ToolTip="Import from XML" Visibility="Collapsed">
+                    <c:CustomImage Source="{StaticResource icon_1_2}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button1_3" 
+                        Click="Event1_3_Click" 
+                        ToolTip="Open target directory">
+                    <c:CustomImage Source="{StaticResource icon_1_3}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button1_4" 
+                        Click="Event1_4_Click" 
+                        ToolTip="Save configuration">
+                    <c:CustomImage Source="{StaticResource icon_1_4}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button1_5" 
+                        Click="Event1_5_Click"
+                        ToolTip="Save all configurations">
+                    <c:CustomImage Source="{StaticResource icon_1_5}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button1_6" 
+                        Click="Event1_6_Click" 
+                        ToolTip="Delete configuration">
+                    <c:CustomImage Source="{StaticResource icon_1_6}" Width="16" Height="16"/>
+                </Button>
+                <Separator/>
+                <Label Name="label1" 
+                       Content="Configuration:" 
+                       VerticalAlignment="Center" 
+                       Padding="2,0,4,0"/>
+                <ComboBox Name="comboBox1" 
+                          Width="120" 
+                          SelectionChanged="ComboBox1_SelectionChanged"/>
+                <Button Name="button1_7" 
+                        Click="Event1_7_Click" 
+                        ToolTip="Configuration properties">
+                    <c:CustomImage Source="{StaticResource icon_1_7}" Width="16" Height="16"/>
+                </Button>
+                <Separator/>
+                <Label Name="label2" 
+                       Content="Translator:" 
+                       VerticalAlignment="Center" 
+                       Padding="2,0,4,0"/>
+                <ComboBox Name="comboBox2" 
+                          Width="120"
+                          SelectionChanged="ComboBox2_SelectionChanged"/>
+                <Separator/>
+                <Button Name="button2_1" 
+                        Click="Event2_1_Click" 
+                        ToolTip="Start processing">
+                    <c:CustomImage Source="{StaticResource icon_2_1}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button2_2" 
+                        Click="Event2_2_Click" 
+                        ToolTip="Stop processing">
+                    <c:CustomImage Source="{StaticResource icon_2_2}" Width="16" Height="16"/>
+                </Button>
+                <Separator/>
+                <Button Name="button3_1" 
+                        Click="Event3_1_Click" 
+                        ToolTip="Options">
+                    <c:CustomImage Source="{StaticResource icon_3_1}" Width="16" Height="16"/>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+
+        <StatusBar Name="statusBar" 
+                   DockPanel.Dock="Bottom" 
+                   VerticalAlignment="Bottom">
+            <StatusBarItem Width="200">
+                <Label Name="label3" 
+                   Content="Selected Items: 0"
+                   Padding="4,0,0,0" 
+                   VerticalAlignment="Center"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <ProgressBar Name="progressBar" 
+                             Width="200" 
+                             Height="10" 
+                             Minimum="0" 
+                             Maximum="100"
+                             Visibility="Hidden">
+
+                </ProgressBar>
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <l:TreeListViewControl x:Name="tvControl1" 
+                                   Grid.Column="0"
+                                   Grid.Row="0" 
+                                   VerticalAlignment="Stretch" 
+                                   HorizontalAlignment="Stretch"/>
+            <GridSplitter Grid.Column="0" 
+                          Grid.Row="1" 
+                          Height="4" 
+                          HorizontalAlignment="Stretch" 
+                          VerticalAlignment="Stretch" 
+                          ResizeDirection="Rows"/>
+            <l:TreeListViewControl x:Name="tvControl2" 
+                                   Grid.Column="0"
+                                   Grid.Row="2" 
+                                   VerticalAlignment="Stretch" 
+                                   HorizontalAlignment="Stretch"/>
+            <GridSplitter Grid.Column="1" 
+                          Grid.RowSpan="3"
+                          Width="4"
+                          HorizontalAlignment="Stretch" 
+                          VerticalAlignment="Stretch" 
+                          ResizeDirection="Columns"/>
+            <xctk:PropertyGrid Name="propertyGrid" 
+                               Grid.Column="2" 
+                               Grid.RowSpan="3"
+                               ShowTitle="False" 
+                               ShowSearchBox="False" 
+                               ShowSortOptions="False" 
+                               NameColumnWidth="200"/>
+        </Grid>
+
+    </DockPanel>
+</Window>

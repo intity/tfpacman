@@ -1,0 +1,29 @@
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+.vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+app.publish/
+[Bb]in/
+[Oo]bj/
+
+# Packages
+packages/
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Fortran module files
+*.mod
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
