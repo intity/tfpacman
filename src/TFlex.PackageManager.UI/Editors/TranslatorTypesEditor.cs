@@ -29,11 +29,12 @@ namespace TFlex.PackageManager.Editors
 
         public FrameworkElement ResolveEditor(PropertyItem propertyItem)
         {
-            var pageTypes = propertyItem.Value as TranslatorTypes;
+            var types = propertyItem.Value as TranslatorTypes;
 
-            textBox.Text = string.Format("[{0}, {1}]",
-                pageTypes.Acad   ? 1 : 0,
-                pageTypes.Bitmap ? 1 : 0);
+            textBox.Text = string.Format("[{0}, {1}, {2}]",
+                types.Acad   ? 1 : 0,
+                types.Bitmap ? 1 : 0,
+                types.Pdf    ? 1 : 0);
 
             return textBox;
         }

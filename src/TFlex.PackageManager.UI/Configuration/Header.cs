@@ -62,7 +62,8 @@ namespace TFlex.PackageManager.Configuration
         private void Package_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender.Equals(package_0) ? package_0.IsChanged :
-                sender.Equals(package_1) ? package_1.IsChanged : package_3.IsChanged)
+                sender.Equals(package_1) ? package_1.IsChanged :
+                sender.Equals(package_9) ? package_9.IsChanged : package_3.IsChanged)
                 objState[5] = 1;
             else
                 objState[5] = 0;
@@ -106,6 +107,10 @@ namespace TFlex.PackageManager.Configuration
                         package_9 = new ExportToPackage9(this);
                         package_9.PropertyChanged += Package_PropertyChanged;
                         translators.Add(e.PropertyName, package_9);
+                    }
+                    else
+                    {
+                        translators.Remove(e.PropertyName);
                     }
                     break;
             }
@@ -331,6 +336,10 @@ namespace TFlex.PackageManager.Configuration
                         translatorTypes.Bitmap = true;
                         package_3.ConfigurationTask(i, 0);
                         break;
+                    case "pdf":
+                        translatorTypes.Pdf = true;
+                        package_9.ConfigurationTask(i, 0);
+                        break;
                 }
             }
         }
@@ -372,6 +381,16 @@ namespace TFlex.PackageManager.Configuration
                             package_3.ConfigurationTask(i, 2);
                         }
                         break;
+                    case "Pdf":
+                        if (translatorTypes.Pdf)
+                        {
+                            package_9.ConfigurationTask(i, 1);
+                        }
+                        else if (package_9 != null)
+                        {
+                            package_9.ConfigurationTask(i, 2);
+                        }
+                        break;
                 }
             }
 
@@ -389,6 +408,12 @@ namespace TFlex.PackageManager.Configuration
                         if (package_3.IsLoaded == false)
                         {
                             package_3.AppendPackageToXml(parent, PackageType.Bitmap);
+                        }
+                        break;
+                    case "Pdf":
+                        if (package_9.IsLoaded == false)
+                        {
+                            package_9.AppendPackageToXml(parent, PackageType.Pdf);
                         }
                         break;
                 }
