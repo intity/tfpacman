@@ -562,10 +562,10 @@ namespace TFlex.PackageManager.Export
                     break;
                 case "BiarcInterpolationAccuracyForSplines":
                     if (flag == 0)
-                        biarcInterpolationAccuracyForSplines = decimal.Parse(value, 
-                            NumberStyles.Float, CultureInfo.CurrentCulture);
+                        biarcInterpolationAccuracyForSplines = decimal.Parse(value,
+                            NumberStyles.Float, CultureInfo.InvariantCulture);
                     else
-                        value = biarcInterpolationAccuracyForSplines.ToString();
+                        value = biarcInterpolationAccuracyForSplines.ToString(CultureInfo.InvariantCulture);
                     break;
             }
             element.Attribute("value").Value = value;
