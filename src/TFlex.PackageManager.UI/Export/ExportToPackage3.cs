@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Linq;
-using Microsoft.Win32;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -189,7 +188,7 @@ namespace TFlex.PackageManager.Export
             base.OnChanged(index);
         }
 
-        public override bool Export(Document document, Page page, string outputPath)
+        public override bool Export(Document document, Page page, string path)
         {
             ImageExport options = ImageExport.None;
             ImageExportFormat format = ImageExportFormat.Bmp;
@@ -197,15 +196,13 @@ namespace TFlex.PackageManager.Export
             ExportToBitmap export = new ExportToBitmap(document)
             {
                 Height = Convert.ToInt32((page.Top.Value - page.Bottom.Value) * px),
-                Width = Convert.ToInt32((page.Right.Value - page.Left.Value) * px),
-                Page = page
+                Width  = Convert.ToInt32((page.Right.Value - page.Left.Value) * px),
+                Page   = page
             };
 
             options = 
-                (ScreenLayers ? ImageExport.ScreenLayers : ImageExport.None) | 
+                (ScreenLayers  ? ImageExport.ScreenLayers  : ImageExport.None) | 
                 (Constructions ? ImageExport.Constructions : ImageExport.None);
-
-            string newFullPathName = ReplaceFullPathName(outputPath);
 
             switch (Extension)
             {
@@ -226,7 +223,7 @@ namespace TFlex.PackageManager.Export
                     break;
             }
 
-            return export.Export(newFullPathName, options, format);
+            return export.Export(path, options, format);
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)

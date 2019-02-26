@@ -326,17 +326,23 @@ namespace TFlex.PackageManager.Export
                     break;
             }
 
-            export.ConvertToLines    = ConvertToLines > 0 ? true : false;
-            export.ConvertAreas      = ConvertAreas > 0 ? true : false;
+            export.ConvertToLines = ConvertToLines > 0 ? true : false;
+            export.ConvertAreas = ConvertAreas > 0 ? true : false;
             export.ConvertDimensions = ConvertDimensions;
-            export.ConvertLineText   = ConvertLineText > 0 ? true : false;
-            export.ConvertMultitext  = ConvertMultitext;
+            export.ConvertLineText = ConvertLineText > 0 ? true : false;
+            export.ConvertMultitext = ConvertMultitext;
             // encoding ?
-            if (BiarcInterpolationForSplines == 0)
+            if (biarcInterpolationForSplines > 0)
             {
-                export.BiarcInterpolationForSplines = BiarcInterpolationForSplines > 0 ? true : false;
-                export.BiarcInterpolationAccuracyForSplines = (double)BiarcInterpolationAccuracyForSplines;
+                export.BiarcInterpolationForSplines = true;
+                export.BiarcInterpolationAccuracyForSplines = (double)biarcInterpolationAccuracyForSplines;
             }
+            else
+            {
+                export.BiarcInterpolationForSplines = false;
+                export.BiarcInterpolationAccuracyForSplines = 0;
+            }
+
             export.ExportAllPages = false;
             export.Page = page;
         }
@@ -435,28 +441,26 @@ namespace TFlex.PackageManager.Export
             base.OnChanged(index);
         }
 
-        public override bool Export(Document document, Page page, string outputPath)
+        public override bool Export(Document document, Page page, string path)
         {
             ExportToDWG export1;
             ExportToDXF export2;
             ExportToDXB export3;
-
-            string fullPathName = ReplaceFullPathName(outputPath);
 
             switch (Extension)
             {
                 case 0:
                     export1 = new ExportToDWG(document);
                     ExportTo(export1, page);
-                    return export1.Export(fullPathName);
+                    return export1.Export(path);
                 case 1:
                     export2 = new ExportToDXF(document);
                     ExportTo(export2, page);
-                    return export2.Export(fullPathName);
+                    return export2.Export(path);
                 case 2:
                     export3 = new ExportToDXB(document);
                     ExportTo(export3, page);
-                    return export3.Export(fullPathName);
+                    return export3.Export(path);
             }
             return false;
         }

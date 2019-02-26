@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TFlex.Model.Model3D;
-using System.ComponentModel;
 using TFlex.Model;
 using TFlex.PackageManager.Configuration;
 
@@ -41,42 +40,12 @@ namespace TFlex.PackageManager.Export
 
         #region public methods
         /// <summary>
-        /// Replace full path name of output file.
-        /// </summary>
-        /// <param name="package"></param>
-        /// <param name="oldFullPathName"></param>
-        /// <returns></returns>
-        public string ReplaceFullPathName(string oldFullPathName)
-        {
-            string newTargetDirectory = null;
-            string newFullPathName = null;
-
-            if (SubDirectoryName.Length > 0)
-            {
-                newTargetDirectory = header.TargetDirectory + "\\" + SubDirectoryName;
-                newFullPathName = newTargetDirectory + oldFullPathName.Replace(header.TargetDirectory, "");
-            }
-            else
-            {
-                newTargetDirectory = header.TargetDirectory + "\\" + OutputExtension;
-                newFullPathName = newTargetDirectory + oldFullPathName.Replace(header.TargetDirectory, "");
-            }
-
-            if (!Directory.Exists(newTargetDirectory))
-                Directory.CreateDirectory(newTargetDirectory);
-
-            return newFullPathName;
-        }
-
-        /// <summary>
         /// The export method.
         /// </summary>
         /// <param name="path"></param>
         public void Export(string path)
         {
             ProcessingFile(path);
-
-            //foreach (var i in selectedFiles) ProcessingFile(i);
         }
 
         /// <summary>
@@ -84,8 +53,8 @@ namespace TFlex.PackageManager.Export
         /// </summary>
         /// <param name="document"></param>
         /// <param name="page"></param>
-        /// <param name="outputPath"></param>
-        public virtual bool Export(Document document, Page page, string outputPath)
+        /// <param name="path">Full path file name.</param>
+        public virtual bool Export(Document document, Page page, string path)
         {
             return false;
         }
@@ -224,7 +193,9 @@ namespace TFlex.PackageManager.Export
         {
             Document document = Application.OpenDocument(path, false);
             FileInfo fileInfo = new FileInfo(path);
-            string directory = fileInfo.Directory.FullName.Replace(header.InitialCatalog, header.TargetDirectory);
+            string directory = fileInfo.Directory.FullName.Replace(
+                header.InitialCatalog, 
+                header.TargetDirectory + "\\" + (SubDirectoryName.Length > 0 ? SubDirectoryName : OutputExtension));
             string targetDirectory = Directory.Exists(directory)
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;
@@ -242,8 +213,8 @@ namespace TFlex.PackageManager.Export
 
             document.Close();
 
-            if (Directory.GetFiles(targetDirectory).Length == 0 && 
-                Directory.GetDirectories(targetDirectory).Length == 0 && targetDirectory != header.TargetDirectory)
+            if (Directory.GetFiles(targetDirectory).Length == 0 &&
+                Directory.GetDirectories(targetDirectory).Length == 0)
                 Directory.Delete(targetDirectory, false);
         }
 
