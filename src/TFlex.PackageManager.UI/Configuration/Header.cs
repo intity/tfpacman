@@ -336,7 +336,7 @@ namespace TFlex.PackageManager.Configuration
                         translatorTypes.Bitmap = true;
                         package_3.ConfigurationTask(i, 0);
                         break;
-                    case "pdf":
+                    case "Pdf":
                         translatorTypes.Pdf = true;
                         package_9.ConfigurationTask(i, 0);
                         break;

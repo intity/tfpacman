@@ -51,7 +51,7 @@ namespace TFlex.PackageManager.Export
                 if (export3dModel != value)
                 {
                     export3dModel = value;
-                    OnChanged(0);
+                    OnChanged(15);
                 }
             }
         }
@@ -75,7 +75,7 @@ namespace TFlex.PackageManager.Export
 
             switch (index)
             {
-                case 0: objState[0] = (byte)(export3dModel ? 1 : 0);
+                case 15: objState[0] = (byte)(export3dModel ? 1 : 0);
                     break;
             }
 
@@ -97,7 +97,8 @@ namespace TFlex.PackageManager.Export
             ExportToPDF export = new ExportToPDF(document)
             {
                 IsSelectPagesDialogEnabled = false,
-                OpenExportFile = false
+                OpenExportFile = false,
+                Export3DModel = export3dModel
             };
 
             export.ExportPages.Add(page);
