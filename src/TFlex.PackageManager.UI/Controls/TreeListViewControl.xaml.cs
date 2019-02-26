@@ -45,7 +45,8 @@ namespace TFlex.PackageManager.Controls
                 new BitmapImage(new Uri(Resource.BASE_URI + "jpg.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "gif.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "tif.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "png.ico"))
+                new BitmapImage(new Uri(Resource.BASE_URI + "png.ico")),
+                new BitmapImage(new Uri(Resource.BASE_URI + "pdf.ico"))
             };
 
             Loaded += TreeListViewControl_Loaded;
@@ -353,6 +354,7 @@ namespace TFlex.PackageManager.Controls
                     case ".gif" : imageIndex = 08; break;
                     case ".tiff": imageIndex = 09; break;
                     case ".png" : imageIndex = 10; break;
+                    case ".pdf" : imageIndex = 11; break;
                 }
 
                 TreeListViewItem subitem = new TreeListViewItem
@@ -440,6 +442,7 @@ namespace TFlex.PackageManager.Controls
                     case ".gif" : imageIndex = 08; break;
                     case ".tiff": imageIndex = 09; break;
                     case ".png" : imageIndex = 10; break;
+                    case ".pdf" : imageIndex = 11; break;
                 }
 
                 item.ImageSource = imageSourceList[imageIndex];

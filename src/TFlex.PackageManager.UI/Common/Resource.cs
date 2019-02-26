@@ -25,6 +25,7 @@ namespace TFlex.PackageManager.Common
         public const string PACKAGE_0   = "Package0";
         public const string PACKAGE_1   = "Package1";
         public const string PACKAGE_3   = "Package3";
+        public const string PACKAGE_9   = "Package9";
 
         public const string BASE_URI = @"pack://application:,,,/TFlex.PackageManager.UI;component/Resources/";
         #endregion

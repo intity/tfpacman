@@ -27,6 +27,7 @@ namespace TFlex.PackageManager.Configuration
         private Package package_0;
         private ExportToPackage1 package_1;
         private ExportToPackage3 package_3;
+        private ExportToPackage9 package_9;
         private ObservableDictionary<string, object> translators;
         private List<string> loadedTranslators;
         private string configurationName;
@@ -97,6 +98,14 @@ namespace TFlex.PackageManager.Configuration
                     else
                     {
                         translators.Remove(e.PropertyName);
+                    }
+                    break;
+                case "Pdf":
+                    if ((sender as TranslatorTypes).Pdf)
+                    {
+                        package_9 = new ExportToPackage9(this);
+                        package_9.PropertyChanged += Package_PropertyChanged;
+                        translators.Add(e.PropertyName, package_9);
                     }
                     break;
             }
@@ -687,7 +696,6 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        [Browsable(false)]
         [PropertyOrder(9)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_9")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_9")]

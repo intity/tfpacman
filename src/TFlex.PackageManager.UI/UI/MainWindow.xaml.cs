@@ -42,11 +42,13 @@ namespace TFlex.PackageManager.UI
         private GridViewColumn column1_1;
         private GridViewColumn column1_2;
         private GridViewColumn column1_3;
+        private GridViewColumn column1_9;
         private GridViewColumn column2_1;
 
         private GridViewColumnHeader header1_1;
         private GridViewColumnHeader header1_2;
         private GridViewColumnHeader header1_3;
+        private GridViewColumnHeader header1_9;
         private GridViewColumnHeader header2_1;
 
         private Common.Options options;
@@ -86,6 +88,12 @@ namespace TFlex.PackageManager.UI
                 Width = 50
             };
 
+            header1_9 = new GridViewColumnHeader
+            {
+                Content = "PDF",
+                Width = 50
+            };
+
             header2_1 = new GridViewColumnHeader
             {
                 Content = Resource.GetString(Resource.MAIN_WINDOW, "header2_1", 0),
@@ -111,6 +119,12 @@ namespace TFlex.PackageManager.UI
                 CellTemplate = tvControl1.Resources["CellTemplateCheckBox"] as DataTemplate
             };
 
+            column1_9 = new GridViewColumn
+            {
+                Header = header1_9,
+                CellTemplate = tvControl1.Resources["CellTemplateCheckBox"] as DataTemplate
+            };
+
             column2_1 = new GridViewColumn
             {
                 Header = header2_1,
@@ -124,16 +138,14 @@ namespace TFlex.PackageManager.UI
             tvControl1.Content = treeListView1;
             tvControl1.SearchPattern = "*.grb";
             tvControl1.SizeChanged += TvControl1_SizeChanged;
-            //tvControl1.PropertyChanged += TvControl1_PropertyChanged;
             tvControl1.SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
 
             treeListView2 = new TreeListView();
             treeListView2.Columns.Add(column2_1);
 
             tvControl2.Content = treeListView2;
-            tvControl2.SearchPattern = "*.dwg|*.dxf|*.dxb|*.bmp|*.jpeg|*.gif|*.tiff|*.png";
+            tvControl2.SearchPattern = "*.dwg|*.dxf|*.dxb|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.pdf";
             tvControl2.SizeChanged += TvControl2_SizeChanged;
-            //tvControl2.PropertyChanged += TvControl2_PropertyChanged;
 
             self = new PackageCollection();
             options = new Common.Options();
@@ -223,18 +235,6 @@ namespace TFlex.PackageManager.UI
         #endregion
 
         #region tree views
-        //private void TvControl1_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    Debug.WriteLine("TvControl1_PropertyChanged");
-        //    tvControl1.InitLayout();
-        //}
-
-        //private void TvControl2_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    Debug.WriteLine("TvControl2_PropertyChanged");
-        //    tvControl2.InitLayout();
-        //}
-
         private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             double a_width, c_width;
@@ -289,6 +289,9 @@ namespace TFlex.PackageManager.UI
                                 break;
                             case "Bitmap":
                                 header1_3.Content = ((ExportToPackage3)self.Configurations[key1].Translators[key2]).OutputExtension;
+                                break;
+                            case "Pdf":
+                                header1_3.Content = ((ExportToPackage9)self.Configurations[key1].Translators[key2]).OutputExtension;
                                 break;
                         }
                         break;
@@ -502,6 +505,9 @@ namespace TFlex.PackageManager.UI
                         case "Bitmap":
                             (self.Configurations[key1].Translators.ElementAt(j - 1).Value as ExportToPackage3).Export(path);
                             break;
+                        case "Pdf":
+                            (self.Configurations[key1].Translators.ElementAt(j - 1).Value as ExportToPackage9).Export(path);
+                            break;
                     }
                 }
             }
@@ -632,6 +638,15 @@ namespace TFlex.PackageManager.UI
 
                         if (treeListView1.Columns.Contains(column1_3) == false)
                             treeListView1.Columns.Add(column1_3);
+                        break;
+                    case "Pdf":
+                        header1_9.Content = ((ExportToPackage9)self.Configurations[key1].Translators[i]).OutputExtension;
+
+                        if (comboBox2.Items.Contains(i) == false)
+                            comboBox2.Items.Add(i);
+
+                        if (treeListView1.Columns.Contains(column1_9) == false)
+                            treeListView1.Columns.Add(column1_9);
                         break;
                 }
             }
