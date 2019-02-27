@@ -122,6 +122,10 @@
   </data>
   <data name="dn4_1" xml:space="preserve">
     <value>3D-modell exportieren</value>
-    <comment>3D-Ansicht des fensters exportieren.</comment>
+    <comment>Umfasst den export eines in PDF integrierten 3D-models.</comment>
+  </data>
+  <data name="dn4_2" xml:space="preserve">
+    <value>Ebenen exportieren</value>
+    <comment>Schließt dokument ebenen für den export ein.</comment>
   </data>
 </root>

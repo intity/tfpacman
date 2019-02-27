@@ -122,6 +122,10 @@
   </data>
   <data name="dn4_1" xml:space="preserve">
     <value>Export 3D model</value>
-    <comment>Export 3D view of the window.</comment>
+    <comment>Includes in the export of a 3D model integrated into PDF.</comment>
+  </data>
+  <data name="dn4_2" xml:space="preserve">
+    <value>Export layers</value>
+    <comment>Includes document layers for export.</comment>
   </data>
 </root>

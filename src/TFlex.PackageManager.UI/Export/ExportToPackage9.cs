@@ -15,9 +15,10 @@ namespace TFlex.PackageManager.Export
     {
         #region private field
         private bool export3dModel;
+        private bool layers;
 
-        private readonly byte[] objState = new byte[1];
-        private readonly bool[] b_values = new bool[1];
+        private readonly byte[] objState = new byte[2];
+        private readonly bool[] b_values = new bool[2];
         private bool isChanged;
         #endregion
 
@@ -38,6 +39,9 @@ namespace TFlex.PackageManager.Export
         #endregion
 
         #region public properies
+        /// <summary>
+        /// Export 3D model.
+        /// </summary>
         [PropertyOrder(18)]
         [CustomCategory(Resource.PACKAGE_9, "category4")]
         [CustomDisplayName(Resource.PACKAGE_9, "dn4_1")]
@@ -55,6 +59,27 @@ namespace TFlex.PackageManager.Export
                 }
             }
         }
+
+        /// <summary>
+        /// Export layers.
+        /// </summary>
+        [PropertyOrder(19)]
+        [CustomCategory(Resource.PACKAGE_9, "category4")]
+        [CustomDisplayName(Resource.PACKAGE_9, "dn4_2")]
+        [CustomDescription(Resource.PACKAGE_9, "dn4_2")]
+        [DefaultValue(false)]
+        public bool Layers
+        {
+            get { return layers; }
+            set
+            {
+                if (layers != value)
+                {
+                    layers = value;
+                    OnChanged(16);
+                }
+            }
+        }
         #endregion
 
         #region methods
@@ -63,6 +88,7 @@ namespace TFlex.PackageManager.Export
             base.OnLoaded();
 
             b_values[0] = export3dModel;
+            b_values[1] = layers;
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
@@ -75,7 +101,17 @@ namespace TFlex.PackageManager.Export
 
             switch (index)
             {
-                case 15: objState[0] = (byte)(export3dModel ? 1 : 0);
+                case 15:
+                    if (b_values[0] != export3dModel)
+                        objState[0] = 1;
+                    else
+                        objState[0] = 0;
+                    break;
+                case 16:
+                    if (b_values[1] != layers)
+                        objState[1] = 1;
+                    else
+                        objState[1] = 0;
                     break;
             }
 
@@ -98,7 +134,8 @@ namespace TFlex.PackageManager.Export
             {
                 IsSelectPagesDialogEnabled = false,
                 OpenExportFile = false,
-                Export3DModel = export3dModel
+                Export3DModel = export3dModel,
+                Layers = layers
             };
 
             export.ExportPages.Add(page);
@@ -114,7 +151,10 @@ namespace TFlex.PackageManager.Export
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter",
                     new XAttribute("name", "Export3dModel"),
-                    new XAttribute("value", export3dModel)));
+                    new XAttribute("value", export3dModel ? "1" : "0")),
+                new XElement("parameter", 
+                    new XAttribute("name", "Layers"), 
+                    new XAttribute("value", layers ? "1" : "0")));
         }
 
         internal override void PackageTask(XElement element, int flag)
@@ -129,6 +169,12 @@ namespace TFlex.PackageManager.Export
                         export3dModel = value == "1" ? true : false;
                     else
                         value = export3dModel ? "1" : "0";
+                    break;
+                case "Layers":
+                    if (flag == 0)
+                        layers = value == "1" ? true : false;
+                    else
+                        value = layers ? "1" : "0";
                     break;
             }
             element.Attribute("value").Value = value;

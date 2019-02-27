@@ -122,6 +122,10 @@
   </data>
   <data name="dn4_1" xml:space="preserve">
     <value>Экспортировать 3D модель</value>
-    <comment>Экспорт 3D-представления окна.</comment>
+    <comment>Включает в экспорт 3D-модель, интегрированную в PDF.</comment>
+  </data>
+  <data name="dn4_2" xml:space="preserve">
+    <value>Экспортировать слои</value>
+    <comment>Включает в экспорт слои документа.</comment>
   </data>
 </root>
