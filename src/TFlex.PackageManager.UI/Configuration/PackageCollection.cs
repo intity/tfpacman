@@ -1,15 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.IO;
 using TFlex.PackageManager.Common;
 
 namespace TFlex.PackageManager.Configuration
@@ -32,39 +21,6 @@ namespace TFlex.PackageManager.Configuration
             oldConfigurations = new ObservableDictionary<string, Header>();
             targetDirectory   = Resource.UserDirectory;
             GetConfigurations();
-
-            newConfigurations.CollectionChanged += Configurations_CollectionChanged;
-        }
-
-        private void Configurations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            //Debug.WriteLine(string.Format("Action: {0}", e.Action));
-
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    lock (e.NewItems.SyncRoot)
-                    {
-                        //header = ((KeyValuePair<string, Header>)e.NewItems[0]).Value as Header;
-                        //header.ConfigurationTask(1);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    lock (e.OldItems.SyncRoot)
-                    {
-                        //header = ((KeyValuePair<string, Header>)e.OldItems[0]).Value as Header;
-                        //header.ConfigurationTask(2);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    //lock (e.OldItems.SyncRoot)
-                    //{
-                    //    header = ((KeyValuePair<string, Header>)e.OldItems[0]).Value as Header;
-                    //}
-                    break;
-            }
-
-            //Debug.WriteLine(string.Format("Configuration name: {0}", header.ConfigurationName));
         }
 
         #region internal properties
@@ -88,14 +44,6 @@ namespace TFlex.PackageManager.Configuration
         {
             get { return (newConfigurations); }
         }
-
-        /// <summary>
-        /// Old configurations exists.
-        /// </summary>
-        //internal bool OldExists
-        //{
-        //    get { return oldConfigurations.Count > 0 ? true : false; }
-        //}
         #endregion        
 
         #region methods

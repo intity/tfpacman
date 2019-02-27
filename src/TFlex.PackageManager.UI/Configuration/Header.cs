@@ -1,13 +1,8 @@
-﻿using Microsoft.Win32;
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
-using System.Reflection;
-using System.Linq;
-using System.Windows;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -29,7 +24,7 @@ namespace TFlex.PackageManager.Configuration
         private ExportToPackage3 package_3;
         private ExportToPackage9 package_9;
         private ObservableDictionary<string, object> translators;
-        private List<string> loadedTranslators;
+        private readonly List<string> loadedTranslators;
         private string configurationName;
         private string initialCatalog;
         private string targetDirectory;
@@ -38,15 +33,12 @@ namespace TFlex.PackageManager.Configuration
 
         private readonly byte[] objState = new byte[6];
         private readonly string[] s_values = new string[4];
-        private readonly bool[] tr_types = new bool[11];
+        private readonly bool[] tr_types = new bool[12];
         private bool isCreated, isChanged, isLoaded;
         #endregion
 
         public Header()
         {
-            package_0         = new Package();
-            package_0.PropertyChanged += Package_PropertyChanged;
-
             configurationName = string.Empty;
             initialCatalog    = string.Empty;
             targetDirectory   = string.Empty;
@@ -54,6 +46,7 @@ namespace TFlex.PackageManager.Configuration
             translators       = new ObservableDictionary<string, object>();
             translatorTypes   = new TranslatorTypes();
             translatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
+            translatorTypes.Default = true;
 
             loadedTranslators = new List<string>();
             isCreated = true;
@@ -63,7 +56,7 @@ namespace TFlex.PackageManager.Configuration
         {
             if (sender.Equals(package_0) ? package_0.IsChanged :
                 sender.Equals(package_1) ? package_1.IsChanged :
-                sender.Equals(package_9) ? package_9.IsChanged : package_3.IsChanged)
+                sender.Equals(package_3) ? package_3.IsChanged : package_9.IsChanged)
                 objState[5] = 1;
             else
                 objState[5] = 0;
@@ -73,10 +66,22 @@ namespace TFlex.PackageManager.Configuration
 
         private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //Debug.WriteLine(string.Format("Translator: {0}", e.PropertyName));
+            Debug.WriteLine(string.Format("Translator: {0}", e.PropertyName));
 
             switch (e.PropertyName)
             {
+                case "Default":
+                    if ((sender as TranslatorTypes).Default)
+                    {
+                        package_0 = new Package();
+                        package_0.PropertyChanged += Package_PropertyChanged;
+                        translators.Add(e.PropertyName, package_0);
+                    }
+                    else
+                    {
+                        translators.Remove(e.PropertyName);
+                    }
+                    break;
                 case "Acad":
                     if ((sender as TranslatorTypes).Acad)
                     {
@@ -119,14 +124,6 @@ namespace TFlex.PackageManager.Configuration
         }
 
         #region internal properties
-        /// <summary>
-        /// Package configuration by default if the count of translators is zero.
-        /// </summary>
-        internal Package Package
-        {
-            get { return (package_0); }
-        }
-
         /// <summary>
         /// Translator list.
         /// </summary>
@@ -251,22 +248,23 @@ namespace TFlex.PackageManager.Configuration
         #region methods
         private void OnLoaded()
         {
-            s_values[0] = configurationName;
-            s_values[1] = initialCatalog;
-            s_values[2] = targetDirectory;
-            s_values[3] = inputExtension;
+            s_values[00] = configurationName;
+            s_values[01] = initialCatalog;
+            s_values[02] = targetDirectory;
+            s_values[03] = inputExtension;
 
-            tr_types[0] = translatorTypes.Acad;
-            tr_types[1] = translatorTypes.Acis;
-            tr_types[2] = translatorTypes.Bitmap;
-            tr_types[3] = translatorTypes.Bmf;
-            tr_types[4] = translatorTypes.Emf;
-            tr_types[5] = translatorTypes.Iges;
-            tr_types[6] = translatorTypes.Jt;
-            tr_types[7] = translatorTypes.Parasolid;
-            tr_types[8] = translatorTypes.Pdf;
-            tr_types[9] = translatorTypes.Step;
-            tr_types[10] = translatorTypes.Stl;
+            tr_types[00] = translatorTypes.Default;
+            tr_types[01] = translatorTypes.Acad;
+            tr_types[02] = translatorTypes.Acis;
+            tr_types[03] = translatorTypes.Bitmap;
+            tr_types[04] = translatorTypes.Bmf;
+            tr_types[05] = translatorTypes.Emf;
+            tr_types[06] = translatorTypes.Iges;
+            tr_types[07] = translatorTypes.Jt;
+            tr_types[08] = translatorTypes.Parasolid;
+            tr_types[09] = translatorTypes.Pdf;
+            tr_types[10] = translatorTypes.Step;
+            tr_types[11] = translatorTypes.Stl;
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
@@ -283,17 +281,18 @@ namespace TFlex.PackageManager.Configuration
                 case 2: objState[2] = (byte)(s_values[2] != targetDirectory   ? 1 : 0); break;
                 case 3: objState[3] = (byte)(s_values[3] != inputExtension    ? 1 : 0); break;
                 case 4:
-                    if (tr_types[00] != translatorTypes.Acad || 
-                        tr_types[01] != translatorTypes.Acis || 
-                        tr_types[02] != translatorTypes.Bitmap || 
-                        tr_types[03] != translatorTypes.Bmf || 
-                        tr_types[04] != translatorTypes.Emf || 
-                        tr_types[05] != translatorTypes.Iges || 
-                        tr_types[06] != translatorTypes.Jt || 
-                        tr_types[07] != translatorTypes.Parasolid || 
-                        tr_types[08] != translatorTypes.Pdf || 
-                        tr_types[09] != translatorTypes.Step || 
-                        tr_types[10] != translatorTypes.Stl)
+                    if (tr_types[00] != translatorTypes.Default || 
+                        tr_types[01] != translatorTypes.Acad || 
+                        tr_types[02] != translatorTypes.Acis || 
+                        tr_types[03] != translatorTypes.Bitmap || 
+                        tr_types[04] != translatorTypes.Bmf || 
+                        tr_types[05] != translatorTypes.Emf || 
+                        tr_types[06] != translatorTypes.Iges || 
+                        tr_types[07] != translatorTypes.Jt || 
+                        tr_types[08] != translatorTypes.Parasolid || 
+                        tr_types[09] != translatorTypes.Pdf || 
+                        tr_types[10] != translatorTypes.Step || 
+                        tr_types[11] != translatorTypes.Stl)
                         objState[4] = 1;
                     else
                         objState[4] = 0;
@@ -322,10 +321,10 @@ namespace TFlex.PackageManager.Configuration
         {
             foreach (XElement i in element.Element("packages").Elements())
             {
-                string value = i.Attribute("id").Value;
-                switch (value)
+                switch (i.Attribute("id").Value)
                 {
                     case "Default":
+                        translatorTypes.Default = true;
                         package_0.ConfigurationTask(i, 0);
                         break;
                     case "Acad":
@@ -358,7 +357,14 @@ namespace TFlex.PackageManager.Configuration
                 switch (value)
                 {
                     case "Default":
-                        package_0.ConfigurationTask(i, 1);
+                        if (translatorTypes.Default)
+                        {
+                            package_0.ConfigurationTask(i, 1);
+                        }
+                        else if (package_0 != null)
+                        {
+                            package_0.ConfigurationTask(i, 2);
+                        }
                         break;
                     case "Acad":
                         
@@ -398,6 +404,12 @@ namespace TFlex.PackageManager.Configuration
             {
                 switch (i.Key)
                 {
+                    case "Default":
+                        if (package_0.IsLoaded == false)
+                        {
+                            package_0.AppendPackageToXml(parent, PackageType.Default);
+                        }
+                        break;
                     case "Acad":
                         if (package_1.IsLoaded == false)
                         {
@@ -538,17 +550,18 @@ namespace TFlex.PackageManager.Configuration
                     {
                         string[] values = value.Split(' ');
 
-                        translatorTypes.Acad      = values[00] == "01" ? true : false;
-                        translatorTypes.Acis      = values[01] == "01" ? true : false;
-                        translatorTypes.Bitmap    = values[02] == "01" ? true : false;
-                        translatorTypes.Bmf       = values[03] == "01" ? true : false;
-                        translatorTypes.Emf       = values[04] == "01" ? true : false;
-                        translatorTypes.Iges      = values[05] == "01" ? true : false;
-                        translatorTypes.Jt        = values[06] == "01" ? true : false;
-                        translatorTypes.Parasolid = values[07] == "01" ? true : false;
-                        translatorTypes.Pdf       = values[08] == "01" ? true : false;
-                        translatorTypes.Step      = values[09] == "01" ? true : false;
-                        translatorTypes.Stl       = values[10] == "01" ? true : false;
+                        translatorTypes.Default   = values[00] == "01" ? true : false;
+                        translatorTypes.Acad      = values[01] == "01" ? true : false;
+                        translatorTypes.Acis      = values[02] == "01" ? true : false;
+                        translatorTypes.Bitmap    = values[03] == "01" ? true : false;
+                        translatorTypes.Bmf       = values[04] == "01" ? true : false;
+                        translatorTypes.Emf       = values[05] == "01" ? true : false;
+                        translatorTypes.Iges      = values[06] == "01" ? true : false;
+                        translatorTypes.Jt        = values[07] == "01" ? true : false;
+                        translatorTypes.Parasolid = values[08] == "01" ? true : false;
+                        translatorTypes.Pdf       = values[09] == "01" ? true : false;
+                        translatorTypes.Step      = values[10] == "01" ? true : false;
+                        translatorTypes.Stl       = values[11] == "01" ? true : false;
                     }
                     else
                         value = translatorTypes.ToString();
@@ -565,6 +578,7 @@ namespace TFlex.PackageManager.Configuration
     public class TranslatorTypes : INotifyPropertyChanged
     {
         #region private fields
+        private bool document;
         private bool acad;
         private bool acis;
         private bool bitmap;
@@ -579,6 +593,23 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region properties
+        [PropertyOrder(0)]
+        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_0")]
+        [CustomDescription(Resource.HEADER_UI, "dn1_5_0")]
+        [DefaultValue(false)]
+        public bool Default
+        {
+            get { return document; }
+            set
+            {
+                if (document != value)
+                {
+                    document = value;
+                    OnPropertyChanged("Default");
+                }
+            }
+        }
+
         [PropertyOrder(1)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_1")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_1")]
@@ -778,19 +809,20 @@ namespace TFlex.PackageManager.Configuration
         #region methods
         public override string ToString()
         {
-            string[] values = new string[11];
+            string[] values = new string[12];
 
-            values[00] = acad      ? "01" : "00";
-            values[01] = acis      ? "01" : "00";
-            values[02] = bitmap    ? "01" : "00";
-            values[03] = bmf       ? "01" : "00";
-            values[04] = emf       ? "01" : "00";
-            values[05] = iges      ? "01" : "00";
-            values[06] = jt        ? "01" : "00";
-            values[07] = parasolid ? "01" : "00";
-            values[08] = pdf       ? "01" : "00";
-            values[09] = step      ? "01" : "00";
-            values[10] = stl       ? "01" : "00";
+            values[00] = document  ? "01" : "00";
+            values[01] = acad      ? "01" : "00";
+            values[02] = acis      ? "01" : "00";
+            values[03] = bitmap    ? "01" : "00";
+            values[04] = bmf       ? "01" : "00";
+            values[05] = emf       ? "01" : "00";
+            values[06] = iges      ? "01" : "00";
+            values[07] = jt        ? "01" : "00";
+            values[08] = parasolid ? "01" : "00";
+            values[09] = pdf       ? "01" : "00";
+            values[10] = step      ? "01" : "00";
+            values[11] = stl       ? "01" : "00";
 
             return values.ToString(" ");
         }

@@ -290,9 +290,6 @@ namespace TFlex.PackageManager.UI
                             case "Bitmap":
                                 header1_3.Content = ((ExportToPackage3)self.Configurations[key1].Translators[key2]).OutputExtension;
                                 break;
-                            case "Pdf":
-                                header1_3.Content = ((ExportToPackage9)self.Configurations[key1].Translators[key2]).OutputExtension;
-                                break;
                         }
                         break;
                     case "SubDirectoryName":
@@ -543,14 +540,14 @@ namespace TFlex.PackageManager.UI
 
                 if (self.Configurations[key1].Translators.Count() == 0)
                 {
-                    propertyGrid.SelectedObject = self.Configurations[key1].Package;
+                    propertyGrid.SelectedObject = null;
                 }
 
                 UpdateControls();
                 UpdateStateToControls();
             }
             else
-                propertyGrid.SelectedObject = 0;
+                propertyGrid.SelectedObject = null;
 
             //Debug.WriteLine(string.Format("ComboBox1_SelectionChanged: [{0}, {1}]", comboBox1.SelectedIndex, comboBox1.SelectedItem));
         } // configuration list
@@ -564,7 +561,7 @@ namespace TFlex.PackageManager.UI
             }
             else
             {
-                propertyGrid.SelectedObject = self.Configurations[key1].Package;
+                propertyGrid.SelectedObject = null;
             }
 
             //Debug.WriteLine(string.Format("ComboBox2_SelectionChanged: [{0}, {1}]", comboBox2.SelectedIndex, comboBox2.SelectedItem));
@@ -621,6 +618,10 @@ namespace TFlex.PackageManager.UI
             {
                 switch (i)
                 {
+                    case "Default":
+                        if (comboBox2.Items.Contains(i) == false)
+                            comboBox2.Items.Add(i);
+                        break;
                     case "Acad":
                         header1_2.Content = ((ExportToPackage1)self.Configurations[key1].Translators[i]).OutputExtension;
 

@@ -143,6 +143,10 @@
     <value>Translator types</value>
     <comment>Enumeration of translator types.</comment>
   </data>
+  <data name="dn1_5_0" xml:space="preserve">
+    <value>Default</value>
+    <comment>Default translator.</comment>
+  </data>
   <data name="dn1_5_1" xml:space="preserve">
     <value>Acad</value>
     <comment>Export to AutoCAD file format [DWG, DXF, DXB]</comment>
