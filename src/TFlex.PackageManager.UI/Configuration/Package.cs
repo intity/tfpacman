@@ -694,9 +694,9 @@ namespace TFlex.PackageManager.Configuration
                 case "PageScale":
                     if (flag == 0)
                         pageScale = decimal.Parse(value, 
-                            NumberStyles.Float, CultureInfo.CurrentCulture);
+                            NumberStyles.Float, CultureInfo.InvariantCulture);
                     else
-                        value = pageScale.ToString();
+                        value = pageScale.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "SavePageScale":
                     if (flag == 0)
@@ -743,9 +743,9 @@ namespace TFlex.PackageManager.Configuration
                 case "ProjectionScale":
                     if (flag == 0)
                         projectionScale = decimal.Parse(value, 
-                            NumberStyles.Float, CultureInfo.CurrentCulture);
+                            NumberStyles.Float, CultureInfo.InvariantCulture);
                     else
-                        value = projectionScale.ToString();
+                        value = projectionScale.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "SaveProjectionScale":
                     if (flag == 0)
