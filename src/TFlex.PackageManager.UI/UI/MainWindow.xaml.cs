@@ -277,8 +277,6 @@ namespace TFlex.PackageManager.UI
         {
             if (e.OriginalSource is PropertyItem item)
             {
-                //Debug.WriteLine(string.Format("PropertyName: {0} [Value: {1}]", item.PropertyName, item.Value));
-
                 switch (item.PropertyName)
                 {
                     case "Extension":
@@ -306,10 +304,16 @@ namespace TFlex.PackageManager.UI
                 if (self.Configurations[key1].IsChanged && 
                     changedConfigurations.Contains(key1) == false && isValid)
                     changedConfigurations.Add(key1);
-                else
+                else if (!self.Configurations[key1].IsChanged)
                     changedConfigurations.Remove(key1);
-
+                
                 UpdateStateToControls();
+
+                Debug.WriteLine(string.Format("PropertyName: {0}, Value: {1}, IsChanged: {2}, total changes: {3}", 
+                    item.PropertyName, 
+                    item.Value, 
+                    self.Configurations[key1].IsChanged, 
+                    changedConfigurations.Count));
             }
         }
 

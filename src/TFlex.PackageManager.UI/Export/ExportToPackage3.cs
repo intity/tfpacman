@@ -17,12 +17,11 @@ namespace TFlex.PackageManager.Export
         #region private fields
         private const double px = 3.7795275590551;
         private int extension;
-        private byte[] imageOptions;
+        private readonly byte[] imageOptions;
         private bool screenLayers;
         private bool constructions;
 
-        private readonly byte[] objState = new byte[3];
-        private readonly int[] i_values = new int[1];
+        private readonly byte[] objState = new byte[2];
         private readonly bool[] b_values = new bool[2];
         private bool isChanged;
         #endregion
@@ -74,18 +73,17 @@ namespace TFlex.PackageManager.Export
             get { return extension; }
             set
             {
-                if (value != extension)
+                if (extension != value)
                 {
                     extension = value;
                     switch (extension)
                     {
-                        case 0: OutputExtension = "BMP"; break;
+                        case 0: OutputExtension = "BMP";  break;
                         case 1: OutputExtension = "JPEG"; break;
-                        case 2: OutputExtension = "GIF"; break;
+                        case 2: OutputExtension = "GIF";  break;
                         case 3: OutputExtension = "TIFF"; break;
-                        case 4: OutputExtension = "PNG"; break;
+                        case 4: OutputExtension = "PNG";  break;
                     }
-                    OnChanged(15);
                 }
             }
         }
@@ -140,7 +138,6 @@ namespace TFlex.PackageManager.Export
         {
             base.OnLoaded();
 
-            i_values[0] = extension;
             b_values[0] = screenLayers;
             b_values[1] = constructions;
 
@@ -150,41 +147,35 @@ namespace TFlex.PackageManager.Export
 
         public override void OnChanged(int index)
         {
-            bool result = false;
             if (!IsLoaded) return;
 
             switch (index)
             {
-                case 15:
-                    if (i_values[0] != extension)
+                case 16:
+                    if (b_values[0] != screenLayers)
                         objState[0] = 1;
                     else
                         objState[0] = 0;
                     break;
-                case 16:
-                    if (b_values[0] != screenLayers)
+                case 17:
+                    if (b_values[1] != constructions)
                         objState[1] = 1;
                     else
                         objState[1] = 0;
                     break;
-                case 17:
-                    if (b_values[1] != constructions)
-                        objState[2] = 1;
-                    else
-                        objState[2] = 0;
-                    break;
             }
+
+            isChanged = false;
 
             foreach (var i in objState)
             {
                 if (i > 0)
                 {
-                    result = true;
+                    isChanged = true;
                     break;
                 }
             }
 
-            isChanged = result;
             base.OnChanged(index);
         }
 
@@ -234,11 +225,7 @@ namespace TFlex.PackageManager.Export
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter", 
                     new XAttribute("name", "OutputExtension"), 
-                    new XAttribute("value", 
-                    extension == 0 ? "BMP" : 
-                    extension == 1 ? "JPEG" : 
-                    extension == 2 ? "GIF" : 
-                    extension == 3 ? "TIFF" : "PNG")),
+                    new XAttribute("value", OutputExtension)),
                 new XElement("parameter",
                     new XAttribute("name", "ImageOptions"),
                     new XAttribute("value", 

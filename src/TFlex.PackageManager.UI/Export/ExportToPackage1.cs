@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
@@ -30,8 +29,8 @@ namespace TFlex.PackageManager.Export
         private int biarcInterpolationForSplines;
         private decimal biarcInterpolationAccuracyForSplines;
 
-        private readonly byte[] objState = new byte[9];
-        private readonly int[] i_values = new int[8];
+        private readonly byte[] objState = new byte[8];
+        private readonly int[] i_values = new int[7];
         private readonly decimal[] m_values = new decimal[1];
         private bool isChanged;
         #endregion
@@ -82,7 +81,7 @@ namespace TFlex.PackageManager.Export
             }
             set
             {
-                if (value != extension)
+                if (extension != value)
                 {
                     extension = value;
                     switch (extension)
@@ -91,7 +90,6 @@ namespace TFlex.PackageManager.Export
                         case 1: OutputExtension = "DXF"; break;
                         case 2: OutputExtension = "DXB"; break;
                     }
-                    OnChanged(15);
                 }
             }
         }
@@ -351,14 +349,13 @@ namespace TFlex.PackageManager.Export
         {
             base.OnLoaded();
 
-            i_values[0] = extension;
-            i_values[1] = autocadExportFileVersion;
-            i_values[2] = convertAreas;
-            i_values[3] = convertToLines;
-            i_values[4] = convertDimensions;
-            i_values[5] = convertLineText;
-            i_values[6] = convertMultitext;
-            i_values[7] = biarcInterpolationForSplines;
+            i_values[0] = autocadExportFileVersion;
+            i_values[1] = convertAreas;
+            i_values[2] = convertToLines;
+            i_values[3] = convertDimensions;
+            i_values[4] = convertLineText;
+            i_values[5] = convertMultitext;
+            i_values[6] = biarcInterpolationForSplines;
             m_values[0] = biarcInterpolationAccuracyForSplines;
 
             for (int i = 0; i < objState.Length; i++)
@@ -367,77 +364,71 @@ namespace TFlex.PackageManager.Export
 
         public override void OnChanged(int index)
         {
-            bool result = false;
             if (!IsLoaded) return;
 
             switch (index)
             {
-                case 15:
-                    if (i_values[0] != extension)
+                case 16:
+                    if (i_values[0] != autocadExportFileVersion)
                         objState[0] = 1;
                     else
                         objState[0] = 0;
                     break;
-                case 16:
-                    if (i_values[1] != autocadExportFileVersion)
+                case 17:
+                    if (i_values[1] != convertAreas)
                         objState[1] = 1;
                     else
                         objState[1] = 0;
                     break;
-                case 17:
-                    if (i_values[2] != convertAreas)
+                case 18:
+                    if (i_values[2] != convertToLines)
                         objState[2] = 1;
                     else
                         objState[2] = 0;
                     break;
-                case 18:
-                    if (i_values[3] != convertToLines)
+                case 19:
+                    if (i_values[3] != convertDimensions)
                         objState[3] = 1;
                     else
                         objState[3] = 0;
                     break;
-                case 19:
-                    if (i_values[4] != convertDimensions)
+                case 20:
+                    if (i_values[4] != convertLineText)
                         objState[4] = 1;
                     else
                         objState[4] = 0;
                     break;
-                case 20:
-                    if (i_values[5] != convertLineText)
+                case 21:
+                    if (i_values[5] != convertMultitext)
                         objState[5] = 1;
                     else
                         objState[5] = 0;
                     break;
-                case 21:
-                    if (i_values[6] != convertMultitext)
+                case 22:
+                    if (i_values[6] != biarcInterpolationForSplines)
                         objState[6] = 1;
                     else
                         objState[6] = 0;
                     break;
-                case 22:
-                    if (i_values[7] != biarcInterpolationForSplines)
+                case 23:
+                    if (m_values[0] != biarcInterpolationAccuracyForSplines)
                         objState[7] = 1;
                     else
                         objState[7] = 0;
                     break;
-                case 23:
-                    if (m_values[0] != biarcInterpolationAccuracyForSplines)
-                        objState[8] = 1;
-                    else
-                        objState[8] = 0;
-                    break;
             }
+
+            isChanged = false;
 
             foreach (var i in objState)
             {
                 if (i > 0)
                 {
-                    result = true;
+                    isChanged = true;
                     break;
                 }
             }
 
-            isChanged = result;
             base.OnChanged(index);
         }
 
@@ -447,7 +438,7 @@ namespace TFlex.PackageManager.Export
             ExportToDXF export2;
             ExportToDXB export3;
 
-            switch (Extension)
+            switch (extension)
             {
                 case 0:
                     export1 = new ExportToDWG(document);
@@ -473,9 +464,7 @@ namespace TFlex.PackageManager.Export
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter", 
                     new XAttribute("name", "OutputExtension"), 
-                    new XAttribute("value", 
-                    extension == 0 ? "DWG" : 
-                    extension == 1 ? "DXF" : "DXB")),
+                    new XAttribute("value", OutputExtension)),
                 new XElement("parameter",
                     new XAttribute("name", "AutocadExportFileVersion"),
                     new XAttribute("value", autocadExportFileVersion)),

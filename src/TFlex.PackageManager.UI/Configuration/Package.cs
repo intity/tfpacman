@@ -45,6 +45,7 @@ namespace TFlex.PackageManager.Configuration
     public class Package : INotifyPropertyChanged
     {
         #region private fields
+        private string outputExtension;
         private string [] pageNames;
         private bool excludePage;
         private decimal pageScale;
@@ -62,16 +63,17 @@ namespace TFlex.PackageManager.Configuration
         private bool useDocumentNamed;
 
         private string[] pg_names, pj_names;
-        private readonly byte[] objState    = new byte[15];
+        private readonly byte[] objState    = new byte[16];
         private readonly bool[] pg_types    = new bool[5];
         private readonly bool[] b_values    = new bool[7];
-        private readonly string[] s_values  = new string[3];
+        private readonly string[] s_values  = new string[4];
         private readonly decimal[] m_values = new decimal[2]; 
         private bool isLoaded, isChanged;
         #endregion
 
         public Package()
         {
+            outputExtension  = string.Empty;
             pageNames        = new string[] { };
             pageScale        = 99999;
             pageTypes        = new PageTypes { Normal = true };
@@ -86,7 +88,7 @@ namespace TFlex.PackageManager.Configuration
 
         private void PageTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnChanged(4);
+            OnChanged(5);
         }
 
         #region internal properties
@@ -106,7 +108,18 @@ namespace TFlex.PackageManager.Configuration
         /// The output file extension.
         /// </summary>
         [Browsable(false)]
-        public string OutputExtension { get; set; }
+        public string OutputExtension
+        {
+            get { return outputExtension; }
+            set
+            {
+                if (outputExtension != value)
+                {
+                    outputExtension = value;
+                    OnChanged(0);
+                }
+            }
+        }
 
         /// <summary>
         /// The page name list.
@@ -125,7 +138,7 @@ namespace TFlex.PackageManager.Configuration
                 if (pageNames != value)
                 {
                     pageNames = value;
-                    OnChanged(0);
+                    OnChanged(1);
                 }
             }
         }
@@ -146,7 +159,7 @@ namespace TFlex.PackageManager.Configuration
                 if (excludePage != value)
                 {
                     excludePage = value;
-                    OnChanged(1);
+                    OnChanged(2);
                 }
             }
         }
@@ -168,7 +181,7 @@ namespace TFlex.PackageManager.Configuration
                 if (pageScale != value)
                 {
                     pageScale = value;
-                    OnChanged(2);
+                    OnChanged(3);
                 }
             }
         }
@@ -189,7 +202,7 @@ namespace TFlex.PackageManager.Configuration
                 if (savePageScale != value)
                 {
                     savePageScale = value;
-                    OnChanged(3);
+                    OnChanged(4);
                 }
             }
         }
@@ -224,7 +237,7 @@ namespace TFlex.PackageManager.Configuration
                 if (checkDrawingTemplate != value)
                 {
                     checkDrawingTemplate = value;
-                    OnChanged(5);
+                    OnChanged(6);
                 }
             }
         }
@@ -246,7 +259,7 @@ namespace TFlex.PackageManager.Configuration
                 if (projectionNames != value)
                 {
                     projectionNames = value;
-                    OnChanged(6);
+                    OnChanged(7);
                 }
             }
         }
@@ -267,7 +280,7 @@ namespace TFlex.PackageManager.Configuration
                 if (excludeProjection != value)
                 {
                     excludeProjection = value;
-                    OnChanged(7);
+                    OnChanged(8);
                 }
             }
         }
@@ -289,7 +302,7 @@ namespace TFlex.PackageManager.Configuration
                 if (projectionScale != value)
                 {
                     projectionScale = value;
-                    OnChanged(8);
+                    OnChanged(9);
                 }
             }
         }
@@ -310,7 +323,7 @@ namespace TFlex.PackageManager.Configuration
                 if (saveProjectionScale != value)
                 {
                     saveProjectionScale = value;
-                    OnChanged(9);
+                    OnChanged(10);
                 }
             }
         }
@@ -331,7 +344,7 @@ namespace TFlex.PackageManager.Configuration
                 if (enableProcessingOfProjections != value)
                 {
                     enableProcessingOfProjections = value;
-                    OnChanged(10);
+                    OnChanged(11);
                 }
             }
         }
@@ -351,7 +364,7 @@ namespace TFlex.PackageManager.Configuration
                 if (subDirectoryName != value)
                 {
                     subDirectoryName = value;
-                    OnChanged(11);
+                    OnChanged(12);
                 }
             }
         }
@@ -371,7 +384,7 @@ namespace TFlex.PackageManager.Configuration
                 if (fileNameSuffix != value)
                 {
                     fileNameSuffix = value;
-                    OnChanged(12);
+                    OnChanged(13);
                 }
             }
         }
@@ -391,7 +404,7 @@ namespace TFlex.PackageManager.Configuration
                 if (templateFileName != value)
                 {
                     templateFileName = value;
-                    OnChanged(13);
+                    OnChanged(14);
                 }
             }
         }
@@ -412,7 +425,7 @@ namespace TFlex.PackageManager.Configuration
                 if (useDocumentNamed != value)
                 {
                     useDocumentNamed = value;
-                    OnChanged(14);
+                    OnChanged(15);
                 }
             }
         }
@@ -424,6 +437,8 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         public virtual void OnLoaded()
         {
+            s_values[0] = outputExtension;
+
             pg_names = (string[])pageNames.Clone();
             pj_names = (string[])projectionNames.Clone();
 
@@ -435,9 +450,9 @@ namespace TFlex.PackageManager.Configuration
             m_values[1] = projectionScale;
             b_values[4] = saveProjectionScale;
             b_values[5] = enableProcessingOfProjections;
-            s_values[0] = subDirectoryName;
-            s_values[1] = fileNameSuffix;
-            s_values[2] = templateFileName;
+            s_values[1] = subDirectoryName;
+            s_values[2] = fileNameSuffix;
+            s_values[3] = templateFileName;
             b_values[6] = useDocumentNamed;
 
             pg_types[0] = pageTypes.Normal;
@@ -461,98 +476,104 @@ namespace TFlex.PackageManager.Configuration
             switch (index)
             {
                 case 0:
-                    if (!Enumerable.SequenceEqual(pg_names, pageNames))
+                    if (s_values[0] != outputExtension)
                         objState[0] = 1;
                     else
                         objState[0] = 0;
                     break;
                 case 1:
-                    if (b_values[0] != excludePage)
+                    if (!Enumerable.SequenceEqual(pg_names, pageNames))
                         objState[1] = 1;
                     else
                         objState[1] = 0;
                     break;
                 case 2:
-                    if (m_values[0] != pageScale)
+                    if (b_values[0] != excludePage)
                         objState[2] = 1;
                     else
                         objState[2] = 0;
                     break;
                 case 3:
-                    if (b_values[1] != savePageScale)
+                    if (m_values[0] != pageScale)
                         objState[3] = 1;
                     else
                         objState[3] = 0;
                     break;
                 case 4:
-                    if (pg_types[0] != pageTypes.Normal ||
-                        pg_types[1] != pageTypes.Workplane ||
-                        pg_types[2] != pageTypes.Auxiliary ||
-                        pg_types[3] != pageTypes.Text ||
-                        pg_types[4] != pageTypes.BillOfMaterials)
+                    if (b_values[1] != savePageScale)
                         objState[4] = 1;
                     else
                         objState[4] = 0;
                     break;
                 case 5:
-                    if (b_values[2] != checkDrawingTemplate)
+                    if (pg_types[0] != pageTypes.Normal ||
+                        pg_types[1] != pageTypes.Workplane ||
+                        pg_types[2] != pageTypes.Auxiliary ||
+                        pg_types[3] != pageTypes.Text ||
+                        pg_types[4] != pageTypes.BillOfMaterials)
                         objState[5] = 1;
                     else
                         objState[5] = 0;
                     break;
                 case 6:
-                    if (!Enumerable.SequenceEqual(pj_names, projectionNames))
+                    if (b_values[2] != checkDrawingTemplate)
                         objState[6] = 1;
                     else
                         objState[6] = 0;
                     break;
                 case 7:
-                    if (b_values[3] != excludeProjection)
+                    if (!Enumerable.SequenceEqual(pj_names, projectionNames))
                         objState[7] = 1;
                     else
                         objState[7] = 0;
                     break;
                 case 8:
-                    if (m_values[1] != projectionScale)
+                    if (b_values[3] != excludeProjection)
                         objState[8] = 1;
                     else
                         objState[8] = 0;
                     break;
                 case 9:
-                    if (b_values[4] != saveProjectionScale)
+                    if (m_values[1] != projectionScale)
                         objState[9] = 1;
                     else
                         objState[9] = 0;
                     break;
                 case 10:
-                    if (b_values[5] != enableProcessingOfProjections)
+                    if (b_values[4] != saveProjectionScale)
                         objState[10] = 1;
                     else
                         objState[10] = 0;
                     break;
                 case 11:
-                    if (s_values[0] != subDirectoryName)
+                    if (b_values[5] != enableProcessingOfProjections)
                         objState[11] = 1;
                     else
                         objState[11] = 0;
                     break;
                 case 12:
-                    if (s_values[1] != fileNameSuffix)
+                    if (s_values[1] != subDirectoryName)
                         objState[12] = 1;
                     else
                         objState[12] = 0;
                     break;
                 case 13:
-                    if (s_values[2] != templateFileName)
+                    if (s_values[2] != fileNameSuffix)
                         objState[13] = 1;
                     else
                         objState[13] = 0;
                     break;
                 case 14:
-                    if (b_values[6] != useDocumentNamed)
+                    if (s_values[3] != templateFileName)
                         objState[14] = 1;
                     else
                         objState[14] = 0;
+                    break;
+                case 15:
+                    if (b_values[6] != useDocumentNamed)
+                        objState[15] = 1;
+                    else
+                        objState[15] = 0;
                     break;
             }
 
