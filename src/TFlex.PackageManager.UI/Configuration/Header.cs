@@ -8,7 +8,6 @@ using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Editors;
-using TFlex.PackageManager.Export;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Configuration
@@ -19,10 +18,10 @@ namespace TFlex.PackageManager.Configuration
     public class Header
     {
         #region private fields
-        private Package package_0;
-        private ExportToPackage1 package_1;
-        private ExportToPackage3 package_3;
-        private ExportToPackage9 package_9;
+        private Package_0 package_0;
+        private Package_1 package_1;
+        private Package_3 package_3;
+        private Package_9 package_9;
         private ObservableDictionary<string, object> translators;
         private readonly List<string> loadedTranslators;
         private string configurationName;
@@ -73,7 +72,7 @@ namespace TFlex.PackageManager.Configuration
                 case "Default":
                     if ((sender as TranslatorTypes).Default)
                     {
-                        package_0 = new Package();
+                        package_0 = new Package_0(this);
                         package_0.PropertyChanged += Package_PropertyChanged;
                         translators.Add(e.PropertyName, package_0);
                     }
@@ -85,7 +84,7 @@ namespace TFlex.PackageManager.Configuration
                 case "Acad":
                     if ((sender as TranslatorTypes).Acad)
                     {
-                        package_1 = new ExportToPackage1(this);
+                        package_1 = new Package_1(this);
                         package_1.PropertyChanged += Package_PropertyChanged;
                         translators.Add(e.PropertyName, package_1);
                     }
@@ -97,7 +96,7 @@ namespace TFlex.PackageManager.Configuration
                 case "Bitmap":
                     if ((sender as TranslatorTypes).Bitmap)
                     {
-                        package_3 = new ExportToPackage3(this);
+                        package_3 = new Package_3(this);
                         package_3.PropertyChanged += Package_PropertyChanged;
                         translators.Add(e.PropertyName, package_3);
                     }
@@ -109,7 +108,7 @@ namespace TFlex.PackageManager.Configuration
                 case "Pdf":
                     if ((sender as TranslatorTypes).Pdf)
                     {
-                        package_9 = new ExportToPackage9(this);
+                        package_9 = new Package_9(this);
                         package_9.PropertyChanged += Package_PropertyChanged;
                         translators.Add(e.PropertyName, package_9);
                     }

@@ -203,6 +203,14 @@ namespace TFlex.PackageManager.Common
             int nFolder, 
             ref IntPtr ppidl);
 
+        [DllImport("user32.dll", EntryPoint = "CallWindowProc", CharSet = CharSet.Auto)]
+        public static extern IntPtr CallWindowProc(
+            IntPtr lpPrevWndFunc, 
+            IntPtr hWnd, 
+            uint   uMsg, 
+            IntPtr wParam, 
+            IntPtr lParam);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int SendMessage(
             IntPtr hWnd,
@@ -244,6 +252,12 @@ namespace TFlex.PackageManager.Common
             int msg, 
             int wParam, 
             ref RECT lParam);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Auto)]
+        public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", CharSet = CharSet.Auto)]
+        public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
 		public static extern bool SetWindowText(IntPtr hwnd, String lpString);

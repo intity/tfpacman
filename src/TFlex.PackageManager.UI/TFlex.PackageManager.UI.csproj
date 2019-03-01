@@ -140,14 +140,13 @@
     </Page>
     <Compile Include="Converters\LevelToIndentConverter.cs" />
     <Compile Include="Common\WinAPI.cs" />
-    <Compile Include="Configuration\Package.cs" />
+    <Compile Include="Configuration\Package_0.cs" />
     <Compile Include="Controls\InputScaleControl.xaml.cs">
       <DependentUpon>InputScaleControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Export\ExportToPackage1.cs" />
-    <Compile Include="Export\ExportToPackage3.cs" />
-    <Compile Include="Export\ExportTo.cs" />
-    <Compile Include="Export\ExportToPackage9.cs" />
+    <Compile Include="Configuration\Package_1.cs" />
+    <Compile Include="Configuration\Package_3.cs" />
+    <Compile Include="Configuration\Package_9.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -312,6 +311,8 @@
     <Resource Include="Resources\save.ico" />
     <Resource Include="Resources\options.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Export\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

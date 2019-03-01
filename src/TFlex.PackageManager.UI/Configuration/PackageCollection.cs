@@ -4,6 +4,25 @@ using TFlex.PackageManager.Common;
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
+    /// The Package type enumeration.
+    /// </summary>
+    public enum PackageType
+    {
+        Default,
+        Acad,
+        Acis,
+        Bitmap,
+        Bmf,
+        Emf,
+        Iges,
+        Jt,
+        Parasolid,
+        Pdf,
+        Step,
+        Stl
+    }
+
+    /// <summary>
     /// The PackageCollection class.
     /// </summary>
     public class PackageCollection

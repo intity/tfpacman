@@ -7,16 +7,15 @@ using System.Linq;
 using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Configuration;
 using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Attributes;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace TFlex.PackageManager.Export
+namespace TFlex.PackageManager.Configuration
 {
     [CustomCategoryOrder(Resource.PACKAGE_1, 3)]
     [CustomCategoryOrder(Resource.PACKAGE_1, 4)]
-    public class ExportToPackage1 : ExportTo
+    public class Package_1 : Package_0
     {
         #region private fields
         private int extension;
@@ -35,16 +34,16 @@ namespace TFlex.PackageManager.Export
         private bool isChanged;
         #endregion
 
-        public ExportToPackage1(Header header) : base(header)
+        public Package_1(Header header) : base(header)
         {
-            extension = 0;
-            autocadExportFileVersion = 3;
-            convertAreas = 0;
-            convertToLines = 1;
-            convertDimensions = 0;
-            convertLineText = 0;
-            convertMultitext = 0;
-            biarcInterpolationForSplines = 0;
+            extension                            = 0;
+            autocadExportFileVersion             = 3;
+            convertAreas                         = 0;
+            convertToLines                       = 1;
+            convertDimensions                    = 0;
+            convertLineText                      = 0;
+            convertMultitext                     = 0;
+            biarcInterpolationForSplines         = 0;
             biarcInterpolationAccuracyForSplines = 0.1m;
 
             OutputExtension = "DWG";
@@ -345,7 +344,7 @@ namespace TFlex.PackageManager.Export
             export.Page = page;
         }
 
-        public override void OnLoaded()
+        internal override void OnLoaded()
         {
             base.OnLoaded();
 
@@ -362,7 +361,7 @@ namespace TFlex.PackageManager.Export
                 objState[i] = 0;
         }
 
-        public override void OnChanged(int index)
+        internal override void OnChanged(int index)
         {
             if (!IsLoaded) return;
 
@@ -432,7 +431,7 @@ namespace TFlex.PackageManager.Export
             base.OnChanged(index);
         }
 
-        public override bool Export(Document document, Page page, string path)
+        internal override void Export(Document document, Page page, string path)
         {
             ExportToDWG export1;
             ExportToDXF export2;
@@ -443,17 +442,19 @@ namespace TFlex.PackageManager.Export
                 case 0:
                     export1 = new ExportToDWG(document);
                     ExportTo(export1, page);
-                    return export1.Export(path);
+                    export1.Export(path);
+                    break;
                 case 1:
                     export2 = new ExportToDXF(document);
                     ExportTo(export2, page);
-                    return export2.Export(path);
+                    export2.Export(path);
+                    break;
                 case 2:
                     export3 = new ExportToDXB(document);
                     ExportTo(export3, page);
-                    return export3.Export(path);
+                    export3.Export(path);
+                    break;
             }
-            return false;
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)

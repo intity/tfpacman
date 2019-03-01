@@ -5,13 +5,12 @@ using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace TFlex.PackageManager.Export
+namespace TFlex.PackageManager.Configuration
 {
     [CustomCategoryOrder(Resource.PACKAGE_9, 4)]
-    public class ExportToPackage9 : ExportTo
+    public class Package_9 : Package_0
     {
         #region private field
         private bool export3dModel;
@@ -22,9 +21,11 @@ namespace TFlex.PackageManager.Export
         private bool isChanged;
         #endregion
 
-        public ExportToPackage9(Header header) : base (header)
+        public Package_9(Header header) : base (header)
         {
             export3dModel   = false;
+            layers          = false;
+
             OutputExtension = "PDF";
         }
 
@@ -83,7 +84,7 @@ namespace TFlex.PackageManager.Export
         #endregion
 
         #region methods
-        public override void OnLoaded()
+        internal override void OnLoaded()
         {
             base.OnLoaded();
 
@@ -94,7 +95,7 @@ namespace TFlex.PackageManager.Export
                 objState[i] = 0;
         }
 
-        public override void OnChanged(int index)
+        internal override void OnChanged(int index)
         {
             bool result = false;
             if (!IsLoaded) return;
@@ -128,19 +129,18 @@ namespace TFlex.PackageManager.Export
             base.OnChanged(index);
         }
 
-        public override bool Export(Document document, Page page, string path)
+        internal override void Export(Document document, Page page, string path)
         {
             ExportToPDF export = new ExportToPDF(document)
             {
                 IsSelectPagesDialogEnabled = false,
-                OpenExportFile = false,
-                Export3DModel = export3dModel,
-                Layers = layers
+                OpenExportFile             = false,
+                Export3DModel              = export3dModel,
+                Layers                     = layers
             };
 
             export.ExportPages.Add(page);
-
-            return export.Export(path);
+            export.Export(path);
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)

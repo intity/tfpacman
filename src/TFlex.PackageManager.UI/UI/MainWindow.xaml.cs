@@ -2,28 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-
-using TFlex.PackageManager.Controls;
-using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Configuration;
-using TFlex.PackageManager.Export;
-using Xceed.Wpf.Toolkit.PropertyGrid;
-using System.ComponentModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using TFlex.PackageManager.Controls;
+using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Configuration;
+using Xceed.Wpf.Toolkit.PropertyGrid;
 
 namespace TFlex.PackageManager.UI
 {
@@ -61,6 +53,12 @@ namespace TFlex.PackageManager.UI
         private string key1, key2;
         private Brush background;
         private bool isValid = true;
+
+        private Thread thread;
+        private bool stoped;
+
+        const int GWLP_WNDPROC = (-4);
+        const uint WM_STOP_PROCESSING = 0x0400;
         #endregion
 
         public MainWindow()
@@ -205,9 +203,39 @@ namespace TFlex.PackageManager.UI
             #endregion
         }
 
+        #region window proc
+        private delegate IntPtr WinProcDelegate(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+
+        private static IntPtr handle = IntPtr.Zero;
+        private static IntPtr oldWndProc = IntPtr.Zero;
+        private WinProcDelegate newWndProc;
+
+        private IntPtr WindowProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam)
+        {
+            switch (uMsg)
+            {
+                case WM_STOP_PROCESSING:
+                    button2_2.IsEnabled = false;
+                    tvControl2.InitLayout();
+                    break;
+            }
+
+            return WinAPI.CallWindowProc(oldWndProc, hWnd, uMsg, wParam, lParam);
+        }
+        #endregion
+
         #region main window
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (handle == IntPtr.Zero)
+            {
+                handle = new WindowInteropHelper(this).Handle;
+                newWndProc = new WinProcDelegate(WindowProc);
+                oldWndProc = WinAPI.GetWindowLongPtr(handle, GWLP_WNDPROC);
+                WinAPI.SetWindowLongPtr(handle, GWLP_WNDPROC, 
+                    Marshal.GetFunctionPointerForDelegate(newWndProc));
+            }
+
             if (comboBox1.Items.Count == 0 && self.Configurations.Count > 0)
             {
                 foreach (var i in self.Configurations.Keys)
@@ -283,10 +311,10 @@ namespace TFlex.PackageManager.UI
                         switch (key2)
                         {
                             case "Acad":
-                                header1_2.Content = ((ExportToPackage1)self.Configurations[key1].Translators[key2]).OutputExtension;
+                                header1_2.Content = ((Package_1)self.Configurations[key1].Translators[key2]).OutputExtension;
                                 break;
                             case "Bitmap":
-                                header1_3.Content = ((ExportToPackage3)self.Configurations[key1].Translators[key2]).OutputExtension;
+                                header1_3.Content = ((Package_3)self.Configurations[key1].Translators[key2]).OutputExtension;
                                 break;
                         }
                         break;
@@ -489,36 +517,15 @@ namespace TFlex.PackageManager.UI
 
         private void Event2_1_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var i in tvControl1.SelectedItems)
-            {
-                string path = i.Key;
-
-                for (int j = 0; j < i.Value.Length; j++)
-                {
-                    if (i.Value[j].Value == false || j == 0)
-                        continue;
-
-                    switch (self.Configurations[key1].Translators.ElementAt(j - 1).Key)
-                    {
-                        case "Acad":
-                            (self.Configurations[key1].Translators.ElementAt(j - 1).Value as ExportToPackage1).Export(path);
-                            break;
-                        case "Bitmap":
-                            (self.Configurations[key1].Translators.ElementAt(j - 1).Value as ExportToPackage3).Export(path);
-                            break;
-                        case "Pdf":
-                            (self.Configurations[key1].Translators.ElementAt(j - 1).Value as ExportToPackage9).Export(path);
-                            break;
-                    }
-                }
-            }
-
-            tvControl2.InitLayout();
+            stoped = false;
+            thread = new Thread(StartProcessing);
+            thread.Start();
+            button2_2.IsEnabled = true;
         } // Start processing
 
         private void Event2_2_Click(object sender, RoutedEventArgs e)
         {
-
+            stoped = true;
         } // Stop processing
 
         private void Event3_1_Click(object sender, RoutedEventArgs e)
@@ -627,7 +634,7 @@ namespace TFlex.PackageManager.UI
                             comboBox2.Items.Add(i);
                         break;
                     case "Acad":
-                        header1_2.Content = ((ExportToPackage1)self.Configurations[key1].Translators[i]).OutputExtension;
+                        header1_2.Content = ((Package_1)self.Configurations[key1].Translators[i]).OutputExtension;
 
                         if (comboBox2.Items.Contains(i) == false)
                             comboBox2.Items.Add(i);
@@ -636,7 +643,7 @@ namespace TFlex.PackageManager.UI
                             treeListView1.Columns.Add(column1_2);
                         break;
                     case "Bitmap":
-                        header1_3.Content = ((ExportToPackage3)self.Configurations[key1].Translators[i]).OutputExtension;
+                        header1_3.Content = ((Package_3)self.Configurations[key1].Translators[i]).OutputExtension;
 
                         if (comboBox2.Items.Contains(i) == false)
                             comboBox2.Items.Add(i);
@@ -645,7 +652,7 @@ namespace TFlex.PackageManager.UI
                             treeListView1.Columns.Add(column1_3);
                         break;
                     case "Pdf":
-                        header1_9.Content = ((ExportToPackage9)self.Configurations[key1].Translators[i]).OutputExtension;
+                        header1_9.Content = ((Package_9)self.Configurations[key1].Translators[i]).OutputExtension;
 
                         if (comboBox2.Items.Contains(i) == false)
                             comboBox2.Items.Add(i);
@@ -737,6 +744,46 @@ namespace TFlex.PackageManager.UI
                 menuItem1_5.IsEnabled = false;
                 button1_5.IsEnabled = false;
             }
+        }
+
+        private void StartProcessing()
+        {
+            foreach (var i in tvControl1.SelectedItems)
+            {
+                if (stoped)
+                {
+                    WinAPI.SendMessage(handle, WM_STOP_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+                    break;
+                }
+
+                string path = i.Key;
+
+                for (int j = 0; j < i.Value.Length; j++)
+                {
+                    if (i.Value[j].Value == false)
+                        continue;
+
+                    switch (self.Configurations[key1].Translators.ElementAt(j).Key)
+                    {
+                        case "Default":
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_0).ProcessingFile(path);
+                            break;
+                        case "Acad":
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_1).ProcessingFile(path);
+                            break;
+                        case "Bitmap":
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_3).ProcessingFile(path);
+                            break;
+                        case "Pdf":
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_9).ProcessingFile(path);
+                            break;
+                    }
+
+                    Debug.WriteLine(string.Format("path: {0}", path));
+                }
+            }
+
+            WinAPI.SendMessage(handle, WM_STOP_PROCESSING, IntPtr.Zero, IntPtr.Zero);
         }
         #endregion
     }

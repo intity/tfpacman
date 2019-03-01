@@ -5,14 +5,13 @@ using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace TFlex.PackageManager.Export
+namespace TFlex.PackageManager.Configuration
 {
     [CustomCategoryOrder(Resource.PACKAGE_3, 3)]
     [CustomCategoryOrder(Resource.PACKAGE_3, 4)]
-    public class ExportToPackage3 : ExportTo
+    public class Package_3 : Package_0
     {
         #region private fields
         private const double px = 3.7795275590551;
@@ -26,7 +25,7 @@ namespace TFlex.PackageManager.Export
         private bool isChanged;
         #endregion
 
-        public ExportToPackage3(Header header) : base(header)
+        public Package_3(Header header) : base(header)
         {
             extension    = 0;
             imageOptions = new byte[2];
@@ -134,7 +133,7 @@ namespace TFlex.PackageManager.Export
         #endregion
 
         #region methods
-        public override void OnLoaded()
+        internal override void OnLoaded()
         {
             base.OnLoaded();
 
@@ -145,7 +144,7 @@ namespace TFlex.PackageManager.Export
                 objState[i] = 0;
         }
 
-        public override void OnChanged(int index)
+        internal override void OnChanged(int index)
         {
             if (!IsLoaded) return;
 
@@ -179,7 +178,7 @@ namespace TFlex.PackageManager.Export
             base.OnChanged(index);
         }
 
-        public override bool Export(Document document, Page page, string path)
+        internal override void Export(Document document, Page page, string path)
         {
             ImageExport options = ImageExport.None;
             ImageExportFormat format = ImageExportFormat.Bmp;
@@ -214,7 +213,7 @@ namespace TFlex.PackageManager.Export
                     break;
             }
 
-            return export.Export(path, options, format);
+            export.Export(path, options, format);
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)
