@@ -58,7 +58,8 @@ namespace TFlex.PackageManager.UI
         private bool stoped;
 
         const int GWLP_WNDPROC = (-4);
-        const uint WM_STOP_PROCESSING = 0x0400;
+        const uint WM_STOPPED_PROCESSING = 0x0400;
+        const uint WM_INCREMENT_PROGRESS = 0x0401;
         #endregion
 
         public MainWindow()
@@ -214,9 +215,20 @@ namespace TFlex.PackageManager.UI
         {
             switch (uMsg)
             {
-                case WM_STOP_PROCESSING:
+                case WM_STOPPED_PROCESSING:
                     button2_2.IsEnabled = false;
+                    menuItem2_2.IsEnabled = false;
                     tvControl2.InitLayout();
+                    break;
+                case WM_INCREMENT_PROGRESS:
+                    double[] value = new double[1];
+                    Marshal.Copy(lParam, value, 0, value.Length);
+                    progressBar.Value = value[0];
+                    if (value[0] == 100)
+                    {
+                        progressBar.Value = 0.0;
+                        progressBar.Visibility = Visibility.Hidden;
+                    }
                     break;
             }
 
@@ -521,6 +533,8 @@ namespace TFlex.PackageManager.UI
             thread = new Thread(StartProcessing);
             thread.Start();
             button2_2.IsEnabled = true;
+            menuItem2_2.IsEnabled = true;
+            progressBar.Visibility = Visibility.Visible;
         } // Start processing
 
         private void Event2_2_Click(object sender, RoutedEventArgs e)
@@ -748,11 +762,18 @@ namespace TFlex.PackageManager.UI
 
         private void StartProcessing()
         {
+            double[] count = { 0.0 };
+            double increment = 0.0;
+            var size = Marshal.SizeOf(count[0]) * count.Length;
+            IntPtr value = Marshal.AllocHGlobal(size);
+
             foreach (var i in tvControl1.SelectedItems)
             {
+                increment = 100.0 / (tvControl1.SelectedItems.Count * i.Value.Length);
+
                 if (stoped)
                 {
-                    WinAPI.SendMessage(handle, WM_STOP_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+                    WinAPI.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
                     break;
                 }
 
@@ -761,7 +782,10 @@ namespace TFlex.PackageManager.UI
                 for (int j = 0; j < i.Value.Length; j++)
                 {
                     if (i.Value[j].Value == false)
+                    {
+                        count[0] += increment;
                         continue;
+                    }
 
                     switch (self.Configurations[key1].Translators.ElementAt(j).Key)
                     {
@@ -779,11 +803,16 @@ namespace TFlex.PackageManager.UI
                             break;
                     }
 
-                    Debug.WriteLine(string.Format("path: {0}", path));
+                    count[0] += increment;
+                    Marshal.Copy(count, 0, value, count.Length);
+                    WinAPI.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
                 }
             }
 
-            WinAPI.SendMessage(handle, WM_STOP_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+            count[0] = 100;
+            Marshal.Copy(count, 0, value, count.Length);
+            WinAPI.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
+            WinAPI.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
         }
         #endregion
     }
