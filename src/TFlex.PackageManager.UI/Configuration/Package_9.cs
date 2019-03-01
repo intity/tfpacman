@@ -129,7 +129,7 @@ namespace TFlex.PackageManager.Configuration
             base.OnChanged(index);
         }
 
-        internal override void Export(Document document, Page page, string path)
+        internal override bool Export(Document document, Page page, string path)
         {
             ExportToPDF export = new ExportToPDF(document)
             {
@@ -140,7 +140,7 @@ namespace TFlex.PackageManager.Configuration
             };
 
             export.ExportPages.Add(page);
-            export.Export(path);
+            return export.Export(path);
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)

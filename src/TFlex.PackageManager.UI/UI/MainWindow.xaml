@@ -202,7 +202,7 @@
                    VerticalAlignment="Bottom">
             <StatusBarItem Width="200">
                 <Label Name="label3" 
-                   Content="Selected Items: 0"
+                   Content="Count of selected files: 0"
                    Padding="4,0,0,0" 
                    VerticalAlignment="Center"/>
             </StatusBarItem>
@@ -213,8 +213,13 @@
                              Minimum="0" 
                              Maximum="100"
                              Visibility="Hidden">
-
                 </ProgressBar>
+            </StatusBarItem>
+            <StatusBarItem>
+                <Label Name="label4" 
+                   Content="Count of exported files: 0"
+                   Padding="4,0,0,0" 
+                   VerticalAlignment="Center"/>
             </StatusBarItem>
         </StatusBar>
 

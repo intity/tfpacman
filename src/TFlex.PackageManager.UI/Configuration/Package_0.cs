@@ -28,8 +28,6 @@ namespace TFlex.PackageManager.Configuration
     {
         #region private fields
         private Header header;
-        private int countProcessingFiles;
-
         private string outputExtension;
         private string [] pageNames;
         private bool excludePage;
@@ -800,7 +798,10 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="document"></param>
         /// <param name="page"></param>
         /// <param name="path">Full path file name.</param>
-        internal virtual void Export(Document document, Page page, string path) { }
+        internal virtual bool Export(Document document, Page page, string path)
+        {
+            return false;
+        }
 
         /// <summary>
         /// Processing file.
@@ -1075,7 +1076,6 @@ namespace TFlex.PackageManager.Configuration
                     path += "." + outputExtension.ToLower();
 
                 Export(document, i, path);
-                countProcessingFiles++;
             }
         }
 

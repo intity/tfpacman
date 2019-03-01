@@ -19,9 +19,10 @@ namespace TFlex.PackageManager.Controls
     public partial class TreeListViewControl : UserControl, INotifyPropertyChanged
     {
         #region private fields
-        private object dummyNode = null;
-        private string targetDirectory = null;
-        private string searchPattern = null;
+        private object dummyNode;
+        private string targetDirectory;
+        private string searchPattern;
+        private int countFiles;
         private int colCount;
         private List<ImageSource> imageSourceList;
         private TreeListView treeListView;
@@ -32,7 +33,10 @@ namespace TFlex.PackageManager.Controls
         {
             InitializeComponent();
 
-            selectedItems = new ObservableDictionary<string, bool?[]>();
+            dummyNode       = null;
+            targetDirectory = null;
+            searchPattern   = null;
+            selectedItems   = new ObservableDictionary<string, bool?[]>();
             imageSourceList = new List<ImageSource>()
             {
                 new BitmapImage(new Uri(Resource.BASE_URI + "collapsed_folder.ico")),
@@ -90,6 +94,23 @@ namespace TFlex.PackageManager.Controls
         public ObservableDictionary<string, bool?[]> SelectedItems
         {
             get { return (selectedItems); }
+        }
+
+        /// <summary>
+        /// Total count files.
+        /// </summary>
+        public int CountFiles
+        {
+            get
+            {
+                if (Directory.Exists(targetDirectory))
+                {
+                    countFiles = GetFiles(targetDirectory, 
+                        SearchOption.AllDirectories).Count();
+                }
+
+                return (countFiles);
+            }
         }
         #endregion
 
@@ -324,12 +345,12 @@ namespace TFlex.PackageManager.Controls
             }
         }
 
-        private string[] GetFiles(string path)
+        private string[] GetFiles(string path, SearchOption option)
         {
             string [] patterns = searchPattern.Split('|');
             ArrayList files = new ArrayList();
             foreach (var i in patterns)
-                files.AddRange(Directory.GetFiles(path, i));
+                files.AddRange(Directory.GetFiles(path, i, option));
             return files.ToArray(typeof(string)) as string[];
         }
 
@@ -341,7 +362,7 @@ namespace TFlex.PackageManager.Controls
             if (directory == null || treeListView == null)
                 return;
 
-            foreach (var i in GetFiles(directory))
+            foreach (var i in GetFiles(directory, SearchOption.TopDirectoryOnly))
             {
                 switch (Path.GetExtension(i))
                 {

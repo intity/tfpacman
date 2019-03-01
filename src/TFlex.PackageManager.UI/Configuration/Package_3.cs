@@ -178,7 +178,7 @@ namespace TFlex.PackageManager.Configuration
             base.OnChanged(index);
         }
 
-        internal override void Export(Document document, Page page, string path)
+        internal override bool Export(Document document, Page page, string path)
         {
             ImageExport options = ImageExport.None;
             ImageExportFormat format = ImageExportFormat.Bmp;
@@ -213,7 +213,7 @@ namespace TFlex.PackageManager.Configuration
                     break;
             }
 
-            export.Export(path, options, format);
+            return export.Export(path, options, format);
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)

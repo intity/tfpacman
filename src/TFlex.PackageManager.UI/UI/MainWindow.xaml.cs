@@ -162,6 +162,8 @@ namespace TFlex.PackageManager.UI
             label2.Content = Resource.GetString(Resource.MAIN_WINDOW, "label2", 0);
             label3.Content = string.Format(
                              Resource.GetString(Resource.MAIN_WINDOW, "label3", 0), 0);
+            label4.Content = string.Format(
+                             Resource.GetString(Resource.MAIN_WINDOW, "label4", 0), 0);
 
             tooltips[0] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 1);
             tooltips[1] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 1);
@@ -218,6 +220,7 @@ namespace TFlex.PackageManager.UI
                 case WM_STOPPED_PROCESSING:
                     button2_2.IsEnabled = false;
                     menuItem2_2.IsEnabled = false;
+                    label4.Content = string.Format(Resource.GetString(Resource.MAIN_WINDOW, "label4", 0), tvControl2.CountFiles);
                     tvControl2.InitLayout();
                     break;
                 case WM_INCREMENT_PROGRESS:
@@ -264,7 +267,10 @@ namespace TFlex.PackageManager.UI
 
             menuItem2_2.IsEnabled = false;
             button2_2.IsEnabled = false;
-            
+            label4.Content = string.Format(
+                Resource.GetString(Resource.MAIN_WINDOW, "label4", 0), 
+                tvControl2.CountFiles);
+
             propertyGrid.PropertyValueChanged += PropertyGrid_PropertyValueChanged;
         }
 

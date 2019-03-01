@@ -431,7 +431,7 @@ namespace TFlex.PackageManager.Configuration
             base.OnChanged(index);
         }
 
-        internal override void Export(Document document, Page page, string path)
+        internal override bool Export(Document document, Page page, string path)
         {
             ExportToDWG export1;
             ExportToDXF export2;
@@ -442,19 +442,18 @@ namespace TFlex.PackageManager.Configuration
                 case 0:
                     export1 = new ExportToDWG(document);
                     ExportTo(export1, page);
-                    export1.Export(path);
-                    break;
+                    return export1.Export(path);
                 case 1:
                     export2 = new ExportToDXF(document);
                     ExportTo(export2, page);
-                    export2.Export(path);
-                    break;
+                    return export2.Export(path);
                 case 2:
                     export3 = new ExportToDXB(document);
                     ExportTo(export3, page);
-                    export3.Export(path);
-                    break;
+                    return export3.Export(path);
             }
+
+            return base.Export(document, page, path);
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)

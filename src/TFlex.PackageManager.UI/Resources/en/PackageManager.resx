@@ -132,6 +132,9 @@
   <data name="label3" xml:space="preserve">
     <value>Count of selected files: {0}</value>
   </data>
+  <data name="label4" xml:space="preserve">
+    <value>Count of exported files: {0}</value>
+  </data>
   <data name="menuItem1" xml:space="preserve">
     <value>File</value>
   </data>
