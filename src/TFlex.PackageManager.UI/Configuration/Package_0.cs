@@ -807,9 +807,18 @@ namespace TFlex.PackageManager.Configuration
         /// Processing file.
         /// </summary>
         /// <param name="path"></param>
-        internal void ProcessingFile(string path)
+        /// <param name="options"></param>
+        internal void ProcessingFile(string path, Common.Options options)
         {
             Document document = Application.OpenDocument(path, false);
+            options.AppendLine(string.Format("Open document:\t{0}", path));
+
+            if (document == null)
+            {
+                options.AppendLine("Processing failed: the document object has a null value.");
+                return;
+            }
+
             FileInfo fileInfo = new FileInfo(path);
             string directory = fileInfo.Directory.FullName.Replace(
                 header.InitialCatalog,
@@ -819,17 +828,19 @@ namespace TFlex.PackageManager.Configuration
                 : Directory.CreateDirectory(directory).FullName;
 
             document.BeginChanges(string.Format("Processing file: {0}", fileInfo.Name));
-            ProcessingPages(document, targetDirectory);
+            ProcessingPages(document, targetDirectory, options);
 
             if (document.Changed)
             {
                 document.EndChanges();
                 document.Save();
+                options.AppendLine("Document saved");
             }
             else
                 document.CancelChanges();
 
             document.Close();
+            options.AppendLine("Document closed");
 
             if (Directory.GetFiles(targetDirectory).Length == 0 &&
                 Directory.GetDirectories(targetDirectory).Length == 0)
@@ -978,7 +989,6 @@ namespace TFlex.PackageManager.Configuration
 
         private bool CheckPageType(Page page)
         {
-            bool result = false;
             uint[,] pt = new uint[,]
             {
                 {
@@ -1007,12 +1017,11 @@ namespace TFlex.PackageManager.Configuration
             {
                 if (pt[i, 0] > 0 && pt[i, 1] == (uint)page.PageType)
                 {
-                    result = true;
-                    break;
+                    return true;
                 }
             }
 
-            return result;
+            return false;
         }
 
         private List<Page> GetPagesOnType(Document document)
@@ -1027,27 +1036,31 @@ namespace TFlex.PackageManager.Configuration
             return pages;
         }
 
-        private void ProcessingPages(Document document, string targetDirectory)
+        private void ProcessingPages(Document document, string targetDirectory, Common.Options options)
         {
-            RegenerateOptions options;
-            int n1, n2, n3, count = 0;
-            uint num;
+            int count = 0;
+            uint flags;
             string path;
+            RegenerateOptions ro;
             IEnumerable<Page> pages = GetPagesOnType(document);
 
             foreach (var i in pages)
             {
-                n1 = pageNames.Contains(i.Name) ? 1 : 0;
-                n2 = excludePage ? 1 : 0;
-                n3 = CheckPageType(i) ? 1 : 0;
-                num = Convert.ToUInt32(Convert.ToUInt32(
-                    n1.ToString() +
-                    n2.ToString() +
-                    n3.ToString(), 2).ToString("X"), 16);
+                flags = 0x0000;
 
-                if (!(num == 1 || num == 5)) continue;
+                flags |= (uint)(pageNames.Contains(i.Name) ? 0x0001 : 0x0000);
+                flags |= (uint)(excludePage                ? 0x0002 : 0x0000);
+                flags |= (uint)(CheckPageType(i)           ? 0x0004 : 0x0000);
 
-                if (checkDrawingTemplate && !IsValidDrawingTemplate(document, i)) return;
+                if (flags == 0x0000 || flags == 0x0007)
+                    continue;
+
+                if (checkDrawingTemplate && !IsValidDrawingTemplate(document, i))
+                    continue;
+
+                options.AppendLine(string.Format("Page name:\t{0}", i.Name));
+                options.AppendLine(string.Format("Page type:\t{0}", i.PageType));
+                //Debug.WriteLine(string.Format("Page name: {0}, flags: {1:X4}", i.Name, flags));
 
                 if (i.Scale.Value != (double)pageScale && pageScale != 99999)
                 {
@@ -1055,15 +1068,18 @@ namespace TFlex.PackageManager.Configuration
 
                     if (savePageScale)
                     {
-                        options = new RegenerateOptions
+                        ro = new RegenerateOptions
                         {
                             Full = true
                         };
-                        document.Regenerate(options);
+                        document.Regenerate(ro);
                     }
                 }
 
-                if (enableProcessingOfProjections) ProcessingProjections(document, i.Name);
+                if (enableProcessingOfProjections)
+                {
+                    ProcessingProjections(document, i.Name, options);
+                }
 
                 path = targetDirectory + "\\" + GetOutputFileName(document, i);
 
@@ -1075,28 +1091,32 @@ namespace TFlex.PackageManager.Configuration
                 else
                     path += "." + outputExtension.ToLower();
 
-                Export(document, i, path);
+                if (Export(document, i, path))
+                {
+                    options.AppendLine(string.Format("Export to:\t{0}", path));
+                }
             }
         }
 
-        private void ProcessingProjections(Document document, string pageName)
+        private void ProcessingProjections(Document document, string pageName, Common.Options options)
         {
-            RegenerateOptions options;
-            int n1, n2, n3;
-            uint num;
+            uint flags;
             double scale;
+            RegenerateOptions ro;
 
             foreach (var i in document.GetProjections().Where(p => p.Page.Name == pageName))
             {
-                n1 = projectionNames.Contains(i.Name) ? 1 : 0;
-                n2 = excludeProjection ? 1 : 0;
-                n3 = enableProcessingOfProjections ? 1 : 0;
-                num = Convert.ToUInt32(Convert.ToUInt32(
-                    n1.ToString() +
-                    n2.ToString() +
-                    n3.ToString(), 2).ToString("X"), 16);
+                flags = 0x0000;
 
-                if (!(num == 1 || num == 5)) continue;
+                flags |= (uint)(projectionNames.Contains(i.Name) ? 0x0001 : 0x0000);
+                flags |= (uint)(excludeProjection                ? 0x0002 : 0x0000);
+                flags |= (uint)(enableProcessingOfProjections    ? 0x0004 : 0x0000);
+
+                if (flags == 0x0000 || flags == 0x0007)
+                    continue;
+
+                options.AppendLine(string.Format("Projection name:{0}", i.Name));
+                //Debug.WriteLine(string.Format("Projection name: {0}, flags: {1:X4}", i.Name, flags));
 
                 if (i.Scale.Value != (double)projectionScale)
                 {
@@ -1105,11 +1125,11 @@ namespace TFlex.PackageManager.Configuration
 
                     if (saveProjectionScale)
                     {
-                        options = new RegenerateOptions
+                        ro = new RegenerateOptions
                         {
                             Projections = true
                         };
-                        document.Regenerate(options);
+                        document.Regenerate(ro);
                     }
                 }
             }

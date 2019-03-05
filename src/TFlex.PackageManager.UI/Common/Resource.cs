@@ -28,6 +28,7 @@ namespace TFlex.PackageManager.Common
         public const string PACKAGE_9   = "Package9";
 
         public const string BASE_URI = @"pack://application:,,,/TFlex.PackageManager.UI;component/Resources/";
+        public const string LOG_FILE = "processing.log";
         #endregion
 
         #region properties

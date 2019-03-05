@@ -772,6 +772,12 @@ namespace TFlex.PackageManager.UI
             double increment = 0.0;
             var size = Marshal.SizeOf(count[0]) * count.Length;
             IntPtr value = Marshal.AllocHGlobal(size);
+            Stopwatch watch = new Stopwatch();
+
+            options.CreateLogFile(self.Configurations[key1].TargetDirectory);
+            options.AppendLine("Started processing");
+
+            watch.Start();
 
             foreach (var i in tvControl1.SelectedItems)
             {
@@ -796,16 +802,24 @@ namespace TFlex.PackageManager.UI
                     switch (self.Configurations[key1].Translators.ElementAt(j).Key)
                     {
                         case "Default":
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_0).ProcessingFile(path);
+                            options.AppendLine("\r\nTranslator:\tDefault");
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_0)
+                                .ProcessingFile(path, options);
                             break;
                         case "Acad":
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_1).ProcessingFile(path);
+                            options.AppendLine("\r\nTranslator:\tAcad");
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_1)
+                                .ProcessingFile(path, options);
                             break;
                         case "Bitmap":
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_3).ProcessingFile(path);
+                            options.AppendLine("\r\nTranslator:\tBitmap");
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_3)
+                                .ProcessingFile(path, options);
                             break;
                         case "Pdf":
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_9).ProcessingFile(path);
+                            options.AppendLine("\r\nTranslator:\tPdf");
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_9)
+                                .ProcessingFile(path, options);
                             break;
                     }
 
@@ -814,6 +828,12 @@ namespace TFlex.PackageManager.UI
                     WinAPI.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
                 }
             }
+
+            watch.Stop();
+
+            options.AppendLine(string.Format("\r\nProcessing time:{0} ms", watch.ElapsedMilliseconds));
+            options.SetContentsToLog();
+            options.OpenLogFile();
 
             count[0] = 100;
             Marshal.Copy(count, 0, value, count.Length);

@@ -127,6 +127,10 @@
     <value>Каталог конфигураций</value>
     <comment>Корневой каталог конфигураций.</comment>
   </data>
+  <data name="dn1_2" xml:space="preserve">
+    <value>Включить файл журнала</value>
+    <comment>Включить вывод данных процесса обработки в файл журнала.</comment>
+  </data>
   <data name="title" xml:space="preserve">
     <value>Опции</value>
   </data>

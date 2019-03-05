@@ -127,6 +127,10 @@
     <value>Konfigurationsverzeichnis</value>
     <comment>Root konfigurationsverzeichnis</comment>
   </data>
+  <data name="dn1_2" xml:space="preserve">
+    <value>Protokolldatei aktivieren</value>
+    <comment>Aktivieren sie die ausgabe der datenverarbeitung in der protokolldatei.</comment>
+  </data>
   <data name="title" xml:space="preserve">
     <value>Optionen</value>
   </data>
