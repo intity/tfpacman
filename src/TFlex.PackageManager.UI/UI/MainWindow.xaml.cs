@@ -16,6 +16,7 @@ using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid;
+using System.ComponentModel;
 
 namespace TFlex.PackageManager.UI
 {
@@ -253,9 +254,10 @@ namespace TFlex.PackageManager.UI
 
             if (comboBox1.Items.Count == 0 && self.Configurations.Count > 0)
             {
-                foreach (var i in self.Configurations.Keys)
+                for (int i = 0; i < self.Configurations.Count; i++)
                 {
-                    comboBox1.Items.Add(i);
+                    self.Configurations.ElementAt(i).Value.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
+                    comboBox1.Items.Add(self.Configurations.ElementAt(i).Key);
                 }
 
                 comboBox1.SelectedIndex = 0;
@@ -278,6 +280,51 @@ namespace TFlex.PackageManager.UI
         {
             QueryOnSaveChanges();
         }
+
+        private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "Acad":
+                    if ((sender as TranslatorTypes).Acad)
+                    {
+                        comboBox2.Items.Add(e.PropertyName);
+                        treeListView1.Columns.Add(column1_2);
+                        header1_2.Content = "DWG";
+                    }
+                    else
+                    {
+                        comboBox2.Items.Remove(e.PropertyName);
+                        treeListView1.Columns.Remove(column1_2);
+                    }
+                    break;
+                case "Bitmap":
+                    if ((sender as TranslatorTypes).Bitmap)
+                    {
+                        comboBox2.Items.Add(e.PropertyName);
+                        treeListView1.Columns.Add(column1_3);
+                        header1_3.Content = "BMP";
+                    }
+                    else
+                    {
+                        comboBox2.Items.Remove(e.PropertyName);
+                        treeListView1.Columns.Remove(column1_3);
+                    }
+                    break;
+                case "Pdf":
+                    if ((sender as TranslatorTypes).Pdf)
+                    {
+                        comboBox2.Items.Add(e.PropertyName);
+                        treeListView1.Columns.Add(column1_9);
+                    }
+                    else
+                    {
+                        comboBox2.Items.Remove(e.PropertyName);
+                        treeListView1.Columns.Remove(column1_9);
+                    }
+                    break;
+            }
+        } // update controls
         #endregion
 
         #region tree views
@@ -290,7 +337,7 @@ namespace TFlex.PackageManager.UI
             treeListView1.Columns[0].Width = a_width;
             header1_1.Width = a_width;
             tvControl1.Content = treeListView1;
-        }
+        } // resize column (0)
 
         private void TvControl1_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -408,10 +455,10 @@ namespace TFlex.PackageManager.UI
                 return;
 
             newKey = self.Configurations.Last().Key;
+            self.Configurations.Last().Value.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
             changedConfigurations.Add(newKey);
             comboBox1.Items.Add(newKey);
             comboBox1.SelectedItem = newKey;
-
         } // New configuration
 
         private void Event1_2_Click(object sender, RoutedEventArgs e)
@@ -512,19 +559,10 @@ namespace TFlex.PackageManager.UI
                 self.RenameConfiguration(key1, newKey);
                 comboBox1.SelectedItem = newKey;
             }
-            else if (self.Configurations[key1].Translators.Count > 0)
-            {
-                UpdateControls();
-            }
-            else if (comboBox2.Items.Count > 0)
-            {
-                for (int i = treeListView1.Columns.Count - 1; i > 0; i--)
-                    treeListView1.Columns.RemoveAt(i);
 
-                comboBox2.Items.Clear();
-            }
+            if (changedConfigurations.Contains(key1) == false)
+                changedConfigurations.Add(key1);
 
-            changedConfigurations.Add(key1);
             UpdateStateToControls();
         } // Properties (edit)
 
@@ -569,18 +607,50 @@ namespace TFlex.PackageManager.UI
             {
                 key1 = comboBox1.SelectedValue.ToString();
 
-                if (self.Configurations[key1].Translators.Count() == 0)
+                string[] items1 = comboBox2.Items.OfType<string>().ToArray();
+                string[] items2 = self.Configurations[key1].Translators.Keys.ToArray();
+
+                if (items2.Length > 0 && !Enumerable.SequenceEqual(items1, items2))
                 {
-                    propertyGrid.SelectedObject = null;
+                    comboBox2.Items.Clear();
+
+                    for (int j = treeListView1.Columns.Count - 1; j > 0; j--)
+                        treeListView1.Columns.RemoveAt(j);
+
+                    foreach (var i in self.Configurations[key1].Translators)
+                    {
+                        comboBox2.Items.Add(i.Key);
+
+                        switch (i.Key)
+                        {
+                            case "Acad":
+                                header1_2.Content = ((Package_1)self.Configurations[key1].Translators[i.Key]).OutputExtension;
+                                treeListView1.Columns.Add(column1_2);
+                                break;
+                            case "Bitmap":
+                                header1_3.Content = ((Package_3)self.Configurations[key1].Translators[i.Key]).OutputExtension;
+                                treeListView1.Columns.Add(column1_3);
+                                break;
+                            case "Pdf":
+                                treeListView1.Columns.Add(column1_9);
+                                break;
+                        }
+                    }
+
+                    comboBox2.SelectedIndex = 0;
                 }
 
-                UpdateControls();
+                tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
+                tvControl2.TargetDirectory = self.Configurations[key1].TargetDirectory;
+
                 UpdateStateToControls();
             }
             else
                 propertyGrid.SelectedObject = null;
 
-            //Debug.WriteLine(string.Format("ComboBox1_SelectionChanged: [{0}, {1}]", comboBox1.SelectedIndex, comboBox1.SelectedItem));
+            Debug.WriteLine(string.Format("ComboBox1_SelectionChanged: [{0}, {1}]", 
+                comboBox1.SelectedIndex, 
+                comboBox1.SelectedItem));
         } // configuration list
 
         private void ComboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -595,7 +665,9 @@ namespace TFlex.PackageManager.UI
                 propertyGrid.SelectedObject = null;
             }
 
-            //Debug.WriteLine(string.Format("ComboBox2_SelectionChanged: [{0}, {1}]", comboBox2.SelectedIndex, comboBox2.SelectedItem));
+            Debug.WriteLine(string.Format("ComboBox2_SelectionChanged: [{0}, {1}]", 
+                comboBox2.SelectedIndex, 
+                comboBox2.SelectedItem));
         } // translator collection
         #endregion
 
@@ -628,66 +700,6 @@ namespace TFlex.PackageManager.UI
                     UpdateStateToControls();
                 }
             }
-        }
-
-        private void UpdateControls()
-        {
-            Debug.WriteLine(string.Format("UpdateControls: {0}", self.Configurations[key1].InitialCatalog));
-
-            string[] items1 = comboBox2.Items.OfType<string>().ToArray();
-            string[] items2 = self.Configurations[key1].Translators.Keys.ToArray();
-
-            if (items1.Length > 0 && !Enumerable.SequenceEqual(items1, items2))
-            {
-                comboBox2.Items.Clear();
-
-                for (int i = treeListView1.Columns.Count - 1; i > 0; i--)
-                    treeListView1.Columns.RemoveAt(i);
-            }
-
-            foreach (var i in self.Configurations[key1].Translators.Keys)
-            {
-                switch (i)
-                {
-                    case "Default":
-                        if (comboBox2.Items.Contains(i) == false)
-                            comboBox2.Items.Add(i);
-                        break;
-                    case "Acad":
-                        header1_2.Content = ((Package_1)self.Configurations[key1].Translators[i]).OutputExtension;
-
-                        if (comboBox2.Items.Contains(i) == false)
-                            comboBox2.Items.Add(i);
-
-                        if (treeListView1.Columns.Contains(column1_2) == false)
-                            treeListView1.Columns.Add(column1_2);
-                        break;
-                    case "Bitmap":
-                        header1_3.Content = ((Package_3)self.Configurations[key1].Translators[i]).OutputExtension;
-
-                        if (comboBox2.Items.Contains(i) == false)
-                            comboBox2.Items.Add(i);
-
-                        if (treeListView1.Columns.Contains(column1_3) == false)
-                            treeListView1.Columns.Add(column1_3);
-                        break;
-                    case "Pdf":
-                        header1_9.Content = ((Package_9)self.Configurations[key1].Translators[i]).OutputExtension;
-
-                        if (comboBox2.Items.Contains(i) == false)
-                            comboBox2.Items.Add(i);
-
-                        if (treeListView1.Columns.Contains(column1_9) == false)
-                            treeListView1.Columns.Add(column1_9);
-                        break;
-                }
-            }
-
-            tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
-            tvControl2.TargetDirectory = self.Configurations[key1].TargetDirectory;
-
-            if (comboBox2.Items.Count > 0)
-                comboBox2.SelectedIndex = 0;
         }
 
         private void UpdateStateToControls()
