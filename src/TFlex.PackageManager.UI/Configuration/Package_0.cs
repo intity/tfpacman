@@ -415,7 +415,7 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region methods
+        #region internal methods
         /// <summary>
         /// Cloneable values this object on loaded.
         /// </summary>
@@ -579,26 +579,23 @@ namespace TFlex.PackageManager.Configuration
         /// Configuration task method.
         /// </summary>
         /// <param name="element"></param>
-        /// <param name="flag"></param>
+        /// <param name="flag">
+        /// Flag definition: (0) - read, (1) - write
+        /// </param>
         internal void ConfigurationTask(XElement element, int flag)
         {
-            if (flag != 2)
-            {
-                foreach (var i in element.Elements())
-                {
-                    PackageTask(i, flag);
-                }
+            if (flag > 0 && isChanged == false)
+                return;
 
-                isLoaded = true;
-                OnLoaded();
-
-                isChanged = false;
-            }
-            else
+            foreach (var i in element.Elements())
             {
-                element.Remove();
-                isLoaded = false;
+                PackageTask(i, flag);
             }
+
+            isLoaded = true;
+            OnLoaded();
+
+            isChanged = false;
         }
 
         /// <summary>
@@ -673,7 +670,7 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         /// <param name="element"></param>
         /// <param name="flag">
-        /// Flag definition: (0) - read, (1) - write, (2) - delete
+        /// Flag definition: (0) - read, (1) - write
         /// </param>
         internal virtual void PackageTask(XElement element, int flag)
         {

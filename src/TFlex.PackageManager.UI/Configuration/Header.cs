@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
+using System.IO;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -348,55 +348,46 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="element"></param>
         internal void SetPackages(XElement element)
         {
+            bool t_value = false;
             XElement parent = element.Element("packages");
+            List<XElement> elements = new List<XElement>();
 
-            foreach (XElement i in parent.Elements())
+            foreach (XElement e in parent.Elements())
             {
-                string value = i.Attribute("id").Value;
-                switch (value)
+                elements.Add(e);
+            }
+
+            foreach (XElement i in elements)
+            {
+                switch (i.Attribute("id").Value)
                 {
                     case "Default":
-                        if (translatorTypes.Default)
+                        if (t_value = translatorTypes.Default)
                         {
                             package_0.ConfigurationTask(i, 1);
                         }
-                        else if (package_0 != null)
-                        {
-                            package_0.ConfigurationTask(i, 2);
-                        }
                         break;
                     case "Acad":
-                        
-                        if (translatorTypes.Acad)
+                        if (t_value = translatorTypes.Acad)
                         {
                             package_1.ConfigurationTask(i, 1);
                         }
-                        else if (package_1 != null)
-                        {
-                            package_1.ConfigurationTask(i, 2);
-                        }
                         break;
                     case "Bitmap":
-                        if (translatorTypes.Bitmap)
+                        if (t_value = translatorTypes.Bitmap)
                         {
                             package_3.ConfigurationTask(i, 1);
                         }
-                        else if (package_3 != null)
-                        {
-                            package_3.ConfigurationTask(i, 2);
-                        }
                         break;
                     case "Pdf":
-                        if (translatorTypes.Pdf)
+                        if (t_value = translatorTypes.Pdf)
                         {
                             package_9.ConfigurationTask(i, 1);
                         }
-                        else if (package_9 != null)
-                        {
-                            package_9.ConfigurationTask(i, 2);
-                        }
                         break;
                 }
+
+                if (t_value == false) i.Remove();
             }
 
             foreach (var i in translators)
