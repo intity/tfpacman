@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -114,6 +115,7 @@ namespace TFlex.PackageManager.Controls
         }
         #endregion
 
+        #region public methods
         public void InitLayout()
         {
             if (targetDirectory == null || treeListView == null)
@@ -130,7 +132,9 @@ namespace TFlex.PackageManager.Controls
                 Debug.WriteLine("InitLayout");
             }
         }
+        #endregion
 
+        #region private methods
         private bool? [] DefaultValuesInit()
         {
             bool? [] value = new bool?[colCount];
@@ -147,9 +151,44 @@ namespace TFlex.PackageManager.Controls
                 return;
 
             treeListView = Content as TreeListView;
+            treeListView.Columns.CollectionChanged += Columns_CollectionChanged;
             colCount = treeListView.Columns.Count;
 
             InitLayout();
+        }
+
+        private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action != NotifyCollectionChangedAction.Remove)
+                return;
+
+            colCount = treeListView.Columns.Count;
+            int?[] indexes = new int?[selectedItems.Count];
+
+            for (int i = 0; i < selectedItems.Count; i++)
+            {
+                bool?[] value = new bool?[colCount];
+
+                for (int j = 0; j < selectedItems.ElementAt(i).Value.Count(); j++)
+                {
+                    if (e.OldStartingIndex != j && selectedItems.ElementAt(i).Value[j] == true)
+                    {
+                        value[j] = selectedItems.ElementAt(i).Value[j];
+                        indexes[i] = i;
+                    }
+                }
+
+                selectedItems[selectedItems.ElementAt(i).Key] = value;
+            }
+
+            for (int i = 0; i < indexes.Length; i++)
+            {
+                if (indexes[i] == null)
+                {
+                    string key = selectedItems.ElementAt(i).Key;
+                    selectedItems.Remove(key);
+                }
+            }
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
@@ -469,6 +508,7 @@ namespace TFlex.PackageManager.Controls
                 item.ImageSource = imageSourceList[imageIndex];
             }
         }
+        #endregion
 
         protected void OnPropertyChanged(string name)
         {
