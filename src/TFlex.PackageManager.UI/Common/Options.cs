@@ -28,11 +28,9 @@ namespace TFlex.PackageManager.Common
         public Options()
         {
             OptionsTask(0);
-
-            if (targetDirectory == null)
-                targetDirectory = Resource.UserDirectory;
-
-            contents = new List<string>();
+            
+            contents        = new List<string>();
+            targetDirectory = Resource.UserDirectory;
         }
 
         #region properties
@@ -51,6 +49,7 @@ namespace TFlex.PackageManager.Common
                 if (targetDirectory != value)
                 {
                     targetDirectory = value;
+                    OptionsTask(1);
                 }
             }
         }
@@ -70,6 +69,7 @@ namespace TFlex.PackageManager.Common
                 if (enableLogFile != value)
                 {
                     enableLogFile = value;
+                    OptionsTask(1);
                 }
             }
         }

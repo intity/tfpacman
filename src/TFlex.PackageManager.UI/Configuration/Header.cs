@@ -150,6 +150,11 @@ namespace TFlex.PackageManager.Configuration
         /// Old configuration name.
         /// </summary>
         internal string OldName { get; set; }
+
+        /// <summary>
+        /// Configurations directory.
+        /// </summary>
+        internal string UserDirectory { get; set; }
         #endregion
 
         #region properties
@@ -159,6 +164,7 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(1)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_1")]
         [CustomDescription(Resource.HEADER_UI, "dn1_1")]
+        [ReadOnly(true)]
         public string ConfigurationName
         {
             get { return configurationName; }
@@ -432,7 +438,7 @@ namespace TFlex.PackageManager.Configuration
                 new XDeclaration("1.0", "utf-8", null),
                 new XElement("configuration", 
                     new XElement("header",
-                    new XElement("parameter",
+                        new XElement("parameter",
                             new XAttribute("name", "ConfigurationName"),
                             new XAttribute("value", configurationName)),
                         new XElement("parameter",
@@ -447,7 +453,7 @@ namespace TFlex.PackageManager.Configuration
                         new XElement("parameter",
                             new XAttribute("name", "TranslatorTypes"),
                             new XAttribute("value", translatorTypes.ToString()))),
-                    new XElement("packages", package_0.NewPackage(PackageType.Default))));
+                    new XElement("packages")));
 
             return document;
         }
@@ -460,7 +466,7 @@ namespace TFlex.PackageManager.Configuration
         /// </param>
         internal void ConfigurationTask(int flag)
         {
-            string path = Resource.UserDirectory + "\\" + configurationName + ".config";
+            string path = UserDirectory + "\\" + configurationName + ".config";
 
             if (flag != 2)
             {
@@ -586,7 +592,7 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(0)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_0")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_0")]
-        [DefaultValue(false), Browsable(false)]
+        [DefaultValue(true), Browsable(false)]
         public bool Default
         {
             get { return document; }

@@ -117,15 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="button1" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="button2" xml:space="preserve">
-    <value>Stornieren</value>
-  </data>
   <data name="dn1_1" xml:space="preserve">
     <value>Konfigurationsname</value>
-    <comment>Ein eindeutiger Konfigurationsname.</comment>
+    <comment>Der name der konfigurationsdatei.</comment>
   </data>
   <data name="dn1_2" xml:space="preserve">
     <value>Anfangskatalog</value>
@@ -190,17 +184,5 @@
   <data name="dn1_5_9" xml:space="preserve">
     <value>Pdf</value>
     <comment>Export in datei format PDF</comment>
-  </data>
-  <data name="message1" xml:space="preserve">
-    <value>Eine konfiguration mit dem namen {0} ist bereits vorhanden.</value>
-  </data>
-  <data name="message2" xml:space="preserve">
-    <value>Der konfigurations name darf keine zeichen enthalten: {0}</value>
-  </data>
-  <data name="title1" xml:space="preserve">
-    <value>Neue konfiguration</value>
-  </data>
-  <data name="title2" xml:space="preserve">
-    <value>Konfigurationseigenschaften</value>
   </data>
 </root>

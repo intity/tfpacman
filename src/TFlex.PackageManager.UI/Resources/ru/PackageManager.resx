@@ -164,7 +164,7 @@
   </data>
   <data name="menuItem1_7" xml:space="preserve">
     <value>Свойства</value>
-    <comment>Свойства текущей конфигурации</comment>
+    <comment>Свойства конфигурации</comment>
   </data>
   <data name="menuItem1_8" xml:space="preserve">
     <value>Выход</value>

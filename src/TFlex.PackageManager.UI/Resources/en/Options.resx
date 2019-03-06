@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="button1" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="button2" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
   <data name="dn1_1" xml:space="preserve">
     <value>Configuration directory</value>
     <comment>Root configuration directory.</comment>
@@ -130,8 +124,5 @@
   <data name="dn1_2" xml:space="preserve">
     <value>Enable Log file</value>
     <comment>Enable the output of data processing in the log file.</comment>
-  </data>
-  <data name="title" xml:space="preserve">
-    <value>Options</value>
   </data>
 </root>

@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="button1" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="button2" xml:space="preserve">
-    <value>Отмена</value>
-  </data>
   <data name="dn1_1" xml:space="preserve">
     <value>Каталог конфигураций</value>
     <comment>Корневой каталог конфигураций.</comment>
@@ -130,8 +124,5 @@
   <data name="dn1_2" xml:space="preserve">
     <value>Включить файл журнала</value>
     <comment>Включить вывод данных процесса обработки в файл журнала.</comment>
-  </data>
-  <data name="title" xml:space="preserve">
-    <value>Опции</value>
   </data>
 </root>

@@ -46,9 +46,9 @@ namespace TFlex.PackageManager.UI
 
         private Common.Options options;
         private AboutUs aboutUs;
-        private CommonOpenFileDialog ofd;
 
         private string[] messages = new string[5];
+        private string[] controls = new string[12];
         private string[] tooltips = new string[10];
 
         private string key1, key2;
@@ -147,8 +147,8 @@ namespace TFlex.PackageManager.UI
             tvControl2.SearchPattern = "*.dwg|*.dxf|*.dxb|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.pdf";
             tvControl2.SizeChanged += TvControl2_SizeChanged;
 
-            self = new PackageCollection();
             options = new Common.Options();
+            self = new PackageCollection(options);
             changedConfigurations = new List<string>();
             #endregion
 
@@ -166,33 +166,46 @@ namespace TFlex.PackageManager.UI
             label4.Content = string.Format(
                              Resource.GetString(Resource.MAIN_WINDOW, "label4", 0), 0);
 
-            tooltips[0] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 1);
-            tooltips[1] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 1);
-            tooltips[2] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 1);
-            tooltips[3] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 1);
-            tooltips[4] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 1);
-            tooltips[5] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 1);
-            tooltips[6] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 1);
-            tooltips[7] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 1);
-            tooltips[8] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 1);
-            tooltips[9] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1);
+            controls[00] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 0);
+            controls[01] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 0);
+            controls[02] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 0);
+            controls[03] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 0);
+            controls[04] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 0);
+            controls[05] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 0);
+            controls[06] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 0);
+            controls[07] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_8", 0);
+            controls[08] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 0);
+            controls[09] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 0);
+            controls[10] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 0);
+            controls[11] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0);
+
+            tooltips[00] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 1);
+            tooltips[01] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 1);
+            tooltips[02] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 1);
+            tooltips[03] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 1);
+            tooltips[04] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 1);
+            tooltips[05] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 1);
+            tooltips[06] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 1);
+            tooltips[07] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 1);
+            tooltips[08] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 1);
+            tooltips[09] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1);
 
             menuItem1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1", 0);
             menuItem2.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2", 0);
             menuItem3.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3", 0);
 
-            menuItem1_1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 0);
-            menuItem1_2.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 0);
-            menuItem1_3.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 0);
-            menuItem1_4.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 0);
-            menuItem1_5.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 0);
-            menuItem1_6.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 0);
-            menuItem1_7.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 0);
-            menuItem1_8.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_8", 0);
-            menuItem2_1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 0);
-            menuItem2_2.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 0);
-            menuItem3_1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 0);
-            menuItem4_1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0);
+            menuItem1_1.Header = controls[0];
+            menuItem1_2.Header = controls[1];
+            menuItem1_3.Header = controls[2];
+            menuItem1_4.Header = controls[3];
+            menuItem1_5.Header = controls[4];
+            menuItem1_6.Header = controls[5];
+            menuItem1_7.Header = controls[6];
+            menuItem1_8.Header = controls[7];
+            menuItem2_1.Header = controls[8];
+            menuItem2_2.Header = controls[9];
+            menuItem3_1.Header = controls[10];
+            menuItem4_1.Header = controls[11];
 
             button1_1.ToolTip = tooltips[0];
             button1_2.ToolTip = tooltips[1];
@@ -448,17 +461,45 @@ namespace TFlex.PackageManager.UI
         #region menubar & toolbar events
         private void Event1_1_Click(object sender, RoutedEventArgs e)
         {
-            string newKey = null;
-            HeaderUI headerUI = new HeaderUI(null, self) { Owner = this };
+            CommonSaveFileDialog sfd = new CommonSaveFileDialog
+            {
+                Title = controls[0],
+                InitialDirectory = self.TargetDirectory,
+                DefaultFileName = "configuration_" + self.Configurations.Count.ToString(),
+                DefaultExtension = "config"
+            };
 
-            if (headerUI.ShowDialog() == false)
+            if (sfd.ShowDialog() == CommonFileDialogResult.Cancel)
                 return;
 
-            newKey = self.Configurations.Last().Key;
-            self.Configurations.Last().Value.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
-            changedConfigurations.Add(newKey);
+            string newKey = Path.GetFileNameWithoutExtension(sfd.FileName);
+            var directory = sfd.FileName.Replace("\\" + newKey + ".config", "");
+
+            if (directory != self.TargetDirectory)
+            {
+                if (QueryOnSaveChanges())
+                {
+                    self.TargetDirectory = directory;
+                    comboBox1.Items.Clear();
+                }
+                else
+                    return;
+            }
+
+            Header header = new Header()
+            {
+                UserDirectory = directory,
+                ConfigurationName = newKey
+            };
+
+            header.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
+            self.Configurations.Add(newKey, header);
+            self.Configurations[newKey].ConfigurationTask(1);
+
             comboBox1.Items.Add(newKey);
             comboBox1.SelectedItem = newKey;
+
+            sfd.Dispose();
         } // New configuration
 
         private void Event1_2_Click(object sender, RoutedEventArgs e)
@@ -468,7 +509,7 @@ namespace TFlex.PackageManager.UI
 
         private void Event1_3_Click(object sender, RoutedEventArgs e)
         {
-            ofd = new CommonOpenFileDialog
+            CommonOpenFileDialog ofd = new CommonOpenFileDialog
             {
                 Title = tooltips[2],
                 Multiselect = false,
@@ -476,32 +517,31 @@ namespace TFlex.PackageManager.UI
                 InitialDirectory = self.TargetDirectory
             };
 
-            if (ofd.ShowDialog() == CommonFileDialogResult.Ok &&
-                ofd.FileName != self.TargetDirectory)
+            if (ofd.ShowDialog() == CommonFileDialogResult.Cancel)
+                return;
+
+            if (ofd.FileName != self.TargetDirectory)
             {
-                QueryOnSaveChanges();
-
-                if (comboBox1.Items.Count > 0)
+                if (QueryOnSaveChanges())
                 {
+                    self.TargetDirectory = ofd.FileName;
                     comboBox1.Items.Clear();
-                    self.Configurations.Clear();
                 }
-
-                self.TargetDirectory = ofd.FileName;
-                self.GetConfigurations();
-
-                if (self.Configurations.Count > 0)
-                {
-                    foreach (var i in self.Configurations.Keys)
-                    {
-                        comboBox1.Items.Add(i);
-                    }
-
-                    comboBox1.SelectedIndex = 0;
-                }
-
-                //Debug.WriteLine(string.Format("TargetDirectory: {0}", self.TargetDirectory));
+                else
+                    return;
             }
+
+            if (self.Configurations.Count > 0)
+            {
+                foreach (var i in self.Configurations.Keys)
+                {
+                    comboBox1.Items.Add(i);
+                }
+
+                comboBox1.SelectedIndex = 0;
+            }
+            
+            ofd.Dispose();
         } // Open target directory
 
         private void Event1_4_Click(object sender, RoutedEventArgs e)
@@ -510,7 +550,6 @@ namespace TFlex.PackageManager.UI
 
             if (self.Configurations[key1].IsLoaded)
             {
-                self.RemoveOldConfiguration(key1);
                 changedConfigurations.Remove(key1);
                 UpdateStateToControls();
             }
@@ -534,37 +573,22 @@ namespace TFlex.PackageManager.UI
             if (result == MessageBoxResult.OK)
             {
                 self.Configurations[key1].ConfigurationTask(2);
-
-                if (true)
-                {
-                    self.Configurations.Remove(key1);
-                    changedConfigurations.Remove(key1);
-                    comboBox1.Items.Remove(key1);
-                    comboBox1.SelectedIndex = (comboBox1.Items.Count - 1);
-                }
+                self.Configurations.Remove(key1);
+                changedConfigurations.Remove(key1);
+                comboBox1.Items.Remove(key1);
+                comboBox1.SelectedIndex = (comboBox1.Items.Count - 1);
             }
         } // Delete configuration
 
         private void Event1_7_Click(object sender, RoutedEventArgs e)
         {
-            string newKey = null;
-            HeaderUI headerUI = new HeaderUI(key1, self) { Owner = this };
-
-            if (headerUI.ShowDialog() == false)
-                return;
-
-            if (key1 != (newKey = self.Configurations[key1].ConfigurationName))
+            PropertiesUI headerUI = new PropertiesUI(self.Configurations[key1])
             {
-                comboBox1.Items[comboBox1.SelectedIndex] = newKey;
-                self.RenameConfiguration(key1, newKey);
-                comboBox1.SelectedItem = newKey;
-            }
-
-            if (changedConfigurations.Contains(key1) == false)
-                changedConfigurations.Add(key1);
-
-            UpdateStateToControls();
-        } // Properties (edit)
+                Title = tooltips[6],
+                Owner = this
+            };
+            headerUI.ShowDialog();
+        } // Header properties
 
         private void Event1_8_Click(object sender, RoutedEventArgs e)
         {
@@ -588,7 +612,11 @@ namespace TFlex.PackageManager.UI
 
         private void Event3_1_Click(object sender, RoutedEventArgs e)
         {
-            OptionsUI optionsUI = new OptionsUI(options) { Owner = this };
+            PropertiesUI optionsUI = new PropertiesUI(options)
+            {
+                Title = controls[10],
+                Owner = this
+            };
             optionsUI.ShowDialog();
         } // Options
 
@@ -683,23 +711,29 @@ namespace TFlex.PackageManager.UI
         #endregion
 
         #region helper methods
-        private void QueryOnSaveChanges()
+        private bool QueryOnSaveChanges()
         {
             if (changedConfigurations.Count > 0)
             {
                 MessageBoxResult result = MessageBox.Show(
                     messages[1],
                     "T-FLEX Package Manager",
-                    MessageBoxButton.YesNo,
+                    MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Question);
 
-                if (result == MessageBoxResult.Yes)
+                switch (result)
                 {
-                    self.SetConfigurations();
-                    changedConfigurations.Clear();
-                    UpdateStateToControls();
+                    case MessageBoxResult.Yes:
+                        self.SetConfigurations();
+                        changedConfigurations.Clear();
+                        UpdateStateToControls();
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return false;
                 }
             }
+
+            return true;
         }
 
         private void UpdateStateToControls()

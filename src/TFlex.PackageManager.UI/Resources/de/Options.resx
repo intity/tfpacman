@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="button1" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="button2" xml:space="preserve">
-    <value>Stornieren</value>
-  </data>
   <data name="dn1_1" xml:space="preserve">
     <value>Konfigurationsverzeichnis</value>
     <comment>Root konfigurationsverzeichnis</comment>
@@ -130,8 +124,5 @@
   <data name="dn1_2" xml:space="preserve">
     <value>Protokolldatei aktivieren</value>
     <comment>Aktivieren sie die ausgabe der datenverarbeitung in der protokolldatei.</comment>
-  </data>
-  <data name="title" xml:space="preserve">
-    <value>Optionen</value>
   </data>
 </root>

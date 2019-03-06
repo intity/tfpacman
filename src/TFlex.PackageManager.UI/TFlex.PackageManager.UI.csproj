@@ -153,11 +153,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UI\OptionsUI.xaml.cs">
-      <DependentUpon>OptionsUI.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\HeaderUI.xaml.cs">
-      <DependentUpon>HeaderUI.xaml</DependentUpon>
+    <Compile Include="UI\PropertiesUI.xaml.cs">
+      <DependentUpon>PropertiesUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\AboutUs.xaml.cs">
       <DependentUpon>AboutUs.xaml</DependentUpon>
@@ -221,11 +218,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\OptionsUI.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\HeaderUI.xaml">
+    <Page Include="UI\PropertiesUI.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -311,8 +304,6 @@
     <Resource Include="Resources\save.ico" />
     <Resource Include="Resources\options.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Export\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

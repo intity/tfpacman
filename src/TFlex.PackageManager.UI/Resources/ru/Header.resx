@@ -117,15 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="button1" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="button2" xml:space="preserve">
-    <value>Отмена</value>
-  </data>
   <data name="dn1_1" xml:space="preserve">
     <value>Имя конфигурации</value>
-    <comment>Уникальное имя конфигурации.</comment>
+    <comment>Наименование файла конфигурации.</comment>
   </data>
   <data name="dn1_2" xml:space="preserve">
     <value>Каталог ввода</value>
@@ -169,9 +163,11 @@
   </data>
   <data name="dn1_5_4" xml:space="preserve">
     <value>Bmf</value>
+    <comment>Экспорт в формат файлов BMF</comment>
   </data>
   <data name="dn1_5_5" xml:space="preserve">
     <value>Emf</value>
+    <comment>Экспорт в формат файлов EMF</comment>
   </data>
   <data name="dn1_5_6" xml:space="preserve">
     <value>Iges</value>
@@ -188,17 +184,5 @@
   <data name="dn1_5_9" xml:space="preserve">
     <value>Pdf</value>
     <comment>Экспорт в формат файлов PDF</comment>
-  </data>
-  <data name="message1" xml:space="preserve">
-    <value>Конфигурация с именем {0} уже существует.</value>
-  </data>
-  <data name="message2" xml:space="preserve">
-    <value>Имя конфигурации не должно содержать символы: {0}</value>
-  </data>
-  <data name="title1" xml:space="preserve">
-    <value>Новая конфигурация</value>
-  </data>
-  <data name="title2" xml:space="preserve">
-    <value>Свойства конфигурации</value>
   </data>
 </root>
