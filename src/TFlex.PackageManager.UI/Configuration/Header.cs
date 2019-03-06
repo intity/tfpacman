@@ -15,7 +15,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The Configuration Header class.
     /// </summary>
-    public class Header
+    public class Header : INotifyPropertyChanged
     {
         #region private fields
         private Package_0 package_0;
@@ -50,6 +50,8 @@ namespace TFlex.PackageManager.Configuration
             loadedTranslators = new List<string>();
             isCreated = true;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void Package_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -315,6 +317,7 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
 
+            OnPropertyChanged("IsChanged");
             //Debug.WriteLine(string.Format("OnChanged: [{0}, {1}]", index, isChanged));
         }
 
@@ -566,6 +569,11 @@ namespace TFlex.PackageManager.Configuration
             element.Attribute("value").Value = value;
         }
         #endregion
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 
     /// <summary>

@@ -269,6 +269,7 @@ namespace TFlex.PackageManager.UI
             {
                 for (int i = 0; i < self.Configurations.Count; i++)
                 {
+                    self.Configurations.ElementAt(i).Value.PropertyChanged += Header_PropertyChanged;
                     self.Configurations.ElementAt(i).Value.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
                     comboBox1.Items.Add(self.Configurations.ElementAt(i).Key);
                 }
@@ -292,6 +293,14 @@ namespace TFlex.PackageManager.UI
         private void Window_Closed(object sender, EventArgs e)
         {
             QueryOnSaveChanges();
+        }
+
+        private void Header_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsChanged")
+            {
+                UpdateStateToControls();
+            }
         }
 
         private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
