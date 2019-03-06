@@ -586,7 +586,7 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(0)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_0")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_0")]
-        [DefaultValue(false)]
+        [DefaultValue(false), Browsable(false)]
         public bool Default
         {
             get { return document; }
