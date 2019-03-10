@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -24,7 +25,7 @@ namespace TFlex.PackageManager.Configuration
     [CustomCategoryOrder(Resource.PACKAGE_0, 1)]
     [CustomCategoryOrder(Resource.PACKAGE_0, 2)]
     [CustomCategoryOrder(Resource.PACKAGE_0, 3)]
-    public class Package_0 : INotifyPropertyChanged
+    public class Package_0 : INotifyPropertyChanged, INotifyDataErrorInfo
     {
         #region private fields
         private Header header;
@@ -50,13 +51,24 @@ namespace TFlex.PackageManager.Configuration
         private readonly bool[] pg_types    = new bool[5];
         private readonly bool[] b_values    = new bool[7];
         private readonly string[] s_values  = new string[4];
-        private readonly decimal[] m_values = new decimal[2]; 
+        private readonly decimal[] m_values = new decimal[2];
+        
+        private readonly Dictionary<string, List<string>> objErrors;
+        private readonly string[] error_messages;
         private bool isLoaded, isChanged;
         #endregion
 
         public Package_0(Header header)
         {
             this.header      = header;
+            objErrors        = new Dictionary<string, List<string>>();
+            error_messages   = new string[]
+            {
+                Resource.GetString(Resource.PACKAGE_0, "message1", 0),
+                Resource.GetString(Resource.PACKAGE_0, "message2", 0),
+                Resource.GetString(Resource.PACKAGE_0, "message3", 0)
+            };
+
             outputExtension  = string.Empty;
             pageNames        = new string[] { };
             pageScale        = 99999;
@@ -70,24 +82,32 @@ namespace TFlex.PackageManager.Configuration
             useDocumentNamed = true;
         }
 
+        #region event handlers
         private void PageTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnChanged(5);
         }
+        #endregion
 
         #region internal properties
         /// <summary>
         /// The package is changed.
         /// </summary>
-        internal virtual bool IsChanged { get { return (isChanged); } }
+        internal virtual bool IsChanged
+        {
+            get { return (isChanged); }
+        }
 
         /// <summary>
         /// The package is loaded.
         /// </summary>
-        internal bool IsLoaded  { get { return (isLoaded); } }
+        internal bool IsLoaded
+        {
+            get { return (isLoaded); }
+        }
         #endregion
 
-        #region properties
+        #region public properties
         /// <summary>
         /// The output file extension.
         /// </summary>
@@ -134,7 +154,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_0, "category1")]
         [CustomDisplayName(Resource.PACKAGE_0, "dn1_2")]
         [CustomDescription(Resource.PACKAGE_0, "dn1_2")]
-        [DefaultValue(false)]
         public bool ExcludePage
         {
             get { return excludePage; }
@@ -156,7 +175,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_0, "dn1_3")]
         [CustomDescription(Resource.PACKAGE_0, "dn1_3")]
         [Editor(typeof(InputScaleControl), typeof(UITypeEditor))]
-        [DefaultValue(typeof(decimal), "99999")]
         public decimal PageScale
         {
             get { return pageScale; }
@@ -177,7 +195,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_0, "category1")]
         [CustomDisplayName(Resource.PACKAGE_0, "dn1_4")]
         [CustomDescription(Resource.PACKAGE_0, "dn1_4")]
-        [DefaultValue(false)]
         public bool SavePageScale
         {
             get { return savePageScale; }
@@ -212,7 +229,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_0, "category1")]
         [CustomDisplayName(Resource.PACKAGE_0, "dn1_6")]
         [CustomDescription(Resource.PACKAGE_0, "dn1_6")]
-        [DefaultValue(false)]
         public bool CheckDrawingTemplate
         {
             get { return checkDrawingTemplate; }
@@ -255,7 +271,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_0, "category2")]
         [CustomDisplayName(Resource.PACKAGE_0, "dn2_2")]
         [CustomDescription(Resource.PACKAGE_0, "dn2_2")]
-        [DefaultValue(false)]
         public bool ExcludeProjection
         {
             get { return excludeProjection; }
@@ -277,7 +292,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_0, "dn2_3")]
         [CustomDescription(Resource.PACKAGE_0, "dn2_3")]
         [Editor(typeof(InputScaleControl), typeof(UITypeEditor))]
-        [DefaultValue(typeof(decimal), "99999")]
         public decimal ProjectionScale
         {
             get { return projectionScale; }
@@ -298,7 +312,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_0, "category2")]
         [CustomDisplayName(Resource.PACKAGE_0, "dn2_4")]
         [CustomDescription(Resource.PACKAGE_0, "dn2_4")]
-        [DefaultValue(false)]
         public bool SaveProjectionScale
         {
             get { return saveProjectionScale; }
@@ -319,7 +332,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_0, "category2")]
         [CustomDisplayName(Resource.PACKAGE_0, "dn2_5")]
         [CustomDescription(Resource.PACKAGE_0, "dn2_5")]
-        [DefaultValue(false)]
         public bool EnableProcessingOfProjections
         {
             get { return enableProcessingOfProjections; }
@@ -348,6 +360,18 @@ namespace TFlex.PackageManager.Configuration
                 if (subDirectoryName != value)
                 {
                     subDirectoryName = value;
+                    char[] pattern   = Path.GetInvalidPathChars();
+                    string error     = string.Format(error_messages[0], pattern.ToString(""));
+
+                    if (IsPathValid(value, pattern))
+                    {
+                        RemoveError("SubDirectoryName", error);
+                    }
+                    else
+                    {
+                        AddError("SubDirectoryName", error);
+                    }
+
                     OnChanged(12);
                 }
             }
@@ -368,6 +392,18 @@ namespace TFlex.PackageManager.Configuration
                 if (fileNameSuffix != value)
                 {
                     fileNameSuffix = value;
+                    char[] pattern = Path.GetInvalidFileNameChars();
+                    string error = string.Format(error_messages[0], pattern.ToString(""));
+
+                    if (IsPathValid(value, pattern))
+                    {
+                        RemoveError("FileNameSuffix", error);
+                    }
+                    else
+                    {
+                        AddError("FileNameSuffix", error);
+                    }
+
                     OnChanged(13);
                 }
             }
@@ -388,6 +424,24 @@ namespace TFlex.PackageManager.Configuration
                 if (templateFileName != value)
                 {
                     templateFileName = value;
+                    string path      = value;
+                    char[] pattern   = Path.GetInvalidFileNameChars();
+                    string error     = string.Format(error_messages[0], pattern.ToString(""));
+
+                    foreach (Match i in Regex.Matches(value, @"\{(.*?)\}"))
+                    {
+                        path = path.Replace(i.Value, "");
+                    }
+
+                    if (IsPathValid(path, pattern))
+                    {
+                        RemoveError("TemplateFileName", error);
+                    }
+                    else
+                    {
+                        AddError("TemplateFileName", error);
+                    }
+
                     OnChanged(14);
                 }
             }
@@ -400,7 +454,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_0, "category3")]
         [CustomDisplayName(Resource.PACKAGE_0, "dn3_4")]
         [CustomDescription(Resource.PACKAGE_0, "dn3_4")]
-        [DefaultValue(true)]
         public bool UseDocumentNamed
         {
             get { return useDocumentNamed; }
@@ -447,6 +500,8 @@ namespace TFlex.PackageManager.Configuration
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
+
+            isLoaded = true;
         }
 
         /// <summary>
@@ -571,7 +626,7 @@ namespace TFlex.PackageManager.Configuration
                     break;
                 }
             }
-            
+
             OnPropertyChanged("IsChanged");
         }
 
@@ -584,15 +639,13 @@ namespace TFlex.PackageManager.Configuration
         /// </param>
         internal void ConfigurationTask(XElement element, int flag)
         {
-            if (flag > 0 && isChanged == false)
-                return;
+            isLoaded = false;
 
             foreach (var i in element.Elements())
             {
                 PackageTask(i, flag);
             }
 
-            isLoaded = true;
             OnLoaded();
 
             isChanged = false;
@@ -663,6 +716,7 @@ namespace TFlex.PackageManager.Configuration
         internal virtual void AppendPackageToXml(XElement parent, PackageType package)
         {
             parent.Add(NewPackage(package));
+            OnLoaded();
         }
 
         /// <summary>
@@ -846,6 +900,11 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region private methods
+        /// <summary>
+        /// Extension method to split expression on tokens.
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns>Returns expression tokens.</returns>
         private string[] Groups(string expression)
         {
             string pattern = @"\((.*?)\)";
@@ -859,6 +918,13 @@ namespace TFlex.PackageManager.Configuration
             return groups;
         }
 
+        /// <summary>
+        /// Extension method to parse expression tokens.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="page"></param>
+        /// <param name="expression"></param>
+        /// <returns>Returns variable value from document.</returns>
         private string GetValue(Document document, Page page, string expression)
         {
             string result = null;
@@ -870,7 +936,8 @@ namespace TFlex.PackageManager.Configuration
             {
                 if (expression.Contains("page.type"))
                 {
-                    if ((argv = groups[1].Split(',')).Length < 2) return result;
+                    if ((argv = groups[1].Split(',')).Length < 2)
+                        return result;
 
                     switch (argv[0])
                     {
@@ -916,12 +983,19 @@ namespace TFlex.PackageManager.Configuration
             return result;
         }
 
-        private string ExpressionParse(Document document, Page page, string expression)
+        /// <summary>
+        /// Parse expression.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="page"></param>
+        /// <param name="expression"></param>
+        /// <returns>Returns variable value from document.</returns>
+        private string ParseExpression(Document document, Page page, string expression)
         {
-            string result = null;
-            string pattern = @"(?:\?\?)";
+            string result   = null;
+            string pattern  = @"(?:\?\?)";
             string[] tokens = new string[] { "??" };
-            string[] group = expression.Split(tokens, StringSplitOptions.None).ToArray();
+            string[] group  = expression.Split(tokens, StringSplitOptions.None).ToArray();
             MatchCollection matches = Regex.Matches(expression, pattern);
 
             if (group.Length > 1)
@@ -949,6 +1023,12 @@ namespace TFlex.PackageManager.Configuration
             return result = result ?? string.Empty;
         }
 
+        /// <summary>
+        /// Get output file name.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="page"></param>
+        /// <returns>Returns output file name.</returns>
         private string GetOutputFileName(Document document, Page page)
         {
             string fileName, expVal, pattern = @"\{(.*?)\}";
@@ -959,13 +1039,13 @@ namespace TFlex.PackageManager.Configuration
             {
                 fileName = Path.GetFileNameWithoutExtension(document.FileName);
                 if (fileNameSuffix.Length > 0)
-                    fileName += ExpressionParse(document, page, fileNameSuffix);
+                    fileName += ParseExpression(document, page, fileNameSuffix);
                 return fileName;
             }
 
             foreach (Match i in Regex.Matches(fileName, pattern))
             {
-                if ((expVal = ExpressionParse(document, page, i.Groups[1].Value)) == null)
+                if ((expVal = ParseExpression(document, page, i.Groups[1].Value)) == null)
                     continue;
 
                 fileName = fileName.Replace(i.Groups[0].Value, expVal);
@@ -974,7 +1054,27 @@ namespace TFlex.PackageManager.Configuration
             return fileName;
         }
 
-        private bool IsValidDrawingTemplate(Document document, Page page)
+        /// <summary>
+        /// Validating the path name.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
+        private bool IsPathValid(string path, char[] pattern)
+        {
+            if (path.Length > 0 && path.IndexOfAny(pattern) >= 0)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// The Drawing Template exists.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        private bool DrawingTemplateExists(Document document, Page page)
         {
             if (document.GetFragments().Where(
                 f => f.GroupType == ObjectType.Fragment && f.Page == page &&
@@ -984,7 +1084,12 @@ namespace TFlex.PackageManager.Configuration
             return false;
         }
 
-        private bool CheckPageType(Page page)
+        /// <summary>
+        /// The Page type exists.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        private bool PageTypeExists(Page page)
         {
             uint[,] pt = new uint[,]
             {
@@ -1021,18 +1126,29 @@ namespace TFlex.PackageManager.Configuration
             return false;
         }
 
+        /// <summary>
+        /// Get pages on type.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
         private List<Page> GetPagesOnType(Document document)
         {
             List<Page> pages = new List<Page>();
 
             foreach (var i in document.GetPages())
             {
-                if (CheckPageType(i) && (pageNames.Count() > 0 ? pageNames.Contains(i.Name) : true))
+                if (PageTypeExists(i) && (pageNames.Count() > 0 ? pageNames.Contains(i.Name) : true))
                     pages.Add(i);
             }
             return pages;
         }
 
+        /// <summary>
+        /// Extension method to processing pages.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="targetDirectory"></param>
+        /// <param name="options"></param>
         private void ProcessingPages(Document document, string targetDirectory, Common.Options options)
         {
             int count = 0;
@@ -1047,12 +1163,12 @@ namespace TFlex.PackageManager.Configuration
 
                 flags |= (uint)(pageNames.Contains(i.Name) ? 0x0001 : 0x0000);
                 flags |= (uint)(excludePage                ? 0x0002 : 0x0000);
-                flags |= (uint)(CheckPageType(i)           ? 0x0004 : 0x0000);
+                flags |= (uint)(PageTypeExists(i)          ? 0x0004 : 0x0000);
 
                 if (flags == 0x0000 || flags == 0x0007)
                     continue;
 
-                if (checkDrawingTemplate && !IsValidDrawingTemplate(document, i))
+                if (checkDrawingTemplate && !DrawingTemplateExists(document, i))
                     continue;
 
                 options.AppendLine(string.Format("Page name:\t{0}", i.Name));
@@ -1095,6 +1211,12 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
+        /// <summary>
+        /// Extension method to processing projections.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="pageName"></param>
+        /// <param name="options"></param>
         private void ProcessingProjections(Document document, string pageName, Common.Options options)
         {
             uint flags;
@@ -1133,12 +1255,98 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region events
+        #region INotifyPropertyChanged members
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// The OpPropertyChanged event handler.
+        /// </summary>
+        /// <param name="name">Property name.</param>
         protected void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+        #endregion
+
+        #region INotifyDataErrorInfo members
+        /// <summary>
+        /// Occurs when the validation errors have changed for a property or for the entire entity.
+        /// </summary>
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        /// <summary>
+        /// The RaiseErrorChanged event handler.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        protected void RaiseErrorChanged(string name)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(name));
+        }
+
+        /// <summary>
+        /// Gets a value that indicates whether the entity has validation errors.
+        /// </summary>
+        [Browsable(false)]
+        public bool HasErrors
+        {
+            get { return (objErrors.Count > 0); }
+        }
+
+        /// <summary>
+        /// Gets the validation errors for a specified property or for the entire entity.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <returns>The validation errors for the property or entity.</returns>
+        public IEnumerable GetErrors(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return objErrors.Values;
+
+            objErrors.TryGetValue(name, out List<string> errors);
+            return errors;
+        }
+
+        /// <summary>
+        /// Add error to dictionary.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <param name="error">Error message.</param>
+        internal void AddError(string name, string error)
+        {
+            if (objErrors.TryGetValue(name, out List<string> errors) == false)
+            {
+                errors = new List<string>();
+                objErrors.Add(name, errors);
+            }
+
+            if (errors.Contains(error) == false)
+            {
+                errors.Add(error);
+            }
+
+            RaiseErrorChanged(name);
+        }
+
+        /// <summary>
+        /// Remove error from dictionary.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <param name="error">Error message.</param>
+        internal void RemoveError(string name, string error)
+        {
+            if (objErrors.TryGetValue(name, out List<string> errors))
+            {
+                errors.Remove(error);
+            }
+
+            if (errors.Count == 0)
+            {
+                objErrors.Remove(name);
+                RaiseErrorChanged(name);
+            }
         }
         #endregion
     }
@@ -1258,7 +1466,7 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region events
+        #region INotifyPropertyChanged members
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)

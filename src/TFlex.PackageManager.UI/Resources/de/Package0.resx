@@ -212,4 +212,13 @@
     <value>Dokument name verwenden</value>
     <comment>Ermitteln sie den namen der ausgabedatei anhand des namens des quell dokuments.</comment>
   </data>
+  <data name="message1" xml:space="preserve">
+    <value>Der name des unterverzeichnisses darf keine zeichen enthalten: {0}</value>
+  </data>
+  <data name="message2" xml:space="preserve">
+    <value>Das dateinamen suffix darf keine zeichen enthalten: {0}</value>
+  </data>
+  <data name="message3" xml:space="preserve">
+    <value>Text, der sich außerhalb der markierungen der vorlage befindet, darf keine zeichen enthalten: {0}</value>
+  </data>
 </root>

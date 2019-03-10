@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="header1_1" xml:space="preserve">
+  <data name="header1_0" xml:space="preserve">
     <value>Файлы документов</value>
   </data>
-  <data name="header2_1" xml:space="preserve">
+  <data name="header2_0" xml:space="preserve">
     <value>Файлы вывода</value>
   </data>
   <data name="label1" xml:space="preserve">
@@ -196,14 +196,5 @@
   </data>
   <data name="message2" xml:space="preserve">
     <value>Имеются конфигурации, которые не сохранены. Вы хотите сохранить их?</value>
-  </data>
-  <data name="message3" xml:space="preserve">
-    <value>Имя подкаталога не должно содержать символы: {0}</value>
-  </data>
-  <data name="message4" xml:space="preserve">
-    <value>Суффикс имени файла не должно содержать символы: {0}</value>
-  </data>
-  <data name="message5" xml:space="preserve">
-    <value>Текст расположенный вне маркеров шаблона не должен содержать символы: {0}</value>
   </data>
 </root>

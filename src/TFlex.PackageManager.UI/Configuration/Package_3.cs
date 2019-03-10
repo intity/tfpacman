@@ -66,7 +66,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_3, "dn3_1")]
         [CustomDescription(Resource.PACKAGE_3, "dn3_1")]
         [ItemsSource(typeof(ExtensionItems2))]
-        [DefaultValue(0)]
         public int Extension
         {
             get { return extension; }
@@ -94,7 +93,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_3, "category4")]
         [CustomDisplayName(Resource.PACKAGE_3, "dn4_1")]
         [CustomDescription(Resource.PACKAGE_3, "dn4_1")]
-        [DefaultValue(false)]
         public bool ScreenLayers
         {
             get { return screenLayers; }
@@ -116,7 +114,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_3, "category4")]
         [CustomDisplayName(Resource.PACKAGE_3, "dn4_2")]
         [CustomDescription(Resource.PACKAGE_3, "dn4_2")]
-        [DefaultValue(false)]
         public bool Constructions
         {
             get { return constructions; }

@@ -1,4 +1,8 @@
 ﻿using System.IO;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
 using TFlex.PackageManager.Common;
 
 namespace TFlex.PackageManager.Configuration
@@ -29,13 +33,16 @@ namespace TFlex.PackageManager.Configuration
     {
         #region private fields
         private ObservableDictionary<string, Header> configurations;
+        private List<string> changedCofigurations;
         private string targetDirectory;
         #endregion
 
         public PackageCollection(Common.Options options)
         {
-            configurations  = new ObservableDictionary<string, Header>();
-            targetDirectory = options.TargetDirectory;
+            configurations       = new ObservableDictionary<string, Header>();
+            configurations.CollectionChanged += Configurations_CollectionChanged;
+            targetDirectory      = options.TargetDirectory;
+            changedCofigurations = new List<string>();
 
             GetConfigurations();
         }
@@ -66,9 +73,17 @@ namespace TFlex.PackageManager.Configuration
         {
             get { return (configurations); }
         }
-        #endregion        
 
-        #region methods
+        /// <summary>
+        /// Has changes configurations.
+        /// </summary>
+        internal bool HasChanged
+        {
+            get { return (changedCofigurations.Count > 0); }
+        }
+        #endregion
+
+        #region internal methods
         /// <summary>
         /// Load all configurations from xml files.
         /// </summary>
@@ -100,6 +115,48 @@ namespace TFlex.PackageManager.Configuration
             foreach (var i in configurations)
             {
                 i.Value.ConfigurationTask(1);
+            }
+
+            changedCofigurations.Clear();
+        }
+        #endregion
+
+        #region private methods
+        private void Configurations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            Header header;
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    header = ((KeyValuePair<string, Header>)e.NewItems[0]).Value as Header;
+                    header.PropertyChanged += Header_PropertyChanged;
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    header = ((KeyValuePair<string, Header>)e.OldItems[0]).Value as Header;
+                    changedCofigurations.Remove(header.ConfigurationName);
+                    break;
+            }
+        }
+
+        private void Header_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is Header header)
+            {
+                if (header.IsChanged && !header.IsInvalid)
+                {
+                    if (changedCofigurations.Contains(header.ConfigurationName) == false)
+                        changedCofigurations.Add(header.ConfigurationName);
+                }
+                else
+                {
+                    changedCofigurations.Remove(header.ConfigurationName);
+                }
+
+                //Debug.WriteLine(string.Format("Header_PropertyChanged [name: {0}, value: {1}, total changes: {2}]", 
+                //    header.ConfigurationName, 
+                //    header.IsChanged, 
+                //    changedCofigurations.Count));
             }
         }
         #endregion

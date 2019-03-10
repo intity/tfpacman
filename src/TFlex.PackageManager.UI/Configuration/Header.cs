@@ -30,10 +30,10 @@ namespace TFlex.PackageManager.Configuration
         private string inputExtension;
         private TranslatorTypes translatorTypes;
 
-        private readonly byte[] objState = new byte[6];
+        private readonly byte[] objState   = new byte[6];
         private readonly string[] s_values = new string[4];
-        private readonly bool[] tr_types = new bool[12];
-        private bool isCreated, isChanged, isLoaded;
+        private readonly bool[] tr_types   = new bool[12];
+        private bool isLoaded, isChanged, isInvalid;
         #endregion
 
         public Header()
@@ -48,26 +48,22 @@ namespace TFlex.PackageManager.Configuration
             translatorTypes.Default = true;
 
             loadedTranslators = new List<string>();
-            isCreated = true;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void Package_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender.Equals(package_0) ? package_0.IsChanged :
-                sender.Equals(package_1) ? package_1.IsChanged :
-                sender.Equals(package_3) ? package_3.IsChanged : package_9.IsChanged)
-                objState[5] = 1;
-            else
-                objState[5] = 0;
-
+            objState[5] = (byte)((sender as Package_0).IsChanged ? 1 : 0);
             OnChanged(5);
+        }
+
+        private void Package_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        {
+            isInvalid = (sender as Package_0).HasErrors;
         }
 
         private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Debug.WriteLine(string.Format("Translator: {0}", e.PropertyName));
+            //Debug.WriteLine(string.Format("Translator: {0}", e.PropertyName));
 
             switch (e.PropertyName)
             {
@@ -76,6 +72,7 @@ namespace TFlex.PackageManager.Configuration
                     {
                         package_0 = new Package_0(this);
                         package_0.PropertyChanged += Package_PropertyChanged;
+                        package_0.ErrorsChanged   += Package_ErrorsChanged;
                         translators.Add(e.PropertyName, package_0);
                     }
                     else
@@ -88,6 +85,7 @@ namespace TFlex.PackageManager.Configuration
                     {
                         package_1 = new Package_1(this);
                         package_1.PropertyChanged += Package_PropertyChanged;
+                        package_1.ErrorsChanged   += Package_ErrorsChanged;
                         translators.Add(e.PropertyName, package_1);
                     }
                     else
@@ -100,6 +98,7 @@ namespace TFlex.PackageManager.Configuration
                     {
                         package_3 = new Package_3(this);
                         package_3.PropertyChanged += Package_PropertyChanged;
+                        package_3.ErrorsChanged   += Package_ErrorsChanged;
                         translators.Add(e.PropertyName, package_3);
                     }
                     else
@@ -112,6 +111,7 @@ namespace TFlex.PackageManager.Configuration
                     {
                         package_9 = new Package_9(this);
                         package_9.PropertyChanged += Package_PropertyChanged;
+                        package_9.ErrorsChanged   += Package_ErrorsChanged;
                         translators.Add(e.PropertyName, package_9);
                     }
                     else
@@ -134,11 +134,6 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// The configuration is created.
-        /// </summary>
-        internal bool IsCreated { get { return (isCreated); } }
-
-        /// <summary>
         /// The configuration is changed.
         /// </summary>
         internal bool IsChanged { get { return (isChanged); } }
@@ -149,9 +144,9 @@ namespace TFlex.PackageManager.Configuration
         internal bool IsLoaded { get { return (isLoaded); } }
 
         /// <summary>
-        /// Old configuration name.
+        /// Validating this configuration properties.
         /// </summary>
-        internal string OldName { get; set; }
+        internal bool IsInvalid { get { return (isInvalid); } }
 
         /// <summary>
         /// Configurations directory.
@@ -227,7 +222,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.HEADER_UI, "dn1_4")]
         [CustomDescription(Resource.HEADER_UI, "dn1_4")]
         [ItemsSource(typeof(InputExtensionItems))]
-        [DefaultValue("*.grb")]
         public string InputExtension
         {
             get { return inputExtension; }
@@ -253,6 +247,9 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region methods
+        /// <summary>
+        /// Cloneable values this object on loaded.
+        /// </summary>
         private void OnLoaded()
         {
             s_values[00] = configurationName;
@@ -275,9 +272,11 @@ namespace TFlex.PackageManager.Configuration
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
+
+            isLoaded = true;
         }
 
-        private void OnChanged(int index)
+        private void OnChanged(int index = -1)
         {
             if (!isLoaded) return;
 
@@ -318,7 +317,6 @@ namespace TFlex.PackageManager.Configuration
             }
 
             OnPropertyChanged("IsChanged");
-            //Debug.WriteLine(string.Format("OnChanged: [{0}, {1}]", index, isChanged));
         }
 
         /// <summary>
@@ -497,17 +495,16 @@ namespace TFlex.PackageManager.Configuration
                     element.Save(path);
                 }
 
-                isLoaded = true;
                 OnLoaded();
-
-                isCreated = false;
-                isChanged = false;
+                OnChanged();
             }
             else
             {
                 File.Delete(path);
                 isLoaded = false;
             }
+
+            //Debug.WriteLine(string.Format("ConfigurationTask [flag: {0}, path: {1}]", flag, path));
         }
 
         /// <summary>
@@ -570,10 +567,21 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
+        #region INotifyPropertyChanged members
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// The OpPropertyChanged event handler.
+        /// </summary>
+        /// <param name="name">Property name.</param>
         protected void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+        #endregion
     }
 
     /// <summary>
@@ -600,7 +608,7 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(0)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_0")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_0")]
-        [DefaultValue(true), Browsable(false)]
+        [Browsable(false)]
         public bool Default
         {
             get { return document; }
@@ -617,7 +625,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(1)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_1")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_1")]
-        [DefaultValue(false)]
         public bool Acad
         {
             get { return acad; }
@@ -635,7 +642,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(2)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_2")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_2")]
-        [DefaultValue(false)]
         public bool Acis
         {
             get { return acis; }
@@ -652,7 +658,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(3)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_3")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_3")]
-        [DefaultValue(false)]
         public bool Bitmap
         {
             get { return bitmap; }
@@ -670,7 +675,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(4)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_4")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_4")]
-        [DefaultValue(false)]
         public bool Bmf
         {
             get { return bmf; }
@@ -688,7 +692,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(5)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_5")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_5")]
-        [DefaultValue(false)]
         public bool Emf
         {
             get { return emf; }
@@ -706,7 +709,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(6)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_6")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_6")]
-        [DefaultValue(false)]
         public bool Iges
         {
             get { return iges; }
@@ -724,7 +726,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(7)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_7")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_7")]
-        [DefaultValue(false)]
         public bool Jt
         {
             get { return jt; }
@@ -742,7 +743,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(8)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_8")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_8")]
-        [DefaultValue(false)]
         public bool Parasolid
         {
             get { return parasolid; }
@@ -759,7 +759,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(9)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_9")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_9")]
-        [DefaultValue(false)]
         public bool Pdf
         {
             get { return pdf; }
@@ -777,7 +776,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(10)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_10")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_10")]
-        [DefaultValue(false)]
         public bool Step
         {
             get { return step; }
@@ -795,7 +793,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(11)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_11")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_11")]
-        [DefaultValue(false)]
         public bool Stl
         {
             get { return stl; }
@@ -832,9 +829,16 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region events
+        #region INotifyPropertyChanged members
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// The OpPropertyChanged event handler.
+        /// </summary>
+        /// <param name="name">Property name.</param>
         protected void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

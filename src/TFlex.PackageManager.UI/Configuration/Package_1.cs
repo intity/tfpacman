@@ -71,7 +71,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_1, "dn3_1")]
         [CustomDescription(Resource.PACKAGE_1, "dn3_1")]
         [ItemsSource(typeof(ExtensionItems0))]
-        [DefaultValue(0)]
         public int Extension
         {
             get
@@ -109,7 +108,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_1, "dn3_2")]
         [CustomDescription(Resource.PACKAGE_1, "dn3_2")]
         [ItemsSource(typeof(AutocadExportFileVersionItems))]
-        [DefaultValue(3)]
         public int AutocadExportFileVersion
         {
             get { return autocadExportFileVersion; }
@@ -133,7 +131,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_1, "dn4_1")]
         [CustomDescription(Resource.PACKAGE_1, "dn4_1")]
         [ItemsSource(typeof(ConvertAreasItems))]
-        [DefaultValue(0)]
         public int ConvertAreas
         {
             get { return convertAreas; }
@@ -157,7 +154,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_1, "dn4_2")]
         [CustomDescription(Resource.PACKAGE_1, "dn4_2")]
         [ItemsSource(typeof(ConvertToLinesItems))]
-        [DefaultValue(1)]
         public int ConvertToLines
         {
             get { return convertToLines; }
@@ -182,7 +178,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_1, "dn4_3")]
         [CustomDescription(Resource.PACKAGE_1, "dn4_3")]
         [ItemsSource(typeof(ConvertDimensionsItems))]
-        [DefaultValue(0)]
         public int ConvertDimensions
         {
             get { return convertDimensions; }
@@ -206,7 +201,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_1, "dn4_4")]
         [CustomDescription(Resource.PACKAGE_1, "dn4_4")]
         [ItemsSource(typeof(ConvertLineTextItems))]
-        [DefaultValue(0)]
         public int ConvertLineText
         {
             get { return convertLineText; }
@@ -231,7 +225,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_1, "dn4_5")]
         [CustomDescription(Resource.PACKAGE_1, "dn4_5")]
         [ItemsSource(typeof(ConvertMultitextItems))]
-        [DefaultValue(0)]
         public int ConvertMultitext
         {
             get { return convertMultitext; }
@@ -255,7 +248,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_1, "dn4_6")]
         [CustomDescription(Resource.PACKAGE_1, "dn4_6")]
         [ItemsSource(typeof(BiarcInterpolationForSplinesItems))]
-        [DefaultValue(0)]
         public int BiarcInterpolationForSplines
         {
             get { return biarcInterpolationForSplines; }
@@ -277,7 +269,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.PACKAGE_1, "dn4_7")]
         [CustomDescription(Resource.PACKAGE_1, "dn4_7")]
         [Editor(typeof(BiarcInterpolationControl), typeof(UITypeEditor))]
-        [DefaultValue(typeof(decimal), "0.1")]
         public decimal BiarcInterpolationAccuracyForSplines
         {
             get { return biarcInterpolationAccuracyForSplines; }

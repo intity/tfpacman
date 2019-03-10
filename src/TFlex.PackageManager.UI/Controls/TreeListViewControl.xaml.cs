@@ -129,7 +129,7 @@ namespace TFlex.PackageManager.Controls
                 GetDirectories();
                 GetFiles();
 
-                Debug.WriteLine("InitLayout");
+                //Debug.WriteLine("InitLayout");
             }
         }
         #endregion
@@ -145,7 +145,7 @@ namespace TFlex.PackageManager.Controls
 
         private void TreeListViewControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("TreeListViewControl_Loaded");
+            //Debug.WriteLine("TreeListViewControl_Loaded");
 
             if (Content == null)
                 return;

@@ -12,6 +12,7 @@
         Icon="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/package_manager.ico" 
         Loaded="Window_Loaded" 
         Closed="Window_Closed" 
+        Closing="Window_Closing"
         ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>

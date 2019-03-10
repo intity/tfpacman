@@ -47,7 +47,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_9, "category4")]
         [CustomDisplayName(Resource.PACKAGE_9, "dn4_1")]
         [CustomDescription(Resource.PACKAGE_9, "dn4_1")]
-        [DefaultValue(false)]
         public bool Export3dModel
         {
             get { return export3dModel; }
@@ -68,7 +67,6 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.PACKAGE_9, "category4")]
         [CustomDisplayName(Resource.PACKAGE_9, "dn4_2")]
         [CustomDescription(Resource.PACKAGE_9, "dn4_2")]
-        [DefaultValue(false)]
         public bool Layers
         {
             get { return layers; }
@@ -97,7 +95,6 @@ namespace TFlex.PackageManager.Configuration
 
         internal override void OnChanged(int index)
         {
-            bool result = false;
             if (!IsLoaded) return;
 
             switch (index)
@@ -116,16 +113,17 @@ namespace TFlex.PackageManager.Configuration
                     break;
             }
 
+            isChanged = false;
+
             foreach (var i in objState)
             {
                 if (i > 0)
                 {
-                    result = true;
+                    isChanged = true;
                     break;
                 }
             }
 
-            isChanged = result;
             base.OnChanged(index);
         }
 

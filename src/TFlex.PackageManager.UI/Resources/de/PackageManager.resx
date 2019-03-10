@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="header1_1" xml:space="preserve">
+  <data name="header1_0" xml:space="preserve">
     <value>Eingabedateien</value>
   </data>
-  <data name="header2_1" xml:space="preserve">
+  <data name="header2_0" xml:space="preserve">
     <value>Ausgabedateien</value>
   </data>
   <data name="label1" xml:space="preserve">
@@ -196,14 +196,5 @@
   </data>
   <data name="message2" xml:space="preserve">
     <value>Es gibt Konfigurationen, die nicht gespeichert werden. Möchten Sie sie retten?</value>
-  </data>
-  <data name="message3" xml:space="preserve">
-    <value>Der name des unterverzeichnisses darf keine zeichen enthalten: {0}</value>
-  </data>
-  <data name="message4" xml:space="preserve">
-    <value>Das dateinamen suffix darf keine zeichen enthalten: {0}</value>
-  </data>
-  <data name="message5" xml:space="preserve">
-    <value>Text, der sich außerhalb der markierungen der vorlage befindet, darf keine zeichen enthalten: {0}</value>
   </data>
 </root>

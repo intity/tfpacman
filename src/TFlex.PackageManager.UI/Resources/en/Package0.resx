@@ -212,4 +212,13 @@
     <value>Use file document name</value>
     <comment>Used the document name for output file definition.</comment>
   </data>
+  <data name="message1" xml:space="preserve">
+    <value>Subdirectory name must not contain characters: {0}</value>
+  </data>
+  <data name="message2" xml:space="preserve">
+    <value>The file name suffix must not contain characters: {0}</value>
+  </data>
+  <data name="message3" xml:space="preserve">
+    <value>Text located outside the markers of the template should not contain characters: {0}</value>
+  </data>
 </root>
