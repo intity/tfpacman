@@ -445,18 +445,21 @@ namespace TFlex.PackageManager.UI
                     return;
             }
 
+            key1 = newKey;
+
             Header header = new Header()
             {
                 UserDirectory = directory,
-                ConfigurationName = newKey
+                ConfigurationName = key1
             };
 
+            header.PropertyChanged += Header_PropertyChanged;
             header.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
-            self.Configurations.Add(newKey, header);
-            self.Configurations[newKey].ConfigurationTask(1);
+            self.Configurations.Add(key1, header);
+            self.Configurations[key1].ConfigurationTask(1);
 
-            comboBox1.Items.Add(newKey);
-            comboBox1.SelectedItem = newKey;
+            comboBox1.Items.Add(key1);
+            comboBox1.SelectedIndex = comboBox1.Items.Count -1;
 
             sfd.Dispose();
         } // New configuration
@@ -622,13 +625,12 @@ namespace TFlex.PackageManager.UI
                     comboBox2.SelectedIndex = 0;
                 }
 
-                tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
-                tvControl2.TargetDirectory = self.Configurations[key1].TargetDirectory;
-
                 UpdateStateToControls();
             }
             else
-                propertyGrid.SelectedObject = null;
+            {
+                comboBox2.Items.Clear();
+            }
 
             //Debug.WriteLine(string.Format("ComboBox1_SelectionChanged: [index: {0}, value: {1}]",
             //    comboBox1.SelectedIndex,
@@ -708,6 +710,8 @@ namespace TFlex.PackageManager.UI
                 button1_7.IsEnabled = false;
                 button2_1.IsEnabled = false;
 
+                tvControl1.TargetDirectory = string.Empty;
+                tvControl2.TargetDirectory = string.Empty;
                 return;
             }
             else
@@ -719,6 +723,9 @@ namespace TFlex.PackageManager.UI
                 button1_3.IsEnabled = true;
                 button1_6.IsEnabled = true;
                 button1_7.IsEnabled = true;
+
+                tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
+                tvControl2.TargetDirectory = self.Configurations[key1].TargetDirectory;
             }
 
             if (self.Configurations[key1].IsChanged && 

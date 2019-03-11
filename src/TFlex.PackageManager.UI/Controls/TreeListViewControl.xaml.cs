@@ -128,11 +128,11 @@ namespace TFlex.PackageManager.Controls
             {
                 GetDirectories();
                 GetFiles();
-
-                //Debug.WriteLine("InitLayout");
             }
             else
                 countFiles = 0;
+
+            //Debug.WriteLine("InitLayout");
         }
         #endregion
 
