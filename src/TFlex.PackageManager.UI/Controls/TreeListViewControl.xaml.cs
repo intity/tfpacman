@@ -131,6 +131,8 @@ namespace TFlex.PackageManager.Controls
 
                 //Debug.WriteLine("InitLayout");
             }
+            else
+                countFiles = 0;
         }
         #endregion
 

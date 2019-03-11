@@ -46,7 +46,7 @@ namespace TFlex.PackageManager.UI
         private Common.Options options;
         private AboutUs aboutUs;
 
-        private string[] s_labels = new string[4];
+        private string[] s_labels = new string[5];
         private string[] messages = new string[2];
         private string[] controls = new string[12];
         private string[] tooltips = new string[10];
@@ -155,13 +155,15 @@ namespace TFlex.PackageManager.UI
 
             s_labels[0] = Resource.GetString(Resource.MAIN_WINDOW, "label1", 0);
             s_labels[1] = Resource.GetString(Resource.MAIN_WINDOW, "label2", 0);
-            s_labels[2] = Resource.GetString(Resource.MAIN_WINDOW, "label3", 0);
-            s_labels[3] = Resource.GetString(Resource.MAIN_WINDOW, "label4", 0);
+            s_labels[2] = Resource.GetString(Resource.MAIN_WINDOW, "label3", 1);
+            s_labels[3] = Resource.GetString(Resource.MAIN_WINDOW, "label4", 1);
+            s_labels[4] = Resource.GetString(Resource.MAIN_WINDOW, "label5", 1);
 
             label1.Content = s_labels[0];
             label2.Content = s_labels[1];
-            label3.Content = string.Format(s_labels[2], 0);
-            label4.Content = string.Format(s_labels[3], 0);
+            label3.ToolTip = string.Format(s_labels[2], 0);
+            label4.ToolTip = string.Format(s_labels[3], 0);
+            label5.ToolTip = string.Format(s_labels[4], 0);
 
             controls[00] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 0);
             controls[01] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 0);
@@ -280,10 +282,7 @@ namespace TFlex.PackageManager.UI
 
             menuItem2_2.IsEnabled = false;
             button2_2.IsEnabled = false;
-            label4.Content = string.Format(
-                Resource.GetString(Resource.MAIN_WINDOW, "label4", 0), 
-                tvControl2.CountFiles);
-
+            
             propertyGrid.PropertyValueChanged += Translator_PropertyValueChanged;
         }
 
@@ -655,7 +654,6 @@ namespace TFlex.PackageManager.UI
         #region statusbar
         private void SelectedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            label3.Content = string.Format(s_labels[2], tvControl1.SelectedItems.Count());
             UpdateStateToControls();
         }
         #endregion
@@ -757,6 +755,10 @@ namespace TFlex.PackageManager.UI
                 menuItem2_1.IsEnabled = false;
                 button2_1.IsEnabled = false;
             }
+
+            label3.Content = string.Format("Iq {0}", tvControl1.CountFiles);
+            label4.Content = string.Format("Oq {0}", tvControl2.CountFiles);
+            label5.Content = string.Format("Sq {0}", tvControl1.SelectedItems.Count);
         }
 
         /// <summary>

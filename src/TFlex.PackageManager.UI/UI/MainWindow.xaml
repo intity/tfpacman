@@ -201,12 +201,6 @@
         <StatusBar Name="statusBar" 
                    DockPanel.Dock="Bottom" 
                    VerticalAlignment="Bottom">
-            <StatusBarItem Width="200">
-                <Label Name="label3" 
-                   Content="Count of selected files: 0"
-                   Padding="4,0,0,0" 
-                   VerticalAlignment="Center"/>
-            </StatusBarItem>
             <StatusBarItem>
                 <ProgressBar Name="progressBar" 
                              Width="200" 
@@ -217,10 +211,28 @@
                 </ProgressBar>
             </StatusBarItem>
             <StatusBarItem>
+                <Label Name="label3" 
+                       Content="Iq 0" 
+                       ToolTip="Count of input files"
+                       Padding="4,0,0,0" 
+                       VerticalAlignment="Center" 
+                       Width="50"/>
+            </StatusBarItem>
+            <StatusBarItem>
                 <Label Name="label4" 
-                   Content="Count of exported files: 0"
-                   Padding="4,0,0,0" 
-                   VerticalAlignment="Center"/>
+                       Content="Oq 0" 
+                       ToolTip="Count of exported files"
+                       Padding="4,0,0,0" 
+                       VerticalAlignment="Center" 
+                       Width="50"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <Label Name="label5" 
+                       Content="Sq 0" 
+                       ToolTip="Count of selected files"
+                       Padding="4,0,0,0" 
+                       VerticalAlignment="Center" 
+                       Width="50"/>
             </StatusBarItem>
         </StatusBar>
 

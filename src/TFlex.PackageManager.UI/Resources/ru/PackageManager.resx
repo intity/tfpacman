@@ -130,10 +130,16 @@
     <value>Транслятор:</value>
   </data>
   <data name="label3" xml:space="preserve">
-    <value>Кол-во выбранных файлов: {0}</value>
+    <value>Iq {0}</value>
+    <comment>Кол-во файлов документов</comment>
   </data>
   <data name="label4" xml:space="preserve">
-    <value>Кол-во экспортированных файлов: {0}</value>
+    <value>Oq {0}</value>
+    <comment>Кол-во экспортированных файлов</comment>
+  </data>
+  <data name="label5" xml:space="preserve">
+    <value>Sq {0}</value>
+    <comment>Кол-во выбранных файлов</comment>
   </data>
   <data name="menuItem1" xml:space="preserve">
     <value>Файл</value>
