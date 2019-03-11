@@ -166,6 +166,7 @@ namespace TFlex.PackageManager.Controls
 
             colCount = treeListView.Columns.Count;
             int?[] indexes = new int?[selectedItems.Count];
+            string[] keys  = selectedItems.Keys.ToArray();
 
             for (int i = 0; i < selectedItems.Count; i++)
             {
@@ -175,7 +176,7 @@ namespace TFlex.PackageManager.Controls
                 {
                     if (e.OldStartingIndex != j && selectedItems.ElementAt(i).Value[j] == true)
                     {
-                        value[j] = selectedItems.ElementAt(i).Value[j];
+                        value[j] = true;
                         indexes[i] = i;
                     }
                 }
@@ -187,8 +188,7 @@ namespace TFlex.PackageManager.Controls
             {
                 if (indexes[i] == null)
                 {
-                    string key = selectedItems.ElementAt(i).Key;
-                    selectedItems.Remove(key);
+                    selectedItems.Remove(keys[i]);
                 }
             }
         }

@@ -595,7 +595,9 @@ namespace TFlex.PackageManager.UI
                     comboBox2.Items.Clear();
 
                     for (int j = treeListView1.Columns.Count - 1; j > 0; j--)
+                    {
                         treeListView1.Columns.RemoveAt(j);
+                    }
 
                     foreach (var i in self.Configurations[key1].Translators)
                     {
