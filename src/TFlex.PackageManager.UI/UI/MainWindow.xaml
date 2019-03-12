@@ -25,6 +25,7 @@
         <BitmapImage x:Key="icon_1_7" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/property.ico"/>
         <BitmapImage x:Key="icon_2_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/start.ico"/>
         <BitmapImage x:Key="icon_2_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/stop.ico"/>
+        <BitmapImage x:Key="icon_2_3" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/clear_target_directory.ico"/>
         <BitmapImage x:Key="icon_3_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/options.ico"/>
     </Window.Resources>
 
@@ -104,6 +105,13 @@
                           Click="Event2_2_Click">
                     <MenuItem.Icon>
                         <c:CustomImage Source="{StaticResource icon_2_2}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuItem2_3" 
+                          Header="Clear target directory" 
+                          Click="Event2_3_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_2_3}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
@@ -188,6 +196,11 @@
                         Click="Event2_2_Click" 
                         ToolTip="Stop processing">
                     <c:CustomImage Source="{StaticResource icon_2_2}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button2_3" 
+                        Click="Event2_3_Click" 
+                        ToolTip="Clear target directory">
+                    <c:CustomImage Source="{StaticResource icon_2_3}" Width="16" Height="16"/>
                 </Button>
                 <Separator/>
                 <Button Name="button3_1" 

@@ -235,6 +235,7 @@ namespace TFlex.PackageManager.UI
                     menuItem2_2.IsEnabled = false;
                     label4.Content = string.Format(s_labels[3], tvControl2.CountFiles);
                     tvControl2.InitLayout();
+                    UpdateStateToControls();
                     break;
                 case WM_INCREMENT_PROGRESS:
                     double[] value = new double[1];
@@ -565,6 +566,12 @@ namespace TFlex.PackageManager.UI
             stoped = true;
         } // Stop processing
 
+        private void Event2_3_Click(object sender, RoutedEventArgs e)
+        {
+            tvControl2.CleanTargetDirectory();
+            UpdateStateToControls();
+        } // Clear target directory
+
         private void Event3_1_Click(object sender, RoutedEventArgs e)
         {
             PropertiesUI optionsUI = new PropertiesUI(options)
@@ -624,13 +631,13 @@ namespace TFlex.PackageManager.UI
 
                     comboBox2.SelectedIndex = 0;
                 }
-
-                UpdateStateToControls();
             }
             else
             {
                 comboBox2.Items.Clear();
             }
+
+            UpdateStateToControls();
 
             //Debug.WriteLine(string.Format("ComboBox1_SelectionChanged: [index: {0}, value: {1}]",
             //    comboBox1.SelectedIndex,
@@ -696,6 +703,8 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         private void UpdateStateToControls()
         {
+            int ic_length = 0, td_length = 0;
+
             if (self.Configurations.Count() == 0)
             {
                 menuItem1_4.IsEnabled = false; // save
@@ -703,12 +712,14 @@ namespace TFlex.PackageManager.UI
                 menuItem1_6.IsEnabled = false; // delete
                 menuItem1_7.IsEnabled = false; // properties
                 menuItem2_1.IsEnabled = false; // start
+                menuItem2_3.IsEnabled = false; // clear target directory
 
                 button1_4.IsEnabled = false;
                 button1_5.IsEnabled = false;
                 button1_6.IsEnabled = false;
                 button1_7.IsEnabled = false;
                 button2_1.IsEnabled = false;
+                button2_3.IsEnabled = false;
 
                 tvControl1.TargetDirectory = string.Empty;
                 tvControl2.TargetDirectory = string.Empty;
@@ -726,6 +737,20 @@ namespace TFlex.PackageManager.UI
 
                 tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
                 tvControl2.TargetDirectory = self.Configurations[key1].TargetDirectory;
+
+                ic_length = tvControl1.TargetDirectory.Length;
+                td_length = tvControl2.TargetDirectory.Length;
+
+                if (tvControl2.CountFiles > 0)
+                {
+                    menuItem2_3.IsEnabled = true;
+                    button2_3.IsEnabled = true;
+                }
+                else
+                {
+                    menuItem2_3.IsEnabled = false;
+                    button2_3.IsEnabled = false;
+                }
             }
 
             if (self.Configurations[key1].IsChanged && 
@@ -752,8 +777,7 @@ namespace TFlex.PackageManager.UI
                 button1_5.IsEnabled = false;
             }
 
-            if (self.Configurations[key1].InitialCatalog.Length > 0 &&
-                self.Configurations[key1].TargetDirectory.Length > 0 && 
+            if (ic_length > 0 && td_length > 0 && 
                 tvControl1.SelectedItems.Count > 0)
             {
                 menuItem2_1.IsEnabled = true;

@@ -301,6 +301,7 @@
     <Resource Include="Resources\dxb.ico" />
     <Resource Include="Resources\pdf.ico" />
     <Resource Include="Resources\open_configurations.ico" />
+    <Resource Include="Resources\clear_target_directory.ico" />
     <Content Include="Resources\refresh.ico" />
     <Resource Include="Resources\save.ico" />
     <Resource Include="Resources\options.ico" />

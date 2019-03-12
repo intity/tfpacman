@@ -116,6 +116,9 @@ namespace TFlex.PackageManager.Controls
         #endregion
 
         #region public methods
+        /// <summary>
+        /// Initialize layout control.
+        /// </summary>
         public void InitLayout()
         {
             if (targetDirectory == null || treeListView == null)
@@ -133,6 +136,22 @@ namespace TFlex.PackageManager.Controls
                 countFiles = 0;
 
             //Debug.WriteLine("InitLayout");
+        }
+
+        /// <summary>
+        /// Clean target directory.
+        /// </summary>
+        public void CleanTargetDirectory()
+        {
+            if (!Directory.Exists(targetDirectory))
+                return;
+
+            DirectoryInfo di = new DirectoryInfo(targetDirectory);
+
+            foreach (var i in di.GetFiles()) i.Delete();
+            foreach (var i in di.GetDirectories()) i.Delete(true);
+
+            InitLayout();
         }
         #endregion
 
