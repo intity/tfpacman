@@ -18,7 +18,7 @@
     <Window.Resources>
         <BitmapImage x:Key="icon_1_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/new_configuration.ico"/>
         <BitmapImage x:Key="icon_1_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/import.ico"/>
-        <BitmapImage x:Key="icon_1_3" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/open_target_directory.ico"/>
+        <BitmapImage x:Key="icon_1_3" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/open_configurations.ico"/>
         <BitmapImage x:Key="icon_1_4" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/save.ico"/>
         <BitmapImage x:Key="icon_1_5" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/save_all.ico"/>
         <BitmapImage x:Key="icon_1_6" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/delete.ico"/>
