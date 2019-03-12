@@ -48,8 +48,8 @@ namespace TFlex.PackageManager.UI
 
         private string[] s_labels = new string[5];
         private string[] messages = new string[2];
-        private string[] controls = new string[12];
-        private string[] tooltips = new string[10];
+        private string[] controls = new string[13];
+        private string[] tooltips = new string[11];
 
         private string key1, key2;
 
@@ -175,8 +175,9 @@ namespace TFlex.PackageManager.UI
             controls[07] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_8", 0);
             controls[08] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 0);
             controls[09] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 0);
-            controls[10] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 0);
-            controls[11] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0);
+            controls[10] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 0);
+            controls[11] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 0);
+            controls[12] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0);
 
             tooltips[00] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 1);
             tooltips[01] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 1);
@@ -187,7 +188,8 @@ namespace TFlex.PackageManager.UI
             tooltips[06] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 1);
             tooltips[07] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 1);
             tooltips[08] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 1);
-            tooltips[09] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1);
+            tooltips[09] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 1);
+            tooltips[10] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1);
 
             menuItem1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1", 0);
             menuItem2.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2", 0);
@@ -203,8 +205,9 @@ namespace TFlex.PackageManager.UI
             menuItem1_8.Header = controls[7];
             menuItem2_1.Header = controls[8];
             menuItem2_2.Header = controls[9];
-            menuItem3_1.Header = controls[10];
-            menuItem4_1.Header = controls[11];
+            menuItem2_3.Header = controls[10];
+            menuItem3_1.Header = controls[11];
+            menuItem4_1.Header = controls[12];
 
             button1_1.ToolTip = tooltips[0];
             button1_2.ToolTip = tooltips[1];
@@ -215,7 +218,8 @@ namespace TFlex.PackageManager.UI
             button1_7.ToolTip = tooltips[6];
             button2_1.ToolTip = tooltips[7];
             button2_2.ToolTip = tooltips[8];
-            button3_1.ToolTip = tooltips[9];
+            button2_3.ToolTip = tooltips[9];
+            button3_1.ToolTip = tooltips[10];
             #endregion
         }
 

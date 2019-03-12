@@ -187,6 +187,10 @@
     <value>Stop</value>
     <comment>Stop processing</comment>
   </data>
+  <data name="menuItem2_3" xml:space="preserve">
+    <value>Clean up target directory</value>
+    <comment>Clean target directory</comment>
+  </data>
   <data name="menuItem3" xml:space="preserve">
     <value>Settings</value>
   </data>

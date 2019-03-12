@@ -187,6 +187,10 @@
     <value>Стоп</value>
     <comment>Завершить процесс обработки</comment>
   </data>
+  <data name="menuItem2_3" xml:space="preserve">
+    <value>Очистить каталог вывода</value>
+    <comment>Очистить каталог вывода</comment>
+  </data>
   <data name="menuItem3" xml:space="preserve">
     <value>Настройки</value>
   </data>

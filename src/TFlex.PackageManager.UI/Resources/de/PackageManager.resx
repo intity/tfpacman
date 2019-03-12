@@ -187,6 +187,10 @@
     <value>Stoppen</value>
     <comment>Verarbeitung abschließen</comment>
   </data>
+  <data name="menuItem2_3" xml:space="preserve">
+    <value>Bereinigen sie das zielverzeichnis</value>
+    <comment>Bereinigen sie das zielverzeichnis</comment>
+  </data>
   <data name="menuItem3" xml:space="preserve">
     <value>Einstellungen</value>
   </data>

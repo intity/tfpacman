@@ -108,7 +108,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Name="menuItem2_3" 
-                          Header="Clear target directory" 
+                          Header="Clean up target directory" 
                           Click="Event2_3_Click">
                     <MenuItem.Icon>
                         <c:CustomImage Source="{StaticResource icon_2_3}" Width="16" Height="16"/>
@@ -199,7 +199,7 @@
                 </Button>
                 <Button Name="button2_3" 
                         Click="Event2_3_Click" 
-                        ToolTip="Clear target directory">
+                        ToolTip="Clean up target directory">
                     <c:CustomImage Source="{StaticResource icon_2_3}" Width="16" Height="16"/>
                 </Button>
                 <Separator/>
