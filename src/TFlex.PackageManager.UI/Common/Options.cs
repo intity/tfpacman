@@ -18,7 +18,7 @@ namespace TFlex.PackageManager.Common
     public class Options
     {
         #region private fields
-        private string targetDirectory;
+        private string userDirectory;
         private bool enableLogFile;
 
         private readonly List<string> contents;
@@ -30,7 +30,7 @@ namespace TFlex.PackageManager.Common
             OptionsTask(0);
             
             contents        = new List<string>();
-            targetDirectory = Resource.UserDirectory;
+            userDirectory = Resource.UserDirectory;
         }
 
         #region properties
@@ -41,14 +41,14 @@ namespace TFlex.PackageManager.Common
         [CustomDisplayName(Resource.OPTIONS_UI, "dn1_1")]
         [CustomDescription(Resource.OPTIONS_UI, "dn1_1")]
         [Editor(typeof(InputPathControl), typeof(UITypeEditor))]
-        public string TargetDirectory
+        public string UserDirectory
         {
-            get { return targetDirectory; }
+            get { return userDirectory; }
             set
             {
-                if (targetDirectory != value)
+                if (userDirectory != value)
                 {
-                    targetDirectory = value;
+                    userDirectory = value;
                     OptionsTask(1);
                 }
             }
@@ -183,9 +183,9 @@ namespace TFlex.PackageManager.Common
             {
                 case "TargetDirectory":
                     if (flag == 0)
-                        targetDirectory = (string)subKey.GetValue(name);
+                        userDirectory = (string)subKey.GetValue(name);
                     else
-                        subKey.SetValue(name, targetDirectory);
+                        subKey.SetValue(name, userDirectory);
                     break;
                 case "EnableLogFile":
                     if (flag == 0)

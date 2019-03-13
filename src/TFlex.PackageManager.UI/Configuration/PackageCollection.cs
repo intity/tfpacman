@@ -41,7 +41,7 @@ namespace TFlex.PackageManager.Configuration
         {
             configurations       = new ObservableDictionary<string, Header>();
             configurations.CollectionChanged += Configurations_CollectionChanged;
-            targetDirectory      = options.TargetDirectory;
+            targetDirectory      = options.UserDirectory;
             changedCofigurations = new List<string>();
 
             GetConfigurations();

@@ -34,6 +34,7 @@ namespace TFlex.PackageManager.Controls
 
             imageSources = new List<ImageSource>
             {
+                new BitmapImage(new Uri(Resource.BASE_URI + "open_configurations.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "open_initial_catalog.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "open_target_directory.ico"))
             };
@@ -63,11 +64,14 @@ namespace TFlex.PackageManager.Controls
 
             switch (propertyItem.PropertyName)
             {
-                case "InitialCatalog":
+                case "UserDirectory":
                     (buton1.Content as Image).Source = imageSources[0];
                     break;
-                case "TargetDirectory":
+                case "InitialCatalog":
                     (buton1.Content as Image).Source = imageSources[1];
+                    break;
+                case "TargetDirectory":
+                    (buton1.Content as Image).Source = imageSources[2];
                     break;
             }
 
