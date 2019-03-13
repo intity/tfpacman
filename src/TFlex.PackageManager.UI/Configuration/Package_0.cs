@@ -858,15 +858,15 @@ namespace TFlex.PackageManager.Configuration
         /// Processing file.
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="options"></param>
-        internal void ProcessingFile(string path, Common.Options options)
+        /// <param name="logFile"></param>
+        internal void ProcessingFile(string path, LogFile logFile)
         {
             Document document = Application.OpenDocument(path, false);
-            options.AppendLine(string.Format("Open document:\t{0}", path));
+            logFile.AppendLine(string.Format("Open document:\t{0}", path));
 
             if (document == null)
             {
-                options.AppendLine("Processing failed: the document object has a null value.");
+                logFile.AppendLine("Processing failed: the document object has a null value.");
                 return;
             }
 
@@ -879,19 +879,19 @@ namespace TFlex.PackageManager.Configuration
                 : Directory.CreateDirectory(directory).FullName;
 
             document.BeginChanges(string.Format("Processing file: {0}", fileInfo.Name));
-            ProcessingPages(document, targetDirectory, options);
+            ProcessingPages(document, targetDirectory, logFile);
 
             if (document.Changed)
             {
                 document.EndChanges();
                 document.Save();
-                options.AppendLine("Document saved");
+                logFile.AppendLine("Document saved");
             }
             else
                 document.CancelChanges();
 
             document.Close();
-            options.AppendLine("Document closed");
+            logFile.AppendLine("Document closed");
 
             if (Directory.GetFiles(targetDirectory).Length == 0 &&
                 Directory.GetDirectories(targetDirectory).Length == 0)
@@ -1148,8 +1148,8 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         /// <param name="document"></param>
         /// <param name="targetDirectory"></param>
-        /// <param name="options"></param>
-        private void ProcessingPages(Document document, string targetDirectory, Common.Options options)
+        /// <param name="logFile"></param>
+        private void ProcessingPages(Document document, string targetDirectory, LogFile logFile)
         {
             int count = 0;
             uint flags;
@@ -1171,8 +1171,8 @@ namespace TFlex.PackageManager.Configuration
                 if (checkDrawingTemplate && !DrawingTemplateExists(document, i))
                     continue;
 
-                options.AppendLine(string.Format("Page name:\t{0}", i.Name));
-                options.AppendLine(string.Format("Page type:\t{0}", i.PageType));
+                logFile.AppendLine(string.Format("Page name:\t{0}", i.Name));
+                logFile.AppendLine(string.Format("Page type:\t{0}", i.PageType));
                 //Debug.WriteLine(string.Format("Page name: {0}, flags: {1:X4}", i.Name, flags));
 
                 if (i.Scale.Value != (double)pageScale && pageScale != 99999)
@@ -1191,7 +1191,7 @@ namespace TFlex.PackageManager.Configuration
 
                 if (enableProcessingOfProjections)
                 {
-                    ProcessingProjections(document, i.Name, options);
+                    ProcessingProjections(document, i.Name, logFile);
                 }
 
                 path = targetDirectory + "\\" + GetOutputFileName(document, i);
@@ -1206,7 +1206,7 @@ namespace TFlex.PackageManager.Configuration
 
                 if (Export(document, i, path))
                 {
-                    options.AppendLine(string.Format("Export to:\t{0}", path));
+                    logFile.AppendLine(string.Format("Export to:\t{0}", path));
                 }
             }
         }
@@ -1216,8 +1216,8 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         /// <param name="document"></param>
         /// <param name="pageName"></param>
-        /// <param name="options"></param>
-        private void ProcessingProjections(Document document, string pageName, Common.Options options)
+        /// <param name="logFile"></param>
+        private void ProcessingProjections(Document document, string pageName, LogFile logFile)
         {
             uint flags;
             double scale;
@@ -1234,7 +1234,7 @@ namespace TFlex.PackageManager.Configuration
                 if (flags == 0x0000 || flags == 0x0007)
                     continue;
 
-                options.AppendLine(string.Format("Projection name:{0}", i.Name));
+                logFile.AppendLine(string.Format("Projection name:{0}", i.Name));
                 //Debug.WriteLine(string.Format("Projection name: {0}, flags: {1:X4}", i.Name, flags));
 
                 if (i.Scale.Value != (double)projectionScale)

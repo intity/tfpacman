@@ -1,10 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
-using System.IO;
 using System.Windows;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Controls;
@@ -20,16 +18,11 @@ namespace TFlex.PackageManager.Common
         #region private fields
         private string userDirectory;
         private bool enableLogFile;
-
-        private readonly List<string> contents;
-        private string logFile;
         #endregion
 
         public Options()
         {
             OptionsTask(0);
-            
-            contents        = new List<string>();
             userDirectory = Resource.UserDirectory;
         }
 
@@ -60,7 +53,6 @@ namespace TFlex.PackageManager.Common
         [PropertyOrder(2)]
         [CustomDisplayName(Resource.OPTIONS_UI, "dn1_2")]
         [CustomDescription(Resource.OPTIONS_UI, "dn1_2")]
-        [DefaultValue(false)]
         public bool EnableLogFile
         {
             get { return enableLogFile; }
@@ -76,61 +68,6 @@ namespace TFlex.PackageManager.Common
         #endregion
 
         #region methods
-        /// <summary>
-        /// Create log file the documents processing.
-        /// </summary>
-        /// <param name="targetDirectory"></param>
-        internal void CreateLogFile(string targetDirectory)
-        {
-            if (!enableLogFile)
-                return;
-
-            logFile = Path.Combine(targetDirectory, Resource.LOG_FILE);
-
-            if (contents.Count > 0)
-                contents.Clear();
-
-            if (File.Exists(logFile))
-                File.Delete(logFile);
-
-            File.AppendAllLines(logFile, contents);
-        }
-
-        /// <summary>
-        /// Append new line to contents.
-        /// </summary>
-        /// <param name="value"></param>
-        internal void AppendLine(string value)
-        {
-            if (!enableLogFile)
-                return;
-
-            contents.Add(value);
-        }
-
-        /// <summary>
-        /// Set contents to log file.
-        /// </summary>
-        internal void SetContentsToLog()
-        {
-            if (!enableLogFile)
-                return;
-
-            File.AppendAllLines(logFile, contents);
-        }
-
-        /// <summary>
-        /// Open log file.
-        /// </summary>
-        internal void OpenLogFile()
-        {
-            if (!enableLogFile)
-                return;
-
-            if (File.Exists(logFile))
-                Process.Start("notepad.exe", logFile);
-        }
-
         /// <summary>
         /// The application options task method.
         /// </summary>
@@ -155,7 +92,6 @@ namespace TFlex.PackageManager.Common
                     {
                         OptionTask(subKey, i.Name, flag);
                     }
-                    
                 }
                 else if (flag == 2)
                 {
@@ -181,7 +117,7 @@ namespace TFlex.PackageManager.Common
         {
             switch (name)
             {
-                case "TargetDirectory":
+                case "UserDirectory":
                     if (flag == 0)
                         userDirectory = (string)subKey.GetValue(name);
                     else

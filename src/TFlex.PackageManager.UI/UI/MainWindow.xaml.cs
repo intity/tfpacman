@@ -808,9 +808,10 @@ namespace TFlex.PackageManager.UI
             var size = Marshal.SizeOf(count[0]) * count.Length;
             IntPtr value = Marshal.AllocHGlobal(size);
             Stopwatch watch = new Stopwatch();
+            LogFile logFile = new LogFile(options);
 
-            options.CreateLogFile(self.Configurations[key1].TargetDirectory);
-            options.AppendLine("Started processing");
+            logFile.CreateLogFile(self.Configurations[key1].TargetDirectory);
+            logFile.AppendLine("Started processing");
 
             watch.Start();
 
@@ -839,24 +840,24 @@ namespace TFlex.PackageManager.UI
                     switch (self.Configurations[key1].Translators.ElementAt(j).Key)
                     {
                         case "Default":
-                            options.AppendLine("\r\nTranslator:\tDefault");
+                            logFile.AppendLine("\r\nTranslator:\tDefault");
                             (self.Configurations[key1].Translators.ElementAt(j).Value as Package_0)
-                                .ProcessingFile(path, options);
+                                .ProcessingFile(path, logFile);
                             break;
                         case "Acad":
-                            options.AppendLine("\r\nTranslator:\tAcad");
+                            logFile.AppendLine("\r\nTranslator:\tAcad");
                             (self.Configurations[key1].Translators.ElementAt(j).Value as Package_1)
-                                .ProcessingFile(path, options);
+                                .ProcessingFile(path, logFile);
                             break;
                         case "Bitmap":
-                            options.AppendLine("\r\nTranslator:\tBitmap");
+                            logFile.AppendLine("\r\nTranslator:\tBitmap");
                             (self.Configurations[key1].Translators.ElementAt(j).Value as Package_3)
-                                .ProcessingFile(path, options);
+                                .ProcessingFile(path, logFile);
                             break;
                         case "Pdf":
-                            options.AppendLine("\r\nTranslator:\tPdf");
+                            logFile.AppendLine("\r\nTranslator:\tPdf");
                             (self.Configurations[key1].Translators.ElementAt(j).Value as Package_9)
-                                .ProcessingFile(path, options);
+                                .ProcessingFile(path, logFile);
                             break;
                     }
 
@@ -868,9 +869,9 @@ namespace TFlex.PackageManager.UI
 
             watch.Stop();
 
-            options.AppendLine(string.Format("\r\nProcessing time:{0} ms", watch.ElapsedMilliseconds));
-            options.SetContentsToLog();
-            options.OpenLogFile();
+            logFile.AppendLine(string.Format("\r\nProcessing time:{0} ms", watch.ElapsedMilliseconds));
+            logFile.SetContentsToLog();
+            logFile.OpenLogFile();
 
             count[0] = 100;
             Marshal.Copy(count, 0, value, count.Length);

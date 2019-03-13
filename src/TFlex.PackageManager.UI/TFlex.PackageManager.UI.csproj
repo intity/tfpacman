@@ -100,6 +100,7 @@
     <Compile Include="Attributes\CustomDisplayNameAttribute.cs" />
     <Compile Include="Common\CustomImage.cs" />
     <Compile Include="Common\Helper.cs" />
+    <Compile Include="Common\LogFile.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\Options.cs" />
     <Compile Include="Configuration\Header.cs" />
