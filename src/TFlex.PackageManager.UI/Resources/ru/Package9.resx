@@ -128,4 +128,8 @@
     <value>Экспортировать слои</value>
     <comment>Включает в экспорт слои документа.</comment>
   </data>
+  <data name="dn4_3" xml:space="preserve">
+    <value>Объединить страницы в один файл</value>
+    <comment>Объединение экспортированных страниц в один PDF-файл.</comment>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Linq;
@@ -175,42 +176,48 @@ namespace TFlex.PackageManager.Configuration
             base.OnChanged(index);
         }
 
-        internal override bool Export(Document document, Page page, string path)
+        internal override void Export(Document document, Dictionary<Page, string> pages, LogFile logFile)
         {
-            ImageExport options = ImageExport.None;
+            ExportToBitmap export    = new ExportToBitmap(document);
+            ImageExport options      = ImageExport.None;
             ImageExportFormat format = ImageExportFormat.Bmp;
 
-            ExportToBitmap export = new ExportToBitmap(document)
+            foreach (var p in pages)
             {
-                Height = Convert.ToInt32((page.Top.Value - page.Bottom.Value) * px),
-                Width  = Convert.ToInt32((page.Right.Value - page.Left.Value) * px),
-                Page   = page
-            };
+                options =
+                    (ScreenLayers  ? ImageExport.ScreenLayers  : ImageExport.None) |
+                    (Constructions ? ImageExport.Constructions : ImageExport.None);
 
-            options = 
-                (ScreenLayers  ? ImageExport.ScreenLayers  : ImageExport.None) | 
-                (Constructions ? ImageExport.Constructions : ImageExport.None);
+                switch (Extension)
+                {
+                    case 0:
+                        format = ImageExportFormat.Bmp;
+                        break;
+                    case 1:
+                        format = ImageExportFormat.Jpeg;
+                        break;
+                    case 2:
+                        format = ImageExportFormat.Gif;
+                        break;
+                    case 3:
+                        format = ImageExportFormat.Tiff;
+                        break;
+                    case 4:
+                        format = ImageExportFormat.Png;
+                        break;
+                }
 
-            switch (Extension)
-            {
-                case 0:
-                    format = ImageExportFormat.Bmp;
-                    break;
-                case 1:
-                    format = ImageExportFormat.Jpeg;
-                    break;
-                case 2:
-                    format = ImageExportFormat.Gif;
-                    break;
-                case 3:
-                    format = ImageExportFormat.Tiff;
-                    break;
-                case 4:
-                    format = ImageExportFormat.Png;
-                    break;
+                export.Page   = p.Key;
+                export.Height = Convert.ToInt32((p.Key.Top.Value - p.Key.Bottom.Value) * px);
+                export.Width  = Convert.ToInt32((p.Key.Right.Value - p.Key.Left.Value) * px);
+
+                if (export.Export(p.Value, options, format))
+                {
+                    logFile.AppendLine(string.Format("Export to:\t{0}", p.Value));
+                }
             }
 
-            return export.Export(path, options, format);
+            logFile.AppendLine(string.Format("Total pages:\t{0}", pages.Count));
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)

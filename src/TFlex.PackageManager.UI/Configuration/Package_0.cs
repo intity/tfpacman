@@ -847,12 +847,9 @@ namespace TFlex.PackageManager.Configuration
         /// The Export virtual method.
         /// </summary>
         /// <param name="document"></param>
-        /// <param name="page"></param>
-        /// <param name="path">Full path file name.</param>
-        internal virtual bool Export(Document document, Page page, string path)
-        {
-            return false;
-        }
+        /// <param name="pages"></param>
+        /// <param name="logFile"></param>
+        internal virtual void Export(Document document, Dictionary<Page, string> pages, LogFile logFile) { }
 
         /// <summary>
         /// Processing file.
@@ -1156,6 +1153,7 @@ namespace TFlex.PackageManager.Configuration
             string path;
             RegenerateOptions ro;
             IEnumerable<Page> pages = GetPagesOnType(document);
+            Dictionary<Page, string> processingPages = new Dictionary<Page, string>();
 
             foreach (var i in pages)
             {
@@ -1204,11 +1202,10 @@ namespace TFlex.PackageManager.Configuration
                 else
                     path += "." + outputExtension.ToLower();
 
-                if (Export(document, i, path))
-                {
-                    logFile.AppendLine(string.Format("Export to:\t{0}", path));
-                }
+                processingPages.Add(i, path);
             }
+
+            Export(document, processingPages, logFile);
         }
 
         /// <summary>

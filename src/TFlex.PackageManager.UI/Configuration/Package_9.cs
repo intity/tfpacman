@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Linq;
@@ -15,17 +16,15 @@ namespace TFlex.PackageManager.Configuration
         #region private field
         private bool export3dModel;
         private bool layers;
+        private bool combinePages;
 
-        private readonly byte[] objState = new byte[2];
-        private readonly bool[] b_values = new bool[2];
+        private readonly byte[] objState = new byte[3];
+        private readonly bool[] b_values = new bool[3];
         private bool isChanged;
         #endregion
 
         public Package_9(Header header) : base (header)
         {
-            export3dModel   = false;
-            layers          = false;
-
             OutputExtension = "PDF";
         }
 
@@ -79,6 +78,26 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
         }
+
+        /// <summary>
+        /// Combine pages to one PDF file.
+        /// </summary>
+        [PropertyOrder(20)]
+        [CustomCategory(Resource.PACKAGE_9, "category4")]
+        [CustomDisplayName(Resource.PACKAGE_9, "dn4_3")]
+        [CustomDescription(Resource.PACKAGE_9, "dn4_3")]
+        public bool CombinePages
+        {
+            get { return combinePages; }
+            set
+            {
+                if (combinePages != value)
+                {
+                    combinePages = value;
+                    OnChanged(17);
+                }
+            }
+        }
         #endregion
 
         #region methods
@@ -88,6 +107,7 @@ namespace TFlex.PackageManager.Configuration
 
             b_values[0] = export3dModel;
             b_values[1] = layers;
+            b_values[2] = combinePages;
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
@@ -111,6 +131,12 @@ namespace TFlex.PackageManager.Configuration
                     else
                         objState[1] = 0;
                     break;
+                case 17:
+                    if (b_values[2] != combinePages)
+                        objState[2] = 1;
+                    else
+                        objState[2] = 0;
+                    break;
             }
 
             isChanged = false;
@@ -127,7 +153,7 @@ namespace TFlex.PackageManager.Configuration
             base.OnChanged(index);
         }
 
-        internal override bool Export(Document document, Page page, string path)
+        internal override void Export(Document document, Dictionary<Page, string> pages, LogFile logFile)
         {
             ExportToPDF export = new ExportToPDF(document)
             {
@@ -137,8 +163,38 @@ namespace TFlex.PackageManager.Configuration
                 Layers                     = layers
             };
 
-            export.ExportPages.Add(page);
-            return export.Export(path);
+            if (combinePages)
+            {
+                string path = pages.Values.First();
+
+                if (path.Contains("_1.pdf"))
+                {
+                    path = path.Replace("_1.pdf", ".pdf");
+                }
+
+                export.ExportPages.AddRange(pages.Keys);
+
+                if (export.Export(path))
+                {
+                    logFile.AppendLine(string.Format("Export to:\t{0}", path));
+                }
+            }
+            else
+            {
+                foreach (var p in pages)
+                {
+                    export.ExportPages.Add(p.Key);
+
+                    if (export.Export(p.Value))
+                    {
+                        logFile.AppendLine(string.Format("Export to:\t{0}", p.Value));
+                    }
+
+                    export.ExportPages.Clear();
+                }
+            }
+
+            logFile.AppendLine(string.Format("Total pages:\t{0}", pages.Count));
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)
@@ -152,7 +208,10 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("value", export3dModel ? "1" : "0")),
                 new XElement("parameter", 
                     new XAttribute("name", "Layers"), 
-                    new XAttribute("value", layers ? "1" : "0")));
+                    new XAttribute("value", layers ? "1" : "0")),
+                new XElement("parameter",
+                    new XAttribute("name", "CombinePages"),
+                    new XAttribute("value", combinePages ? "1" : "0")));
         }
 
         internal override void PackageTask(XElement element, int flag)
@@ -173,6 +232,12 @@ namespace TFlex.PackageManager.Configuration
                         layers = value == "1" ? true : false;
                     else
                         value = layers ? "1" : "0";
+                    break;
+                case "CombinePages":
+                    if (flag == 0)
+                        combinePages = value == "1" ? true : false;
+                    else
+                        value = combinePages ? "1" : "0";
                     break;
             }
             element.Attribute("value").Value = value;

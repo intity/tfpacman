@@ -128,4 +128,8 @@
     <value>Export layers</value>
     <comment>Includes document layers for export.</comment>
   </data>
+  <data name="dn4_3" xml:space="preserve">
+    <value>Combine pages into one file</value>
+    <comment>Combine exported pages into one PDF file.</comment>
+  </data>
 </root>

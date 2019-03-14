@@ -10,6 +10,7 @@ using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Attributes;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+using System.Collections.Generic;
 
 namespace TFlex.PackageManager.Configuration
 {
@@ -284,57 +285,6 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region methods
-        private void ExportTo(ExportToACAD export, Page page)
-        {
-            switch (autocadExportFileVersion)
-            {
-                case 0:
-                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD12;
-                    break;
-                case 1:
-                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD13;
-                    break;
-                case 2:
-                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD14;
-                    break;
-                case 3:
-                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2000;
-                    break;
-                case 4:
-                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2004;
-                    break;
-                case 5:
-                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2007;
-                    break;
-                case 6:
-                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2010;
-                    break;
-                case 7:
-                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2013;
-                    break;
-            }
-
-            export.ConvertToLines = ConvertToLines > 0 ? true : false;
-            export.ConvertAreas = ConvertAreas > 0 ? true : false;
-            export.ConvertDimensions = ConvertDimensions;
-            export.ConvertLineText = ConvertLineText > 0 ? true : false;
-            export.ConvertMultitext = ConvertMultitext;
-            // encoding ?
-            if (biarcInterpolationForSplines > 0)
-            {
-                export.BiarcInterpolationForSplines = true;
-                export.BiarcInterpolationAccuracyForSplines = (double)biarcInterpolationAccuracyForSplines;
-            }
-            else
-            {
-                export.BiarcInterpolationForSplines = false;
-                export.BiarcInterpolationAccuracyForSplines = 0;
-            }
-
-            export.ExportAllPages = false;
-            export.Page = page;
-        }
-
         internal override void OnLoaded()
         {
             base.OnLoaded();
@@ -422,29 +372,41 @@ namespace TFlex.PackageManager.Configuration
             base.OnChanged(index);
         }
 
-        internal override bool Export(Document document, Page page, string path)
+        internal override void Export(Document document, Dictionary<Page, string> pages, LogFile logFile)
         {
             ExportToDWG export1;
             ExportToDXF export2;
             ExportToDXB export3;
+            bool result = false;
 
-            switch (extension)
+            foreach (var p in pages)
             {
-                case 0:
-                    export1 = new ExportToDWG(document);
-                    ExportTo(export1, page);
-                    return export1.Export(path);
-                case 1:
-                    export2 = new ExportToDXF(document);
-                    ExportTo(export2, page);
-                    return export2.Export(path);
-                case 2:
-                    export3 = new ExportToDXB(document);
-                    ExportTo(export3, page);
-                    return export3.Export(path);
+                switch (extension)
+                {
+                    case 0:
+                        export1 = new ExportToDWG(document);
+                        ExportTo(export1, p.Key);
+                        result = export1.Export(p.Value);
+                        break;
+                    case 1:
+                        export2 = new ExportToDXF(document);
+                        ExportTo(export2, p.Key);
+                        result = export2.Export(p.Value);
+                        break;
+                    case 2:
+                        export3 = new ExportToDXB(document);
+                        ExportTo(export3, p.Key);
+                        result = export3.Export(p.Value);
+                        break;
+                }
+
+                if (result)
+                {
+                    logFile.AppendLine(string.Format("Export to:\t{0}", p.Value));
+                }
             }
 
-            return base.Export(document, page, path);
+            logFile.AppendLine(string.Format("Total pages:\t{0}", pages.Count));
         }
 
         internal override void AppendPackageToXml(XElement parent, PackageType package)
@@ -553,6 +515,59 @@ namespace TFlex.PackageManager.Configuration
                     break;
             }
             element.Attribute("value").Value = value;
+        }
+        #endregion
+
+        #region private methods
+        private void ExportTo(ExportToACAD export, Page page)
+        {
+            switch (autocadExportFileVersion)
+            {
+                case 0:
+                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD12;
+                    break;
+                case 1:
+                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD13;
+                    break;
+                case 2:
+                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD14;
+                    break;
+                case 3:
+                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2000;
+                    break;
+                case 4:
+                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2004;
+                    break;
+                case 5:
+                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2007;
+                    break;
+                case 6:
+                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2010;
+                    break;
+                case 7:
+                    export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD2013;
+                    break;
+            }
+
+            export.ConvertToLines = ConvertToLines > 0 ? true : false;
+            export.ConvertAreas = ConvertAreas > 0 ? true : false;
+            export.ConvertDimensions = ConvertDimensions;
+            export.ConvertLineText = ConvertLineText > 0 ? true : false;
+            export.ConvertMultitext = ConvertMultitext;
+            // encoding ?
+            if (biarcInterpolationForSplines > 0)
+            {
+                export.BiarcInterpolationForSplines = true;
+                export.BiarcInterpolationAccuracyForSplines = (double)biarcInterpolationAccuracyForSplines;
+            }
+            else
+            {
+                export.BiarcInterpolationForSplines = false;
+                export.BiarcInterpolationAccuracyForSplines = 0;
+            }
+
+            export.ExportAllPages = false;
+            export.Page = page;
         }
         #endregion
     }

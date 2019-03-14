@@ -128,4 +128,8 @@
     <value>Ebenen exportieren</value>
     <comment>Schließt dokument ebenen für den export ein.</comment>
   </data>
+  <data name="dn4_3" xml:space="preserve">
+    <value>Seiten in datei zusammenführen</value>
+    <comment>Exportierte seiten in einer PDF-datei zusammenführen.</comment>
+  </data>
 </root>
