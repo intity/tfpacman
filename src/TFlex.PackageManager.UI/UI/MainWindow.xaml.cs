@@ -46,10 +46,10 @@ namespace TFlex.PackageManager.UI
         private Common.Options options;
         private AboutUs aboutUs;
 
-        private string[] s_labels = new string[5];
-        private string[] messages = new string[2];
-        private string[] controls = new string[13];
-        private string[] tooltips = new string[11];
+        private string[] s_labels;
+        private string[] messages;
+        private string[] controls;
+        private string[] tooltips;
 
         private string key1, key2;
 
@@ -150,14 +150,20 @@ namespace TFlex.PackageManager.UI
             #endregion
 
             #region initialize resources
-            messages[0] = Resource.GetString(Resource.MAIN_WINDOW, "message1", 0);
-            messages[1] = Resource.GetString(Resource.MAIN_WINDOW, "message2", 0);
+            messages = new string[]
+            {
+                Resource.GetString(Resource.MAIN_WINDOW, "message1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "message2", 0)
+            };
 
-            s_labels[0] = Resource.GetString(Resource.MAIN_WINDOW, "label1", 0);
-            s_labels[1] = Resource.GetString(Resource.MAIN_WINDOW, "label2", 0);
-            s_labels[2] = Resource.GetString(Resource.MAIN_WINDOW, "label3", 1);
-            s_labels[3] = Resource.GetString(Resource.MAIN_WINDOW, "label4", 1);
-            s_labels[4] = Resource.GetString(Resource.MAIN_WINDOW, "label5", 1);
+            s_labels = new string[]
+            {
+                Resource.GetString(Resource.MAIN_WINDOW, "label1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "label2", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "label3", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "label4", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "label5", 1)
+            };
 
             label1.Content = s_labels[0];
             label2.Content = s_labels[1];
@@ -165,31 +171,37 @@ namespace TFlex.PackageManager.UI
             label4.ToolTip = string.Format(s_labels[3], 0);
             label5.ToolTip = string.Format(s_labels[4], 0);
 
-            controls[00] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 0);
-            controls[01] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 0);
-            controls[02] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 0);
-            controls[03] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 0);
-            controls[04] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 0);
-            controls[05] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 0);
-            controls[06] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 0);
-            controls[07] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_8", 0);
-            controls[08] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 0);
-            controls[09] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 0);
-            controls[10] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 0);
-            controls[11] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 0);
-            controls[12] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0);
+            controls = new string[]
+            {
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_8", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0)
+            };
 
-            tooltips[00] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 1);
-            tooltips[01] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 1);
-            tooltips[02] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 1);
-            tooltips[03] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 1);
-            tooltips[04] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 1);
-            tooltips[05] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 1);
-            tooltips[06] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 1);
-            tooltips[07] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 1);
-            tooltips[08] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 1);
-            tooltips[09] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 1);
-            tooltips[10] = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1);
+            tooltips = new string[]
+            {
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1)
+            };
 
             menuItem1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1", 0);
             menuItem2.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2", 0);
@@ -580,7 +592,7 @@ namespace TFlex.PackageManager.UI
         {
             PropertiesUI optionsUI = new PropertiesUI(options)
             {
-                Title = controls[10],
+                Title = controls[11],
                 Owner = this
             };
             optionsUI.ShowDialog();
