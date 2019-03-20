@@ -18,10 +18,10 @@ namespace TFlex.PackageManager.Configuration
     public class Header : INotifyPropertyChanged
     {
         #region private fields
-        private Package_0 package_0;
-        private Package_1 package_1;
-        private Package_3 package_3;
-        private Package_9 package_9;
+        private Translator_0 translator_0;
+        private Translator_1 translator_1;
+        private Translator_3 translator_3;
+        private Translator_9 translator_9;
         private ObservableDictionary<string, object> translators;
         private readonly List<string> loadedTranslators;
         private string configurationName;
@@ -50,15 +50,16 @@ namespace TFlex.PackageManager.Configuration
             loadedTranslators = new List<string>();
         }
 
+        #region event handlers
         private void Package_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            objState[5] = (byte)((sender as Package_0).IsChanged ? 1 : 0);
+            objState[5] = (byte)((sender as Translator_0).IsChanged ? 1 : 0);
             OnChanged(5);
         }
 
         private void Package_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            isInvalid = (sender as Package_0).HasErrors;
+            isInvalid = (sender as Translator_0).HasErrors;
         }
 
         private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -70,10 +71,10 @@ namespace TFlex.PackageManager.Configuration
                 case "Default":
                     if ((sender as TranslatorTypes).Default)
                     {
-                        package_0 = new Package_0(this);
-                        package_0.PropertyChanged += Package_PropertyChanged;
-                        package_0.ErrorsChanged   += Package_ErrorsChanged;
-                        translators.Add(e.PropertyName, package_0);
+                        translator_0 = new Translator_0(this);
+                        translator_0.PropertyChanged += Package_PropertyChanged;
+                        translator_0.ErrorsChanged   += Package_ErrorsChanged;
+                        translators.Add(e.PropertyName, translator_0);
                     }
                     else
                     {
@@ -83,10 +84,10 @@ namespace TFlex.PackageManager.Configuration
                 case "Acad":
                     if ((sender as TranslatorTypes).Acad)
                     {
-                        package_1 = new Package_1(this);
-                        package_1.PropertyChanged += Package_PropertyChanged;
-                        package_1.ErrorsChanged   += Package_ErrorsChanged;
-                        translators.Add(e.PropertyName, package_1);
+                        translator_1 = new Translator_1(this);
+                        translator_1.PropertyChanged += Package_PropertyChanged;
+                        translator_1.ErrorsChanged   += Package_ErrorsChanged;
+                        translators.Add(e.PropertyName, translator_1);
                     }
                     else
                     {
@@ -96,10 +97,10 @@ namespace TFlex.PackageManager.Configuration
                 case "Bitmap":
                     if ((sender as TranslatorTypes).Bitmap)
                     {
-                        package_3 = new Package_3(this);
-                        package_3.PropertyChanged += Package_PropertyChanged;
-                        package_3.ErrorsChanged   += Package_ErrorsChanged;
-                        translators.Add(e.PropertyName, package_3);
+                        translator_3 = new Translator_3(this);
+                        translator_3.PropertyChanged += Package_PropertyChanged;
+                        translator_3.ErrorsChanged   += Package_ErrorsChanged;
+                        translators.Add(e.PropertyName, translator_3);
                     }
                     else
                     {
@@ -109,10 +110,10 @@ namespace TFlex.PackageManager.Configuration
                 case "Pdf":
                     if ((sender as TranslatorTypes).Pdf)
                     {
-                        package_9 = new Package_9(this);
-                        package_9.PropertyChanged += Package_PropertyChanged;
-                        package_9.ErrorsChanged   += Package_ErrorsChanged;
-                        translators.Add(e.PropertyName, package_9);
+                        translator_9 = new Translator_9(this);
+                        translator_9.PropertyChanged += Package_PropertyChanged;
+                        translator_9.ErrorsChanged   += Package_ErrorsChanged;
+                        translators.Add(e.PropertyName, translator_9);
                     }
                     else
                     {
@@ -123,6 +124,7 @@ namespace TFlex.PackageManager.Configuration
 
             OnChanged(4);
         }
+        #endregion
 
         #region internal properties
         /// <summary>
@@ -276,6 +278,10 @@ namespace TFlex.PackageManager.Configuration
             isLoaded = true;
         }
 
+        /// <summary>
+        /// Verified this object a change and calls event for 'IsChanged' property.
+        /// </summary>
+        /// <param name="index">Property index.</param>
         private void OnChanged(int index = -1)
         {
             if (!isLoaded) return;
@@ -320,43 +326,43 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// Extension method to get packages.
+        /// Extension method to get translators.
         /// </summary>
         /// <param name="element"></param>
-        internal void GetPackages(XElement element)
+        internal void GetTranslators(XElement element)
         {
-            foreach (XElement i in element.Element("packages").Elements())
+            foreach (XElement i in element.Element("translators").Elements())
             {
                 switch (i.Attribute("id").Value)
                 {
                     case "Default":
                         translatorTypes.Default = true;
-                        package_0.ConfigurationTask(i, 0);
+                        translator_0.ConfigurationTask(i, 0);
                         break;
                     case "Acad":
                         translatorTypes.Acad = true;
-                        package_1.ConfigurationTask(i, 0);
+                        translator_1.ConfigurationTask(i, 0);
                         break;
                     case "Bitmap":
                         translatorTypes.Bitmap = true;
-                        package_3.ConfigurationTask(i, 0);
+                        translator_3.ConfigurationTask(i, 0);
                         break;
                     case "Pdf":
                         translatorTypes.Pdf = true;
-                        package_9.ConfigurationTask(i, 0);
+                        translator_9.ConfigurationTask(i, 0);
                         break;
                 }
             }
         }
 
         /// <summary>
-        /// Extension method to set packages.
+        /// Extension method to set translators.
         /// </summary>
         /// <param name="element"></param>
-        internal void SetPackages(XElement element)
+        internal void SetTranslators(XElement element)
         {
             bool t_value = false;
-            XElement parent = element.Element("packages");
+            XElement parent = element.Element("translators");
             List<XElement> elements = new List<XElement>();
 
             foreach (XElement e in parent.Elements())
@@ -371,25 +377,25 @@ namespace TFlex.PackageManager.Configuration
                     case "Default":
                         if (t_value = translatorTypes.Default)
                         {
-                            package_0.ConfigurationTask(i, 1);
+                            translator_0.ConfigurationTask(i, 1);
                         }
                         break;
                     case "Acad":
                         if (t_value = translatorTypes.Acad)
                         {
-                            package_1.ConfigurationTask(i, 1);
+                            translator_1.ConfigurationTask(i, 1);
                         }
                         break;
                     case "Bitmap":
                         if (t_value = translatorTypes.Bitmap)
                         {
-                            package_3.ConfigurationTask(i, 1);
+                            translator_3.ConfigurationTask(i, 1);
                         }
                         break;
                     case "Pdf":
                         if (t_value = translatorTypes.Pdf)
                         {
-                            package_9.ConfigurationTask(i, 1);
+                            translator_9.ConfigurationTask(i, 1);
                         }
                         break;
                 }
@@ -402,27 +408,27 @@ namespace TFlex.PackageManager.Configuration
                 switch (i.Key)
                 {
                     case "Default":
-                        if (package_0.IsLoaded == false)
+                        if (translator_0.IsLoaded == false)
                         {
-                            package_0.AppendPackageToXml(parent, PackageType.Default);
+                            translator_0.AppendTranslatorToXml(parent, TranslatorType.Default);
                         }
                         break;
                     case "Acad":
-                        if (package_1.IsLoaded == false)
+                        if (translator_1.IsLoaded == false)
                         {
-                            package_1.AppendPackageToXml(parent, PackageType.Acad);
+                            translator_1.AppendTranslatorToXml(parent, TranslatorType.Acad);
                         }
                         break;
                     case "Bitmap":
-                        if (package_3.IsLoaded == false)
+                        if (translator_3.IsLoaded == false)
                         {
-                            package_3.AppendPackageToXml(parent, PackageType.Bitmap);
+                            translator_3.AppendTranslatorToXml(parent, TranslatorType.Bitmap);
                         }
                         break;
                     case "Pdf":
-                        if (package_9.IsLoaded == false)
+                        if (translator_9.IsLoaded == false)
                         {
-                            package_9.AppendPackageToXml(parent, PackageType.Pdf);
+                            translator_9.AppendTranslatorToXml(parent, TranslatorType.Pdf);
                         }
                         break;
                 }
@@ -454,7 +460,7 @@ namespace TFlex.PackageManager.Configuration
                         new XElement("parameter",
                             new XAttribute("name", "TranslatorTypes"),
                             new XAttribute("value", translatorTypes.ToString()))),
-                    new XElement("packages")));
+                    new XElement("translators")));
 
             return document;
         }
@@ -487,11 +493,11 @@ namespace TFlex.PackageManager.Configuration
 
                 if (flag == 0)
                 {
-                    GetPackages(element);
+                    GetTranslators(element);
                 }
                 else
                 {
-                    SetPackages(element);
+                    SetTranslators(element);
                     element.Save(path);
                 }
 

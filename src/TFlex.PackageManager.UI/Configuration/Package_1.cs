@@ -14,9 +14,9 @@ using System.Collections.Generic;
 
 namespace TFlex.PackageManager.Configuration
 {
-    [CustomCategoryOrder(Resource.PACKAGE_1, 3)]
-    [CustomCategoryOrder(Resource.PACKAGE_1, 4)]
-    public class Package_1 : Package_0
+    [CustomCategoryOrder(Resource.TRANSLATOR_1, 3)]
+    [CustomCategoryOrder(Resource.TRANSLATOR_1, 4)]
+    public class Translator_1 : Translator_0
     {
         #region private fields
         private int extension;
@@ -35,7 +35,7 @@ namespace TFlex.PackageManager.Configuration
         private bool isChanged;
         #endregion
 
-        public Package_1(Header header) : base(header)
+        public Translator_1(Header header) : base(header)
         {
             extension                            = 0;
             autocadExportFileVersion             = 3;
@@ -68,9 +68,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - DXB
         /// </summary>
         [PropertyOrder(16)]
-        [CustomCategory(Resource.PACKAGE_1, "category3")]
-        [CustomDisplayName(Resource.PACKAGE_1, "dn3_1")]
-        [CustomDescription(Resource.PACKAGE_1, "dn3_1")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn3_1")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn3_1")]
         [ItemsSource(typeof(ExtensionItems0))]
         public int Extension
         {
@@ -105,9 +105,9 @@ namespace TFlex.PackageManager.Configuration
         /// (7) - 2013
         /// </summary>
         [PropertyOrder(17)]
-        [CustomCategory(Resource.PACKAGE_1, "category3")]
-        [CustomDisplayName(Resource.PACKAGE_1, "dn3_2")]
-        [CustomDescription(Resource.PACKAGE_1, "dn3_2")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn3_2")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn3_2")]
         [ItemsSource(typeof(AutocadExportFileVersionItems))]
         public int AutocadExportFileVersion
         {
@@ -128,9 +128,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - to hatching.
         /// </summary>
         [PropertyOrder(18)]
-        [CustomCategory(Resource.PACKAGE_1, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_1, "dn4_1")]
-        [CustomDescription(Resource.PACKAGE_1, "dn4_1")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_1")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn4_1")]
         [ItemsSource(typeof(ConvertAreasItems))]
         public int ConvertAreas
         {
@@ -151,9 +151,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - in a line.
         /// </summary>
         [PropertyOrder(19)]
-        [CustomCategory(Resource.PACKAGE_1, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_1, "dn4_2")]
-        [CustomDescription(Resource.PACKAGE_1, "dn4_2")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_2")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn4_2")]
         [ItemsSource(typeof(ConvertToLinesItems))]
         public int ConvertToLines
         {
@@ -175,9 +175,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - in lines and texts.
         /// </summary>
         [PropertyOrder(20)]
-        [CustomCategory(Resource.PACKAGE_1, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_1, "dn4_3")]
-        [CustomDescription(Resource.PACKAGE_1, "dn4_3")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_3")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn4_3")]
         [ItemsSource(typeof(ConvertDimensionsItems))]
         public int ConvertDimensions
         {
@@ -198,9 +198,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - to line.
         /// </summary>
         [PropertyOrder(21)]
-        [CustomCategory(Resource.PACKAGE_1, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_1, "dn4_4")]
-        [CustomDescription(Resource.PACKAGE_1, "dn4_4")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_4")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn4_4")]
         [ItemsSource(typeof(ConvertLineTextItems))]
         public int ConvertLineText
         {
@@ -222,9 +222,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - in texts in a line.
         /// </summary>
         [PropertyOrder(22)]
-        [CustomCategory(Resource.PACKAGE_1, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_1, "dn4_5")]
-        [CustomDescription(Resource.PACKAGE_1, "dn4_5")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_5")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn4_5")]
         [ItemsSource(typeof(ConvertMultitextItems))]
         public int ConvertMultitext
         {
@@ -245,9 +245,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - Polylines with interpolation.
         /// </summary>
         [PropertyOrder(23)]
-        [CustomCategory(Resource.PACKAGE_1, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_1, "dn4_6")]
-        [CustomDescription(Resource.PACKAGE_1, "dn4_6")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_6")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn4_6")]
         [ItemsSource(typeof(BiarcInterpolationForSplinesItems))]
         public int BiarcInterpolationForSplines
         {
@@ -266,9 +266,9 @@ namespace TFlex.PackageManager.Configuration
         /// Accuracy of circular interpolation.
         /// </summary>
         [PropertyOrder(24)]
-        [CustomCategory(Resource.PACKAGE_1, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_1, "dn4_7")]
-        [CustomDescription(Resource.PACKAGE_1, "dn4_7")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_7")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn4_7")]
         [Editor(typeof(BiarcInterpolationControl), typeof(UITypeEditor))]
         public decimal BiarcInterpolationAccuracyForSplines
         {
@@ -409,11 +409,11 @@ namespace TFlex.PackageManager.Configuration
             logFile.AppendLine(string.Format("Total pages:\t{0}", pages.Count));
         }
 
-        internal override void AppendPackageToXml(XElement parent, PackageType package)
+        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
         {
-            base.AppendPackageToXml(parent, package);
+            base.AppendTranslatorToXml(parent, translator);
 
-            string value = Enum.GetName(typeof(PackageType), package);
+            string value = Enum.GetName(typeof(TranslatorType), translator);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter", 
                     new XAttribute("name", "OutputExtension"), 
@@ -444,9 +444,9 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("value", biarcInterpolationAccuracyForSplines)));
         }
 
-        internal override void PackageTask(XElement element, int flag)
+        internal override void TranslatorTask(XElement element, int flag)
         {
-            base.PackageTask(element, flag);
+            base.TranslatorTask(element, flag);
 
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)
@@ -609,8 +609,8 @@ namespace TFlex.PackageManager.Configuration
         {
             return new ItemCollection
             {
-                { 0, Resource.GetString(Resource.PACKAGE_1, "dn4_1_0", 0) },
-                { 1, Resource.GetString(Resource.PACKAGE_1, "dn4_1_1", 0) }
+                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_1_0", 0) },
+                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_1_1", 0) }
             };
         }
     }
@@ -621,8 +621,8 @@ namespace TFlex.PackageManager.Configuration
         {
             return new ItemCollection
             {
-                { 0, Resource.GetString(Resource.PACKAGE_1, "dn4_2_0", 0) },
-                { 1, Resource.GetString(Resource.PACKAGE_1, "dn4_2_1", 0) }
+                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_2_0", 0) },
+                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_2_1", 0) }
             };
         }
     }
@@ -633,9 +633,9 @@ namespace TFlex.PackageManager.Configuration
         {
             return new ItemCollection
             {
-                { 0, Resource.GetString(Resource.PACKAGE_1, "dn4_3_0", 0) },
-                { 1, Resource.GetString(Resource.PACKAGE_1, "dn4_3_1", 0) },
-                { 2, Resource.GetString(Resource.PACKAGE_1, "dn4_3_2", 0) }
+                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_3_0", 0) },
+                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_3_1", 0) },
+                { 2, Resource.GetString(Resource.TRANSLATOR_1, "dn4_3_2", 0) }
             };
         }
     }
@@ -646,8 +646,8 @@ namespace TFlex.PackageManager.Configuration
         {
             return new ItemCollection
             {
-                { 0, Resource.GetString(Resource.PACKAGE_1, "dn4_4_0", 0) },
-                { 1, Resource.GetString(Resource.PACKAGE_1, "dn4_4_1", 0) }
+                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_4_0", 0) },
+                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_4_1", 0) }
             };
         }
     }
@@ -658,9 +658,9 @@ namespace TFlex.PackageManager.Configuration
         {
             return new ItemCollection
             {
-                { 0, Resource.GetString(Resource.PACKAGE_1, "dn4_5_0", 0) },
-                { 1, Resource.GetString(Resource.PACKAGE_1, "dn4_5_1", 0) },
-                { 2, Resource.GetString(Resource.PACKAGE_1, "dn4_5_2", 0) }
+                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_5_0", 0) },
+                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_5_1", 0) },
+                { 2, Resource.GetString(Resource.TRANSLATOR_1, "dn4_5_2", 0) }
             };
         }
     }
@@ -671,8 +671,8 @@ namespace TFlex.PackageManager.Configuration
         {
             return new ItemCollection
             {
-                { 0, Resource.GetString(Resource.PACKAGE_1, "dn4_6_0", 0) },
-                { 1, Resource.GetString(Resource.PACKAGE_1, "dn4_6_1", 0) }
+                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_6_0", 0) },
+                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_6_1", 0) }
             };
         }
     }

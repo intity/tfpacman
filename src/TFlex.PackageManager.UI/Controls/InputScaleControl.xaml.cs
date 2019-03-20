@@ -24,7 +24,7 @@ namespace TFlex.PackageManager.Controls
         {
             InitializeComponent();
 
-            scale.Add(Resource.GetString(Resource.PACKAGE_0, "dn1_3_1", 0), 99999);
+            scale.Add(Resource.GetString(Resource.TRANSLATOR_0, "dn1_3_1", 0), 99999);
             scale.Add("1:1",    1);
             scale.Add("1:2",    0.5m);
             scale.Add("1:4",    0.25m);
@@ -51,7 +51,7 @@ namespace TFlex.PackageManager.Controls
             scale.Add("100:1",  100);
 
             foreach (var i in scale) comboBox.Items.Add(i.Key);
-            other = Resource.GetString(Resource.PACKAGE_0, "dn1_3_2", 0);
+            other = Resource.GetString(Resource.TRANSLATOR_0, "dn1_3_2", 0);
         }
 
         public decimal? Value

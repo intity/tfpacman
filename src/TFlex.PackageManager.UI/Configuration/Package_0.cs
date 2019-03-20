@@ -22,10 +22,10 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The Package configuration base class.
     /// </summary>
-    [CustomCategoryOrder(Resource.PACKAGE_0, 1)]
-    [CustomCategoryOrder(Resource.PACKAGE_0, 2)]
-    [CustomCategoryOrder(Resource.PACKAGE_0, 3)]
-    public class Package_0 : INotifyPropertyChanged, INotifyDataErrorInfo
+    [CustomCategoryOrder(Resource.TRANSLATOR_0, 1)]
+    [CustomCategoryOrder(Resource.TRANSLATOR_0, 2)]
+    [CustomCategoryOrder(Resource.TRANSLATOR_0, 3)]
+    public class Translator_0 : INotifyPropertyChanged, INotifyDataErrorInfo
     {
         #region private fields
         private Header header;
@@ -58,15 +58,15 @@ namespace TFlex.PackageManager.Configuration
         private bool isLoaded, isChanged;
         #endregion
 
-        public Package_0(Header header)
+        public Translator_0(Header header)
         {
             this.header      = header;
             objErrors        = new Dictionary<string, List<string>>();
             error_messages   = new string[]
             {
-                Resource.GetString(Resource.PACKAGE_0, "message1", 0),
-                Resource.GetString(Resource.PACKAGE_0, "message2", 0),
-                Resource.GetString(Resource.PACKAGE_0, "message3", 0)
+                Resource.GetString(Resource.TRANSLATOR_0, "message1", 0),
+                Resource.GetString(Resource.TRANSLATOR_0, "message2", 0),
+                Resource.GetString(Resource.TRANSLATOR_0, "message3", 0)
             };
 
             outputExtension  = string.Empty;
@@ -129,9 +129,9 @@ namespace TFlex.PackageManager.Configuration
         /// The page name list.
         /// </summary>
         [PropertyOrder(1)]
-        [CustomCategory(Resource.PACKAGE_0, "category1")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_1")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_1")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_1")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_1")]
         [ExpandableObject]
         [Editor(typeof(InputCollectionControl), typeof(UITypeEditor))]
         public string[] PageNames
@@ -151,9 +151,9 @@ namespace TFlex.PackageManager.Configuration
         /// Exclude the page name from search.
         /// </summary>
         [PropertyOrder(2)]
-        [CustomCategory(Resource.PACKAGE_0, "category1")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_2")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_2")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_2")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_2")]
         public bool ExcludePage
         {
             get { return excludePage; }
@@ -171,9 +171,9 @@ namespace TFlex.PackageManager.Configuration
         /// The page scale value.
         /// </summary>
         [PropertyOrder(3)]
-        [CustomCategory(Resource.PACKAGE_0, "category1")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_3")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_3")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_3")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_3")]
         [Editor(typeof(InputScaleControl), typeof(UITypeEditor))]
         public decimal PageScale
         {
@@ -192,9 +192,9 @@ namespace TFlex.PackageManager.Configuration
         /// Save change the page scale value in document.
         /// </summary>
         [PropertyOrder(4)]
-        [CustomCategory(Resource.PACKAGE_0, "category1")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_4")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_4")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4")]
         public bool SavePageScale
         {
             get { return savePageScale; }
@@ -212,9 +212,9 @@ namespace TFlex.PackageManager.Configuration
         /// The page type list.
         /// </summary>
         [PropertyOrder(5)]
-        [CustomCategory(Resource.PACKAGE_0, "category1")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_5")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_5")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5")]
         [ExpandableObject]
         [Editor(typeof(PageTypesEditor), typeof(UITypeEditor))]
         public PageTypes PageTypes
@@ -226,9 +226,9 @@ namespace TFlex.PackageManager.Configuration
         /// Check the drawing template.
         /// </summary>
         [PropertyOrder(6)]
-        [CustomCategory(Resource.PACKAGE_0, "category1")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_6")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_6")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_6")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_6")]
         public bool CheckDrawingTemplate
         {
             get { return checkDrawingTemplate; }
@@ -246,9 +246,9 @@ namespace TFlex.PackageManager.Configuration
         /// The projection name list.
         /// </summary>
         [PropertyOrder(7)]
-        [CustomCategory(Resource.PACKAGE_0, "category2")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn2_1")]
-        [CustomDescription(Resource.PACKAGE_0, "dn2_1")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_1")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn2_1")]
         [ExpandableObject]
         [Editor(typeof(InputCollectionControl), typeof(UITypeEditor))]
         public string[] ProjectionNames
@@ -268,9 +268,9 @@ namespace TFlex.PackageManager.Configuration
         /// Exclude the projection name from search.
         /// </summary>
         [PropertyOrder(8)]
-        [CustomCategory(Resource.PACKAGE_0, "category2")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn2_2")]
-        [CustomDescription(Resource.PACKAGE_0, "dn2_2")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_2")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn2_2")]
         public bool ExcludeProjection
         {
             get { return excludeProjection; }
@@ -288,9 +288,9 @@ namespace TFlex.PackageManager.Configuration
         /// The projection scale value.
         /// </summary>
         [PropertyOrder(9)]
-        [CustomCategory(Resource.PACKAGE_0, "category2")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn2_3")]
-        [CustomDescription(Resource.PACKAGE_0, "dn2_3")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_3")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn2_3")]
         [Editor(typeof(InputScaleControl), typeof(UITypeEditor))]
         public decimal ProjectionScale
         {
@@ -309,9 +309,9 @@ namespace TFlex.PackageManager.Configuration
         /// Save change the projection scale value in document.
         /// </summary>
         [PropertyOrder(10)]
-        [CustomCategory(Resource.PACKAGE_0, "category2")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn2_4")]
-        [CustomDescription(Resource.PACKAGE_0, "dn2_4")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_4")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn2_4")]
         public bool SaveProjectionScale
         {
             get { return saveProjectionScale; }
@@ -329,9 +329,9 @@ namespace TFlex.PackageManager.Configuration
         /// Enable the processing of projections.
         /// </summary>
         [PropertyOrder(11)]
-        [CustomCategory(Resource.PACKAGE_0, "category2")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn2_5")]
-        [CustomDescription(Resource.PACKAGE_0, "dn2_5")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_5")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn2_5")]
         public bool EnableProcessingOfProjections
         {
             get { return enableProcessingOfProjections; }
@@ -349,9 +349,9 @@ namespace TFlex.PackageManager.Configuration
         /// The sub directory name definition for include in the target directory.
         /// </summary>
         [PropertyOrder(12)]
-        [CustomCategory(Resource.PACKAGE_0, "category3")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn3_1")]
-        [CustomDescription(Resource.PACKAGE_0, "dn3_1")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_1")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn3_1")]
         public string SubDirectoryName
         {
             get { return subDirectoryName; }
@@ -381,9 +381,9 @@ namespace TFlex.PackageManager.Configuration
         /// The file name suffix.
         /// </summary>
         [PropertyOrder(13)]
-        [CustomCategory(Resource.PACKAGE_0, "category3")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn3_2")]
-        [CustomDescription(Resource.PACKAGE_0, "dn3_2")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_2")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn3_2")]
         public string FileNameSuffix
         {
             get { return fileNameSuffix; }
@@ -413,9 +413,9 @@ namespace TFlex.PackageManager.Configuration
         /// Template name of the file definition.
         /// </summary>
         [PropertyOrder(14)]
-        [CustomCategory(Resource.PACKAGE_0, "category3")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn3_3")]
-        [CustomDescription(Resource.PACKAGE_0, "dn3_3")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_3")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn3_3")]
         public string TemplateFileName
         {
             get { return templateFileName; }
@@ -451,9 +451,9 @@ namespace TFlex.PackageManager.Configuration
         /// Used the document name for output file definition.
         /// </summary>
         [PropertyOrder(15)]
-        [CustomCategory(Resource.PACKAGE_0, "category3")]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn3_4")]
-        [CustomDescription(Resource.PACKAGE_0, "dn3_4")]
+        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_4")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn3_4")]
         public bool UseDocumentNamed
         {
             get { return useDocumentNamed; }
@@ -501,7 +501,8 @@ namespace TFlex.PackageManager.Configuration
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
 
-            isLoaded = true;
+            isLoaded  = true;
+            isChanged = false;
         }
 
         /// <summary>
@@ -643,22 +644,20 @@ namespace TFlex.PackageManager.Configuration
 
             foreach (var i in element.Elements())
             {
-                PackageTask(i, flag);
+                TranslatorTask(i, flag);
             }
 
             OnLoaded();
-
-            isChanged = false;
         }
 
         /// <summary>
-        /// Create new package metadata to Xml.
+        /// Create new translator metadata to Xml.
         /// </summary>
-        /// <param name="package">Package type.</param>
+        /// <param name="translator">Translator type.</param>
         /// <returns></returns>
-        internal XElement NewPackage(PackageType package)
+        internal XElement NewTranslator(TranslatorType translator)
         {
-            XElement element = new XElement("package", new XAttribute("id", package),
+            XElement element = new XElement("translator", new XAttribute("id", translator),
                 new XElement("parameter",
                     new XAttribute("name", "PageNames"),
                     new XAttribute("value", pageNames.ToString("\r\n"))),
@@ -709,24 +708,24 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// Append package metadata to parent element.
+        /// Append translator metadata to parent element.
         /// </summary>
         /// <param name="parent">Parent element from metadata Xml.</param>
-        /// <param name="package">Package type.</param>
-        internal virtual void AppendPackageToXml(XElement parent, PackageType package)
+        /// <param name="translator">Translator type.</param>
+        internal virtual void AppendTranslatorToXml(XElement parent, TranslatorType translator)
         {
-            parent.Add(NewPackage(package));
+            parent.Add(NewTranslator(translator));
             OnLoaded();
         }
 
         /// <summary>
-        /// Virtual method for processing package parameters.
+        /// Virtual method for processing translator parameters.
         /// </summary>
         /// <param name="element"></param>
         /// <param name="flag">
         /// Flag definition: (0) - read, (1) - write
         /// </param>
-        internal virtual void PackageTask(XElement element, int flag)
+        internal virtual void TranslatorTask(XElement element, int flag)
         {
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)
@@ -1363,8 +1362,8 @@ namespace TFlex.PackageManager.Configuration
 
         #region properties
         [PropertyOrder(1)]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_5_1")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_5_1")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_1")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_1")]
         [DefaultValue(true)]
         public bool Normal
         {
@@ -1380,8 +1379,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(2)]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_5_2")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_5_2")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_2")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_2")]
         [DefaultValue(false)]
         public bool Workplane
         {
@@ -1397,8 +1396,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(3)]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_5_3")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_5_3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_3")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_3")]
         [DefaultValue(false)]
         public bool Auxiliary
         {
@@ -1414,8 +1413,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(4)]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_5_4")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_5_4")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_4")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_4")]
         [DefaultValue(false)]
         public bool Text
         {
@@ -1431,8 +1430,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(5)]
-        [CustomDisplayName(Resource.PACKAGE_0, "dn1_5_5")]
-        [CustomDescription(Resource.PACKAGE_0, "dn1_5_5")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_5")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_5")]
         [DefaultValue(false)]
         public bool BillOfMaterials
         {

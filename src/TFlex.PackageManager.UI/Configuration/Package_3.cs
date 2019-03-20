@@ -10,9 +10,9 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Configuration
 {
-    [CustomCategoryOrder(Resource.PACKAGE_3, 3)]
-    [CustomCategoryOrder(Resource.PACKAGE_3, 4)]
-    public class Package_3 : Package_0
+    [CustomCategoryOrder(Resource.TRANSLATOR_3, 3)]
+    [CustomCategoryOrder(Resource.TRANSLATOR_3, 4)]
+    public class Translator_3 : Translator_0
     {
         #region private fields
         private const double px = 3.7795275590551;
@@ -26,7 +26,7 @@ namespace TFlex.PackageManager.Configuration
         private bool isChanged;
         #endregion
 
-        public Package_3(Header header) : base(header)
+        public Translator_3(Header header) : base(header)
         {
             extension    = 0;
             imageOptions = new byte[2];
@@ -63,9 +63,9 @@ namespace TFlex.PackageManager.Configuration
         /// 4 - PNG
         /// </summary>
         [PropertyOrder(16)]
-        [CustomCategory(Resource.PACKAGE_3, "category3")]
-        [CustomDisplayName(Resource.PACKAGE_3, "dn3_1")]
-        [CustomDescription(Resource.PACKAGE_3, "dn3_1")]
+        [CustomCategory(Resource.TRANSLATOR_3, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_3, "dn3_1")]
+        [CustomDescription(Resource.TRANSLATOR_3, "dn3_1")]
         [ItemsSource(typeof(ExtensionItems2))]
         public int Extension
         {
@@ -91,9 +91,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export the screen layers of the drawing.
         /// </summary>
         [PropertyOrder(17)]
-        [CustomCategory(Resource.PACKAGE_3, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_3, "dn4_1")]
-        [CustomDescription(Resource.PACKAGE_3, "dn4_1")]
+        [CustomCategory(Resource.TRANSLATOR_3, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_3, "dn4_1")]
+        [CustomDescription(Resource.TRANSLATOR_3, "dn4_1")]
         public bool ScreenLayers
         {
             get { return screenLayers; }
@@ -112,9 +112,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export drawing elements.
         /// </summary>
         [PropertyOrder(18)]
-        [CustomCategory(Resource.PACKAGE_3, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_3, "dn4_2")]
-        [CustomDescription(Resource.PACKAGE_3, "dn4_2")]
+        [CustomCategory(Resource.TRANSLATOR_3, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_3, "dn4_2")]
+        [CustomDescription(Resource.TRANSLATOR_3, "dn4_2")]
         public bool Constructions
         {
             get { return constructions; }
@@ -220,11 +220,11 @@ namespace TFlex.PackageManager.Configuration
             logFile.AppendLine(string.Format("Total pages:\t{0}", pages.Count));
         }
 
-        internal override void AppendPackageToXml(XElement parent, PackageType package)
+        internal override void AppendTranslatorToXml(XElement parent, TranslatorType package)
         {
-            base.AppendPackageToXml(parent, package);
+            base.AppendTranslatorToXml(parent, package);
 
-            string value = Enum.GetName(typeof(PackageType), package);
+            string value = Enum.GetName(typeof(TranslatorType), package);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter", 
                     new XAttribute("name", "OutputExtension"), 
@@ -236,9 +236,9 @@ namespace TFlex.PackageManager.Configuration
                     (imageOptions[1] == 1 ? "01" : "00"))));
         }
 
-        internal override void PackageTask(XElement element, int flag)
+        internal override void TranslatorTask(XElement element, int flag)
         {
-            base.PackageTask(element, flag);
+            base.TranslatorTask(element, flag);
 
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)

@@ -10,8 +10,8 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Configuration
 {
-    [CustomCategoryOrder(Resource.PACKAGE_9, 4)]
-    public class Package_9 : Package_0
+    [CustomCategoryOrder(Resource.TRANSLATOR_9, 4)]
+    public class Translator_9 : Translator_0
     {
         #region private field
         private bool export3dModel;
@@ -23,7 +23,7 @@ namespace TFlex.PackageManager.Configuration
         private bool isChanged;
         #endregion
 
-        public Package_9(Header header) : base (header)
+        public Translator_9(Header header) : base (header)
         {
             OutputExtension = "PDF";
         }
@@ -43,9 +43,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export 3D model.
         /// </summary>
         [PropertyOrder(18)]
-        [CustomCategory(Resource.PACKAGE_9, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_9, "dn4_1")]
-        [CustomDescription(Resource.PACKAGE_9, "dn4_1")]
+        [CustomCategory(Resource.TRANSLATOR_9, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_1")]
+        [CustomDescription(Resource.TRANSLATOR_9, "dn4_1")]
         public bool Export3dModel
         {
             get { return export3dModel; }
@@ -63,9 +63,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export layers.
         /// </summary>
         [PropertyOrder(19)]
-        [CustomCategory(Resource.PACKAGE_9, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_9, "dn4_2")]
-        [CustomDescription(Resource.PACKAGE_9, "dn4_2")]
+        [CustomCategory(Resource.TRANSLATOR_9, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_2")]
+        [CustomDescription(Resource.TRANSLATOR_9, "dn4_2")]
         public bool Layers
         {
             get { return layers; }
@@ -83,9 +83,9 @@ namespace TFlex.PackageManager.Configuration
         /// Combine pages to one PDF file.
         /// </summary>
         [PropertyOrder(20)]
-        [CustomCategory(Resource.PACKAGE_9, "category4")]
-        [CustomDisplayName(Resource.PACKAGE_9, "dn4_3")]
-        [CustomDescription(Resource.PACKAGE_9, "dn4_3")]
+        [CustomCategory(Resource.TRANSLATOR_9, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_3")]
+        [CustomDescription(Resource.TRANSLATOR_9, "dn4_3")]
         public bool CombinePages
         {
             get { return combinePages; }
@@ -197,11 +197,11 @@ namespace TFlex.PackageManager.Configuration
             logFile.AppendLine(string.Format("Total pages:\t{0}", pages.Count));
         }
 
-        internal override void AppendPackageToXml(XElement parent, PackageType package)
+        internal override void AppendTranslatorToXml(XElement parent, TranslatorType package)
         {
-            base.AppendPackageToXml(parent, package);
+            base.AppendTranslatorToXml(parent, package);
 
-            string value = Enum.GetName(typeof(PackageType), package);
+            string value = Enum.GetName(typeof(TranslatorType), package);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter",
                     new XAttribute("name", "Export3dModel"),
@@ -214,9 +214,9 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("value", combinePages ? "1" : "0")));
         }
 
-        internal override void PackageTask(XElement element, int flag)
+        internal override void TranslatorTask(XElement element, int flag)
         {
-            base.PackageTask(element, flag);
+            base.TranslatorTask(element, flag);
 
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)

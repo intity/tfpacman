@@ -26,7 +26,7 @@ namespace TFlex.PackageManager.UI
     public partial class MainWindow : Window
     {
         #region private fields
-        private PackageCollection self;
+        private ConfigurationCollection self;
 
         private TreeListView treeListView1;
         private TreeListView treeListView2;
@@ -146,7 +146,7 @@ namespace TFlex.PackageManager.UI
             tvControl2.SizeChanged += TvControl2_SizeChanged;
 
             options = new Common.Options();
-            self = new PackageCollection(options);
+            self = new ConfigurationCollection { TargetDirectory = options.UserDirectory };
             #endregion
 
             #region initialize resources
@@ -414,10 +414,10 @@ namespace TFlex.PackageManager.UI
                         switch (key2)
                         {
                             case "Acad":
-                                header1_1.Content = ((Package_1)self.Configurations[key1].Translators[key2]).OutputExtension;
+                                header1_1.Content = ((Translator_1)self.Configurations[key1].Translators[key2]).OutputExtension;
                                 break;
                             case "Bitmap":
-                                header1_3.Content = ((Package_3)self.Configurations[key1].Translators[key2]).OutputExtension;
+                                header1_3.Content = ((Translator_3)self.Configurations[key1].Translators[key2]).OutputExtension;
                                 break;
                         }
                         break;
@@ -632,11 +632,11 @@ namespace TFlex.PackageManager.UI
                         switch (i.Key)
                         {
                             case "Acad":
-                                header1_1.Content = ((Package_1)self.Configurations[key1].Translators[i.Key]).OutputExtension;
+                                header1_1.Content = ((Translator_1)self.Configurations[key1].Translators[i.Key]).OutputExtension;
                                 treeListView1.Columns.Add(column1_1);
                                 break;
                             case "Bitmap":
-                                header1_3.Content = ((Package_3)self.Configurations[key1].Translators[i.Key]).OutputExtension;
+                                header1_3.Content = ((Translator_3)self.Configurations[key1].Translators[i.Key]).OutputExtension;
                                 treeListView1.Columns.Add(column1_3);
                                 break;
                             case "Pdf":
@@ -853,22 +853,22 @@ namespace TFlex.PackageManager.UI
                     {
                         case "Default":
                             logFile.AppendLine("\r\nTranslator:\tDefault");
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_0)
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Translator_0)
                                 .ProcessingFile(path, logFile);
                             break;
                         case "Acad":
                             logFile.AppendLine("\r\nTranslator:\tAcad");
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_1)
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Translator_1)
                                 .ProcessingFile(path, logFile);
                             break;
                         case "Bitmap":
                             logFile.AppendLine("\r\nTranslator:\tBitmap");
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_3)
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Translator_3)
                                 .ProcessingFile(path, logFile);
                             break;
                         case "Pdf":
                             logFile.AppendLine("\r\nTranslator:\tPdf");
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Package_9)
+                            (self.Configurations[key1].Translators.ElementAt(j).Value as Translator_9)
                                 .ProcessingFile(path, logFile);
                             break;
                     }

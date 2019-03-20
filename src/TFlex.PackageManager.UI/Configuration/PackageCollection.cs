@@ -8,9 +8,9 @@ using TFlex.PackageManager.Common;
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
-    /// The Package type enumeration.
+    /// The Translator type enumeration.
     /// </summary>
-    public enum PackageType
+    public enum TranslatorType
     {
         Default,
         Acad,
@@ -27,9 +27,9 @@ namespace TFlex.PackageManager.Configuration
     }
 
     /// <summary>
-    /// The PackageCollection class.
+    /// The CinfigurationCollection class.
     /// </summary>
-    public class PackageCollection
+    public class ConfigurationCollection
     {
         #region private fields
         private ObservableDictionary<string, Header> configurations;
@@ -37,14 +37,11 @@ namespace TFlex.PackageManager.Configuration
         private string targetDirectory;
         #endregion
 
-        public PackageCollection(Common.Options options)
+        public ConfigurationCollection()
         {
             configurations       = new ObservableDictionary<string, Header>();
             configurations.CollectionChanged += Configurations_CollectionChanged;
-            targetDirectory      = options.UserDirectory;
             changedCofigurations = new List<string>();
-
-            GetConfigurations();
         }
 
         #region internal properties
@@ -53,7 +50,7 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         internal string TargetDirectory
         {
-            get { return (targetDirectory); }
+            get { return targetDirectory; }
             set
             {
                 if (targetDirectory != value)
@@ -105,6 +102,9 @@ namespace TFlex.PackageManager.Configuration
                 header.ConfigurationTask(0);
                 configurations.Add(name, header);
             }
+
+            //Debug.WriteLine(string.Format("GetConfigurations [count: {0}]",
+            //    configurations.Count));
         }
 
         /// <summary>
@@ -114,14 +114,15 @@ namespace TFlex.PackageManager.Configuration
         {
             foreach (var i in configurations)
             {
-                i.Value.ConfigurationTask(1);
+                if (i.Value.IsChanged)
+                    i.Value.ConfigurationTask(1);
             }
 
             changedCofigurations.Clear();
         }
         #endregion
 
-        #region private methods
+        #region event handlers
         private void Configurations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             Header header;
