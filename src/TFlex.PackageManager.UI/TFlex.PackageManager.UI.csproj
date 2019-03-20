@@ -103,6 +103,7 @@
     <Compile Include="Common\LogFile.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\Options.cs" />
+    <Compile Include="Common\Processing.cs" />
     <Compile Include="Configuration\Header.cs" />
     <Compile Include="Configuration\ConfigurationCollection.cs" />
     <Compile Include="Controls\BiarcInterpolationControl.xaml.cs">

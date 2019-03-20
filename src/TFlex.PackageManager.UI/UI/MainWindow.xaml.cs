@@ -821,6 +821,8 @@ namespace TFlex.PackageManager.UI
             IntPtr value = Marshal.AllocHGlobal(size);
             Stopwatch watch = new Stopwatch();
             LogFile logFile = new LogFile(options);
+            Processing processing = new Processing(self.Configurations[key1], logFile);
+            object translator = null;
 
             logFile.CreateLogFile(self.Configurations[key1].TargetDirectory);
             logFile.AppendLine("Started processing");
@@ -853,23 +855,23 @@ namespace TFlex.PackageManager.UI
                     {
                         case "Default":
                             logFile.AppendLine("\r\nTranslator:\tDefault");
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Translator_0)
-                                .ProcessingFile(path, logFile);
+                            translator = self.Configurations[key1].Translators.ElementAt(j).Value;
+                            processing.ProcessingFile(translator, TranslatorType.Default, path);
                             break;
                         case "Acad":
                             logFile.AppendLine("\r\nTranslator:\tAcad");
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Translator_1)
-                                .ProcessingFile(path, logFile);
+                            translator = self.Configurations[key1].Translators.ElementAt(j).Value;
+                            processing.ProcessingFile(translator, TranslatorType.Acad, path);
                             break;
                         case "Bitmap":
                             logFile.AppendLine("\r\nTranslator:\tBitmap");
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Translator_3)
-                                .ProcessingFile(path, logFile);
+                            translator = self.Configurations[key1].Translators.ElementAt(j).Value;
+                            processing.ProcessingFile(translator, TranslatorType.Bitmap, path);
                             break;
                         case "Pdf":
                             logFile.AppendLine("\r\nTranslator:\tPdf");
-                            (self.Configurations[key1].Translators.ElementAt(j).Value as Translator_9)
-                                .ProcessingFile(path, logFile);
+                            translator = self.Configurations[key1].Translators.ElementAt(j).Value;
+                            processing.ProcessingFile(translator, TranslatorType.Pdf, path);
                             break;
                     }
 
