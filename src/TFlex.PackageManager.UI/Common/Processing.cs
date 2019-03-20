@@ -28,6 +28,7 @@ namespace TFlex.PackageManager.Common
         {
             this.header  = header;
             this.logFile = logFile;
+            translator_t = TranslatorType.Default;
         }
 
         #region internal methods
@@ -35,15 +36,26 @@ namespace TFlex.PackageManager.Common
         /// Processing file.
         /// </summary>
         /// <param name="translator"></param>
-        /// <param name="type"></param>
         /// <param name="path"></param>
-        internal void ProcessingFile(object translator, TranslatorType type, string path)
+        internal void ProcessingFile(object translator, string path)
         {
             translator_0 = translator as Translator_0;
-            translator_1 = translator as Translator_1;
-            translator_3 = translator as Translator_3;
-            translator_9 = translator as Translator_9;
-            translator_t = type;
+
+            if (translator.GetType() == typeof(Translator_1))
+            {
+                translator_1 = translator as Translator_1;
+                translator_t = TranslatorType.Acad;
+            }
+            else if (translator.GetType() == typeof(Translator_3))
+            {
+                translator_3 = translator as Translator_3;
+                translator_t = TranslatorType.Bitmap;
+            }
+            else if (translator.GetType() == typeof(Translator_9))
+            {
+                translator_9 = translator as Translator_9;
+                translator_t = TranslatorType.Pdf;
+            }
 
             Document document = Application.OpenDocument(path, false);
             logFile.AppendLine(string.Format("Open document:\t{0}", path));

@@ -822,7 +822,6 @@ namespace TFlex.PackageManager.UI
             Stopwatch watch = new Stopwatch();
             LogFile logFile = new LogFile(options);
             Processing processing = new Processing(self.Configurations[key1], logFile);
-            object translator = null;
 
             logFile.CreateLogFile(self.Configurations[key1].TargetDirectory);
             logFile.AppendLine("Started processing");
@@ -839,7 +838,7 @@ namespace TFlex.PackageManager.UI
                     break;
                 }
 
-                string path = i.Key;
+                string path = i.Key, name;
 
                 for (int j = 0; j < i.Value.Length; j++)
                 {
@@ -851,29 +850,9 @@ namespace TFlex.PackageManager.UI
                         continue;
                     }
 
-                    switch (self.Configurations[key1].Translators.ElementAt(j).Key)
-                    {
-                        case "Default":
-                            logFile.AppendLine("\r\nTranslator:\tDefault");
-                            translator = self.Configurations[key1].Translators.ElementAt(j).Value;
-                            processing.ProcessingFile(translator, TranslatorType.Default, path);
-                            break;
-                        case "Acad":
-                            logFile.AppendLine("\r\nTranslator:\tAcad");
-                            translator = self.Configurations[key1].Translators.ElementAt(j).Value;
-                            processing.ProcessingFile(translator, TranslatorType.Acad, path);
-                            break;
-                        case "Bitmap":
-                            logFile.AppendLine("\r\nTranslator:\tBitmap");
-                            translator = self.Configurations[key1].Translators.ElementAt(j).Value;
-                            processing.ProcessingFile(translator, TranslatorType.Bitmap, path);
-                            break;
-                        case "Pdf":
-                            logFile.AppendLine("\r\nTranslator:\tPdf");
-                            translator = self.Configurations[key1].Translators.ElementAt(j).Value;
-                            processing.ProcessingFile(translator, TranslatorType.Pdf, path);
-                            break;
-                    }
+                    name = self.Configurations[key1].Translators.ElementAt(j).Key;
+                    logFile.AppendLine(string.Format("\r\nTranslator:\t{0}", name));
+                    processing.ProcessingFile(self.Configurations[key1].Translators.ElementAt(j).Value, path);
 
                     count[0] += increment;
                     Marshal.Copy(count, 0, value, count.Length);
