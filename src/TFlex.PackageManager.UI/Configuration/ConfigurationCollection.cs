@@ -27,7 +27,7 @@ namespace TFlex.PackageManager.Configuration
     }
 
     /// <summary>
-    /// The CinfigurationCollection class.
+    /// The ConfigurationCollection class.
     /// </summary>
     public class ConfigurationCollection
     {

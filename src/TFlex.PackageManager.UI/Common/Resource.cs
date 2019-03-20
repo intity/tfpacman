@@ -22,10 +22,10 @@ namespace TFlex.PackageManager.Common
         public const string MAIN_WINDOW  = "PackageManager";
         public const string LIST_VALUES  = "ListValues";
         public const string OPTIONS_UI   = "Options";
-        public const string TRANSLATOR_0 = "Package0";
-        public const string TRANSLATOR_1 = "Package1";
-        public const string TRANSLATOR_3 = "Package3";
-        public const string TRANSLATOR_9 = "Package9";
+        public const string TRANSLATOR_0 = "Translator_0";
+        public const string TRANSLATOR_1 = "Translator_1";
+        public const string TRANSLATOR_3 = "Translator_3";
+        public const string TRANSLATOR_9 = "Translator_9";
 
         public const string BASE_URI = @"pack://application:,,,/TFlex.PackageManager.UI;component/Resources/";
         public const string LOG_FILE = "processing.log";
