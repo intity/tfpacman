@@ -355,10 +355,6 @@ namespace TFlex.PackageManager.Common
                 if (translator_0.CheckDrawingTemplate && !DrawingTemplateExists(document, i))
                     continue;
 
-                logFile.AppendLine(string.Format("Page name:\t{0}", i.Name));
-                logFile.AppendLine(string.Format("Page type:\t{0}", i.PageType));
-                //Debug.WriteLine(string.Format("Page name: {0}, flags: {1:X4}", i.Name, flags));
-
                 if (i.Scale.Value != (double)translator_0.PageScale && translator_0.PageScale != 99999)
                 {
                     i.Scale = new Parameter((double)translator_0.PageScale);
@@ -372,6 +368,12 @@ namespace TFlex.PackageManager.Common
                         document.Regenerate(ro);
                     }
                 }
+
+                logFile.AppendLine(string.Format("Page name:\t{0}",  i.Name));
+                logFile.AppendLine(string.Format("Page type:\t{0}",  i.PageType));
+                logFile.AppendLine(string.Format("Page scale:\t{0}", i.Scale.Value));
+
+                //Debug.WriteLine(string.Format("Page name: {0}, flags: {1:X4}", i.Name, flags));
 
                 if (translator_0.EnableProcessingOfProjections)
                 {
@@ -403,6 +405,8 @@ namespace TFlex.PackageManager.Common
                     translator_9.Export(document, processingPages, logFile);
                     break;
             }
+
+            logFile.AppendLine(string.Format("Total pages:\t{0}", processingPages.Count));
         }
 
         /// <summary>
@@ -427,9 +431,6 @@ namespace TFlex.PackageManager.Common
                 if (flags == 0x0000 || flags == 0x0007)
                     continue;
 
-                logFile.AppendLine(string.Format("Projection name:{0}", i.Name));
-                //Debug.WriteLine(string.Format("Projection name: {0}, flags: {1:X4}", i.Name, flags));
-
                 if (i.Scale.Value != (double)translator_0.ProjectionScale)
                 {
                     scale = translator_0.ProjectionScale == 99999 
@@ -446,6 +447,11 @@ namespace TFlex.PackageManager.Common
                         document.Regenerate(ro);
                     }
                 }
+
+                logFile.AppendLine(string.Format("Projection name:{0}", i.Name));
+                logFile.AppendLine(string.Format("Projection scale:{0}", i.Scale.Value));
+
+                //Debug.WriteLine(string.Format("Projection name: {0}, flags: {1:X4}", i.Name, flags));
             }
         }
         #endregion

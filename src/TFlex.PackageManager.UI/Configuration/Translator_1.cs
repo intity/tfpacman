@@ -405,8 +405,6 @@ namespace TFlex.PackageManager.Configuration
                     logFile.AppendLine(string.Format("Export to:\t{0}", p.Value));
                 }
             }
-
-            logFile.AppendLine(string.Format("Total pages:\t{0}", pages.Count));
         }
 
         internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)

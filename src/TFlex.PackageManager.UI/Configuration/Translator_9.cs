@@ -193,8 +193,6 @@ namespace TFlex.PackageManager.Configuration
                     export.ExportPages.Clear();
                 }
             }
-
-            logFile.AppendLine(string.Format("Total pages:\t{0}", pages.Count));
         }
 
         internal override void AppendTranslatorToXml(XElement parent, TranslatorType package)
