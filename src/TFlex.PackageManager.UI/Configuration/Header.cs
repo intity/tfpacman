@@ -71,7 +71,7 @@ namespace TFlex.PackageManager.Configuration
                 case "Default":
                     if ((sender as TranslatorTypes).Default)
                     {
-                        translator_0 = new Translator_0(this);
+                        translator_0 = new Translator_0();
                         translator_0.PropertyChanged += Package_PropertyChanged;
                         translator_0.ErrorsChanged   += Package_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_0);
@@ -84,7 +84,7 @@ namespace TFlex.PackageManager.Configuration
                 case "Acad":
                     if ((sender as TranslatorTypes).Acad)
                     {
-                        translator_1 = new Translator_1(this);
+                        translator_1 = new Translator_1();
                         translator_1.PropertyChanged += Package_PropertyChanged;
                         translator_1.ErrorsChanged   += Package_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_1);
@@ -97,7 +97,7 @@ namespace TFlex.PackageManager.Configuration
                 case "Bitmap":
                     if ((sender as TranslatorTypes).Bitmap)
                     {
-                        translator_3 = new Translator_3(this);
+                        translator_3 = new Translator_3();
                         translator_3.PropertyChanged += Package_PropertyChanged;
                         translator_3.ErrorsChanged   += Package_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_3);
@@ -110,7 +110,7 @@ namespace TFlex.PackageManager.Configuration
                 case "Pdf":
                     if ((sender as TranslatorTypes).Pdf)
                     {
-                        translator_9 = new Translator_9(this);
+                        translator_9 = new Translator_9();
                         translator_9.PropertyChanged += Package_PropertyChanged;
                         translator_9.ErrorsChanged   += Package_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_9);

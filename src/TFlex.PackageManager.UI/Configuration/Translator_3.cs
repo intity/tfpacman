@@ -26,7 +26,7 @@ namespace TFlex.PackageManager.Configuration
         private bool isChanged;
         #endregion
 
-        public Translator_3(Header header) : base(header)
+        public Translator_3()
         {
             extension    = 0;
             imageOptions = new byte[2];

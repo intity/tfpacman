@@ -35,7 +35,7 @@ namespace TFlex.PackageManager.Configuration
         private bool isChanged;
         #endregion
 
-        public Translator_1(Header header) : base(header)
+        public Translator_1()
         {
             extension                            = 0;
             autocadExportFileVersion             = 3;

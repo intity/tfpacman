@@ -23,7 +23,7 @@ namespace TFlex.PackageManager.Configuration
         private bool isChanged;
         #endregion
 
-        public Translator_9(Header header) : base (header)
+        public Translator_9()
         {
             OutputExtension = "PDF";
         }

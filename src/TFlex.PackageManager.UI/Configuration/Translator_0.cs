@@ -27,7 +27,6 @@ namespace TFlex.PackageManager.Configuration
     public class Translator_0 : INotifyPropertyChanged, INotifyDataErrorInfo
     {
         #region private fields
-        private readonly Header header;
         private string outputExtension;
         private string [] pageNames;
         private bool excludePage;
@@ -57,9 +56,8 @@ namespace TFlex.PackageManager.Configuration
         private bool isLoaded, isChanged;
         #endregion
 
-        public Translator_0(Header header)
+        public Translator_0()
         {
-            this.header      = header;
             objErrors        = new Dictionary<string, List<string>>();
             error_messages   = new string[]
             {
