@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.Windows;
@@ -9,63 +11,99 @@ namespace TFlex
 {
     public class ApiLoader
     {
-        private static List<string> folders = null;
+        #region private fields
+        private const string API_VERSION = "16.0.35.0";
+        private static List<string> folders;
+        private static bool isLoaded;
+        #endregion
 
-        public static void PreLoad()
+        #region public methods
+        /// <summary>
+        /// Preload T-FLEX API.
+        /// </summary>
+        public static void Preload()
         {
-            if (folders != null)
-                return;
-            else
-                folders = new List<string>();
+            folders = new List<string>();
 
-            string path = GetPath(@"T-FLEX CAD 3D 16\Rus");
-            if (string.IsNullOrEmpty(path))
-                throw new System.IO.FileNotFoundException("T-FLEX CAD not installed");
+            string[] products = new string[]
+            {
+                @"T-FLEX CAD 3D 16\Rus",
+                @"T-FLEX CAD 3D 16\Eng",
+                @"TENADO CAD 3D 16\Ger"
+            };
 
-            folders.Add(path);
+            string path = null;
+
+            foreach (var i in products)
+            {
+                if ((path = GetPath(i)).Length > 0)
+                    folders.Add(path);
+            }
+
+            if (folders.Count == 0)
+            {
+                throw new FileNotFoundException("T-FLEX CAD not installed");
+            }
+
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
         }
 
+        /// <summary>
+        /// Initialize T-FLEX API.
+        /// </summary>
+        /// <returns></returns>
         public static bool InitSession()
         {
-            if (folders == null)
-                throw new InvalidOperationException("Call Initialize first");
+            if (!isLoaded)
+            {
+                throw new FileNotFoundException("T-FLEX API not installed");
+            }
 
             ApplicationSessionSetup setup = new ApplicationSessionSetup
             {
                 ReadOnly = false,
                 ProtectionLicense = ApplicationSessionSetup.License.Auto
             };
-            return Application.InitSession(setup);
+
+            if (Application.InitSession(setup))
+            {
+                Debug.WriteLine(string.Format("InitSession [product: {0}, language: {1}]",
+                    Application.Product,
+                    Application.InterfaceLanguage));
+
+                return true;
+            }
+
+            return false;
         }
 
+        /// <summary>
+        /// Exit the T-FLEX API session.
+        /// </summary>
         public static void ExitSession()
         {
-            if (folders == null)
-                return;
-
             Application.ExitSession();
-            folders = null;
+            Debug.WriteLine("ExitSession");
         }
+        #endregion
 
+        #region private methods
         private static string GetPath(string product)
         {
-            string path = "";
+            string path = string.Empty;
 
             if (string.IsNullOrEmpty(product))
                 return path;
 
-            string regPath = string.Format(@"SOFTWARE\Top Systems\{0}\", product);
-
+            string regPath  = string.Format(@"SOFTWARE\Top Systems\{0}\", product);
             RegistryKey key = Registry.LocalMachine.OpenSubKey(regPath,
-                RegistryKeyPermissionCheck.ReadSubTree, RegistryRights.ReadKey);
+                RegistryKeyPermissionCheck.ReadSubTree,
+                RegistryRights.ReadKey);
 
-            if (key == null)
+            if (key == null || API_VERSION != (string)key.GetValue("SetupProductVersion"))
                 return path;
 
-            if (string.IsNullOrEmpty(path))
-                path = (string)key.GetValue("SetupHelpPath", string.Empty);
-
+            path = (string)key.GetValue("SetupHelpPath", string.Empty);
             key.Close();
 
             if (path.Length > 0 && path[path.Length - 1] != '\\')
@@ -81,6 +119,7 @@ namespace TFlex
 
             try
             {
+                Assembly assembly;
                 string name = args.Name;
 
                 int index = name.IndexOf(",");
@@ -89,16 +128,25 @@ namespace TFlex
 
                 foreach (string path in folders)
                 {
-                    if (!System.IO.Directory.Exists(path))
+                    if (!Directory.Exists(path))
                         continue;
 
                     string fileName = string.Format("{0}{1}.dll", path, name);
 
-                    if (!System.IO.File.Exists(fileName))
+                    if (!File.Exists(fileName))
                         continue;
 
-                    System.IO.Directory.SetCurrentDirectory(path);
-                    return Assembly.LoadFile(fileName);
+                    Directory.SetCurrentDirectory(path);
+
+                    if ((assembly = Assembly.LoadFile(fileName)) != null)
+                    {
+                        isLoaded = true;
+
+                        Debug.WriteLine(string.Format("AssemblyResolve [assembly loaded: {0}]",
+                            assembly.FullName));
+                    }
+
+                    return assembly;
                 }
             }
             catch (Exception ex)
@@ -113,5 +161,6 @@ namespace TFlex
 
             return null;
         }
+        #endregion
     }
 }

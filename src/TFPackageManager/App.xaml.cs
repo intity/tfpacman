@@ -11,7 +11,7 @@ namespace TFlex.PackageManager
     {
         void AppStartup(object sender, StartupEventArgs args)
         {
-            ApiLoader.PreLoad();
+            ApiLoader.Preload();
             ApiLoader.InitSession();
 
             UI.MainWindow packageManager = new UI.MainWindow();
