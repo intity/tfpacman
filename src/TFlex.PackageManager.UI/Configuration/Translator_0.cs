@@ -498,8 +498,9 @@ namespace TFlex.PackageManager.Configuration
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
 
-            isLoaded  = true;
-            isChanged = false;
+            isLoaded = true;
+
+            //Debug.WriteLine("OnLoaded");
         }
 
         /// <summary>
@@ -712,7 +713,6 @@ namespace TFlex.PackageManager.Configuration
         internal virtual void AppendTranslatorToXml(XElement parent, TranslatorType translator)
         {
             parent.Add(NewTranslator(translator));
-            OnLoaded();
         }
 
         /// <summary>

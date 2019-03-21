@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using TFlex.Model;
@@ -33,7 +33,7 @@ namespace TFlex.PackageManager.Configuration
         {
             get
             {
-                return (isChanged ? true : base.IsChanged);
+                return (isChanged | base.IsChanged);
             }
         }
         #endregion
@@ -195,11 +195,11 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        internal override void AppendTranslatorToXml(XElement parent, TranslatorType package)
+        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
         {
-            base.AppendTranslatorToXml(parent, package);
+            base.AppendTranslatorToXml(parent, translator);
 
-            string value = Enum.GetName(typeof(TranslatorType), package);
+            string value = Enum.GetName(typeof(TranslatorType), translator);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter",
                     new XAttribute("name", "Export3dModel"),

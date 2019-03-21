@@ -55,7 +55,7 @@ namespace TFlex.PackageManager.Configuration
         {
             get
             {
-                return (isChanged ? true : base.IsChanged);
+                return (isChanged | base.IsChanged);
             }
         }
         #endregion
@@ -71,7 +71,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category3")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn3_1")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn3_1")]
-        [ItemsSource(typeof(ExtensionItems0))]
+        [ItemsSource(typeof(ExtensionItems_1))]
         public int Extension
         {
             get
@@ -570,7 +570,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
     }
 
-    internal class ExtensionItems0 : IItemsSource
+    internal class ExtensionItems_1 : IItemsSource
     {
         public ItemCollection GetValues()
         {

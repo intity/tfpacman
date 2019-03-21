@@ -39,7 +39,7 @@ namespace TFlex.PackageManager.Configuration
         {
             get
             {
-                return (isChanged ? true : base.IsChanged);
+                return (isChanged | base.IsChanged);
             }
         }
         #endregion
@@ -66,7 +66,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_3, "category3")]
         [CustomDisplayName(Resource.TRANSLATOR_3, "dn3_1")]
         [CustomDescription(Resource.TRANSLATOR_3, "dn3_1")]
-        [ItemsSource(typeof(ExtensionItems2))]
+        [ItemsSource(typeof(ExtensionItems_3))]
         public int Extension
         {
             get { return extension; }
@@ -218,11 +218,11 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        internal override void AppendTranslatorToXml(XElement parent, TranslatorType package)
+        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
         {
-            base.AppendTranslatorToXml(parent, package);
+            base.AppendTranslatorToXml(parent, translator);
 
-            string value = Enum.GetName(typeof(TranslatorType), package);
+            string value = Enum.GetName(typeof(TranslatorType), translator);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter", 
                     new XAttribute("name", "OutputExtension"), 
@@ -278,7 +278,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
     }
 
-    internal class ExtensionItems2 : IItemsSource
+    internal class ExtensionItems_3 : IItemsSource
     {
         public ItemCollection GetValues()
         {

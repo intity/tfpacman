@@ -33,6 +33,7 @@ namespace TFlex.PackageManager.Configuration
         private readonly byte[] objState   = new byte[6];
         private readonly string[] s_values = new string[4];
         private readonly bool[] tr_types   = new bool[12];
+        private readonly byte[] tchanges   = new byte[4];
         private bool isLoaded, isChanged, isInvalid;
         #endregion
 
@@ -51,13 +52,42 @@ namespace TFlex.PackageManager.Configuration
         }
 
         #region event handlers
-        private void Package_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Translator_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            objState[5] = (byte)((sender as Translator_0).IsChanged ? 1 : 0);
+            if (sender.Equals(translator_0))
+            {
+                tchanges[0] = (byte)(translator_0.IsChanged ? 1 : 0);
+            }
+            else if (sender.Equals(translator_1))
+            {
+                tchanges[1] = (byte)(translator_1.IsChanged ? 1 : 0);
+            }
+            else if (sender.Equals(translator_3))
+            {
+                tchanges[2] = (byte)(translator_3.IsChanged ? 1 : 0);
+            }
+            else if (sender.Equals(translator_9))
+            {
+                tchanges[3] = (byte)(translator_9.IsChanged ? 1 : 0);
+            }
+
+            objState[5] = 0;
+
+            foreach (var i in tchanges)
+            {
+                if (i > 0)
+                {
+                    objState[5] = 1;
+                    break;
+                }
+            }
+
             OnChanged(5);
+
+            //Debug.WriteLine(string.Format("IsChanged [value: {0}]", isChanged));
         }
 
-        private void Package_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        private void Translator_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
             isInvalid = (sender as Translator_0).HasErrors;
         }
@@ -72,8 +102,8 @@ namespace TFlex.PackageManager.Configuration
                     if ((sender as TranslatorTypes).Default)
                     {
                         translator_0 = new Translator_0();
-                        translator_0.PropertyChanged += Package_PropertyChanged;
-                        translator_0.ErrorsChanged   += Package_ErrorsChanged;
+                        translator_0.PropertyChanged += Translator_PropertyChanged;
+                        translator_0.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_0);
                     }
                     else
@@ -85,8 +115,8 @@ namespace TFlex.PackageManager.Configuration
                     if ((sender as TranslatorTypes).Acad)
                     {
                         translator_1 = new Translator_1();
-                        translator_1.PropertyChanged += Package_PropertyChanged;
-                        translator_1.ErrorsChanged   += Package_ErrorsChanged;
+                        translator_1.PropertyChanged += Translator_PropertyChanged;
+                        translator_1.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_1);
                     }
                     else
@@ -98,8 +128,8 @@ namespace TFlex.PackageManager.Configuration
                     if ((sender as TranslatorTypes).Bitmap)
                     {
                         translator_3 = new Translator_3();
-                        translator_3.PropertyChanged += Package_PropertyChanged;
-                        translator_3.ErrorsChanged   += Package_ErrorsChanged;
+                        translator_3.PropertyChanged += Translator_PropertyChanged;
+                        translator_3.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_3);
                     }
                     else
@@ -111,8 +141,8 @@ namespace TFlex.PackageManager.Configuration
                     if ((sender as TranslatorTypes).Pdf)
                     {
                         translator_9 = new Translator_9();
-                        translator_9.PropertyChanged += Package_PropertyChanged;
-                        translator_9.ErrorsChanged   += Package_ErrorsChanged;
+                        translator_9.PropertyChanged += Translator_PropertyChanged;
+                        translator_9.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_9);
                     }
                     else
@@ -275,14 +305,23 @@ namespace TFlex.PackageManager.Configuration
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
 
+            for (int i = 0; i < tchanges.Length; i++)
+                tchanges[i] = 0;
+
             isLoaded = true;
+
+            if (isChanged)
+            {
+                isChanged = false;
+                OnPropertyChanged("IsChanged");
+            }
         }
 
         /// <summary>
         /// Verified this object a change and calls event for 'IsChanged' property.
         /// </summary>
         /// <param name="index">Property index.</param>
-        private void OnChanged(int index = -1)
+        private void OnChanged(int index)
         {
             if (!isLoaded) return;
 
@@ -502,7 +541,6 @@ namespace TFlex.PackageManager.Configuration
                 }
 
                 OnLoaded();
-                OnChanged();
             }
             else
             {
