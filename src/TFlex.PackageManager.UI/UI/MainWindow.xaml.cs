@@ -445,6 +445,8 @@ namespace TFlex.PackageManager.UI
                 DefaultExtension = "config"
             };
 
+            sfd.Filters.Add(new CommonFileDialogFilter("Configuration Files", "*.config"));
+
             if (sfd.ShowDialog() == CommonFileDialogResult.Cancel)
                 return;
 
