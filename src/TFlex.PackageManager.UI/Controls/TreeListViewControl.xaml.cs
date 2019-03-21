@@ -180,10 +180,11 @@ namespace TFlex.PackageManager.Controls
 
         private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            colCount = treeListView.Columns.Count;
+
             if (e.Action != NotifyCollectionChangedAction.Remove)
                 return;
 
-            colCount = treeListView.Columns.Count;
             int?[] indexes = new int?[selectedItems.Count];
             string[] keys  = selectedItems.Keys.ToArray();
 
