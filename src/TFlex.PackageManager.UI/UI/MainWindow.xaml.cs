@@ -545,10 +545,26 @@ namespace TFlex.PackageManager.UI
 
             if (result == MessageBoxResult.OK)
             {
-                self.Configurations[key1].ConfigurationTask(2);
-                self.Configurations.Remove(key1);
-                comboBox1.Items.Remove(key1);
-                comboBox1.SelectedIndex = (comboBox1.Items.Count - 1);
+                int index = -1;
+                string oldKey = key1;
+
+                foreach (var i in self.Configurations)
+                {
+                    if (i.Key == oldKey)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        key1 = i.Key;
+                        index++;
+                    }
+                }
+
+                self.Configurations[oldKey].ConfigurationTask(2);
+                self.Configurations.Remove(oldKey);
+                comboBox1.Items.Remove(oldKey);
+                comboBox1.SelectedIndex = index;
             }
         } // Delete configuration
 
