@@ -449,7 +449,7 @@ namespace TFlex.PackageManager.UI
                 return;
 
             string newKey = Path.GetFileNameWithoutExtension(sfd.FileName);
-            var directory = sfd.FileName.Replace("\\" + newKey + ".config", "");
+            var directory = Path.GetDirectoryName(sfd.FileName);
 
             if (directory != self.TargetDirectory)
             {
@@ -462,21 +462,33 @@ namespace TFlex.PackageManager.UI
                     return;
             }
 
-            key1 = newKey;
-
             Header header = new Header()
             {
                 UserDirectory = directory,
-                ConfigurationName = key1
+                ConfigurationName = newKey
             };
 
             header.PropertyChanged += Header_PropertyChanged;
             header.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
-            self.Configurations.Add(key1, header);
-            self.Configurations[key1].ConfigurationTask(1);
 
-            comboBox1.Items.Add(key1);
-            comboBox1.SelectedIndex = comboBox1.Items.Count -1;
+            if (key1 != newKey)
+            {
+                key1 = newKey;
+
+                self.Configurations.Add(key1, header);
+                self.Configurations[key1].ConfigurationTask(1);
+
+                comboBox1.Items.Add(key1);
+            }
+            else
+            {
+                self.Configurations[key1] = header;
+                self.Configurations[key1].ConfigurationTask(1);
+
+                comboBox1.SelectedIndex = -1;
+            }
+
+            comboBox1.SelectedItem = key1;
 
             sfd.Dispose();
         } // New configuration
