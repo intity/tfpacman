@@ -60,14 +60,14 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region properties
+        #region public properties
         /// <summary>
         /// The AutoCAD file format:
         /// (0) - DWG,
         /// (1) - DXF,
         /// (2) - DXB
         /// </summary>
-        [PropertyOrder(16)]
+        [PropertyOrder(15)]
         [CustomCategory(Resource.TRANSLATOR_1, "category3")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn3_1")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn3_1")]
@@ -104,7 +104,7 @@ namespace TFlex.PackageManager.Configuration
         /// (6) - 2010,
         /// (7) - 2013
         /// </summary>
-        [PropertyOrder(17)]
+        [PropertyOrder(16)]
         [CustomCategory(Resource.TRANSLATOR_1, "category3")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn3_2")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn3_2")]
@@ -127,7 +127,7 @@ namespace TFlex.PackageManager.Configuration
         /// (0) - to line, 
         /// (1) - to hatching.
         /// </summary>
-        [PropertyOrder(18)]
+        [PropertyOrder(17)]
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_1")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_1")]
@@ -150,7 +150,7 @@ namespace TFlex.PackageManager.Configuration
         /// (0) - in a polyline, 
         /// (1) - in a line.
         /// </summary>
-        [PropertyOrder(19)]
+        [PropertyOrder(18)]
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_2")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_2")]
@@ -174,7 +174,7 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - in the dimensions and texts, 
         /// (2) - in lines and texts.
         /// </summary>
-        [PropertyOrder(20)]
+        [PropertyOrder(19)]
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_3")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_3")]
@@ -197,7 +197,7 @@ namespace TFlex.PackageManager.Configuration
         /// (0) - to text, 
         /// (1) - to line.
         /// </summary>
-        [PropertyOrder(21)]
+        [PropertyOrder(20)]
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_4")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_4")]
@@ -221,7 +221,7 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - in multitexts, 
         /// (2) - in texts in a line.
         /// </summary>
-        [PropertyOrder(22)]
+        [PropertyOrder(21)]
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_5")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_5")]
@@ -244,7 +244,7 @@ namespace TFlex.PackageManager.Configuration
         /// (0) - Polylines, 
         /// (1) - Polylines with interpolation.
         /// </summary>
-        [PropertyOrder(23)]
+        [PropertyOrder(22)]
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_6")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_6")]
@@ -265,7 +265,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Accuracy of circular interpolation.
         /// </summary>
-        [PropertyOrder(24)]
+        [PropertyOrder(23)]
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_7")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_7")]

@@ -208,10 +208,6 @@
     <value>Dateinamens vorlage</value>
     <comment>Definieren sie eine vorlage für den namen der ausgabedatei.</comment>
   </data>
-  <data name="dn3_4" xml:space="preserve">
-    <value>Dokument name verwenden</value>
-    <comment>Ermitteln sie den namen der ausgabedatei anhand des namens des quell dokuments.</comment>
-  </data>
   <data name="message1" xml:space="preserve">
     <value>Der name des unterverzeichnisses darf keine zeichen enthalten: {0}</value>
   </data>

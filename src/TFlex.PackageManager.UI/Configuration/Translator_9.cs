@@ -42,7 +42,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Export 3D model.
         /// </summary>
-        [PropertyOrder(18)]
+        [PropertyOrder(15)]
         [CustomCategory(Resource.TRANSLATOR_9, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_1")]
         [CustomDescription(Resource.TRANSLATOR_9, "dn4_1")]
@@ -62,7 +62,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Export layers.
         /// </summary>
-        [PropertyOrder(19)]
+        [PropertyOrder(16)]
         [CustomCategory(Resource.TRANSLATOR_9, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_2")]
         [CustomDescription(Resource.TRANSLATOR_9, "dn4_2")]
@@ -82,7 +82,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Combine pages to one PDF file.
         /// </summary>
-        [PropertyOrder(20)]
+        [PropertyOrder(17)]
         [CustomCategory(Resource.TRANSLATOR_9, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_3")]
         [CustomDescription(Resource.TRANSLATOR_9, "dn4_3")]

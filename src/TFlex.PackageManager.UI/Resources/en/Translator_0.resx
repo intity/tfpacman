@@ -208,10 +208,6 @@
     <value>Template file name</value>
     <comment>Template of the file name definition.</comment>
   </data>
-  <data name="dn3_4" xml:space="preserve">
-    <value>Use file document name</value>
-    <comment>Used the document name for output file definition.</comment>
-  </data>
   <data name="message1" xml:space="preserve">
     <value>Subdirectory name must not contain characters: {0}</value>
   </data>

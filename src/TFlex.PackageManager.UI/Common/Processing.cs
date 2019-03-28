@@ -231,7 +231,7 @@ namespace TFlex.PackageManager.Common
         {
             string fileName, expVal, pattern = @"\{(.*?)\}";
 
-            if (translator_0.TemplateFileName.Length > 0 && !translator_0.UseDocumentNamed)
+            if (translator_0.TemplateFileName.Length > 0)
                 fileName = translator_0.TemplateFileName.Replace(Environment.NewLine, "");
             else
             {

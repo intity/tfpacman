@@ -44,7 +44,7 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region properties
+        #region public properties
         /// <summary>
         /// Image options definition.
         /// </summary>
@@ -62,7 +62,7 @@ namespace TFlex.PackageManager.Configuration
         /// 3 - TIFF,
         /// 4 - PNG
         /// </summary>
-        [PropertyOrder(16)]
+        [PropertyOrder(15)]
         [CustomCategory(Resource.TRANSLATOR_3, "category3")]
         [CustomDisplayName(Resource.TRANSLATOR_3, "dn3_1")]
         [CustomDescription(Resource.TRANSLATOR_3, "dn3_1")]
@@ -90,7 +90,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Export the screen layers of the drawing.
         /// </summary>
-        [PropertyOrder(17)]
+        [PropertyOrder(16)]
         [CustomCategory(Resource.TRANSLATOR_3, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_3, "dn4_1")]
         [CustomDescription(Resource.TRANSLATOR_3, "dn4_1")]
@@ -111,7 +111,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Export drawing elements.
         /// </summary>
-        [PropertyOrder(18)]
+        [PropertyOrder(17)]
         [CustomCategory(Resource.TRANSLATOR_3, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_3, "dn4_2")]
         [CustomDescription(Resource.TRANSLATOR_3, "dn4_2")]

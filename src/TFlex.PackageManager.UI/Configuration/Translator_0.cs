@@ -42,10 +42,9 @@ namespace TFlex.PackageManager.Configuration
         private string subDirectoryName;
         private string fileNameSuffix;
         private string templateFileName;
-        private bool useDocumentNamed;
 
         private string[] pg_names, pj_names;
-        private readonly byte[] objState    = new byte[16];
+        private readonly byte[] objState    = new byte[15];
         private readonly bool[] pg_types    = new bool[5];
         private readonly bool[] b_values    = new bool[7];
         private readonly string[] s_values  = new string[4];
@@ -76,7 +75,6 @@ namespace TFlex.PackageManager.Configuration
             subDirectoryName = string.Empty;
             fileNameSuffix   = string.Empty;
             templateFileName = string.Empty;
-            useDocumentNamed = true;
         }
 
         #region event handlers
@@ -443,26 +441,6 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
         }
-
-        /// <summary>
-        /// Used the document name for output file definition.
-        /// </summary>
-        [PropertyOrder(15)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_4")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn3_4")]
-        public bool UseDocumentNamed
-        {
-            get { return useDocumentNamed; }
-            set
-            {
-                if (useDocumentNamed != value)
-                {
-                    useDocumentNamed = value;
-                    OnChanged(15);
-                }
-            }
-        }
         #endregion
 
         #region internal methods
@@ -487,7 +465,6 @@ namespace TFlex.PackageManager.Configuration
             s_values[1] = subDirectoryName;
             s_values[2] = fileNameSuffix;
             s_values[3] = templateFileName;
-            b_values[6] = useDocumentNamed;
 
             pg_types[0] = pageTypes.Normal;
             pg_types[1] = pageTypes.Workplane;
@@ -607,12 +584,6 @@ namespace TFlex.PackageManager.Configuration
                     else
                         objState[14] = 0;
                     break;
-                case 15:
-                    if (b_values[6] != useDocumentNamed)
-                        objState[15] = 1;
-                    else
-                        objState[15] = 0;
-                    break;
             }
 
             isChanged = false;
@@ -697,10 +668,7 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("value", fileNameSuffix)),
                 new XElement("parameter",
                     new XAttribute("name", "TemplateFileName"),
-                    new XAttribute("value", templateFileName)),
-                new XElement("parameter",
-                    new XAttribute("name", "UseDocumentNamed"),
-                    new XAttribute("value", useDocumentNamed ? "1" : "0")));
+                    new XAttribute("value", templateFileName)));
 
             return element;
         }
@@ -829,12 +797,6 @@ namespace TFlex.PackageManager.Configuration
                     else
                         value = templateFileName;
                     break;
-                case "UseDocumentNamed":
-                    if (flag == 0)
-                        useDocumentNamed = value == "1" ? true : false;
-                    else
-                        value = useDocumentNamed ? "1" : "0";
-                    break;
             }
             element.Attribute("value").Value = value;
         }
@@ -950,6 +912,9 @@ namespace TFlex.PackageManager.Configuration
             {
                 errors.Remove(error);
             }
+
+            if (errors == null)
+                return;
 
             if (errors.Count == 0)
             {

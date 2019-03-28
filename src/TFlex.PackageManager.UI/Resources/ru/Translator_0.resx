@@ -208,10 +208,6 @@
     <value>Шаблон имени файла</value>
     <comment>Определение шаблона имени файла вывода.</comment>
   </data>
-  <data name="dn3_4" xml:space="preserve">
-    <value>Использовать имя файла документа</value>
-    <comment>Определение имени файла вывода по имени исходного документа.</comment>
-  </data>
   <data name="message1" xml:space="preserve">
     <value>Имя подкаталога не должно содержать символы: {0}</value>
   </data>
