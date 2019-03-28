@@ -46,7 +46,7 @@ namespace TFlex.PackageManager.Configuration
         private string[] pg_names, pj_names;
         private readonly byte[] objState    = new byte[15];
         private readonly bool[] pg_types    = new bool[5];
-        private readonly bool[] b_values    = new bool[7];
+        private readonly bool[] b_values    = new bool[6];
         private readonly string[] s_values  = new string[4];
         private readonly decimal[] m_values = new decimal[2];
         
@@ -388,7 +388,7 @@ namespace TFlex.PackageManager.Configuration
                 {
                     fileNameSuffix = value;
                     char[] pattern = Path.GetInvalidFileNameChars();
-                    string error = string.Format(error_messages[0], pattern.ToString(""));
+                    string error = string.Format(error_messages[1], pattern.ToString(""));
 
                     if (IsPathValid(value, pattern))
                     {
@@ -421,7 +421,7 @@ namespace TFlex.PackageManager.Configuration
                     templateFileName = value;
                     string path      = value;
                     char[] pattern   = Path.GetInvalidFileNameChars();
-                    string error     = string.Format(error_messages[0], pattern.ToString(""));
+                    string error     = string.Format(error_messages[2], pattern.ToString(""));
 
                     foreach (Match i in Regex.Matches(value, @"\{(.*?)\}"))
                     {
