@@ -942,7 +942,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(1)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_1")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_1")]
-        [DefaultValue(true)]
         public bool Normal
         {
             get { return normal; }
@@ -959,7 +958,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(2)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_2")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_2")]
-        [DefaultValue(false)]
         public bool Workplane
         {
             get { return workplane; }
@@ -976,7 +974,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(3)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_3")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_3")]
-        [DefaultValue(false)]
         public bool Auxiliary
         {
             get { return auxiliary; }
@@ -993,7 +990,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(4)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_4")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_4")]
-        [DefaultValue(false)]
         public bool Text
         {
             get { return text; }
@@ -1010,7 +1006,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(5)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_5")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_5")]
-        [DefaultValue(false)]
         public bool BillOfMaterials
         {
             get { return billOfMaterials; }
