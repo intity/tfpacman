@@ -1,14 +1,11 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
@@ -361,6 +358,10 @@ namespace TFlex.PackageManager.UI
 
         private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            int selected_index = comboBox2.SelectedIndex;
+            int contains_index = comboBox2.Items.IndexOf(e.PropertyName);
+            bool rm_translator = false;
+
             switch (e.PropertyName)
             {
                 case "Acad":
@@ -374,6 +375,7 @@ namespace TFlex.PackageManager.UI
                     {
                         comboBox2.Items.Remove(e.PropertyName);
                         treeListView1.Columns.Remove(column1_1);
+                        rm_translator = true;
                     }
                     break;
                 case "Bitmap":
@@ -387,6 +389,7 @@ namespace TFlex.PackageManager.UI
                     {
                         comboBox2.Items.Remove(e.PropertyName);
                         treeListView1.Columns.Remove(column1_3);
+                        rm_translator = true;
                     }
                     break;
                 case "Pdf":
@@ -399,8 +402,20 @@ namespace TFlex.PackageManager.UI
                     {
                         comboBox2.Items.Remove(e.PropertyName);
                         treeListView1.Columns.Remove(column1_9);
+                        rm_translator = true;
                     }
                     break;
+            }
+
+            if (rm_translator)
+            {
+                comboBox2.SelectedIndex = selected_index != contains_index 
+                    ? selected_index 
+                    : selected_index - 1;
+            }
+            else
+            {
+                comboBox2.SelectedIndex = comboBox2.Items.Count - 1;
             }
         }
 
