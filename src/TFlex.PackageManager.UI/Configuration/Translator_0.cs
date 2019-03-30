@@ -284,9 +284,6 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
         }
-
-        //[Browsable(false)]
-        //public new string SubDirectoryName { get; set; }
         #endregion
 
         #region internal properties
@@ -294,7 +291,7 @@ namespace TFlex.PackageManager.Configuration
         {
             get
             {
-                return (isChanged);
+                return (isChanged | base.IsChanged);
             }
         }
         #endregion

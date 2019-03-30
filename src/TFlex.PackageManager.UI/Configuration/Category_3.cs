@@ -197,10 +197,10 @@ namespace TFlex.PackageManager.Configuration
 
             switch (index)
             {
-                case 12: objState[1] = (byte)(s_values[0] != subDirectoryName ? 1 : 0); break;
-                case 13: objState[2] = (byte)(s_values[1] != fileNameSuffix   ? 1 : 0); break;
-                case 14: objState[3] = (byte)(s_values[2] != templateFileName ? 1 : 0); break;
-                case 15: objState[0] = (byte)(s_values[3] != outputExtension  ? 1 : 0); break;
+                case 12: objState[0] = (byte)(s_values[0] != subDirectoryName ? 1 : 0); break;
+                case 13: objState[1] = (byte)(s_values[1] != fileNameSuffix   ? 1 : 0); break;
+                case 14: objState[2] = (byte)(s_values[2] != templateFileName ? 1 : 0); break;
+                case 15: objState[3] = (byte)(s_values[3] != outputExtension  ? 1 : 0); break;
             }
 
             isChanged = false;
