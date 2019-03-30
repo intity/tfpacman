@@ -247,6 +247,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\de\Translator_10.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\en\Translator_10.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\de\Translator_3D.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
