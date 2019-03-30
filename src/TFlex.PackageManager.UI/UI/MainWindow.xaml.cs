@@ -520,6 +520,7 @@ namespace TFlex.PackageManager.UI
 
             string newKey = Path.GetFileNameWithoutExtension(sfd.FileName);
             var directory = Path.GetDirectoryName(sfd.FileName);
+            int index     = comboBox1.SelectedIndex;
 
             if (directory != self.TargetDirectory)
             {
@@ -549,6 +550,7 @@ namespace TFlex.PackageManager.UI
                 self.Configurations[key1].ConfigurationTask(1);
 
                 comboBox1.Items.Add(key1);
+                index = comboBox1.Items.Count - 1;
             }
             else
             {
@@ -558,7 +560,7 @@ namespace TFlex.PackageManager.UI
                 comboBox1.SelectedIndex = -1;
             }
 
-            comboBox1.SelectedItem = key1;
+            comboBox1.SelectedIndex = index;
 
             sfd.Dispose();
         } // New configuration
@@ -647,6 +649,8 @@ namespace TFlex.PackageManager.UI
                 self.Configurations.Remove(oldKey);
                 comboBox1.Items.Remove(oldKey);
                 comboBox1.SelectedIndex = index;
+
+                if (index == -1) key1 = string.Empty;
             }
         } // Delete configuration
 
