@@ -17,15 +17,18 @@ namespace TFlex.PackageManager.Common
         #endregion
 
         #region constants
-        public const string ABOUT_US     = "AboutUs";
-        public const string HEADER_UI    = "Header";
-        public const string MAIN_WINDOW  = "PackageManager";
-        public const string LIST_VALUES  = "ListValues";
-        public const string OPTIONS_UI   = "Options";
-        public const string TRANSLATOR_0 = "Translator_0";
-        public const string TRANSLATOR_1 = "Translator_1";
-        public const string TRANSLATOR_3 = "Translator_3";
-        public const string TRANSLATOR_9 = "Translator_9";
+        public const string ABOUT_US      = "AboutUs";
+        public const string HEADER_UI     = "Header";
+        public const string MAIN_WINDOW   = "PackageManager";
+        public const string LIST_VALUES   = "ListValues";
+        public const string OPTIONS_UI    = "Options";
+        public const string CATEGIRY_3    = "Category_3";
+        public const string TRANSLATOR_0  = "Translator_0";
+        public const string TRANSLATOR_1  = "Translator_1";
+        public const string TRANSLATOR_3  = "Translator_3";
+        public const string TRANSLATOR_9  = "Translator_9";
+        public const string TRANSLATOR_10 = "Translator_10";
+        public const string TRANSLATOR_3D = "Translator_3D";
 
         public const string BASE_URI = @"pack://application:,,,/TFlex.PackageManager.UI;component/Resources/";
         public const string LOG_FILE = "processing.log";

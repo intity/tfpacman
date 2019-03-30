@@ -117,80 +117,63 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category1" xml:space="preserve">
-    <value>Seite</value>
+  <data name="category4" xml:space="preserve">
+    <value>Параметры экспорта 3D</value>
   </data>
-  <data name="category2" xml:space="preserve">
-    <value>Projektion</value>
+  <data name="dn4_1" xml:space="preserve">
+    <value>Тип экспорта</value>
+    <comment>Тип экспорта.</comment>
   </data>
-  <data name="dn1_1" xml:space="preserve">
-    <value>Seitenname</value>
-    <comment>Sammlung von seitennamen.</comment>
+  <data name="dn4_10" xml:space="preserve">
+    <value>Экспортировать проволочные тела</value>
+    <comment>Включение в экспорт проволочные тела модели.</comment>
   </data>
-  <data name="dn1_2" xml:space="preserve">
-    <value>Seite von der suche ausschließen</value>
-    <comment>Schließt die sammlung von seiten aus der suche aus.</comment>
+  <data name="dn4_11" xml:space="preserve">
+    <value>Упрощать геометрию</value>
+    <comment>Упрощение геометрии модели.</comment>
   </data>
-  <data name="dn1_3" xml:space="preserve">
-    <value>Seiten maßstab</value>
-    <comment>Bestimmen sie den maßstab der seite.</comment>
+  <data name="dn4_1_0" xml:space="preserve">
+    <value>Сборка</value>
   </data>
-  <data name="dn1_3_1" xml:space="preserve">
-    <value>Aus dokument</value>
+  <data name="dn4_1_1" xml:space="preserve">
+    <value>Набор тел</value>
   </data>
-  <data name="dn1_3_2" xml:space="preserve">
-    <value>Andere</value>
+  <data name="dn4_2" xml:space="preserve">
+    <value>Цвет</value>
+    <comment>Источник для цвета.</comment>
   </data>
-  <data name="dn1_4" xml:space="preserve">
-    <value>Speichern sie den seiten maßstab</value>
-    <comment>Ermöglicht das speichern der maßstab im quelldokument.</comment>
+  <data name="dn4_2_0" xml:space="preserve">
+    <value>Тоновая закраска</value>
   </data>
-  <data name="dn1_5" xml:space="preserve">
-    <value>Seitentyp</value>
-    <comment>Ermitteln sie die arten der zu verarbeitenden seiten.</comment>
+  <data name="dn4_2_1" xml:space="preserve">
+    <value>Материал</value>
   </data>
-  <data name="dn1_5_1" xml:space="preserve">
-    <value>Üblich</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  <data name="dn4_3" xml:space="preserve">
+    <value>Экспортировать 3D изображения</value>
+    <comment>Включение в экспорт 3D изображения.</comment>
   </data>
-  <data name="dn1_5_2" xml:space="preserve">
-    <value>Arbeitsebene</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  <data name="dn4_4" xml:space="preserve">
+    <value>Экспортировать аннотации</value>
+    <comment>Включение в экспорт аннотации.</comment>
   </data>
-  <data name="dn1_5_3" xml:space="preserve">
-    <value>Hilfsgerät</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  <data name="dn4_5" xml:space="preserve">
+    <value>Экспортировать профили</value>
+    <comment>Включение в экспорт профили.</comment>
   </data>
-  <data name="dn1_5_4" xml:space="preserve">
-    <value>Text</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  <data name="dn4_6" xml:space="preserve">
+    <value>Экспортировать кривые</value>
+    <comment>Включение в экспорт кривые модели.</comment>
   </data>
-  <data name="dn1_5_5" xml:space="preserve">
-    <value>Spezifikation</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  <data name="dn4_7" xml:space="preserve">
+    <value>Экспортировать листовые тела</value>
+    <comment>Включение в экспорт листовые тела модели.</comment>
   </data>
-  <data name="dn1_6" xml:space="preserve">
-    <value>Überprüfen sie die zeichnungsvorlage</value>
-    <comment>Aktiviert die überprüfung, ob eine formatierte seite auf der seite vorhanden ist.</comment>
+  <data name="dn4_8" xml:space="preserve">
+    <value>Экспортировать твердые тела</value>
+    <comment>Включение в экспорт твердые тела модели.</comment>
   </data>
-  <data name="dn2_1" xml:space="preserve">
-    <value>Projektions name</value>
-    <comment>Sammlung von namen von projektionen.</comment>
-  </data>
-  <data name="dn2_2" xml:space="preserve">
-    <value>Schließen sie die projektion von der suche aus</value>
-    <comment>Schließt die projektion von der suche aus.</comment>
-  </data>
-  <data name="dn2_3" xml:space="preserve">
-    <value>Projektions maßstab</value>
-    <comment>Bestimmen sie den maßstab der projektion.</comment>
-  </data>
-  <data name="dn2_4" xml:space="preserve">
-    <value>Speichern sie die projektion maßstab</value>
-    <comment>Ermöglicht das speichern der maßstab im quelldokument.</comment>
-  </data>
-  <data name="dn2_5" xml:space="preserve">
-    <value>Aktivieren sie die projektions verarbeitung</value>
-    <comment>Enthält einen projektions filter im verarbeitungs pool.</comment>
+  <data name="dn4_9" xml:space="preserve">
+    <value>Экспортировать сварные швы</value>
+    <comment>Включение в экспорт сварные швы модели.</comment>
   </data>
 </root>

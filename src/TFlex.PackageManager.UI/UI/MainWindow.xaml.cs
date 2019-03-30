@@ -32,12 +32,14 @@ namespace TFlex.PackageManager.UI
         private GridViewColumn column1_1;
         private GridViewColumn column1_3;
         private GridViewColumn column1_9;
+        private GridViewColumn column1_10;
         private GridViewColumn column2_0;
 
         private GridViewColumnHeader header1_0;
         private GridViewColumnHeader header1_1;
         private GridViewColumnHeader header1_3;
         private GridViewColumnHeader header1_9;
+        private GridViewColumnHeader header1_10;
         private GridViewColumnHeader header2_0;
 
         private Common.Options options;
@@ -89,6 +91,12 @@ namespace TFlex.PackageManager.UI
                 Width = 50
             };
 
+            header1_10 = new GridViewColumnHeader
+            {
+                Content = "STP",
+                Width = 50
+            };
+
             header2_0 = new GridViewColumnHeader
             {
                 Content = Resource.GetString(Resource.MAIN_WINDOW, "header2_0", 0),
@@ -120,6 +128,12 @@ namespace TFlex.PackageManager.UI
                 CellTemplate = tvControl1.Resources["CellTemplateCheckBox"] as DataTemplate
             };
 
+            column1_10 = new GridViewColumn
+            {
+                Header = header1_10,
+                CellTemplate = tvControl1.Resources["CellTemplateCheckBox"] as DataTemplate
+            };
+
             column2_0 = new GridViewColumn
             {
                 Header = header2_0,
@@ -139,7 +153,7 @@ namespace TFlex.PackageManager.UI
             treeListView2.Columns.Add(column2_0);
 
             tvControl2.Content = treeListView2;
-            tvControl2.SearchPattern = "*.dwg|*.dxf|*.dxb|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.pdf";
+            tvControl2.SearchPattern = "*.dwg|*.dxf|*.dxb|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.pdf|*.stp";
             tvControl2.SizeChanged += TvControl2_SizeChanged;
 
             options = new Common.Options();
@@ -278,6 +292,8 @@ namespace TFlex.PackageManager.UI
                     Marshal.GetFunctionPointerForDelegate(newWndProc));
             }
 
+            propertyGrid.SelectedObjectChanged += PropertyGrid_SelectedObjectChanged;
+
             if (comboBox1.Items.Count == 0 && self.Configurations.Count > 0)
             {
                 for (int i = 0; i < self.Configurations.Count; i++)
@@ -296,8 +312,32 @@ namespace TFlex.PackageManager.UI
 
             menuItem2_2.IsEnabled = false;
             button2_2.IsEnabled = false;
-            
+
             propertyGrid.PropertyValueChanged += Translator_PropertyValueChanged;
+        }
+
+        private void PropertyGrid_SelectedObjectChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (comboBox2.SelectedIndex != -1 && comboBox2.SelectedItem.ToString() == "Default")
+            {
+                if (propertyGrid.PropertyDefinitions.Count == 0)
+                {
+                    propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
+                    {
+                        TargetProperties = new[]
+                        {
+                            "SubDirectoryName",
+                            "FileNameSuffix",
+                            "TemplateFileName"
+                        },
+                        IsBrowsable = false
+                    });
+                }
+            }
+            else if (propertyGrid.PropertyDefinitions.Count > 0)
+            {
+                propertyGrid.PropertyDefinitions.Clear();
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -402,6 +442,19 @@ namespace TFlex.PackageManager.UI
                     {
                         comboBox2.Items.Remove(e.PropertyName);
                         treeListView1.Columns.Remove(column1_9);
+                        rm_translator = true;
+                    }
+                    break;
+                case "Step":
+                    if ((sender as TranslatorTypes).Step)
+                    {
+                        comboBox2.Items.Add(e.PropertyName);
+                        treeListView1.Columns.Add(column1_10);
+                    }
+                    else
+                    {
+                        comboBox2.Items.Remove(e.PropertyName);
+                        treeListView1.Columns.Remove(column1_10);
                         rm_translator = true;
                     }
                     break;
@@ -686,6 +739,9 @@ namespace TFlex.PackageManager.UI
                                 break;
                             case "Pdf":
                                 treeListView1.Columns.Add(column1_9);
+                                break;
+                            case "Step":
+                                treeListView1.Columns.Add(column1_10);
                                 break;
                         }
                     }

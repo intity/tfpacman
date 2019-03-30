@@ -17,10 +17,12 @@ namespace TFlex.PackageManager.Common
         #region private fields
         private readonly Header header;
         private readonly LogFile logFile;
+        private Category_3   categoryFile;
         private Translator_0 translator_0;
         private Translator_1 translator_1;
         private Translator_3 translator_3;
         private Translator_9 translator_9;
+        private Translator_10 translator_10;
         private TranslatorType translator_t;
         #endregion
 
@@ -40,6 +42,7 @@ namespace TFlex.PackageManager.Common
         internal void ProcessingFile(object translator, string path)
         {
             translator_0 = translator as Translator_0;
+            categoryFile = translator as Category_3;
 
             if (translator.GetType() == typeof(Translator_1))
             {
@@ -56,6 +59,11 @@ namespace TFlex.PackageManager.Common
                 translator_9 = translator as Translator_9;
                 translator_t = TranslatorType.Pdf;
             }
+            else if (translator.GetType() == typeof(Translator_10))
+            {
+                translator_10 = translator as Translator_10;
+                translator_t = TranslatorType.Step;
+            }
 
             Document document = Application.OpenDocument(path, false);
             logFile.AppendLine(string.Format("Open document:\t{0}", path));
@@ -69,15 +77,16 @@ namespace TFlex.PackageManager.Common
             FileInfo fileInfo = new FileInfo(path);
             string directory = fileInfo.Directory.FullName.Replace(
                 header.InitialCatalog,
-                header.TargetDirectory + "\\" + (translator_0.SubDirectoryName.Length > 0 
-                ? translator_0.SubDirectoryName 
-                : translator_0.OutputExtension));
+                header.TargetDirectory + "\\" + (categoryFile.SubDirectoryName.Length > 0 
+                ? categoryFile.SubDirectoryName 
+                : categoryFile.OutputExtension));
             string targetDirectory = Directory.Exists(directory)
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;
 
             document.BeginChanges(string.Format("Processing file: {0}", fileInfo.Name));
-            ProcessingPages(document, targetDirectory);
+
+            ProcessingDocument(document, targetDirectory);
 
             if (document.Changed)
             {
@@ -132,7 +141,7 @@ namespace TFlex.PackageManager.Common
 
             if (groups.Length > 1)
             {
-                if (expression.Contains("page.type"))
+                if (expression.Contains("page.type") && page != null)
                 {
                     if ((argv = groups[1].Split(',')).Length < 2)
                         return result;
@@ -231,13 +240,13 @@ namespace TFlex.PackageManager.Common
         {
             string fileName, expVal, pattern = @"\{(.*?)\}";
 
-            if (translator_0.TemplateFileName.Length > 0)
-                fileName = translator_0.TemplateFileName.Replace(Environment.NewLine, "");
+            if (categoryFile.TemplateFileName.Length > 0)
+                fileName = categoryFile.TemplateFileName.Replace(Environment.NewLine, "");
             else
             {
                 fileName = Path.GetFileNameWithoutExtension(document.FileName);
-                if (translator_0.FileNameSuffix.Length > 0)
-                    fileName += ParseExpression(document, page, translator_0.FileNameSuffix);
+                if (categoryFile.FileNameSuffix.Length > 0)
+                    fileName += ParseExpression(document, page, categoryFile.FileNameSuffix);
                 return fileName;
             }
 
@@ -325,6 +334,23 @@ namespace TFlex.PackageManager.Common
                     pages.Add(i);
             }
             return pages;
+        }
+
+        private void ProcessingDocument(Document document, string targetDirectory)
+        {
+            switch (translator_t)
+            {
+                case TranslatorType.Default:
+                case TranslatorType.Bitmap:
+                case TranslatorType.Pdf:
+                    ProcessingPages(document, targetDirectory);
+                    break;
+                case TranslatorType.Step:
+                    string path = Path.Combine(targetDirectory, 
+                        GetOutputFileName(document, null) + ".stp");
+                    translator_10.Export(document, path, logFile);
+                    break;
+            }
         }
 
         /// <summary>

@@ -18,14 +18,17 @@ namespace TFlex.PackageManager.Configuration
         private bool layers;
         private bool combinePages;
 
-        private readonly byte[] objState = new byte[3];
-        private readonly bool[] b_values = new bool[3];
+        private readonly byte[] objState;
+        private readonly bool[] b_values;
         private bool isChanged;
         #endregion
 
         public Translator_9()
         {
             OutputExtension = "PDF";
+
+            objState        = new byte[3];
+            b_values        = new bool[3];
         }
 
         #region internal properties
@@ -42,7 +45,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Export 3D model.
         /// </summary>
-        [PropertyOrder(15)]
+        [PropertyOrder(16)]
         [CustomCategory(Resource.TRANSLATOR_9, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_1")]
         [CustomDescription(Resource.TRANSLATOR_9, "dn4_1")]
@@ -54,7 +57,7 @@ namespace TFlex.PackageManager.Configuration
                 if (export3dModel != value)
                 {
                     export3dModel = value;
-                    OnChanged(15);
+                    OnChanged(16);
                 }
             }
         }
@@ -62,7 +65,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Export layers.
         /// </summary>
-        [PropertyOrder(16)]
+        [PropertyOrder(17)]
         [CustomCategory(Resource.TRANSLATOR_9, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_2")]
         [CustomDescription(Resource.TRANSLATOR_9, "dn4_2")]
@@ -74,7 +77,7 @@ namespace TFlex.PackageManager.Configuration
                 if (layers != value)
                 {
                     layers = value;
-                    OnChanged(16);
+                    OnChanged(17);
                 }
             }
         }
@@ -82,7 +85,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Combine pages to one PDF file.
         /// </summary>
-        [PropertyOrder(17)]
+        [PropertyOrder(18)]
         [CustomCategory(Resource.TRANSLATOR_9, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_3")]
         [CustomDescription(Resource.TRANSLATOR_9, "dn4_3")]
@@ -94,7 +97,7 @@ namespace TFlex.PackageManager.Configuration
                 if (combinePages != value)
                 {
                     combinePages = value;
-                    OnChanged(17);
+                    OnChanged(18);
                 }
             }
         }
@@ -103,14 +106,14 @@ namespace TFlex.PackageManager.Configuration
         #region methods
         internal override void OnLoaded()
         {
-            base.OnLoaded();
-
             b_values[0] = export3dModel;
             b_values[1] = layers;
             b_values[2] = combinePages;
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
+
+            base.OnLoaded();
         }
 
         internal override void OnChanged(int index)
@@ -119,24 +122,9 @@ namespace TFlex.PackageManager.Configuration
 
             switch (index)
             {
-                case 15:
-                    if (b_values[0] != export3dModel)
-                        objState[0] = 1;
-                    else
-                        objState[0] = 0;
-                    break;
-                case 16:
-                    if (b_values[1] != layers)
-                        objState[1] = 1;
-                    else
-                        objState[1] = 0;
-                    break;
-                case 17:
-                    if (b_values[2] != combinePages)
-                        objState[2] = 1;
-                    else
-                        objState[2] = 0;
-                    break;
+                case 16: objState[0] = (byte)(b_values[0] != export3dModel ? 1 : 0); break;
+                case 17: objState[1] = (byte)(b_values[1] != layers        ? 1 : 0); break;
+                case 18: objState[2] = (byte)(b_values[2] != combinePages  ? 1 : 0); break;
             }
 
             isChanged = false;
@@ -201,6 +189,18 @@ namespace TFlex.PackageManager.Configuration
 
             string value = Enum.GetName(typeof(TranslatorType), translator);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
+                new XElement("parameter",
+                    new XAttribute("name", "SubDirectoryName"),
+                    new XAttribute("value", SubDirectoryName)),
+                new XElement("parameter",
+                    new XAttribute("name", "FileNameSuffix"),
+                    new XAttribute("value", FileNameSuffix)),
+                new XElement("parameter",
+                    new XAttribute("name", "TemplateFileName"),
+                    new XAttribute("value", TemplateFileName)),
+                new XElement("parameter",
+                    new XAttribute("name", "OutputExtension"),
+                    new XAttribute("value", OutputExtension)),
                 new XElement("parameter",
                     new XAttribute("name", "Export3dModel"),
                     new XAttribute("value", export3dModel ? "1" : "0")),

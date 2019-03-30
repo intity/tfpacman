@@ -22,18 +22,19 @@ namespace TFlex.PackageManager.Configuration
         private Translator_1 translator_1;
         private Translator_3 translator_3;
         private Translator_9 translator_9;
-        private ObservableDictionary<string, object> translators;
-        private readonly List<string> loadedTranslators;
+        private Translator_10 translator_10;
+        private readonly ObservableDictionary<string, object> translators;
+
         private string configurationName;
         private string initialCatalog;
         private string targetDirectory;
         private string inputExtension;
         private TranslatorTypes translatorTypes;
 
-        private readonly byte[] objState   = new byte[6];
-        private readonly string[] s_values = new string[4];
-        private readonly bool[] tr_types   = new bool[12];
-        private readonly byte[] tchanges   = new byte[4];
+        private readonly byte[] objState;
+        private readonly string[] s_values;
+        private readonly bool[] tr_types;
+        private readonly byte[] tchanges;
         private bool isLoaded, isChanged, isInvalid;
         #endregion
 
@@ -48,7 +49,10 @@ namespace TFlex.PackageManager.Configuration
             translatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
             translatorTypes.Default = true;
 
-            loadedTranslators = new List<string>();
+            objState          = new byte[6];
+            s_values          = new string[4];
+            tr_types          = new bool[12];
+            tchanges          = new byte[5];
         }
 
         #region event handlers
@@ -70,6 +74,10 @@ namespace TFlex.PackageManager.Configuration
             {
                 tchanges[3] = (byte)(translator_9.IsChanged ? 1 : 0);
             }
+            else if (sender.Equals(translator_10))
+            {
+                tchanges[4] = (byte)(translator_10.IsChanged ? 1 : 0);
+            }
 
             objState[5] = 0;
 
@@ -89,7 +97,7 @@ namespace TFlex.PackageManager.Configuration
 
         private void Translator_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            isInvalid = (sender as Translator_0).HasErrors;
+            isInvalid = (sender as Category_3).HasErrors;
         }
 
         private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -144,6 +152,19 @@ namespace TFlex.PackageManager.Configuration
                         translator_9.PropertyChanged += Translator_PropertyChanged;
                         translator_9.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_9);
+                    }
+                    else
+                    {
+                        translators.Remove(e.PropertyName);
+                    }
+                    break;
+                case "Step":
+                    if ((sender as TranslatorTypes).Step)
+                    {
+                        translator_10 = new Translator_10();
+                        translator_10.PropertyChanged += Translator_PropertyChanged;
+                        translator_10.ErrorsChanged   += Translator_ErrorsChanged;
+                        translators.Add(e.PropertyName, translator_10);
                     }
                     else
                     {
@@ -390,6 +411,10 @@ namespace TFlex.PackageManager.Configuration
                         translatorTypes.Pdf = true;
                         translator_9.ConfigurationTask(i, 0);
                         break;
+                    case "Step":
+                        translatorTypes.Step = true;
+                        translator_10.ConfigurationTask(i, 0);
+                        break;
                 }
             }
         }
@@ -437,6 +462,12 @@ namespace TFlex.PackageManager.Configuration
                             translator_9.ConfigurationTask(i, 1);
                         }
                         break;
+                    case "Step":
+                        if (t_value = translatorTypes.Step)
+                        {
+                            translator_10.ConfigurationTask(i, 1);
+                        }
+                        break;
                 }
 
                 if (t_value == false) i.Remove();
@@ -468,6 +499,12 @@ namespace TFlex.PackageManager.Configuration
                         if (translator_9.IsLoaded == false)
                         {
                             translator_9.AppendTranslatorToXml(parent, TranslatorType.Pdf);
+                        }
+                        break;
+                    case "Step":
+                        if (translator_10.IsLoaded == false)
+                        {
+                            translator_10.AppendTranslatorToXml(parent, TranslatorType.Step);
                         }
                         break;
                 }
@@ -816,7 +853,6 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        [Browsable(false)]
         [PropertyOrder(10)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_10")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_10")]

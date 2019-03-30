@@ -123,9 +123,6 @@
   <data name="category2" xml:space="preserve">
     <value>Проекция</value>
   </data>
-  <data name="category3" xml:space="preserve">
-    <value>Файл</value>
-  </data>
   <data name="dn1_1" xml:space="preserve">
     <value>Имя страницы</value>
     <comment>Коллекция имен страниц.</comment>
@@ -195,26 +192,5 @@
   <data name="dn2_5" xml:space="preserve">
     <value>Включить обработку проекции</value>
     <comment>Включает в пул обработки фильтр проекции.</comment>
-  </data>
-  <data name="dn3_1" xml:space="preserve">
-    <value>Имя подкаталога</value>
-    <comment>Включает вложенный каталог ассоциированный с транслятором.</comment>
-  </data>
-  <data name="dn3_2" xml:space="preserve">
-    <value>Суффикс имени файла</value>
-    <comment>Добавляет суффикс к имени файла вывода.</comment>
-  </data>
-  <data name="dn3_3" xml:space="preserve">
-    <value>Шаблон имени файла</value>
-    <comment>Определение шаблона имени файла вывода.</comment>
-  </data>
-  <data name="message1" xml:space="preserve">
-    <value>Имя подкаталога не должно содержать символы: {0}</value>
-  </data>
-  <data name="message2" xml:space="preserve">
-    <value>Суффикс имени файла не должно содержать символы: {0}</value>
-  </data>
-  <data name="message3" xml:space="preserve">
-    <value>Текст расположенный вне маркеров шаблона не должен содержать символы: {0}</value>
   </data>
 </root>

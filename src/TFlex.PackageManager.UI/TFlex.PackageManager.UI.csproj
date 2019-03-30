@@ -104,8 +104,12 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\Options.cs" />
     <Compile Include="Common\Processing.cs" />
+    <Compile Include="Configuration\Translator.cs" />
+    <Compile Include="Configuration\Category_3.cs" />
+    <Compile Include="Configuration\Translator3D.cs" />
     <Compile Include="Configuration\Header.cs" />
     <Compile Include="Configuration\ConfigurationCollection.cs" />
+    <Compile Include="Configuration\Translator_10.cs" />
     <Compile Include="Controls\BiarcInterpolationControl.xaml.cs">
       <DependentUpon>BiarcInterpolationControl.xaml</DependentUpon>
     </Compile>
@@ -243,6 +247,27 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\de\Translator_3D.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\en\Translator_3D.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\de\Category_3.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\en\Category_3.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ru\Category_3.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ru\Translator_3D.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ru\Translator_10.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\de\Translator_9.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -304,6 +329,7 @@
     <Resource Include="Resources\pdf.ico" />
     <Resource Include="Resources\open_configurations.ico" />
     <Resource Include="Resources\clear_target_directory.ico" />
+    <Resource Include="Resources\stp.ico" />
     <Content Include="Resources\refresh.ico" />
     <Resource Include="Resources\save.ico" />
     <Resource Include="Resources\options.ico" />

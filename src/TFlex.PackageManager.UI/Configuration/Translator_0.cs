@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Controls;
@@ -19,15 +13,14 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
-    /// The translator configuration base class.
+    /// The default translator class.
     /// </summary>
     [CustomCategoryOrder(Resource.TRANSLATOR_0, 1)]
     [CustomCategoryOrder(Resource.TRANSLATOR_0, 2)]
     [CustomCategoryOrder(Resource.TRANSLATOR_0, 3)]
-    public class Translator_0 : INotifyPropertyChanged, INotifyDataErrorInfo
+    public class Translator_0 : Category_3
     {
         #region private fields
-        private string outputExtension;
         private string [] pageNames;
         private bool excludePage;
         private decimal pageScale;
@@ -39,42 +32,29 @@ namespace TFlex.PackageManager.Configuration
         private decimal projectionScale;
         private bool saveProjectionScale;
         private bool enableProcessingOfProjections;
-        private string subDirectoryName;
-        private string fileNameSuffix;
-        private string templateFileName;
 
         private string[] pg_names, pj_names;
-        private readonly byte[] objState    = new byte[15];
-        private readonly bool[] pg_types    = new bool[5];
-        private readonly bool[] b_values    = new bool[6];
-        private readonly string[] s_values  = new string[4];
-        private readonly decimal[] m_values = new decimal[2];
+        private readonly byte[] objState;
+        private readonly bool[] pg_types;
+        private readonly bool[] b_values;
+        private readonly decimal[] m_values;
         
-        private readonly Dictionary<string, List<string>> objErrors;
-        private readonly string[] error_messages;
-        private bool isLoaded, isChanged;
+        private bool isChanged;
         #endregion
 
         public Translator_0()
         {
-            objErrors        = new Dictionary<string, List<string>>();
-            error_messages   = new string[]
-            {
-                Resource.GetString(Resource.TRANSLATOR_0, "message1", 0),
-                Resource.GetString(Resource.TRANSLATOR_0, "message2", 0),
-                Resource.GetString(Resource.TRANSLATOR_0, "message3", 0)
-            };
-
-            outputExtension  = string.Empty;
             pageNames        = new string[] { };
             pageScale        = 99999;
             pageTypes        = new PageTypes { Normal = true };
             pageTypes.PropertyChanged += PageTypes_PropertyChanged;
             projectionNames  = new string[] { };
             projectionScale  = 99999;
-            subDirectoryName = string.Empty;
-            fileNameSuffix   = string.Empty;
-            templateFileName = string.Empty;
+
+            objState         = new byte[11];
+            pg_types         = new bool[5];
+            b_values         = new bool[6];
+            m_values         = new decimal[2];
         }
 
         #region event handlers
@@ -84,42 +64,7 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region internal properties
-        /// <summary>
-        /// The package is changed.
-        /// </summary>
-        internal virtual bool IsChanged
-        {
-            get { return (isChanged); }
-        }
-
-        /// <summary>
-        /// The package is loaded.
-        /// </summary>
-        internal bool IsLoaded
-        {
-            get { return (isLoaded); }
-        }
-        #endregion
-
         #region public properties
-        /// <summary>
-        /// The output file extension.
-        /// </summary>
-        [Browsable(false)]
-        public string OutputExtension
-        {
-            get { return outputExtension; }
-            set
-            {
-                if (outputExtension != value)
-                {
-                    outputExtension = value;
-                    OnChanged(0);
-                }
-            }
-        }
-
         /// <summary>
         /// The page name list.
         /// </summary>
@@ -340,117 +285,23 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        /// <summary>
-        /// The sub directory name definition for include in the target directory.
-        /// </summary>
-        [PropertyOrder(12)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_1")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn3_1")]
-        public string SubDirectoryName
+        //[Browsable(false)]
+        //public new string SubDirectoryName { get; set; }
+        #endregion
+
+        #region internal properties
+        internal override bool IsChanged
         {
-            get { return subDirectoryName; }
-            set
+            get
             {
-                if (subDirectoryName != value)
-                {
-                    subDirectoryName = value;
-                    char[] pattern   = Path.GetInvalidPathChars();
-                    string error     = string.Format(error_messages[0], pattern.ToString(""));
-
-                    if (IsPathValid(value, pattern))
-                    {
-                        RemoveError("SubDirectoryName", error);
-                    }
-                    else
-                    {
-                        AddError("SubDirectoryName", error);
-                    }
-
-                    OnChanged(12);
-                }
-            }
-        }
-
-        /// <summary>
-        /// The file name suffix.
-        /// </summary>
-        [PropertyOrder(13)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_2")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn3_2")]
-        public string FileNameSuffix
-        {
-            get { return fileNameSuffix; }
-            set
-            {
-                if (fileNameSuffix != value)
-                {
-                    fileNameSuffix = value;
-                    char[] pattern = Path.GetInvalidFileNameChars();
-                    string error = string.Format(error_messages[1], pattern.ToString(""));
-
-                    if (IsPathValid(value, pattern))
-                    {
-                        RemoveError("FileNameSuffix", error);
-                    }
-                    else
-                    {
-                        AddError("FileNameSuffix", error);
-                    }
-
-                    OnChanged(13);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Template name of the file definition.
-        /// </summary>
-        [PropertyOrder(14)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_3")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn3_3")]
-        public string TemplateFileName
-        {
-            get { return templateFileName; }
-            set
-            {
-                if (templateFileName != value)
-                {
-                    templateFileName = value;
-                    string path      = value;
-                    char[] pattern   = Path.GetInvalidFileNameChars();
-                    string error     = string.Format(error_messages[2], pattern.ToString(""));
-
-                    foreach (Match i in Regex.Matches(value, @"\{(.*?)\}"))
-                    {
-                        path = path.Replace(i.Value, "");
-                    }
-
-                    if (IsPathValid(path, pattern))
-                    {
-                        RemoveError("TemplateFileName", error);
-                    }
-                    else
-                    {
-                        AddError("TemplateFileName", error);
-                    }
-
-                    OnChanged(14);
-                }
+                return (isChanged);
             }
         }
         #endregion
 
         #region internal methods
-        /// <summary>
-        /// Cloneable values this object on loaded.
-        /// </summary>
-        internal virtual void OnLoaded()
+        internal override void OnLoaded()
         {
-            s_values[0] = outputExtension;
-
             pg_names = (string[])pageNames.Clone();
             pj_names = (string[])projectionNames.Clone();
 
@@ -462,9 +313,6 @@ namespace TFlex.PackageManager.Configuration
             m_values[1] = projectionScale;
             b_values[4] = saveProjectionScale;
             b_values[5] = enableProcessingOfProjections;
-            s_values[1] = subDirectoryName;
-            s_values[2] = fileNameSuffix;
-            s_values[3] = templateFileName;
 
             pg_types[0] = pageTypes.Normal;
             pg_types[1] = pageTypes.Workplane;
@@ -475,50 +323,38 @@ namespace TFlex.PackageManager.Configuration
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
 
-            isLoaded = true;
-
-            //Debug.WriteLine("OnLoaded");
+            base.OnLoaded();
         }
 
-        /// <summary>
-        /// Verified this object a change and calls event for 'IsChanged' property.
-        /// </summary>
-        /// <param name="index">Property index.</param>
-        internal virtual void OnChanged(int index)
+        internal override void OnChanged(int index)
         {
-            if (!isLoaded) return;
+            if (!IsLoaded) return;
 
             switch (index)
             {
-                case 0:
-                    if (s_values[0] != outputExtension)
+                case 1:
+                    if (!Enumerable.SequenceEqual(pg_names, pageNames))
                         objState[0] = 1;
                     else
                         objState[0] = 0;
                     break;
-                case 1:
-                    if (!Enumerable.SequenceEqual(pg_names, pageNames))
+                case 2:
+                    if (b_values[0] != excludePage)
                         objState[1] = 1;
                     else
                         objState[1] = 0;
                     break;
-                case 2:
-                    if (b_values[0] != excludePage)
+                case 3:
+                    if (m_values[0] != pageScale)
                         objState[2] = 1;
                     else
                         objState[2] = 0;
                     break;
-                case 3:
-                    if (m_values[0] != pageScale)
+                case 4:
+                    if (b_values[1] != savePageScale)
                         objState[3] = 1;
                     else
                         objState[3] = 0;
-                    break;
-                case 4:
-                    if (b_values[1] != savePageScale)
-                        objState[4] = 1;
-                    else
-                        objState[4] = 0;
                     break;
                 case 5:
                     if (pg_types[0] != pageTypes.Normal ||
@@ -526,63 +362,45 @@ namespace TFlex.PackageManager.Configuration
                         pg_types[2] != pageTypes.Auxiliary ||
                         pg_types[3] != pageTypes.Text ||
                         pg_types[4] != pageTypes.BillOfMaterials)
+                        objState[4] = 1;
+                    else
+                        objState[4] = 0;
+                    break;
+                case 6:
+                    if (b_values[2] != checkDrawingTemplate)
                         objState[5] = 1;
                     else
                         objState[5] = 0;
                     break;
-                case 6:
-                    if (b_values[2] != checkDrawingTemplate)
+                case 7:
+                    if (!Enumerable.SequenceEqual(pj_names, projectionNames))
                         objState[6] = 1;
                     else
                         objState[6] = 0;
                     break;
-                case 7:
-                    if (!Enumerable.SequenceEqual(pj_names, projectionNames))
+                case 8:
+                    if (b_values[3] != excludeProjection)
                         objState[7] = 1;
                     else
                         objState[7] = 0;
                     break;
-                case 8:
-                    if (b_values[3] != excludeProjection)
+                case 9:
+                    if (m_values[1] != projectionScale)
                         objState[8] = 1;
                     else
                         objState[8] = 0;
                     break;
-                case 9:
-                    if (m_values[1] != projectionScale)
+                case 10:
+                    if (b_values[4] != saveProjectionScale)
                         objState[9] = 1;
                     else
                         objState[9] = 0;
                     break;
-                case 10:
-                    if (b_values[4] != saveProjectionScale)
+                case 11:
+                    if (b_values[5] != enableProcessingOfProjections)
                         objState[10] = 1;
                     else
                         objState[10] = 0;
-                    break;
-                case 11:
-                    if (b_values[5] != enableProcessingOfProjections)
-                        objState[11] = 1;
-                    else
-                        objState[11] = 0;
-                    break;
-                case 12:
-                    if (s_values[1] != subDirectoryName)
-                        objState[12] = 1;
-                    else
-                        objState[12] = 0;
-                    break;
-                case 13:
-                    if (s_values[2] != fileNameSuffix)
-                        objState[13] = 1;
-                    else
-                        objState[13] = 0;
-                    break;
-                case 14:
-                    if (s_values[3] != templateFileName)
-                        objState[14] = 1;
-                    else
-                        objState[14] = 0;
                     break;
             }
 
@@ -597,34 +415,10 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
 
-            OnPropertyChanged("IsChanged");
+            base.OnChanged(index);
         }
 
-        /// <summary>
-        /// Configuration task method.
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="flag">
-        /// Flag definition: (0) - read, (1) - write
-        /// </param>
-        internal void ConfigurationTask(XElement element, int flag)
-        {
-            isLoaded = false;
-
-            foreach (var i in element.Elements())
-            {
-                TranslatorTask(i, flag);
-            }
-
-            OnLoaded();
-        }
-
-        /// <summary>
-        /// Create new translator metadata to Xml.
-        /// </summary>
-        /// <param name="translator">Translator type.</param>
-        /// <returns></returns>
-        internal XElement NewTranslator(TranslatorType translator)
+        internal override XElement NewTranslator(TranslatorType translator)
         {
             XElement element = new XElement("translator", new XAttribute("id", translator),
                 new XElement("parameter",
@@ -659,39 +453,15 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("value", saveProjectionScale ? "1" : "0")),
                 new XElement("parameter",
                     new XAttribute("name", "EnableProcessingOfProjections"),
-                    new XAttribute("value", enableProcessingOfProjections ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "SubDirectoryName"),
-                    new XAttribute("value", subDirectoryName)),
-                new XElement("parameter",
-                    new XAttribute("name", "FileNameSuffix"),
-                    new XAttribute("value", fileNameSuffix)),
-                new XElement("parameter",
-                    new XAttribute("name", "TemplateFileName"),
-                    new XAttribute("value", templateFileName)));
+                    new XAttribute("value", enableProcessingOfProjections ? "1" : "0")));
 
             return element;
         }
 
-        /// <summary>
-        /// Append translator metadata to parent element.
-        /// </summary>
-        /// <param name="parent">Parent element from metadata Xml.</param>
-        /// <param name="translator">Translator type.</param>
-        internal virtual void AppendTranslatorToXml(XElement parent, TranslatorType translator)
+        internal override void TranslatorTask(XElement element, int flag)
         {
-            parent.Add(NewTranslator(translator));
-        }
+            //base.TranslatorTask(element, flag);
 
-        /// <summary>
-        /// Virtual method for processing translator parameters.
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="flag">
-        /// Flag definition: (0) - read, (1) - write
-        /// </param>
-        internal virtual void TranslatorTask(XElement element, int flag)
-        {
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)
             {
@@ -779,148 +549,8 @@ namespace TFlex.PackageManager.Configuration
                     else
                         value = enableProcessingOfProjections ? "1" : "0";
                     break;
-                case "SubDirectoryName":
-                    if (flag == 0)
-                        subDirectoryName = value;
-                    else
-                        value = subDirectoryName;
-                    break;
-                case "FileNameSuffix":
-                    if (flag == 0)
-                        fileNameSuffix = value;
-                    else
-                        value = fileNameSuffix;
-                    break;
-                case "TemplateFileName":
-                    if (flag == 0)
-                        templateFileName = value;
-                    else
-                        value = templateFileName;
-                    break;
             }
             element.Attribute("value").Value = value;
-        }
-
-        /// <summary>
-        /// The Export virtual method.
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="pages"></param>
-        /// <param name="logFile"></param>
-        internal virtual void Export(Document document, Dictionary<Page, string> pages, LogFile logFile) { }
-        #endregion
-
-        #region private methods
-        /// <summary>
-        /// Validating the path name.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="pattern"></param>
-        /// <returns></returns>
-        private bool IsPathValid(string path, char[] pattern)
-        {
-            if (path.Length > 0 && path.IndexOfAny(pattern) >= 0)
-                return false;
-
-            return true;
-        }
-        #endregion
-
-        #region INotifyPropertyChanged members
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// The OpPropertyChanged event handler.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        #endregion
-
-        #region INotifyDataErrorInfo members
-        /// <summary>
-        /// Occurs when the validation errors have changed for a property or for the entire entity.
-        /// </summary>
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-        /// <summary>
-        /// The RaiseErrorChanged event handler.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        protected void RaiseErrorChanged(string name)
-        {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(name));
-        }
-
-        /// <summary>
-        /// Gets a value that indicates whether the entity has validation errors.
-        /// </summary>
-        [Browsable(false)]
-        public bool HasErrors
-        {
-            get { return (objErrors.Count > 0); }
-        }
-
-        /// <summary>
-        /// Gets the validation errors for a specified property or for the entire entity.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <returns>The validation errors for the property or entity.</returns>
-        public IEnumerable GetErrors(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                return objErrors.Values;
-
-            objErrors.TryGetValue(name, out List<string> errors);
-            return errors;
-        }
-
-        /// <summary>
-        /// Add error to dictionary.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <param name="error">Error message.</param>
-        internal void AddError(string name, string error)
-        {
-            if (objErrors.TryGetValue(name, out List<string> errors) == false)
-            {
-                errors = new List<string>();
-                objErrors.Add(name, errors);
-            }
-
-            if (errors.Contains(error) == false)
-            {
-                errors.Add(error);
-            }
-
-            RaiseErrorChanged(name);
-        }
-
-        /// <summary>
-        /// Remove error from dictionary.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <param name="error">Error message.</param>
-        internal void RemoveError(string name, string error)
-        {
-            if (objErrors.TryGetValue(name, out List<string> errors))
-            {
-                errors.Remove(error);
-            }
-
-            if (errors == null)
-                return;
-
-            if (errors.Count == 0)
-            {
-                objErrors.Remove(name);
-                RaiseErrorChanged(name);
-            }
         }
         #endregion
     }

@@ -14,6 +14,9 @@ using System.Collections.Generic;
 
 namespace TFlex.PackageManager.Configuration
 {
+    /// <summary>
+    /// The Acad translator class.
+    /// </summary>
     [CustomCategoryOrder(Resource.TRANSLATOR_1, 3)]
     [CustomCategoryOrder(Resource.TRANSLATOR_1, 4)]
     public class Translator_1 : Translator_0
@@ -29,9 +32,9 @@ namespace TFlex.PackageManager.Configuration
         private int biarcInterpolationForSplines;
         private decimal biarcInterpolationAccuracyForSplines;
 
-        private readonly byte[] objState = new byte[8];
-        private readonly int[] i_values = new int[7];
-        private readonly decimal[] m_values = new decimal[1];
+        private readonly byte[] objState;
+        private readonly int[] i_values;
+        private readonly decimal[] m_values;
         private bool isChanged;
         #endregion
 
@@ -48,17 +51,11 @@ namespace TFlex.PackageManager.Configuration
             biarcInterpolationAccuracyForSplines = 0.1m;
 
             OutputExtension = "DWG";
-        }
 
-        #region internal properties
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
+            objState        = new byte[8];
+            i_values        = new int[7];
+            m_values        = new decimal[1];
         }
-        #endregion
 
         #region public properties
         /// <summary>
@@ -284,11 +281,19 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region methods
+        #region internal properties
+        internal override bool IsChanged
+        {
+            get
+            {
+                return (isChanged | base.IsChanged);
+            }
+        }
+        #endregion
+
+        #region internal methods
         internal override void OnLoaded()
         {
-            base.OnLoaded();
-
             i_values[0] = autocadExportFileVersion;
             i_values[1] = convertAreas;
             i_values[2] = convertToLines;
@@ -300,6 +305,8 @@ namespace TFlex.PackageManager.Configuration
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
+
+            base.OnLoaded();
         }
 
         internal override void OnChanged(int index)
@@ -308,54 +315,14 @@ namespace TFlex.PackageManager.Configuration
 
             switch (index)
             {
-                case 16:
-                    if (i_values[0] != autocadExportFileVersion)
-                        objState[0] = 1;
-                    else
-                        objState[0] = 0;
-                    break;
-                case 17:
-                    if (i_values[1] != convertAreas)
-                        objState[1] = 1;
-                    else
-                        objState[1] = 0;
-                    break;
-                case 18:
-                    if (i_values[2] != convertToLines)
-                        objState[2] = 1;
-                    else
-                        objState[2] = 0;
-                    break;
-                case 19:
-                    if (i_values[3] != convertDimensions)
-                        objState[3] = 1;
-                    else
-                        objState[3] = 0;
-                    break;
-                case 20:
-                    if (i_values[4] != convertLineText)
-                        objState[4] = 1;
-                    else
-                        objState[4] = 0;
-                    break;
-                case 21:
-                    if (i_values[5] != convertMultitext)
-                        objState[5] = 1;
-                    else
-                        objState[5] = 0;
-                    break;
-                case 22:
-                    if (i_values[6] != biarcInterpolationForSplines)
-                        objState[6] = 1;
-                    else
-                        objState[6] = 0;
-                    break;
-                case 23:
-                    if (m_values[0] != biarcInterpolationAccuracyForSplines)
-                        objState[7] = 1;
-                    else
-                        objState[7] = 0;
-                    break;
+                case 16: objState[0] = (byte)(i_values[0] != autocadExportFileVersion             ? 1 : 0); break;
+                case 17: objState[1] = (byte)(i_values[1] != convertAreas                         ? 1 : 0); break;
+                case 18: objState[2] = (byte)(i_values[2] != convertToLines                       ? 1 : 0); break;
+                case 19: objState[3] = (byte)(i_values[3] != convertDimensions                    ? 1 : 0); break;
+                case 20: objState[4] = (byte)(i_values[4] != convertLineText                      ? 1 : 0); break;
+                case 21: objState[5] = (byte)(i_values[5] != convertMultitext                     ? 1 : 0); break;
+                case 22: objState[6] = (byte)(i_values[6] != biarcInterpolationForSplines         ? 1 : 0); break;
+                case 23: objState[7] = (byte)(m_values[0] != biarcInterpolationAccuracyForSplines ? 1 : 0); break;
             }
 
             isChanged = false;
@@ -413,33 +380,42 @@ namespace TFlex.PackageManager.Configuration
 
             string value = Enum.GetName(typeof(TranslatorType), translator);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
-                new XElement("parameter", 
-                    new XAttribute("name", "OutputExtension"), 
+                new XElement("parameter",
+                    new XAttribute("name", "SubDirectoryName"),
+                    new XAttribute("value", SubDirectoryName)),
+                new XElement("parameter",
+                    new XAttribute("name", "FileNameSuffix"),
+                    new XAttribute("value", FileNameSuffix)),
+                new XElement("parameter",
+                    new XAttribute("name", "TemplateFileName"),
+                    new XAttribute("value", TemplateFileName)),
+                new XElement("parameter",
+                    new XAttribute("name", "OutputExtension"),
                     new XAttribute("value", OutputExtension)),
                 new XElement("parameter",
                     new XAttribute("name", "AutocadExportFileVersion"),
-                    new XAttribute("value", autocadExportFileVersion)),
+                    new XAttribute("value", AutocadExportFileVersion)),
                 new XElement("parameter",
                     new XAttribute("name", "ConvertAreas"),
-                    new XAttribute("value", convertAreas)),
+                    new XAttribute("value", ConvertAreas)),
                 new XElement("parameter",
                     new XAttribute("name", "ConvertToLines"),
-                    new XAttribute("value", convertToLines)),
+                    new XAttribute("value", ConvertToLines)),
                 new XElement("parameter",
                     new XAttribute("name", "ConvertDimensions"),
-                    new XAttribute("value", convertDimensions)),
+                    new XAttribute("value", ConvertDimensions)),
                 new XElement("parameter",
                     new XAttribute("name", "ConvertLineText"),
-                    new XAttribute("value", convertLineText)),
+                    new XAttribute("value", ConvertLineText)),
                 new XElement("parameter",
                     new XAttribute("name", "ConvertMultitext"),
-                    new XAttribute("value", convertMultitext)),
+                    new XAttribute("value", ConvertMultitext)),
                 new XElement("parameter",
                     new XAttribute("name", "BiarcInterpolationForSplines"),
-                    new XAttribute("value", biarcInterpolationForSplines)),
+                    new XAttribute("value", BiarcInterpolationForSplines)),
                 new XElement("parameter",
                     new XAttribute("name", "BiarcInterpolationAccuracyForSplines"),
-                    new XAttribute("value", biarcInterpolationAccuracyForSplines)));
+                    new XAttribute("value", BiarcInterpolationAccuracyForSplines)));
         }
 
         internal override void TranslatorTask(XElement element, int flag)
@@ -547,11 +523,11 @@ namespace TFlex.PackageManager.Configuration
                     break;
             }
 
-            export.ConvertToLines = ConvertToLines > 0 ? true : false;
-            export.ConvertAreas = ConvertAreas > 0 ? true : false;
+            export.ConvertToLines    = ConvertToLines > 0;
+            export.ConvertAreas      = ConvertAreas > 0;
             export.ConvertDimensions = ConvertDimensions;
-            export.ConvertLineText = ConvertLineText > 0 ? true : false;
-            export.ConvertMultitext = ConvertMultitext;
+            export.ConvertLineText   = ConvertLineText > 0;
+            export.ConvertMultitext  = ConvertMultitext;
             // encoding ?
             if (biarcInterpolationForSplines > 0)
             {

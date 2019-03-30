@@ -21,8 +21,8 @@ namespace TFlex.PackageManager.Configuration
         private bool screenLayers;
         private bool constructions;
 
-        private readonly byte[] objState = new byte[2];
-        private readonly bool[] b_values = new bool[2];
+        private readonly byte[] objState;
+        private readonly bool[] b_values;
         private bool isChanged;
         #endregion
 
@@ -32,17 +32,9 @@ namespace TFlex.PackageManager.Configuration
             imageOptions = new byte[2];
 
             OutputExtension = "BMP";
+            objState        = new byte[2];
+            b_values        = new bool[2];
         }
-
-        #region internal properties
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
-        }
-        #endregion
 
         #region public properties
         /// <summary>
@@ -130,16 +122,26 @@ namespace TFlex.PackageManager.Configuration
         }   
         #endregion
 
-        #region methods
+        #region internal properties
+        internal override bool IsChanged
+        {
+            get
+            {
+                return (isChanged | base.IsChanged);
+            }
+        }
+        #endregion
+
+        #region internal methods
         internal override void OnLoaded()
         {
-            base.OnLoaded();
-
             b_values[0] = screenLayers;
             b_values[1] = constructions;
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
+
+            base.OnLoaded();
         }
 
         internal override void OnChanged(int index)
@@ -148,18 +150,8 @@ namespace TFlex.PackageManager.Configuration
 
             switch (index)
             {
-                case 16:
-                    if (b_values[0] != screenLayers)
-                        objState[0] = 1;
-                    else
-                        objState[0] = 0;
-                    break;
-                case 17:
-                    if (b_values[1] != constructions)
-                        objState[1] = 1;
-                    else
-                        objState[1] = 0;
-                    break;
+                case 16: objState[0] = (byte)(b_values[0] != screenLayers  ? 1 : 0); break;
+                case 17: objState[1] = (byte)(b_values[1] != constructions ? 1 : 0); break;
             }
 
             isChanged = false;
@@ -185,10 +177,10 @@ namespace TFlex.PackageManager.Configuration
             foreach (var p in pages)
             {
                 options =
-                    (ScreenLayers  ? ImageExport.ScreenLayers  : ImageExport.None) |
-                    (Constructions ? ImageExport.Constructions : ImageExport.None);
+                    (screenLayers  ? ImageExport.ScreenLayers  : ImageExport.None) |
+                    (constructions ? ImageExport.Constructions : ImageExport.None);
 
-                switch (Extension)
+                switch (extension)
                 {
                     case 0:
                         format = ImageExportFormat.Bmp;
@@ -224,8 +216,17 @@ namespace TFlex.PackageManager.Configuration
 
             string value = Enum.GetName(typeof(TranslatorType), translator);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
-                new XElement("parameter", 
-                    new XAttribute("name", "OutputExtension"), 
+                new XElement("parameter",
+                    new XAttribute("name", "SubDirectoryName"),
+                    new XAttribute("value", SubDirectoryName)),
+                new XElement("parameter",
+                    new XAttribute("name", "FileNameSuffix"),
+                    new XAttribute("value", FileNameSuffix)),
+                new XElement("parameter",
+                    new XAttribute("name", "TemplateFileName"),
+                    new XAttribute("value", TemplateFileName)),
+                new XElement("parameter",
+                    new XAttribute("name", "OutputExtension"),
                     new XAttribute("value", OutputExtension)),
                 new XElement("parameter",
                     new XAttribute("name", "ImageOptions"),
@@ -261,8 +262,8 @@ namespace TFlex.PackageManager.Configuration
 
                     if (flag == 0)
                     {
-                        screenLayers  = values[0] == "01" ? true : false;
-                        constructions = values[1] == "01" ? true : false;
+                        screenLayers  = values[0] == "01";
+                        constructions = values[1] == "01";
                     }
                     else
                     {
