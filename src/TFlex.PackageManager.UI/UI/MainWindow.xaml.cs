@@ -358,10 +358,10 @@ namespace TFlex.PackageManager.UI
             
             c_width = treeListView1.Columns.Count > 1 ? (treeListView1.Columns.Count - 1) * 50 : 0;
             a_width = tvControl1.ActualWidth - (c_width + 18);
-            treeListView1.Columns[0].Width = a_width;
+            column1_0.Width = a_width;
             header1_0.Width = a_width;
             tvControl1.Content = treeListView1;
-        } // resize column (0)
+        }
 
         private void TvControl1_SizeChanged(object sender, SizeChangedEventArgs e)
         {
