@@ -171,16 +171,16 @@ namespace TFlex.PackageManager.UI
             {
                 Resource.GetString(Resource.MAIN_WINDOW, "label1", 0),
                 Resource.GetString(Resource.MAIN_WINDOW, "label2", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "label3", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "label4", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "label5", 1)
+                Resource.GetString(Resource.MAIN_WINDOW, "label3", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "label4", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "label5", 0)
             };
 
             label1.Content = s_labels[0];
             label2.Content = s_labels[1];
-            label3.ToolTip = string.Format(s_labels[2], 0);
-            label4.ToolTip = string.Format(s_labels[3], 0);
-            label5.ToolTip = string.Format(s_labels[4], 0);
+            label3.Content = string.Format(s_labels[2], 0);
+            label4.Content = string.Format(s_labels[3], 0);
+            label5.Content = string.Format(s_labels[4], 0);
 
             controls = new string[]
             {
@@ -211,7 +211,10 @@ namespace TFlex.PackageManager.UI
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 1),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 1),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1)
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "label3", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "label4", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "label5", 1)
             };
 
             menuItem1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1", 0);
@@ -243,6 +246,10 @@ namespace TFlex.PackageManager.UI
             button2_2.ToolTip = tooltips[8];
             button2_3.ToolTip = tooltips[9];
             button3_1.ToolTip = tooltips[10];
+
+            label3.ToolTip = tooltips[11];
+            label4.ToolTip = tooltips[12];
+            label5.ToolTip = tooltips[13];
             #endregion
         }
 
@@ -914,9 +921,9 @@ namespace TFlex.PackageManager.UI
                 button2_1.IsEnabled = false;
             }
 
-            label3.Content = string.Format("Iq {0}", tvControl1.CountFiles);
-            label4.Content = string.Format("Oq {0}", tvControl2.CountFiles);
-            label5.Content = string.Format("Sq {0}", tvControl1.SelectedItems.Count);
+            label3.Content = string.Format(s_labels[2], tvControl1.CountFiles);
+            label4.Content = string.Format(s_labels[3], tvControl2.CountFiles);
+            label5.Content = string.Format(s_labels[4], tvControl1.SelectedItems.Count);
         }
 
         /// <summary>
