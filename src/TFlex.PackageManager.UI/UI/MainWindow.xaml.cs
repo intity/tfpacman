@@ -354,13 +354,17 @@ namespace TFlex.PackageManager.UI
         #region tree views
         private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            double a_width, c_width;
-            
-            c_width = treeListView1.Columns.Count > 1 ? (treeListView1.Columns.Count - 1) * 50 : 0;
-            a_width = tvControl1.ActualWidth - (c_width + 18);
-            column1_0.Width = a_width;
-            header1_0.Width = a_width;
-            tvControl1.Content = treeListView1;
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    header1_0.Width -= 50;
+                    column1_0.Width -= 50;
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    header1_0.Width += 50;
+                    column1_0.Width += 50;
+                    break;
+            }
         }
 
         private void TvControl1_SizeChanged(object sender, SizeChangedEventArgs e)
