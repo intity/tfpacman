@@ -8,7 +8,7 @@ namespace TFlex.PackageManager.Converters
     /// <summary>
     /// Convert Level to left margin
     /// </summary>
-    internal class LevelToIndentConverter : IValueConverter
+    public class LevelToIndentConverter : IValueConverter
     {
         private const double c_IndentSize = 18.0;
 

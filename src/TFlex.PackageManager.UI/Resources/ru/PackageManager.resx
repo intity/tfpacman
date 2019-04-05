@@ -123,24 +123,6 @@
   <data name="header2_0" xml:space="preserve">
     <value>Файлы вывода</value>
   </data>
-  <data name="label1" xml:space="preserve">
-    <value>Конфигурация:</value>
-  </data>
-  <data name="label2" xml:space="preserve">
-    <value>Транслятор:</value>
-  </data>
-  <data name="label3" xml:space="preserve">
-    <value>Iq {0}</value>
-    <comment>Кол-во файлов документов</comment>
-  </data>
-  <data name="label4" xml:space="preserve">
-    <value>Oq {0}</value>
-    <comment>Кол-во экспортированных файлов</comment>
-  </data>
-  <data name="label5" xml:space="preserve">
-    <value>Sq {0}</value>
-    <comment>Кол-во выбранных файлов</comment>
-  </data>
   <data name="menuItem1" xml:space="preserve">
     <value>Файл</value>
   </data>
@@ -206,5 +188,23 @@
   </data>
   <data name="message2" xml:space="preserve">
     <value>Имеются конфигурации, которые не сохранены. Вы хотите сохранить их?</value>
+  </data>
+  <data name="sb_label1" xml:space="preserve">
+    <value>Iq {0}</value>
+    <comment>Кол-во файлов документов</comment>
+  </data>
+  <data name="sb_label2" xml:space="preserve">
+    <value>Oq {0}</value>
+    <comment>Кол-во экспортированных файлов</comment>
+  </data>
+  <data name="sb_label3" xml:space="preserve">
+    <value>Sq {0}</value>
+    <comment>Кол-во выбранных файлов</comment>
+  </data>
+  <data name="tb_label1" xml:space="preserve">
+    <value>Конфигурация:</value>
+  </data>
+  <data name="tb_label2" xml:space="preserve">
+    <value>Транслятор:</value>
   </data>
 </root>

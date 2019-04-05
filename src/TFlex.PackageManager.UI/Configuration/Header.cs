@@ -104,74 +104,58 @@ namespace TFlex.PackageManager.Configuration
         {
             //Debug.WriteLine(string.Format("Translator: {0}", e.PropertyName));
 
+            bool t_value = false;
+
             switch (e.PropertyName)
             {
                 case "Default":
-                    if ((sender as TranslatorTypes).Default)
+                    if (t_value = (sender as TranslatorTypes).Default)
                     {
                         translator_0 = new Translator_0();
                         translator_0.PropertyChanged += Translator_PropertyChanged;
                         translator_0.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_0);
                     }
-                    else
-                    {
-                        translators.Remove(e.PropertyName);
-                    }
                     break;
                 case "Acad":
-                    if ((sender as TranslatorTypes).Acad)
+                    if (t_value = (sender as TranslatorTypes).Acad)
                     {
                         translator_1 = new Translator_1();
                         translator_1.PropertyChanged += Translator_PropertyChanged;
                         translator_1.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_1);
-                    }
-                    else
-                    {
-                        translators.Remove(e.PropertyName);
                     }   
                     break;
                 case "Bitmap":
-                    if ((sender as TranslatorTypes).Bitmap)
+                    if (t_value = (sender as TranslatorTypes).Bitmap)
                     {
                         translator_3 = new Translator_3();
                         translator_3.PropertyChanged += Translator_PropertyChanged;
                         translator_3.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_3);
                     }
-                    else
-                    {
-                        translators.Remove(e.PropertyName);
-                    }
                     break;
                 case "Pdf":
-                    if ((sender as TranslatorTypes).Pdf)
+                    if (t_value = (sender as TranslatorTypes).Pdf)
                     {
                         translator_9 = new Translator_9();
                         translator_9.PropertyChanged += Translator_PropertyChanged;
                         translator_9.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_9);
                     }
-                    else
-                    {
-                        translators.Remove(e.PropertyName);
-                    }
                     break;
                 case "Step":
-                    if ((sender as TranslatorTypes).Step)
+                    if (t_value = (sender as TranslatorTypes).Step)
                     {
                         translator_10 = new Translator_10();
                         translator_10.PropertyChanged += Translator_PropertyChanged;
                         translator_10.ErrorsChanged   += Translator_ErrorsChanged;
                         translators.Add(e.PropertyName, translator_10);
                     }
-                    else
-                    {
-                        translators.Remove(e.PropertyName);
-                    }
                     break;
             }
+
+            if (!t_value) translators.Remove(e.PropertyName);
 
             OnChanged(4);
         }
@@ -470,7 +454,7 @@ namespace TFlex.PackageManager.Configuration
                         break;
                 }
 
-                if (t_value == false) i.Remove();
+                if (!t_value) i.Remove();
             }
 
             foreach (var i in translators)
@@ -881,7 +865,7 @@ namespace TFlex.PackageManager.Configuration
                 if (stl != value)
                 {
                     stl = value;
-                    OnPropertyChanged("Iges");
+                    OnPropertyChanged("Stl");
                 }
             }
         }
@@ -926,6 +910,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
     }
 
+#pragma warning disable CA1812
     internal class InputExtensionItems : IItemsSource
     {
         public ItemCollection GetValues()

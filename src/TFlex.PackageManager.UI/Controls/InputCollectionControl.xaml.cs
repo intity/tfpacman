@@ -6,6 +6,9 @@ using TFlex.PackageManager.UI;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 
+#pragma warning disable CA1721
+#pragma warning disable CA1819
+
 namespace TFlex.PackageManager.Controls
 {
     /// <summary>

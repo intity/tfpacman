@@ -9,6 +9,8 @@ using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
+#pragma warning disable CA1707
+
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
@@ -252,7 +254,7 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="path"></param>
         /// <param name="pattern"></param>
         /// <returns></returns>
-        private bool IsPathValid(string path, char[] pattern)
+        private static bool IsPathValid(string path, char[] pattern)
         {
             if (path.Length > 0 && path.IndexOfAny(pattern) >= 0)
                 return false;
@@ -271,7 +273,7 @@ namespace TFlex.PackageManager.Configuration
         /// The RaiseErrorChanged event handler.
         /// </summary>
         /// <param name="name">Property name.</param>
-        protected void RaiseErrorChanged(string name)
+        protected void OnRaiseErrorChanged(string name)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(name));
         }
@@ -317,7 +319,7 @@ namespace TFlex.PackageManager.Configuration
                 errors.Add(error);
             }
 
-            RaiseErrorChanged(name);
+            OnRaiseErrorChanged(name);
         }
 
         /// <summary>
@@ -338,7 +340,7 @@ namespace TFlex.PackageManager.Configuration
             if (errors.Count == 0)
             {
                 objErrors.Remove(name);
-                RaiseErrorChanged(name);
+                OnRaiseErrorChanged(name);
             }
         }
         #endregion

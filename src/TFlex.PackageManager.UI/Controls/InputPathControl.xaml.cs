@@ -9,6 +9,8 @@ using TFlex.PackageManager.Common;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 
+#pragma warning disable CA1721
+
 namespace TFlex.PackageManager.Controls
 {
     /// <summary>
@@ -16,21 +18,13 @@ namespace TFlex.PackageManager.Controls
     /// </summary>
     public partial class InputPathControl : UserControl, ITypeEditor
     {
-        private CustomFolderBrowserDialog fbd;
         private string displayName;
         private string description;
-        private List<ImageSource> imageSources;
+        private readonly List<ImageSource> imageSources;
 
         public InputPathControl()
         {
             InitializeComponent();
-
-            fbd = new CustomFolderBrowserDialog
-            {
-                RootFolder = Environment.SpecialFolder.MyComputer,
-                SelectedPath = null,
-                StartupLocation = WindowStartupLocation.CenterOwner
-            };
 
             imageSources = new List<ImageSource>
             {
@@ -52,16 +46,6 @@ namespace TFlex.PackageManager.Controls
 
         public FrameworkElement ResolveEditor(PropertyItem propertyItem)
         {
-            Binding binding = new Binding("Value")
-            {
-                Source = propertyItem,
-                ValidatesOnExceptions = true,
-                ValidatesOnDataErrors = true
-            };
-            BindingOperations.SetBinding(this, ValueProperty, binding);
-            displayName = propertyItem.DisplayName;
-            description = propertyItem.Description;
-
             switch (propertyItem.PropertyName)
             {
                 case "UserDirectory":
@@ -75,16 +59,33 @@ namespace TFlex.PackageManager.Controls
                     break;
             }
 
+            Binding binding = new Binding("Value")
+            {
+                Source = propertyItem,
+                ValidatesOnExceptions = true,
+                ValidatesOnDataErrors = true
+            };
+
+            BindingOperations.SetBinding(this, ValueProperty, binding);
+            displayName = propertyItem.DisplayName;
+            description = propertyItem.Description;
+
             return this;
         }
 
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            fbd.SelectedPath = Value?.ToString();
-            fbd.Title = displayName;
-            fbd.Description = description;
+            CustomFolderBrowserDialog fbd = new CustomFolderBrowserDialog
+            {
+                Title           = displayName,
+                Description     = description,
+                Owner           = Window.GetWindow(Parent),
+                RootFolder      = Environment.SpecialFolder.MyComputer,
+                SelectedPath    = Value?.ToString(),
+                StartupLocation = WindowStartupLocation.CenterOwner
+            };
 
-            if (fbd.ShowDialog(Window.GetWindow(Parent)) == MessageBoxResult.OK)
+            if (fbd.ShowDialog())
             {
                 Value = fbd.SelectedPath;
             }

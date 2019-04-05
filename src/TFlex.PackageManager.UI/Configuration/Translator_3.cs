@@ -8,6 +8,9 @@ using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
+#pragma warning disable CA1707
+#pragma warning disable CA1819
+
 namespace TFlex.PackageManager.Configuration
 {
     [CustomCategoryOrder(Resource.TRANSLATOR_3, 3)]
@@ -279,6 +282,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
     }
 
+#pragma warning disable CA1812
     internal class ExtensionItems_3 : IItemsSource
     {
         public ItemCollection GetValues()

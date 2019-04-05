@@ -406,6 +406,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
     }
 
+#pragma warning disable CA1812
     internal class ModeItems : IItemsSource
     {
         public ItemCollection GetValues()

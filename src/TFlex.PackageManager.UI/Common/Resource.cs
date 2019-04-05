@@ -4,10 +4,13 @@ using System.ComponentModel.Design;
 using System.IO;
 using System.Reflection;
 using System.Resources;
+using System.Windows;
+
+#pragma warning disable CA1707
 
 namespace TFlex.PackageManager.Common
 {
-    public class Resource
+    public static class Resource
     {
         #region private fields
         private static readonly string appDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -97,6 +100,7 @@ namespace TFlex.PackageManager.Common
         {
             string path = null;
             string result = null;
+            ResXResourceReader resource = null;
 
             switch (Application.InterfaceLanguage)
             {
@@ -114,11 +118,14 @@ namespace TFlex.PackageManager.Common
                     break;
             }
 
-            using (var resource = new ResXResourceReader(path))
+            try
             {
-                resource.UseResXDataNodes = true;
-                IDictionaryEnumerator dict = resource.GetEnumerator();
+                resource = new ResXResourceReader(path)
+                {
+                    UseResXDataNodes = true
+                };
 
+                IDictionaryEnumerator dict = resource.GetEnumerator();
                 while (dict.MoveNext())
                 {
                     var node = dict.Value as ResXDataNode;
@@ -134,11 +141,20 @@ namespace TFlex.PackageManager.Common
                                 result = node.Comment ?? string.Empty;
                                 break;
                         }
-                        resource.Close();
-                        return result;
+
+                        break;
                     }
                 }
-                resource.Close();
+                
+            }
+            catch (FileNotFoundException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            finally
+            {
+                if (resource != null)
+                    resource.Close();
             }
             return result;
         }

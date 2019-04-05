@@ -6,6 +6,8 @@ using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
+#pragma warning disable CA1707
+
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
@@ -193,6 +195,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
     }
 
+#pragma warning disable CA1812
     internal class ProtocolItems : IItemsSource
     {
         public ItemCollection GetValues()

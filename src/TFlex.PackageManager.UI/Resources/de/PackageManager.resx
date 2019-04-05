@@ -123,24 +123,6 @@
   <data name="header2_0" xml:space="preserve">
     <value>Ausgabedateien</value>
   </data>
-  <data name="label1" xml:space="preserve">
-    <value>Konfiguration:</value>
-  </data>
-  <data name="label2" xml:space="preserve">
-    <value>Übersetzer:</value>
-  </data>
-  <data name="label3" xml:space="preserve">
-    <value>Iq {0}</value>
-    <comment>Anzahl der quelldateien</comment>
-  </data>
-  <data name="label4" xml:space="preserve">
-    <value>Oq {0}</value>
-    <comment>Anzahl der exportierten dateien</comment>
-  </data>
-  <data name="label5" xml:space="preserve">
-    <value>Sq {0}</value>
-    <comment>Anzahl der ausgewählten dateien</comment>
-  </data>
   <data name="menuItem1" xml:space="preserve">
     <value>Datei</value>
   </data>
@@ -206,5 +188,23 @@
   </data>
   <data name="message2" xml:space="preserve">
     <value>Es gibt Konfigurationen, die nicht gespeichert werden. Möchten Sie sie retten?</value>
+  </data>
+  <data name="sb_label1" xml:space="preserve">
+    <value>Iq {0}</value>
+    <comment>Anzahl der quelldateien</comment>
+  </data>
+  <data name="sb_label2" xml:space="preserve">
+    <value>Oq {0}</value>
+    <comment>Anzahl der exportierten dateien</comment>
+  </data>
+  <data name="sb_label3" xml:space="preserve">
+    <value>Sq {0}</value>
+    <comment>Anzahl der ausgewählten dateien</comment>
+  </data>
+  <data name="tb_label1" xml:space="preserve">
+    <value>Konfiguration:</value>
+  </data>
+  <data name="tb_label2" xml:space="preserve">
+    <value>Übersetzer:</value>
   </data>
 </root>

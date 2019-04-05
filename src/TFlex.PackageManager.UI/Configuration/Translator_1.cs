@@ -12,6 +12,8 @@ using TFlex.PackageManager.Attributes;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using System.Collections.Generic;
 
+#pragma warning disable CA1707
+
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
@@ -546,6 +548,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
     }
 
+#pragma warning disable CA1812
     internal class ExtensionItems_1 : IItemsSource
     {
         public ItemCollection GetValues()

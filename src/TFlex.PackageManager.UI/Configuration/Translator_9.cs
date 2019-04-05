@@ -8,6 +8,8 @@ using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
+#pragma warning disable CA1707
+
 namespace TFlex.PackageManager.Configuration
 {
     [CustomCategoryOrder(Resource.TRANSLATOR_9, 4)]

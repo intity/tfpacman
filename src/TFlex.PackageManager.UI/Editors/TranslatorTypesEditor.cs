@@ -7,9 +7,9 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 
 namespace TFlex.PackageManager.Editors
 {
-    internal class TranslatorTypesEditor : ITypeEditor
+    public class TranslatorTypesEditor : ITypeEditor
     {
-        private TextBox textBox;
+        private readonly TextBox textBox;
 
         public TranslatorTypesEditor()
         {

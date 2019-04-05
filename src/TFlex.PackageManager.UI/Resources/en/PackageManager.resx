@@ -123,24 +123,6 @@
   <data name="header2_0" xml:space="preserve">
     <value>Output files</value>
   </data>
-  <data name="label1" xml:space="preserve">
-    <value>Configuration:</value>
-  </data>
-  <data name="label2" xml:space="preserve">
-    <value>Translator:</value>
-  </data>
-  <data name="label3" xml:space="preserve">
-    <value>Iq {0}</value>
-    <comment>Count of input files</comment>
-  </data>
-  <data name="label4" xml:space="preserve">
-    <value>Oq {0}</value>
-    <comment>Count of exported files</comment>
-  </data>
-  <data name="label5" xml:space="preserve">
-    <value>Sq {0}</value>
-    <comment>Count of selected files</comment>
-  </data>
   <data name="menuItem1" xml:space="preserve">
     <value>File</value>
   </data>
@@ -206,5 +188,23 @@
   </data>
   <data name="message2" xml:space="preserve">
     <value>There are configurations that are not saved. Do you want to save them?</value>
+  </data>
+  <data name="sb_label1" xml:space="preserve">
+    <value>Iq {0}</value>
+    <comment>Count of input files</comment>
+  </data>
+  <data name="sb_label2" xml:space="preserve">
+    <value>Oq {0}</value>
+    <comment>Count of exported files</comment>
+  </data>
+  <data name="sb_label3" xml:space="preserve">
+    <value>Sq {0}</value>
+    <comment>Count of selected files</comment>
+  </data>
+  <data name="tb_label1" xml:space="preserve">
+    <value>Configuration:</value>
+  </data>
+  <data name="tb_label2" xml:space="preserve">
+    <value>Translator:</value>
   </data>
 </root>

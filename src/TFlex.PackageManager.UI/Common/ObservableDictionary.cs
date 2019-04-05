@@ -85,7 +85,7 @@ namespace TFlex.PackageManager.Common
         public bool Remove(TKey key)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             Dictionary.TryGetValue(key, out TValue value);
             var removed = Dictionary.Remove(key);
@@ -192,7 +192,7 @@ namespace TFlex.PackageManager.Common
         public void AddRange(IDictionary<TKey, TValue> items)
         {
             if (items == null)
-                throw new ArgumentNullException("items");
+                throw new ArgumentNullException(nameof(items));
 
             if (items.Count > 0)
             {
@@ -213,7 +213,7 @@ namespace TFlex.PackageManager.Common
         private void Insert(TKey key, TValue value, bool add)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
 
             if (Dictionary.TryGetValue(key, out TValue item))

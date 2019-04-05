@@ -10,6 +10,9 @@ using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
+#pragma warning disable CA1707
+#pragma warning disable CA1819
+
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
@@ -25,7 +28,7 @@ namespace TFlex.PackageManager.Configuration
         private bool excludePage;
         private decimal pageScale;
         private bool savePageScale;
-        private PageTypes pageTypes;
+        private readonly PageTypes pageTypes;
         private bool checkDrawingTemplate;
         private string [] projectionNames;
         private bool excludeProjection;
@@ -474,7 +477,7 @@ namespace TFlex.PackageManager.Configuration
                     break;
                 case "ExcludePage":
                     if (flag == 0)
-                        excludePage = value == "1" ? true : false;
+                        excludePage = value == "1";
                     else
                         value = excludePage ? "1" : "0";
                     break;
@@ -487,7 +490,7 @@ namespace TFlex.PackageManager.Configuration
                     break;
                 case "SavePageScale":
                     if (flag == 0)
-                        savePageScale = value == "1" ? true : false;
+                        savePageScale = value == "1";
                     else
                         value = savePageScale ? "1" : "0";
                     break;
@@ -496,18 +499,18 @@ namespace TFlex.PackageManager.Configuration
                     {
                         string[] values = value.Split(' ');
 
-                        pageTypes.Normal          = values[0] == "01" ? true : false;
-                        pageTypes.Workplane       = values[1] == "01" ? true : false;
-                        pageTypes.Auxiliary       = values[2] == "01" ? true : false;
-                        pageTypes.Text            = values[3] == "01" ? true : false;
-                        pageTypes.BillOfMaterials = values[4] == "01" ? true : false;
+                        pageTypes.Normal          = values[0] == "01";
+                        pageTypes.Workplane       = values[1] == "01";
+                        pageTypes.Auxiliary       = values[2] == "01";
+                        pageTypes.Text            = values[3] == "01";
+                        pageTypes.BillOfMaterials = values[4] == "01";
                     }
                     else
                         value = pageTypes.ToString();
                     break;
                 case "CheckDrawingTemplate":
                     if (flag == 0)
-                        checkDrawingTemplate = value == "1" ? true : false;
+                        checkDrawingTemplate = value == "1";
                     else
                         value = checkDrawingTemplate ? "1" : "0";
                     break;
@@ -523,7 +526,7 @@ namespace TFlex.PackageManager.Configuration
                     break;
                 case "ExcludeProjection":
                     if (flag == 0)
-                        excludeProjection = value == "1" ? true : false;
+                        excludeProjection = value == "1";
                     else
                         value = excludeProjection ? "1" : "0";
                     break;
@@ -536,13 +539,13 @@ namespace TFlex.PackageManager.Configuration
                     break;
                 case "SaveProjectionScale":
                     if (flag == 0)
-                        saveProjectionScale = value == "1" ? true : false;
+                        saveProjectionScale = value == "1";
                     else
                         value = saveProjectionScale ? "1" : "0";
                     break;
                 case "EnableProcessingOfProjections":
                     if (flag == 0)
-                        enableProcessingOfProjections = value == "1" ? true : false;
+                        enableProcessingOfProjections = value == "1";
                     else
                         value = enableProcessingOfProjections ? "1" : "0";
                     break;

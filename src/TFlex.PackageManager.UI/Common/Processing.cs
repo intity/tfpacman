@@ -112,7 +112,7 @@ namespace TFlex.PackageManager.Common
         /// </summary>
         /// <param name="expression"></param>
         /// <returns>Returns expression tokens.</returns>
-        private string[] Groups(string expression)
+        private static string[] Groups(string expression)
         {
             string pattern = @"\((.*?)\)";
             string[] groups = expression.Split(new string[] { ".type", ".format" }, StringSplitOptions.None);
@@ -132,7 +132,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="page"></param>
         /// <param name="expression"></param>
         /// <returns>Returns variable value from document.</returns>
-        private string GetValue(Document document, Page page, string expression)
+        private static string GetValue(Document document, Page page, string expression)
         {
             string result = null;
             string[] groups = Groups(expression);
@@ -197,7 +197,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="page"></param>
         /// <param name="expression"></param>
         /// <returns>Returns variable value from document.</returns>
-        private string ParseExpression(Document document, Page page, string expression)
+        private static string ParseExpression(Document document, Page page, string expression)
         {
             string result = null;
             string pattern = @"(?:\?\?)";
@@ -227,7 +227,7 @@ namespace TFlex.PackageManager.Common
             else
                 result = GetValue(document, page, expression);
 
-            return result = result ?? string.Empty;
+            return result ?? string.Empty;
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="document"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        private bool DrawingTemplateExists(Document document, Page page)
+        private static bool DrawingTemplateExists(Document document, Page page)
         {
             if (document.GetFragments().Where(
                 f => f.GroupType == ObjectType.Fragment && f.Page == page &&
@@ -284,33 +284,18 @@ namespace TFlex.PackageManager.Common
         /// <returns></returns>
         private bool PageTypeExists(Page page)
         {
-            uint[,] pt = new uint[,]
+            Dictionary<PageType, bool> types = new Dictionary<PageType, bool>
             {
-                {
-                    (uint)(translator_0.PageTypes.Normal ? 1 : 0),
-                    (uint)PageType.Normal
-                },
-                {
-                    (uint)(translator_0.PageTypes.Workplane ? 1 : 0),
-                    (uint)PageType.Workplane
-                },
-                {
-                    (uint)(translator_0.PageTypes.Auxiliary ? 1 : 0),
-                    (uint)PageType.Auxiliary
-                },
-                {
-                    (uint)(translator_0.PageTypes.Text ? 1 : 0),
-                    (uint)PageType.Text
-                },
-                {
-                    (uint)(translator_0.PageTypes.BillOfMaterials ? 1 : 0),
-                    (uint)PageType.BillOfMaterials
-                }
+                { PageType.Normal,          translator_0.PageTypes.Normal },
+                { PageType.Workplane,       translator_0.PageTypes.Workplane },
+                { PageType.Auxiliary,       translator_0.PageTypes.Auxiliary },
+                { PageType.Text,            translator_0.PageTypes.Text },
+                { PageType.BillOfMaterials, translator_0.PageTypes.BillOfMaterials }
             };
 
-            for (int i = 0; i < pt.GetLength(0); i++)
+            foreach(var i in types)
             {
-                if (pt[i, 0] > 0 && pt[i, 1] == (uint)page.PageType)
+                if (i.Key == page.PageType && i.Value)
                 {
                     return true;
                 }

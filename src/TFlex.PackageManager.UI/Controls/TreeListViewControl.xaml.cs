@@ -302,18 +302,15 @@ namespace TFlex.PackageManager.Controls
         /// (1) - set value
         /// </param>
         /// <returns></returns>
-        private bool? CellConfigure(TreeListViewItem ti, int iColumn, bool? value, int flag)
+        private static bool? CellConfigure(TreeListViewItem ti, int iColumn, bool? value, int flag)
         {
-            bool? result = null;
-
             var sp = VisualTreeHelper.GetChild(ti, 0) as StackPanel;
             var bd = VisualTreeHelper.GetChild(sp, 0) as Border;
             var rw = VisualTreeHelper.GetChild(bd, 0) as GridViewRowPresenter;
             var cp = VisualTreeHelper.GetChild(rw, iColumn) as ContentPresenter;
             var dp = VisualTreeHelper.GetChild(cp, 0) as DockPanel;
             var cb = dp.FindName("Cb") as CheckBox;
-
-            return result = (flag > 0 ? (cb.IsChecked = value) : cb.IsChecked);
+            return (flag > 0 ? (cb.IsChecked = value) : cb.IsChecked);
         }
 
         /// <summary>
@@ -328,11 +325,9 @@ namespace TFlex.PackageManager.Controls
         /// (1) - set value
         /// </param>
         /// <returns></returns>
-        private bool? GroupConfigure(TreeListViewItem ti, int iColumn, bool? value, int flag)
+        private static bool? GroupConfigure(TreeListViewItem ti, int iColumn, bool? value, int flag)
         {
             int count = 0;
-            bool? result = null;
-
             var sp = VisualTreeHelper.GetChild(ti, 0) as StackPanel;
             var ip = VisualTreeHelper.GetChild(sp, 1) as ItemsPresenter;
             int ic = VisualTreeHelper.GetChildrenCount(ip);
@@ -360,6 +355,7 @@ namespace TFlex.PackageManager.Controls
                 }
             }
 
+            bool? result;
             if (count > 0 && count != ic_child)
                 result = null;
             else if (count == ic_child)

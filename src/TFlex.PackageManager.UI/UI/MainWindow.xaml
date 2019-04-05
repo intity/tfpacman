@@ -166,7 +166,7 @@
                     <c:CustomImage Source="{StaticResource icon_1_6}" Width="16" Height="16"/>
                 </Button>
                 <Separator/>
-                <Label Name="label1" 
+                <Label Name="tb_label1" 
                        Content="Configuration:" 
                        VerticalAlignment="Center" 
                        Padding="2,0,4,0"/>
@@ -179,7 +179,7 @@
                     <c:CustomImage Source="{StaticResource icon_1_7}" Width="16" Height="16"/>
                 </Button>
                 <Separator/>
-                <Label Name="label2" 
+                <Label Name="tb_label2" 
                        Content="Translator:" 
                        VerticalAlignment="Center" 
                        Padding="2,0,4,0"/>
@@ -224,7 +224,7 @@
                 </ProgressBar>
             </StatusBarItem>
             <StatusBarItem>
-                <Label Name="label3" 
+                <Label Name="sb_label1" 
                        Content="Iq 0" 
                        ToolTip="Count of input files"
                        Padding="4,0,0,0" 
@@ -232,7 +232,7 @@
                        Width="50"/>
             </StatusBarItem>
             <StatusBarItem>
-                <Label Name="label4" 
+                <Label Name="sb_label2" 
                        Content="Oq 0" 
                        ToolTip="Count of exported files"
                        Padding="4,0,0,0" 
@@ -240,7 +240,7 @@
                        Width="50"/>
             </StatusBarItem>
             <StatusBarItem>
-                <Label Name="label5" 
+                <Label Name="sb_label3" 
                        Content="Sq 0" 
                        ToolTip="Count of selected files"
                        Padding="4,0,0,0" 

@@ -32,8 +32,8 @@ namespace TFlex.PackageManager.Configuration
     public class ConfigurationCollection
     {
         #region private fields
-        private ObservableDictionary<string, Header> configurations;
-        private List<string> changedCofigurations;
+        private readonly ObservableDictionary<string, Header> configurations;
+        private readonly List<string> changedCofigurations;
         private string targetDirectory;
         #endregion
 

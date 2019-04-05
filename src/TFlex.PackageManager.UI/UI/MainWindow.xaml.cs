@@ -25,39 +25,38 @@ namespace TFlex.PackageManager.UI
         #region private fields
         private ConfigurationCollection self;
 
-        private TreeListView treeListView1;
-        private TreeListView treeListView2;
+        private readonly TreeListView treeListView1;
+        private readonly TreeListView treeListView2;
 
-        private GridViewColumn column1_0;
-        private GridViewColumn column1_1;
-        private GridViewColumn column1_3;
-        private GridViewColumn column1_9;
-        private GridViewColumn column1_10;
-        private GridViewColumn column2_0;
+        private readonly GridViewColumn column1_0;
+        private readonly GridViewColumn column1_1;
+        private readonly GridViewColumn column1_3;
+        private readonly GridViewColumn column1_9;
+        private readonly GridViewColumn column1_10;
+        private readonly GridViewColumn column2_0;
 
-        private GridViewColumnHeader header1_0;
-        private GridViewColumnHeader header1_1;
-        private GridViewColumnHeader header1_3;
-        private GridViewColumnHeader header1_9;
-        private GridViewColumnHeader header1_10;
-        private GridViewColumnHeader header2_0;
+        private readonly GridViewColumnHeader header1_0;
+        private readonly GridViewColumnHeader header1_1;
+        private readonly GridViewColumnHeader header1_3;
+        private readonly GridViewColumnHeader header1_9;
+        private readonly GridViewColumnHeader header1_10;
+        private readonly GridViewColumnHeader header2_0;
 
-        private Common.Options options;
-        private AboutUs aboutUs;
+        private readonly Common.Options options;
 
-        private string[] s_labels;
-        private string[] messages;
-        private string[] controls;
-        private string[] tooltips;
+        private readonly string[] tblabels;
+        private readonly string[] sblabels;
+        private readonly string[] messages;
+        private readonly string[] controls;
+        private readonly string[] tooltips;
 
         private string key1, key2;
 
         private Thread thread;
         private bool stoped;
 
-        const int GWLP_WNDPROC = (-4);
-        const uint WM_STOPPED_PROCESSING = 0x0400;
-        const uint WM_INCREMENT_PROGRESS = 0x0401;
+        const int WM_STOPPED_PROCESSING = 0x0400;
+        const int WM_INCREMENT_PROGRESS = 0x0401;
         #endregion
 
         public MainWindow()
@@ -167,20 +166,25 @@ namespace TFlex.PackageManager.UI
                 Resource.GetString(Resource.MAIN_WINDOW, "message2", 0)
             };
 
-            s_labels = new string[]
+            tblabels = new string[]
             {
-                Resource.GetString(Resource.MAIN_WINDOW, "label1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "label2", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "label3", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "label4", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "label5", 0)
+                Resource.GetString(Resource.MAIN_WINDOW, "tb_label1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "tb_label2", 0)
             };
 
-            label1.Content = s_labels[0];
-            label2.Content = s_labels[1];
-            label3.Content = string.Format(s_labels[2], 0);
-            label4.Content = string.Format(s_labels[3], 0);
-            label5.Content = string.Format(s_labels[4], 0);
+            tb_label1.Content = tblabels[0];
+            tb_label2.Content = tblabels[1];
+
+            sblabels = new string[]
+            {
+                Resource.GetString(Resource.MAIN_WINDOW, "sb_label1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "sb_label2", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "sb_label3", 0)
+            };
+
+            sb_label1.Content = string.Format(sblabels[0], 0);
+            sb_label2.Content = string.Format(sblabels[1], 0);
+            sb_label3.Content = string.Format(sblabels[2], 0);
 
             controls = new string[]
             {
@@ -211,10 +215,7 @@ namespace TFlex.PackageManager.UI
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 1),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 1),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "label3", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "label4", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "label5", 1)
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1)
             };
 
             menuItem1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1", 0);
@@ -247,18 +248,16 @@ namespace TFlex.PackageManager.UI
             button2_3.ToolTip = tooltips[9];
             button3_1.ToolTip = tooltips[10];
 
-            label3.ToolTip = tooltips[11];
-            label4.ToolTip = tooltips[12];
-            label5.ToolTip = tooltips[13];
+            sb_label1.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label1", 1);
+            sb_label2.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label2", 1);
+            sb_label3.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label3", 1);
             #endregion
         }
 
         #region window proc
-        private delegate IntPtr WinProcDelegate(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
-
         private static IntPtr handle = IntPtr.Zero;
         private static IntPtr oldWndProc = IntPtr.Zero;
-        private WinProcDelegate newWndProc;
+        private NativeMethods.WndProc newWndProc;
 
         private IntPtr WindowProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam)
         {
@@ -267,7 +266,7 @@ namespace TFlex.PackageManager.UI
                 case WM_STOPPED_PROCESSING:
                     button2_2.IsEnabled = false;
                     menuItem2_2.IsEnabled = false;
-                    label4.Content = string.Format(s_labels[3], tvControl2.CountFiles);
+                    sb_label2.Content = string.Format(sblabels[1], tvControl2.CountFiles);
                     tvControl2.InitLayout();
                     UpdateStateToControls();
                     break;
@@ -283,7 +282,7 @@ namespace TFlex.PackageManager.UI
                     break;
             }
 
-            return WinAPI.CallWindowProc(oldWndProc, hWnd, uMsg, wParam, lParam);
+            return NativeMethods.CallWindowProc(oldWndProc, hWnd, uMsg, wParam, lParam);
         }
         #endregion
 
@@ -293,9 +292,9 @@ namespace TFlex.PackageManager.UI
             if (handle == IntPtr.Zero)
             {
                 handle = new WindowInteropHelper(this).Handle;
-                newWndProc = new WinProcDelegate(WindowProc);
-                oldWndProc = WinAPI.GetWindowLongPtr(handle, GWLP_WNDPROC);
-                WinAPI.SetWindowLongPtr(handle, GWLP_WNDPROC, 
+                newWndProc = new NativeMethods.WndProc(WindowProc);
+                oldWndProc = NativeMethods.GetWindowLongPtr(handle, NativeMethods.GWLP_WNDPROC);
+                NativeMethods.SetWindowLongPtr(handle, NativeMethods.GWLP_WNDPROC, 
                     Marshal.GetFunctionPointerForDelegate(newWndProc));
             }
 
@@ -411,75 +410,65 @@ namespace TFlex.PackageManager.UI
         {
             int selected_index = comboBox2.SelectedIndex;
             int contains_index = comboBox2.Items.IndexOf(e.PropertyName);
-            bool rm_translator = false;
+            bool t_value       = false;
 
             switch (e.PropertyName)
             {
                 case "Acad":
-                    if ((sender as TranslatorTypes).Acad)
+                    if (t_value = (sender as TranslatorTypes).Acad)
                     {
-                        comboBox2.Items.Add(e.PropertyName);
                         treeListView1.Columns.Add(column1_1);
                         header1_1.Content = "DWG";
                     }
                     else
                     {
-                        comboBox2.Items.Remove(e.PropertyName);
                         treeListView1.Columns.Remove(column1_1);
-                        rm_translator = true;
                     }
                     break;
                 case "Bitmap":
-                    if ((sender as TranslatorTypes).Bitmap)
+                    if (t_value = (sender as TranslatorTypes).Bitmap)
                     {
-                        comboBox2.Items.Add(e.PropertyName);
                         treeListView1.Columns.Add(column1_3);
                         header1_3.Content = "BMP";
                     }
                     else
                     {
-                        comboBox2.Items.Remove(e.PropertyName);
                         treeListView1.Columns.Remove(column1_3);
-                        rm_translator = true;
                     }
                     break;
                 case "Pdf":
-                    if ((sender as TranslatorTypes).Pdf)
+                    if (t_value = (sender as TranslatorTypes).Pdf)
                     {
-                        comboBox2.Items.Add(e.PropertyName);
                         treeListView1.Columns.Add(column1_9);
                     }
                     else
                     {
-                        comboBox2.Items.Remove(e.PropertyName);
                         treeListView1.Columns.Remove(column1_9);
-                        rm_translator = true;
                     }
                     break;
                 case "Step":
-                    if ((sender as TranslatorTypes).Step)
+                    if (t_value = (sender as TranslatorTypes).Step)
                     {
-                        comboBox2.Items.Add(e.PropertyName);
                         treeListView1.Columns.Add(column1_10);
                     }
                     else
                     {
-                        comboBox2.Items.Remove(e.PropertyName);
                         treeListView1.Columns.Remove(column1_10);
-                        rm_translator = true;
                     }
                     break;
             }
 
-            if (rm_translator)
+            if (t_value)
             {
-                comboBox2.SelectedIndex = selected_index != contains_index 
-                    ? selected_index 
-                    : selected_index - 1;
+                comboBox2.Items.Add(e.PropertyName);
+                comboBox2.SelectedIndex = comboBox2.Items.Count - 1;
             }
             else
             {
-                comboBox2.SelectedIndex = comboBox2.Items.Count - 1;
+                comboBox2.Items.Remove(e.PropertyName);
+                comboBox2.SelectedIndex = selected_index != contains_index
+                    ? selected_index
+                    : selected_index - 1;
             }
         }
 
@@ -713,7 +702,7 @@ namespace TFlex.PackageManager.UI
 
         private void Event4_1_Click(object sender, RoutedEventArgs e)
         {
-            aboutUs = new AboutUs
+            AboutUs aboutUs = new AboutUs
             {
                 Owner = this
             };
@@ -835,7 +824,8 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         private void UpdateStateToControls()
         {
-            int ic_length = 0, td_length = 0;
+            int ic_length;
+            int td_length;
 
             if (self.Configurations.Count() == 0)
             {
@@ -921,9 +911,9 @@ namespace TFlex.PackageManager.UI
                 button2_1.IsEnabled = false;
             }
 
-            label3.Content = string.Format(s_labels[2], tvControl1.CountFiles);
-            label4.Content = string.Format(s_labels[3], tvControl2.CountFiles);
-            label5.Content = string.Format(s_labels[4], tvControl1.SelectedItems.Count);
+            sb_label1.Content = string.Format(sblabels[0], tvControl1.CountFiles);
+            sb_label2.Content = string.Format(sblabels[1], tvControl2.CountFiles);
+            sb_label3.Content = string.Format(sblabels[2], tvControl1.SelectedItems.Count);
         }
 
         /// <summary>
@@ -932,7 +922,6 @@ namespace TFlex.PackageManager.UI
         private void StartProcessing()
         {
             double[] count = { 0.0 };
-            double increment = 0.0;
             var size = Marshal.SizeOf(count[0]) * count.Length;
             IntPtr value = Marshal.AllocHGlobal(size);
             Stopwatch watch = new Stopwatch();
@@ -946,11 +935,11 @@ namespace TFlex.PackageManager.UI
 
             foreach (var i in tvControl1.SelectedItems)
             {
-                increment = 100.0 / (tvControl1.SelectedItems.Count * i.Value.Length);
+                double increment = 100.0 / (tvControl1.SelectedItems.Count * i.Value.Length);
 
                 if (stoped)
                 {
-                    WinAPI.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+                    NativeMethods.SendMessage(handle, (int)WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
                     break;
                 }
 
@@ -962,7 +951,7 @@ namespace TFlex.PackageManager.UI
                     {
                         count[0] += increment;
                         Marshal.Copy(count, 0, value, count.Length);
-                        WinAPI.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
+                        NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
                         continue;
                     }
 
@@ -972,7 +961,7 @@ namespace TFlex.PackageManager.UI
 
                     count[0] += increment;
                     Marshal.Copy(count, 0, value, count.Length);
-                    WinAPI.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
+                    NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
                 }
             }
 
@@ -984,8 +973,8 @@ namespace TFlex.PackageManager.UI
 
             count[0] = 100;
             Marshal.Copy(count, 0, value, count.Length);
-            WinAPI.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
-            WinAPI.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+            NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
+            NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
         }
         #endregion
     }

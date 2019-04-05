@@ -107,7 +107,7 @@ namespace TFlex.PackageManager.Common
 
                 subKey.Close();
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 MessageBox.Show(e.Message);
             }

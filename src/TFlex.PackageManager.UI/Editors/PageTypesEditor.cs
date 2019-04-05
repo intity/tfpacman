@@ -8,9 +8,9 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 
 namespace TFlex.PackageManager.Editors
 {
-    internal class PageTypesEditor : ITypeEditor
+    public class PageTypesEditor : ITypeEditor
     {
-        private TextBox textBox;
+        private readonly TextBox textBox;
 
         public PageTypesEditor()
         {
