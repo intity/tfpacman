@@ -29,7 +29,7 @@ namespace TFlex.PackageManager.Configuration
         private string initialCatalog;
         private string targetDirectory;
         private string inputExtension;
-        private TranslatorTypes translatorTypes;
+        private readonly TranslatorTypes translatorTypes;
 
         private readonly byte[] objState;
         private readonly string[] s_values;
@@ -102,8 +102,6 @@ namespace TFlex.PackageManager.Configuration
 
         private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //Debug.WriteLine(string.Format("Translator: {0}", e.PropertyName));
-
             bool t_value = false;
 
             switch (e.PropertyName)
@@ -111,51 +109,73 @@ namespace TFlex.PackageManager.Configuration
                 case "Default":
                     if (t_value = (sender as TranslatorTypes).Default)
                     {
-                        translator_0 = new Translator_0();
-                        translator_0.PropertyChanged += Translator_PropertyChanged;
-                        translator_0.ErrorsChanged   += Translator_ErrorsChanged;
+                        if (translator_0 == null)
+                        {
+                            translator_0 = new Translator_0();
+                            translator_0.PropertyChanged += Translator_PropertyChanged;
+                            translator_0.ErrorsChanged   += Translator_ErrorsChanged;
+                        }
+
                         translators.Add(e.PropertyName, translator_0);
                     }
                     break;
                 case "Acad":
                     if (t_value = (sender as TranslatorTypes).Acad)
                     {
-                        translator_1 = new Translator_1();
-                        translator_1.PropertyChanged += Translator_PropertyChanged;
-                        translator_1.ErrorsChanged   += Translator_ErrorsChanged;
+                        if (translator_1 == null)
+                        {
+                            translator_1 = new Translator_1();
+                            translator_1.PropertyChanged += Translator_PropertyChanged;
+                            translator_1.ErrorsChanged   += Translator_ErrorsChanged;
+                        }
+
                         translators.Add(e.PropertyName, translator_1);
                     }   
                     break;
                 case "Bitmap":
                     if (t_value = (sender as TranslatorTypes).Bitmap)
                     {
-                        translator_3 = new Translator_3();
-                        translator_3.PropertyChanged += Translator_PropertyChanged;
-                        translator_3.ErrorsChanged   += Translator_ErrorsChanged;
+                        if (translator_3 == null)
+                        {
+                            translator_3 = new Translator_3();
+                            translator_3.PropertyChanged += Translator_PropertyChanged;
+                            translator_3.ErrorsChanged   += Translator_ErrorsChanged;
+                        }
+
                         translators.Add(e.PropertyName, translator_3);
                     }
                     break;
                 case "Pdf":
                     if (t_value = (sender as TranslatorTypes).Pdf)
                     {
-                        translator_9 = new Translator_9();
-                        translator_9.PropertyChanged += Translator_PropertyChanged;
-                        translator_9.ErrorsChanged   += Translator_ErrorsChanged;
+                        if (translator_9 == null)
+                        {
+                            translator_9 = new Translator_9();
+                            translator_9.PropertyChanged += Translator_PropertyChanged;
+                            translator_9.ErrorsChanged   += Translator_ErrorsChanged;
+                        }
+
                         translators.Add(e.PropertyName, translator_9);
                     }
                     break;
                 case "Step":
                     if (t_value = (sender as TranslatorTypes).Step)
                     {
-                        translator_10 = new Translator_10();
-                        translator_10.PropertyChanged += Translator_PropertyChanged;
-                        translator_10.ErrorsChanged   += Translator_ErrorsChanged;
+                        if (translator_10 == null)
+                        {
+                            translator_10 = new Translator_10();
+                            translator_10.PropertyChanged += Translator_PropertyChanged;
+                            translator_10.ErrorsChanged   += Translator_ErrorsChanged;
+                        }
+
                         translators.Add(e.PropertyName, translator_10);
                     }
                     break;
             }
 
             if (!t_value) translators.Remove(e.PropertyName);
+            //Debug.WriteLine(string.Format("TranslatorTypes_PropertyChanged [name: {0}, value: {1}]", 
+            //    e.PropertyName, t_value));
 
             OnChanged(4);
         }
