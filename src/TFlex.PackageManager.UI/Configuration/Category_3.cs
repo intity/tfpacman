@@ -21,7 +21,6 @@ namespace TFlex.PackageManager.Configuration
     {
         #region private fields
         private string outputExtension;
-        private string subDirectoryName;
         private string fileNameSuffix;
         private string templateFileName;
 
@@ -36,54 +35,20 @@ namespace TFlex.PackageManager.Configuration
         public Category_3()
         {
             outputExtension  = string.Empty;
-            subDirectoryName = string.Empty;
             fileNameSuffix   = string.Empty;
             templateFileName = string.Empty;
 
-            objState         = new byte[4];
-            s_values         = new string[4];
+            objState         = new byte[3];
+            s_values         = new string[3];
             objErrors        = new Dictionary<string, List<string>>();
             error_messages   = new string[]
             {
-                Resource.GetString(Resource.CATEGIRY_3, "message1", 0),
                 Resource.GetString(Resource.CATEGIRY_3, "message2", 0),
                 Resource.GetString(Resource.CATEGIRY_3, "message3", 0)
             };
         }
 
         #region public properties
-        /// <summary>
-        /// The sub directory name definition for include in the target directory.
-        /// </summary>
-        [PropertyOrder(12)]
-        [CustomCategory(Resource.CATEGIRY_3, "category3")]
-        [CustomDisplayName(Resource.CATEGIRY_3, "dn3_1")]
-        [CustomDescription(Resource.CATEGIRY_3, "dn3_1")]
-        public string SubDirectoryName
-        {
-            get { return subDirectoryName; }
-            set
-            {
-                if (subDirectoryName != value)
-                {
-                    subDirectoryName = value;
-                    char[] pattern = Path.GetInvalidPathChars();
-                    string error = string.Format(error_messages[0], pattern.ToString(""));
-
-                    if (IsPathValid(value, pattern))
-                    {
-                        RemoveError("SubDirectoryName", error);
-                    }
-                    else
-                    {
-                        AddError("SubDirectoryName", error);
-                    }
-
-                    OnChanged(12);
-                }
-            }
-        }
-
         /// <summary>
         /// The file name suffix.
         /// </summary>
@@ -100,7 +65,7 @@ namespace TFlex.PackageManager.Configuration
                 {
                     fileNameSuffix = value;
                     char[] pattern = Path.GetInvalidFileNameChars();
-                    string error = string.Format(error_messages[1], pattern.ToString(""));
+                    string error = string.Format(error_messages[0], pattern.ToString(""));
 
                     if (IsPathValid(value, pattern))
                     {
@@ -133,7 +98,7 @@ namespace TFlex.PackageManager.Configuration
                     templateFileName = value;
                     string path = value;
                     char[] pattern = Path.GetInvalidFileNameChars();
-                    string error = string.Format(error_messages[2], pattern.ToString(""));
+                    string error = string.Format(error_messages[1], pattern.ToString(""));
 
                     foreach (Match i in Regex.Matches(value, @"\{(.*?)\}"))
                     {
@@ -182,10 +147,9 @@ namespace TFlex.PackageManager.Configuration
         #region internal methods
         internal override void OnLoaded()
         {
-            s_values[0] = subDirectoryName;
-            s_values[1] = fileNameSuffix;
-            s_values[2] = templateFileName;
-            s_values[3] = outputExtension;
+            s_values[0] = fileNameSuffix;
+            s_values[1] = templateFileName;
+            s_values[2] = outputExtension;
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
@@ -199,10 +163,9 @@ namespace TFlex.PackageManager.Configuration
 
             switch (index)
             {
-                case 12: objState[0] = (byte)(s_values[0] != subDirectoryName ? 1 : 0); break;
-                case 13: objState[1] = (byte)(s_values[1] != fileNameSuffix   ? 1 : 0); break;
-                case 14: objState[2] = (byte)(s_values[2] != templateFileName ? 1 : 0); break;
-                case 15: objState[3] = (byte)(s_values[3] != outputExtension  ? 1 : 0); break;
+                case 13: objState[0] = (byte)(s_values[0] != fileNameSuffix   ? 1 : 0); break;
+                case 14: objState[1] = (byte)(s_values[1] != templateFileName ? 1 : 0); break;
+                case 15: objState[2] = (byte)(s_values[2] != outputExtension  ? 1 : 0); break;
             }
 
             isChanged = false;
@@ -224,12 +187,6 @@ namespace TFlex.PackageManager.Configuration
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)
             {
-                case "SubDirectoryName":
-                    if (flag == 0)
-                        subDirectoryName = value;
-                    else
-                        value = subDirectoryName;
-                    break;
                 case "FileNameSuffix":
                     if (flag == 0)
                         fileNameSuffix = value;

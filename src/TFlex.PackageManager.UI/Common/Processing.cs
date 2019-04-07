@@ -77,9 +77,7 @@ namespace TFlex.PackageManager.Common
             FileInfo fileInfo = new FileInfo(path);
             string directory = fileInfo.Directory.FullName.Replace(
                 header.InitialCatalog,
-                header.TargetDirectory + "\\" + (categoryFile.SubDirectoryName.Length > 0 
-                ? categoryFile.SubDirectoryName 
-                : categoryFile.OutputExtension));
+                header.TargetDirectory + "\\" + Enum.GetName(typeof(TranslatorType), translator_t));
             string targetDirectory = Directory.Exists(directory)
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;

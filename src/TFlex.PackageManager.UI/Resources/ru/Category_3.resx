@@ -120,10 +120,6 @@
   <data name="category3" xml:space="preserve">
     <value>Файл</value>
   </data>
-  <data name="dn3_1" xml:space="preserve">
-    <value>Имя подкаталога</value>
-    <comment>Включает вложенный каталог ассоциированный с транслятором.</comment>
-  </data>
   <data name="dn3_2" xml:space="preserve">
     <value>Суффикс имени файла</value>
     <comment>Добавляет суффикс к имени файла вывода.</comment>
@@ -131,9 +127,6 @@
   <data name="dn3_3" xml:space="preserve">
     <value>Шаблон имени файла</value>
     <comment>Определение шаблона имени файла вывода.</comment>
-  </data>
-  <data name="message1" xml:space="preserve">
-    <value>Имя подкаталога не должно содержать символы: {0}</value>
   </data>
   <data name="message2" xml:space="preserve">
     <value>Суффикс имени файла не должно содержать символы: {0}</value>

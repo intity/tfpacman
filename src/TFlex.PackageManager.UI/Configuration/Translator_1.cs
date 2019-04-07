@@ -383,9 +383,6 @@ namespace TFlex.PackageManager.Configuration
             string value = Enum.GetName(typeof(TranslatorType), translator);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter",
-                    new XAttribute("name", "SubDirectoryName"),
-                    new XAttribute("value", SubDirectoryName)),
-                new XElement("parameter",
                     new XAttribute("name", "FileNameSuffix"),
                     new XAttribute("value", FileNameSuffix)),
                 new XElement("parameter",

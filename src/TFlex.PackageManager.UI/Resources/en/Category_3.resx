@@ -120,10 +120,6 @@
   <data name="category3" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="dn3_1" xml:space="preserve">
-    <value>Sub directory name</value>
-    <comment>Includes a subdirectory associated with the translator.</comment>
-  </data>
   <data name="dn3_2" xml:space="preserve">
     <value>File name suffix</value>
     <comment>Adds a suffix to the output file name.</comment>
@@ -131,9 +127,6 @@
   <data name="dn3_3" xml:space="preserve">
     <value>Template file name</value>
     <comment>Template of the file name definition.</comment>
-  </data>
-  <data name="message1" xml:space="preserve">
-    <value>Subdirectory name must not contain characters: {0}</value>
   </data>
   <data name="message2" xml:space="preserve">
     <value>The file name suffix must not contain characters: {0}</value>

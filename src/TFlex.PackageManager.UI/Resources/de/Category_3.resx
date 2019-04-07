@@ -120,10 +120,6 @@
   <data name="category3" xml:space="preserve">
     <value>Datei</value>
   </data>
-  <data name="dn3_1" xml:space="preserve">
-    <value>Name des unterverzeichnisses</value>
-    <comment>Enthält ein unterverzeichnis, das dem übersetzer zugeordnet ist.</comment>
-  </data>
   <data name="dn3_2" xml:space="preserve">
     <value>Datei namen suffix</value>
     <comment>Fügt dem namen der ausgabedatei ein suffix hinzu.</comment>
@@ -131,9 +127,6 @@
   <data name="dn3_3" xml:space="preserve">
     <value>Dateinamens vorlage</value>
     <comment>Definieren sie eine vorlage für den namen der ausgabedatei.</comment>
-  </data>
-  <data name="message1" xml:space="preserve">
-    <value>Der name des unterverzeichnisses darf keine zeichen enthalten: {0}</value>
   </data>
   <data name="message2" xml:space="preserve">
     <value>Das dateinamen suffix darf keine zeichen enthalten: {0}</value>
