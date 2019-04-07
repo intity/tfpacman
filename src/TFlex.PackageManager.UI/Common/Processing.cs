@@ -324,6 +324,7 @@ namespace TFlex.PackageManager.Common
             switch (translator_t)
             {
                 case TranslatorType.Default:
+                case TranslatorType.Acad:
                 case TranslatorType.Bitmap:
                 case TranslatorType.Pdf:
                     ProcessingPages(document, targetDirectory);
