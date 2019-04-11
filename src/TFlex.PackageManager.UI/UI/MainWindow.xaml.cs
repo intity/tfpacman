@@ -300,7 +300,9 @@ namespace TFlex.PackageManager.UI
                     tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
                     break;
                 case "TargetDirectory":
-                    tvControl2.TargetDirectory = Path.Combine(self.Configurations[key1].TargetDirectory, key2);
+                    tvControl2.TargetDirectory = key2 != null 
+                        ? Path.Combine(self.Configurations[key1].TargetDirectory, key2) 
+                        : self.Configurations[key1].TargetDirectory;
                     break;
             }
 
