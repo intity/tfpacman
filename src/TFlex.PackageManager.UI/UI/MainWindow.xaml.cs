@@ -163,8 +163,30 @@ namespace TFlex.PackageManager.UI
             sb_label2.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label2", 1);
             sb_label3.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label3", 1);
 
-            inputPath1.ToolTip = Resource.GetString(Resource.HEADER_UI, "dn1_2", 1);
-            inputPath2.ToolTip = Resource.GetString(Resource.HEADER_UI, "dn1_3", 1);
+            inputPath1.PropertyDefinitions.Add(new PropertyDefinition
+            {
+                TargetProperties = new[]
+                {
+                    "ConfigurationName",
+                    "TargetDirectory",
+                    "InputExtension",
+                    "TranslatorTypes"
+                },
+                IsBrowsable = false
+            });
+
+            inputPath2.PropertyDefinitions.Add(new PropertyDefinition
+            {
+                TargetProperties = new[]
+                {
+                    "ConfigurationName",
+                    "InitialCatalog",
+                    "InputExtension",
+                    "TranslatorTypes"
+                },
+                IsBrowsable = false
+            });
+
             #endregion
         }
 
@@ -276,11 +298,9 @@ namespace TFlex.PackageManager.UI
             {
                 case "InitialCatalog":
                     tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
-                    inputPath1.Value = self.Configurations[key1].InitialCatalog;
                     break;
                 case "TargetDirectory":
                     tvControl2.TargetDirectory = Path.Combine(self.Configurations[key1].TargetDirectory, key2);
-                    inputPath2.Value = self.Configurations[key1].TargetDirectory;
                     break;
             }
 
@@ -535,7 +555,8 @@ namespace TFlex.PackageManager.UI
             {
                 key1 = comboBox1.SelectedValue.ToString();
                 tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
-                inputPath1.Value = self.Configurations[key1].InitialCatalog;
+                inputPath1.SelectedObject  = self.Configurations[key1];
+                inputPath2.SelectedObject  = self.Configurations[key1];
 
                 string[] items1 = comboBox2.Items.OfType<string>().ToArray();
                 string[] items2 = self.Configurations[key1].Translators.Keys.ToArray();
@@ -576,7 +597,6 @@ namespace TFlex.PackageManager.UI
                 if (path.Length > 0)
                 {
                     tvControl2.TargetDirectory = Path.Combine(path, key2);
-                    inputPath2.Value = path;
                 }
             }
             else
