@@ -577,8 +577,11 @@ namespace TFlex.PackageManager.UI
             }
             else
             {
-                comboBox2.Items.Clear();
                 tvControl1.TargetDirectory = string.Empty;
+                tvControl2.TargetDirectory = string.Empty;
+                inputPath1.SelectedObject  = null;
+                inputPath2.SelectedObject  = null;
+                comboBox2.Items.Clear();
             }
 
             UpdateStateToControls();
@@ -604,7 +607,6 @@ namespace TFlex.PackageManager.UI
             else
             {
                 propertyGrid.SelectedObject = null;
-                tvControl2.TargetDirectory  = string.Empty;
             }
 
             UpdateStateToControls();
