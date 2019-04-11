@@ -23,24 +23,10 @@ namespace TFlex.PackageManager.UI
     public partial class MainWindow : Window
     {
         #region private fields
-        private ConfigurationCollection self;
+        private readonly ConfigurationCollection self;
 
-        private readonly TreeListView treeListView1;
-        private readonly TreeListView treeListView2;
-
-        private readonly GridViewColumn column1_0;
-        private readonly GridViewColumn column1_1;
-        private readonly GridViewColumn column1_3;
-        private readonly GridViewColumn column1_9;
-        private readonly GridViewColumn column1_10;
-        private readonly GridViewColumn column2_0;
-
-        private readonly GridViewColumnHeader header1_0;
-        private readonly GridViewColumnHeader header1_1;
-        private readonly GridViewColumnHeader header1_3;
-        private readonly GridViewColumnHeader header1_9;
-        private readonly GridViewColumnHeader header1_10;
-        private readonly GridViewColumnHeader header2_0;
+        private readonly CustomTreeView treeListView1;
+        private readonly CustomTreeView treeListView2;
 
         private readonly Common.Options options;
 
@@ -55,6 +41,10 @@ namespace TFlex.PackageManager.UI
         private Thread thread;
         private bool stoped;
 
+        private static IntPtr handle = IntPtr.Zero;
+        private static IntPtr oldWndProc = IntPtr.Zero;
+        private NativeMethods.WndProc newWndProc;
+
         const int WM_STOPPED_PROCESSING = 0x0400;
         const int WM_INCREMENT_PROGRESS = 0x0401;
         #endregion
@@ -65,95 +55,16 @@ namespace TFlex.PackageManager.UI
             Title = Resource.AppName;
 
             #region initialize controls
-            header1_0 = new GridViewColumnHeader
-            {
-                Content = Resource.GetString(Resource.MAIN_WINDOW, "header1_0", 0),
-                Padding = new Thickness(10, 2, 0, 0),
-                HorizontalContentAlignment = HorizontalAlignment.Left
-            };
-
-            header1_1 = new GridViewColumnHeader
-            {
-                Content = "DWG",
-                Width = 50
-            };
-
-            header1_3 = new GridViewColumnHeader
-            {
-                Content = "BMP",
-                Width = 50
-            };
-
-            header1_9 = new GridViewColumnHeader
-            {
-                Content = "PDF",
-                Width = 50
-            };
-
-            header1_10 = new GridViewColumnHeader
-            {
-                Content = "STP",
-                Width = 50
-            };
-
-            header2_0 = new GridViewColumnHeader
-            {
-                Content = Resource.GetString(Resource.MAIN_WINDOW, "header2_0", 0),
-                Padding = new Thickness(10, 2, 0, 0),
-                HorizontalContentAlignment = HorizontalAlignment.Left
-            };
-
-            column1_0 = new GridViewColumn
-            {
-                Header = header1_0,
-                CellTemplate = tvControl1.Resources["CellTemplateLabel"] as DataTemplate
-            };
-
-            column1_1 = new GridViewColumn
-            {
-                Header = header1_1,
-                CellTemplate = tvControl1.Resources["CellTemplateCheckBox"] as DataTemplate
-            };
-
-            column1_3 = new GridViewColumn
-            {
-                Header = header1_3,
-                CellTemplate = tvControl1.Resources["CellTemplateCheckBox"] as DataTemplate
-            };
-
-            column1_9 = new GridViewColumn
-            {
-                Header = header1_9,
-                CellTemplate = tvControl1.Resources["CellTemplateCheckBox"] as DataTemplate
-            };
-
-            column1_10 = new GridViewColumn
-            {
-                Header = header1_10,
-                CellTemplate = tvControl1.Resources["CellTemplateCheckBox"] as DataTemplate
-            };
-
-            column2_0 = new GridViewColumn
-            {
-                Header = header2_0,
-                CellTemplate = tvControl2.Resources["CellTemplateLabel"] as DataTemplate
-            };
-
-            treeListView1 = new TreeListView { CheckboxesVisible = true };
-            treeListView1.Columns.Add(column1_0);
-            treeListView1.Columns.CollectionChanged += Columns_CollectionChanged;
+            treeListView1 = new CustomTreeView { CheckboxesVisible = true };
 
             tvControl1.Content = treeListView1;
             tvControl1.SearchPattern = "*.grb";
-            tvControl1.SizeChanged += TvControl1_SizeChanged;
             tvControl1.SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
 
-            treeListView2 = new TreeListView();
-            treeListView2.Columns.Add(column2_0);
+            treeListView2 = new CustomTreeView();
 
             tvControl2.Content = treeListView2;
             tvControl2.SearchPattern = "*.dwg|*.dxf|*.dxb|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.pdf|*.stp";
-            tvControl2.SizeChanged += TvControl2_SizeChanged;
 
             options = new Common.Options();
             self = new ConfigurationCollection { TargetDirectory = options.UserDirectory };
@@ -251,14 +162,13 @@ namespace TFlex.PackageManager.UI
             sb_label1.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label1", 1);
             sb_label2.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label2", 1);
             sb_label3.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label3", 1);
+
+            inputPath1.ToolTip = Resource.GetString(Resource.HEADER_UI, "dn1_2", 1);
+            inputPath2.ToolTip = Resource.GetString(Resource.HEADER_UI, "dn1_3", 1);
             #endregion
         }
 
         #region window proc
-        private static IntPtr handle = IntPtr.Zero;
-        private static IntPtr oldWndProc = IntPtr.Zero;
-        private NativeMethods.WndProc newWndProc;
-
         private IntPtr WindowProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam)
         {
             switch (uMsg)
@@ -316,8 +226,10 @@ namespace TFlex.PackageManager.UI
                 UpdateStateToControls();
             }
 
+            menuItem2_1.IsEnabled = false;
             menuItem2_2.IsEnabled = false;
-            button2_2.IsEnabled = false;
+            button2_1.IsEnabled   = false;
+            button2_2.IsEnabled   = false;
 
             propertyGrid.PropertyValueChanged += Translator_PropertyValueChanged;
         }
@@ -357,52 +269,21 @@ namespace TFlex.PackageManager.UI
         }
         #endregion
 
-        #region tree views
-        private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    header1_0.Width -= 50;
-                    column1_0.Width -= 50;
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    header1_0.Width += 50;
-                    column1_0.Width += 50;
-                    break;
-            }
-        }
-
-        private void TvControl1_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            double a_width, c_width = treeListView1.Columns.Count > 1 
-                                   ? (treeListView1.Columns.Count - 1) * 50 : 0;
-
-            if (sender is TreeListViewControl tvctl && tvctl.ActualWidth >= (c_width + 18))
-            {
-                a_width = tvctl.ActualWidth - (c_width + 18);
-                column1_0.Width = a_width;
-                header1_0.Width = a_width;
-            }
-        }
-
-        private void TvControl2_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            double width;
-
-            if (sender is TreeListViewControl tvctl && tvctl.ActualWidth >= 18)
-            {
-                width = tvctl.ActualWidth - 18;
-                column2_0.Width = width;
-                header2_0.Width = width;
-            }
-        }
-        #endregion
-
         #region configuration event handlers
         private void Header_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //Debug.WriteLine(string.Format("Header_PropertyChanged [name: {0}]", e.PropertyName));
+            switch (e.PropertyName)
+            {
+                case "InitialCatalog":
+                    tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
+                    inputPath1.Value = self.Configurations[key1].InitialCatalog;
+                    break;
+                case "TargetDirectory":
+                    tvControl2.TargetDirectory = Path.Combine(self.Configurations[key1].TargetDirectory, key2);
+                    inputPath2.Value = self.Configurations[key1].TargetDirectory;
+                    break;
+            }
+
             UpdateStateToControls();
         }
 
@@ -414,48 +295,11 @@ namespace TFlex.PackageManager.UI
 
             switch (e.PropertyName)
             {
-                case "Acad":
-                    if (t_value = (sender as TranslatorTypes).Acad)
-                    {
-                        treeListView1.Columns.Add(column1_1);
-                        header1_1.Content = "DWG";
-                    }
-                    else
-                    {
-                        treeListView1.Columns.Remove(column1_1);
-                    }
-                    break;
-                case "Bitmap":
-                    if (t_value = (sender as TranslatorTypes).Bitmap)
-                    {
-                        treeListView1.Columns.Add(column1_3);
-                        header1_3.Content = "BMP";
-                    }
-                    else
-                    {
-                        treeListView1.Columns.Remove(column1_3);
-                    }
-                    break;
-                case "Pdf":
-                    if (t_value = (sender as TranslatorTypes).Pdf)
-                    {
-                        treeListView1.Columns.Add(column1_9);
-                    }
-                    else
-                    {
-                        treeListView1.Columns.Remove(column1_9);
-                    }
-                    break;
-                case "Step":
-                    if (t_value = (sender as TranslatorTypes).Step)
-                    {
-                        treeListView1.Columns.Add(column1_10);
-                    }
-                    else
-                    {
-                        treeListView1.Columns.Remove(column1_10);
-                    }
-                    break;
+                case "Default": t_value = (sender as TranslatorTypes).Default; break;
+                case "Acad"   : t_value = (sender as TranslatorTypes).Acad;    break;
+                case "Bitmap" : t_value = (sender as TranslatorTypes).Bitmap;  break;
+                case "Pdf"    : t_value = (sender as TranslatorTypes).Pdf;     break;
+                case "Step"   : t_value = (sender as TranslatorTypes).Step;    break;
             }
 
             if (t_value)
@@ -474,31 +318,7 @@ namespace TFlex.PackageManager.UI
 
         private void Translator_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
         {
-            if (e.OriginalSource is PropertyItem item)
-            {
-                switch (item.PropertyName)
-                {
-                    case "Extension":
-                        switch (key2)
-                        {
-                            case "Acad":
-                                header1_1.Content = ((Translator_1)self.Configurations[key1].Translators[key2]).OutputExtension;
-                                break;
-                            case "Bitmap":
-                                header1_3.Content = ((Translator_3)self.Configurations[key1].Translators[key2]).OutputExtension;
-                                break;
-                        }
-                        break;
-                }
-                
-                UpdateStateToControls();
-
-                //Debug.WriteLine(string.Format("PropertyName: {0}, Value: {1}, IsChanged: {2}, total changes: {3}", 
-                //    item.PropertyName, 
-                //    item.Value, 
-                //    self.Configurations[key1].IsChanged, 
-                //    self.ChangedConfigurations.Count));
-            }
+            UpdateStateToControls();
         }
         #endregion
 
@@ -714,6 +534,8 @@ namespace TFlex.PackageManager.UI
             if (comboBox1.SelectedIndex != -1)
             {
                 key1 = comboBox1.SelectedValue.ToString();
+                tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
+                inputPath1.Value = self.Configurations[key1].InitialCatalog;
 
                 string[] items1 = comboBox2.Items.OfType<string>().ToArray();
                 string[] items2 = self.Configurations[key1].Translators.Keys.ToArray();
@@ -722,32 +544,9 @@ namespace TFlex.PackageManager.UI
                 {
                     comboBox2.Items.Clear();
 
-                    for (int j = treeListView1.Columns.Count - 1; j > 0; j--)
-                    {
-                        treeListView1.Columns.RemoveAt(j);
-                    }
-
                     foreach (var i in self.Configurations[key1].Translators)
                     {
                         comboBox2.Items.Add(i.Key);
-
-                        switch (i.Key)
-                        {
-                            case "Acad":
-                                header1_1.Content = ((Translator_1)self.Configurations[key1].Translators[i.Key]).OutputExtension;
-                                treeListView1.Columns.Add(column1_1);
-                                break;
-                            case "Bitmap":
-                                header1_3.Content = ((Translator_3)self.Configurations[key1].Translators[i.Key]).OutputExtension;
-                                treeListView1.Columns.Add(column1_3);
-                                break;
-                            case "Pdf":
-                                treeListView1.Columns.Add(column1_9);
-                                break;
-                            case "Step":
-                                treeListView1.Columns.Add(column1_10);
-                                break;
-                        }
                     }
 
                     comboBox2.SelectedIndex = 0;
@@ -756,6 +555,7 @@ namespace TFlex.PackageManager.UI
             else
             {
                 comboBox2.Items.Clear();
+                tvControl1.TargetDirectory = string.Empty;
             }
 
             UpdateStateToControls();
@@ -771,11 +571,21 @@ namespace TFlex.PackageManager.UI
             {
                 key2 = comboBox2.SelectedValue.ToString();
                 propertyGrid.SelectedObject = self.Configurations[key1].Translators[key2];
+
+                string path = self.Configurations[key1].TargetDirectory;
+                if (path.Length > 0)
+                {
+                    tvControl2.TargetDirectory = Path.Combine(path, key2);
+                    inputPath2.Value = path;
+                }
             }
             else
             {
                 propertyGrid.SelectedObject = null;
+                tvControl2.TargetDirectory  = string.Empty;
             }
+
+            UpdateStateToControls();
 
             //Debug.WriteLine(string.Format("ComboBox2_SelectionChanged: [{0}, {1}]",
             //    comboBox2.SelectedIndex,
@@ -786,7 +596,20 @@ namespace TFlex.PackageManager.UI
         #region statusbar
         private void SelectedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            UpdateStateToControls();
+            if (tvControl1.SelectedItems.Count > 0 &&
+                tvControl1.TargetDirectory.Length > 0 &&
+                tvControl2.TargetDirectory.Length > 0)
+            {
+                menuItem2_1.IsEnabled = true;
+                button2_1.IsEnabled = true;
+            }
+            else
+            {
+                menuItem2_1.IsEnabled = false;
+                button2_1.IsEnabled = false;
+            }
+
+            sb_label3.Content = string.Format(sblabels[2], tvControl1.SelectedItems.Count);
         }
         #endregion
 
@@ -824,8 +647,7 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         private void UpdateStateToControls()
         {
-            int ic_length;
-            int td_length;
+            //Debug.WriteLine("UpdateStateToControls");
 
             if (self.Configurations.Count() == 0)
             {
@@ -842,9 +664,6 @@ namespace TFlex.PackageManager.UI
                 button1_7.IsEnabled = false;
                 button2_1.IsEnabled = false;
                 button2_3.IsEnabled = false;
-
-                tvControl1.TargetDirectory = string.Empty;
-                tvControl2.TargetDirectory = string.Empty;
                 return;
             }
             else
@@ -856,12 +675,6 @@ namespace TFlex.PackageManager.UI
                 button1_3.IsEnabled = true;
                 button1_6.IsEnabled = true;
                 button1_7.IsEnabled = true;
-
-                tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
-                tvControl2.TargetDirectory = self.Configurations[key1].TargetDirectory;
-
-                ic_length = tvControl1.TargetDirectory.Length;
-                td_length = tvControl2.TargetDirectory.Length;
 
                 if (tvControl2.CountFiles > 0)
                 {
@@ -899,21 +712,8 @@ namespace TFlex.PackageManager.UI
                 button1_5.IsEnabled = false;
             }
 
-            if (ic_length > 0 && td_length > 0 && 
-                tvControl1.SelectedItems.Count > 0)
-            {
-                menuItem2_1.IsEnabled = true;
-                button2_1.IsEnabled = true;
-            }
-            else
-            {
-                menuItem2_1.IsEnabled = false;
-                button2_1.IsEnabled = false;
-            }
-
             sb_label1.Content = string.Format(sblabels[0], tvControl1.CountFiles);
             sb_label2.Content = string.Format(sblabels[1], tvControl2.CountFiles);
-            sb_label3.Content = string.Format(sblabels[2], tvControl1.SelectedItems.Count);
         }
 
         /// <summary>
@@ -927,47 +727,35 @@ namespace TFlex.PackageManager.UI
             Stopwatch watch = new Stopwatch();
             LogFile logFile = new LogFile(options);
             Processing processing = new Processing(self.Configurations[key1], logFile);
-
-            logFile.CreateLogFile(self.Configurations[key1].TargetDirectory);
+            
+            logFile.CreateLogFile(Path.Combine(self.Configurations[key1].TargetDirectory, key2));
             logFile.AppendLine("Started processing");
+            logFile.AppendLine(string.Format("Translator:\t{0}", key2));
 
             watch.Start();
 
             foreach (var i in tvControl1.SelectedItems)
             {
-                double increment = 100.0 / (tvControl1.SelectedItems.Count * i.Value.Length);
+                double increment = 100.0 / tvControl1.SelectedItems.Count;
 
                 if (stoped)
                 {
-                    NativeMethods.SendMessage(handle, (int)WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+                    NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
                     break;
                 }
 
-                string path = i.Key, name;
+                logFile.AppendLine("\n");
+                processing.ProcessingFile(self.Configurations[key1].Translators[key2], i.ToString());
 
-                for (int j = 0; j < i.Value.Length; j++)
-                {
-                    if (i.Value[j].Value == false)
-                    {
-                        count[0] += increment;
-                        Marshal.Copy(count, 0, value, count.Length);
-                        NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
-                        continue;
-                    }
-
-                    name = self.Configurations[key1].Translators.ElementAt(j).Key;
-                    logFile.AppendLine(string.Format("\r\nTranslator:\t{0}", name));
-                    processing.ProcessingFile(self.Configurations[key1].Translators.ElementAt(j).Value, path);
-
-                    count[0] += increment;
-                    Marshal.Copy(count, 0, value, count.Length);
-                    NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
-                }
+                count[0] += increment;
+                Marshal.Copy(count, 0, value, count.Length);
+                NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
+                
             }
 
             watch.Stop();
 
-            logFile.AppendLine(string.Format("\r\nProcessing time:{0} ms", watch.ElapsedMilliseconds));
+            logFile.AppendLine(string.Format("\r\nTotal processing time: {0} ms", watch.ElapsedMilliseconds));
             logFile.SetContentsToLog();
             logFile.OpenLogFile();
 

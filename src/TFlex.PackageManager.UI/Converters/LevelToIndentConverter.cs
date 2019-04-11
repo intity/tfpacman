@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
+using TFlex.PackageManager.Controls;
 
 namespace TFlex.PackageManager.Converters
 {
@@ -10,11 +11,14 @@ namespace TFlex.PackageManager.Converters
     /// </summary>
     public class LevelToIndentConverter : IValueConverter
     {
-        private const double c_IndentSize = 18.0;
+        private const double offset = 20.0;
 
         public object Convert(object obj, Type type, object parameter, CultureInfo culture)
         {
-            return new Thickness((int)obj * c_IndentSize, 0, 0, 0);
+            if (!(obj is CustomTreeViewItem item))
+                return new Thickness(0);
+
+            return new Thickness(item.Level * offset, 0, 0, 0);
         }
 
         public object ConvertBack(object obj, Type type, object parameter, CultureInfo culture)

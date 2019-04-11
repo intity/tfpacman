@@ -47,7 +47,6 @@ namespace TFlex.PackageManager.Configuration
             translators       = new ObservableDictionary<string, object>();
             translatorTypes   = new TranslatorTypes();
             translatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
-            translatorTypes.Default = true;
 
             objState          = new byte[6];
             s_values          = new string[4];
@@ -173,7 +172,17 @@ namespace TFlex.PackageManager.Configuration
                     break;
             }
 
-            if (!t_value) translators.Remove(e.PropertyName);
+            if (t_value)
+            {
+                if (targetDirectory.Length > 0)
+                {
+                    string path = Path.Combine(targetDirectory, e.PropertyName);
+                    if (Directory.Exists(path) == false)
+                        Directory.CreateDirectory(path);
+                }
+            }
+            else
+                translators.Remove(e.PropertyName);
             //Debug.WriteLine(string.Format("TranslatorTypes_PropertyChanged [name: {0}, value: {1}]", 
             //    e.PropertyName, t_value));
 
@@ -248,6 +257,7 @@ namespace TFlex.PackageManager.Configuration
                 {
                     initialCatalog = value;
                     OnChanged(1);
+                    OnPropertyChanged("InitialCatalog");
                 }
             }
         }
@@ -268,6 +278,7 @@ namespace TFlex.PackageManager.Configuration
                 {
                     targetDirectory = value;
                     OnChanged(2);
+                    OnPropertyChanged("TargetDirectory");
                 }
             }
         }
@@ -693,7 +704,6 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(0)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_0")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_0")]
-        [Browsable(false)]
         public bool Default
         {
             get { return document; }

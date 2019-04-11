@@ -121,14 +121,13 @@
     <Compile Include="Controls\InputPathControl.xaml.cs">
       <DependentUpon>InputPathControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TreeViewControl.xaml.cs">
+      <DependentUpon>TreeViewControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\TranslatorTypesEditor.cs" />
     <Compile Include="Editors\PageTypesEditor.cs" />
     <Compile Include="Common\CustomFolderBrowserDialog.cs" />
     <Compile Include="Common\Resource.cs" />
-    <Compile Include="Controls\TreeListView.cs" />
-    <Compile Include="Controls\TreeListViewControl.xaml.cs">
-      <DependentUpon>TreeListViewControl.xaml</DependentUpon>
-    </Compile>
     <Page Include="Controls\BiarcInterpolationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -138,10 +137,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\InputPathControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\TreeListViewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -222,6 +217,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Page Include="Controls\InputScaleControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TreeViewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

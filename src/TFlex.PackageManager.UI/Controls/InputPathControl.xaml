@@ -16,7 +16,7 @@
         <TextBox Grid.Column="0" 
                  BorderBrush="White" 
                  Padding="2" 
-                 Text="{Binding Value}" 
+                 Text="{Binding Value, RelativeSource={RelativeSource AncestorType=local:InputPathControl}}" 
                  IsReadOnly="True">
             
         </TextBox>
