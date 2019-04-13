@@ -29,8 +29,11 @@ namespace TFlex
             string[] products = new string[]
             {
                 @"T-FLEX CAD 3D 16\Rus",
+                @"T-FLEX CAD SE 16\Rus",
                 @"T-FLEX CAD 3D 16\Eng",
-                @"TENADO CAD 3D 16\Ger"
+                @"T-FLEX CAD SE 16\Eng",
+                @"TENADO CAD 3D 16\Ger",
+                @"TENADO CAD SE 16\Ger"
             };
 
             string path = null;
@@ -144,7 +147,8 @@ namespace TFlex
                     {
                         isLoaded = true;
 
-                        //Debug.WriteLine(string.Format("AssemblyResolve [assembly loaded: {0}]",
+                        //Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                        //    "AssemblyResolve [assembly loaded: {0}]",
                         //    assembly.FullName));
                     }
 
