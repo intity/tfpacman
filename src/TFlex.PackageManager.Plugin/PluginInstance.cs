@@ -16,7 +16,6 @@ namespace TFlex.PackageManager.Plugin
     /// </summary>
     public partial class PluginInstance : TFlex.Plugin
     {
-        private UI.MainWindow packageManager;
         private readonly string command1, toolbar1;
         private const string PLUGIN = "Plugin";
 
@@ -79,11 +78,8 @@ namespace TFlex.PackageManager.Plugin
                     base.OnCommand(document, id);
                     break;
                 case Commands.PackageManager:
-                    if (packageManager == null)
-                    {
-                        packageManager = new UI.MainWindow();
-                    }
-                    packageManager.Show();
+                    UI.MainWindow tfpacman = new UI.MainWindow();
+                    tfpacman.Show();
                     break;
             }
         }
