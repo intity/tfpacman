@@ -59,7 +59,7 @@ namespace TFlex.PackageManager.Plugin
                 (int)Commands.PackageManager
             });
 
-            RibbonGroup ribbonGroup = RibbonBar.ApplicationsTab.AddGroup(null);
+            RibbonGroup ribbonGroup = RibbonBar.ApplicationsTab.AddGroup(toolbar1);
             ribbonGroup.AddButton((int)Commands.PackageManager, this, 
                 RibbonButtonStyle.LargeIconAndCaption);
         }
