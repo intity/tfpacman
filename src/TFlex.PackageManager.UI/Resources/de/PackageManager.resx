@@ -183,6 +183,9 @@
   <data name="menuItem4_1" xml:space="preserve">
     <value>Über uns</value>
   </data>
+  <data name="menuItem4_2" xml:space="preserve">
+    <value>Hilfe</value>
+  </data>
   <data name="message1" xml:space="preserve">
     <value>Löschen sie die konfiguration von {0}?</value>
   </data>

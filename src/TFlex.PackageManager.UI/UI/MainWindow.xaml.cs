@@ -111,7 +111,8 @@ namespace TFlex.PackageManager.UI
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 0),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 0),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0)
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_2", 0)
             };
 
             tooltips = new string[]
@@ -146,6 +147,7 @@ namespace TFlex.PackageManager.UI
             menuItem2_3.Header = controls[10];
             menuItem3_1.Header = controls[11];
             menuItem4_1.Header = controls[12];
+            menuItem4_2.Header = controls[13];
 
             button1_1.ToolTip = tooltips[0];
             button1_2.ToolTip = tooltips[1];
@@ -550,6 +552,12 @@ namespace TFlex.PackageManager.UI
             };
             aboutUs.ShowDialog();
         } // About Us
+
+        private void Event4_2_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.Help.ShowHelp(null, 
+                Path.Combine(Resource.AppDirectory, "TFPackageManager.chm"));
+        } // Help
 
         private void ComboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

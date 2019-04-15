@@ -125,10 +125,15 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Name="menuItem4" Header="?">
+            <MenuItem Name="menuItem4" 
+                      Header="?">
                 <MenuItem Name="menuItem4_1" 
                           Header="About Us" 
                           Click="Event4_1_Click">
+                </MenuItem>
+                <MenuItem Name="menuItem4_2" 
+                          Header="Help" 
+                          Click="Event4_2_Click">
                 </MenuItem>
             </MenuItem>
         </Menu>
