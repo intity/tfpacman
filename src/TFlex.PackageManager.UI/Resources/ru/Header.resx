@@ -138,8 +138,8 @@
     <comment>Перечисление типов транслятора.</comment>
   </data>
   <data name="dn1_5_0" xml:space="preserve">
-    <value>Default</value>
-    <comment>Транслятор по умолчанию.</comment>
+    <value>Document</value>
+    <comment>Обработка документов T-FLEX CAD.</comment>
   </data>
   <data name="dn1_5_1" xml:space="preserve">
     <value>Acad</value>

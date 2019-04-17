@@ -12,7 +12,7 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     public enum TranslatorType
     {
-        Default,
+        Document,
         Acad,
         Acis,
         Bitmap,

@@ -30,7 +30,7 @@ namespace TFlex.PackageManager.Common
         {
             this.header  = header;
             this.logFile = logFile;
-            translator_t = TranslatorType.Default;
+            translator_t = TranslatorType.Document;
         }
 
         #region internal methods
@@ -323,7 +323,7 @@ namespace TFlex.PackageManager.Common
         {
             switch (translator_t)
             {
-                case TranslatorType.Default:
+                case TranslatorType.Document:
                 case TranslatorType.Acad:
                 case TranslatorType.Bitmap:
                 case TranslatorType.Pdf:

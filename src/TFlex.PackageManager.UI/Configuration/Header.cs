@@ -105,8 +105,8 @@ namespace TFlex.PackageManager.Configuration
 
             switch (e.PropertyName)
             {
-                case "Default":
-                    if (t_value = (sender as TranslatorTypes).Default)
+                case "Document":
+                    if (t_value = (sender as TranslatorTypes).Document)
                     {
                         if (translator_0 == null)
                         {
@@ -325,7 +325,7 @@ namespace TFlex.PackageManager.Configuration
             s_values[02] = targetDirectory;
             s_values[03] = inputExtension;
 
-            tr_types[00] = translatorTypes.Default;
+            tr_types[00] = translatorTypes.Document;
             tr_types[01] = translatorTypes.Acad;
             tr_types[02] = translatorTypes.Acis;
             tr_types[03] = translatorTypes.Bitmap;
@@ -368,7 +368,7 @@ namespace TFlex.PackageManager.Configuration
                 case 2: objState[2] = (byte)(s_values[2] != targetDirectory   ? 1 : 0); break;
                 case 3: objState[3] = (byte)(s_values[3] != inputExtension    ? 1 : 0); break;
                 case 4:
-                    if (tr_types[00] != translatorTypes.Default || 
+                    if (tr_types[00] != translatorTypes.Document || 
                         tr_types[01] != translatorTypes.Acad || 
                         tr_types[02] != translatorTypes.Acis || 
                         tr_types[03] != translatorTypes.Bitmap || 
@@ -410,8 +410,8 @@ namespace TFlex.PackageManager.Configuration
             {
                 switch (i.Attribute("id").Value)
                 {
-                    case "Default":
-                        translatorTypes.Default = true;
+                    case "Document":
+                        translatorTypes.Document = true;
                         translator_0.ConfigurationTask(i, 0);
                         break;
                     case "Acad":
@@ -453,8 +453,8 @@ namespace TFlex.PackageManager.Configuration
             {
                 switch (i.Attribute("id").Value)
                 {
-                    case "Default":
-                        if (t_value = translatorTypes.Default)
+                    case "Document":
+                        if (t_value = translatorTypes.Document)
                         {
                             translator_0.ConfigurationTask(i, 1);
                         }
@@ -492,10 +492,10 @@ namespace TFlex.PackageManager.Configuration
             {
                 switch (i.Key)
                 {
-                    case "Default":
+                    case "Document":
                         if (translator_0.IsLoaded == false)
                         {
-                            translator_0.AppendTranslatorToXml(parent, TranslatorType.Default);
+                            translator_0.AppendTranslatorToXml(parent, TranslatorType.Document);
                         }
                         break;
                     case "Acad":
@@ -568,8 +568,7 @@ namespace TFlex.PackageManager.Configuration
 
             if (flag != 2)
             {
-                XDocument document = null;
-
+                XDocument document;
                 if (File.Exists(path))
                     document = XDocument.Load(path);
                 else
@@ -642,7 +641,7 @@ namespace TFlex.PackageManager.Configuration
                     {
                         string[] values = value.Split(' ');
 
-                        translatorTypes.Default   = values[00] == "01" ? true : false;
+                        translatorTypes.Document  = values[00] == "01" ? true : false;
                         translatorTypes.Acad      = values[01] == "01" ? true : false;
                         translatorTypes.Acis      = values[02] == "01" ? true : false;
                         translatorTypes.Bitmap    = values[03] == "01" ? true : false;
@@ -704,7 +703,7 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(0)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_0")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_0")]
-        public bool Default
+        public bool Document
         {
             get { return document; }
             set
@@ -712,7 +711,7 @@ namespace TFlex.PackageManager.Configuration
                 if (document != value)
                 {
                     document = value;
-                    OnPropertyChanged("Default");
+                    OnPropertyChanged("Document");
                 }
             }
         }

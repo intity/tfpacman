@@ -16,7 +16,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
-    /// The default translator class.
+    /// The document translator class.
     /// </summary>
     [CustomCategoryOrder(Resource.TRANSLATOR_0, 1)]
     [CustomCategoryOrder(Resource.TRANSLATOR_0, 2)]

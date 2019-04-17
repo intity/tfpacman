@@ -260,7 +260,7 @@ namespace TFlex.PackageManager.UI
 
         private void PropertyGrid_SelectedObjectChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (comboBox2.SelectedIndex != -1 && comboBox2.SelectedItem.ToString() == "Default")
+            if (comboBox2.SelectedIndex != -1 && comboBox2.SelectedItem.ToString() == "Document")
             {
                 if (propertyGrid.PropertyDefinitions.Count == 0)
                 {
@@ -319,11 +319,11 @@ namespace TFlex.PackageManager.UI
 
             switch (e.PropertyName)
             {
-                case "Default": t_value = (sender as TranslatorTypes).Default; break;
-                case "Acad"   : t_value = (sender as TranslatorTypes).Acad;    break;
-                case "Bitmap" : t_value = (sender as TranslatorTypes).Bitmap;  break;
-                case "Pdf"    : t_value = (sender as TranslatorTypes).Pdf;     break;
-                case "Step"   : t_value = (sender as TranslatorTypes).Step;    break;
+                case "Document": t_value = (sender as TranslatorTypes).Document; break;
+                case "Acad"    : t_value = (sender as TranslatorTypes).Acad;     break;
+                case "Bitmap"  : t_value = (sender as TranslatorTypes).Bitmap;   break;
+                case "Pdf"     : t_value = (sender as TranslatorTypes).Pdf;      break;
+                case "Step"    : t_value = (sender as TranslatorTypes).Step;     break;
             }
 
             if (t_value)

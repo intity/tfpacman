@@ -131,15 +131,15 @@
   </data>
   <data name="dn1_4" xml:space="preserve">
     <value>Datei format</value>
-    <comment>T-FLEX CAD datei format.</comment>
+    <comment>TENADO CAD datei format.</comment>
   </data>
   <data name="dn1_5" xml:space="preserve">
     <value>Übersetzer typen</value>
     <comment>Enumeration of translator types.</comment>
   </data>
   <data name="dn1_5_0" xml:space="preserve">
-    <value>Default</value>
-    <comment>Standard Übersetzer.</comment>
+    <value>Document</value>
+    <comment>Dokumentenverarbeitung TENADO CAD.</comment>
   </data>
   <data name="dn1_5_1" xml:space="preserve">
     <value>Acad</value>
