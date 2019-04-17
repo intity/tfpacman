@@ -36,7 +36,7 @@
                 </Hyperlink>
             </Label>
             <Label Name="label1" Margin="0,0,0,1" Padding="0">
-                T-FLEX API version: 16
+                T-FLEX CAD API version: 16
             </Label>
             <Label Name="label2" Margin="0,0,0,1" Padding="0">
                 Supported OS: Windows 7, 8, 10
