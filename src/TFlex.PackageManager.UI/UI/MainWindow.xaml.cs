@@ -37,6 +37,7 @@ namespace TFlex.PackageManager.UI
         private readonly string[] tooltips;
 
         private string key1, key2;
+        private int processing_index = -1;
 
         private Thread thread;
         private bool stoped;
@@ -64,13 +65,15 @@ namespace TFlex.PackageManager.UI
             treeListView2 = new CustomTreeView();
 
             tvControl2.Content = treeListView2;
-            tvControl2.SearchPattern = "*.dwg|*.dxf|*.dxb|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.pdf|*.stp";
+            tvControl2.SearchPattern = "*.grb|*.dwg|*.dxf|*.dxb|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.pdf|*.stp";
 
             options = new Common.Options();
             self = new ConfigurationCollection { TargetDirectory = options.UserDirectory };
             #endregion
 
             #region initialize resources
+            Resource.InitPaths();
+
             messages = new string[]
             {
                 Resource.GetString(Resource.MAIN_WINDOW, "message1", 0),
@@ -342,6 +345,20 @@ namespace TFlex.PackageManager.UI
 
         private void Translator_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
         {
+            var item = e.OriginalSource as PropertyItem;
+
+            switch (item.PropertyName)
+            {
+                case "ImportMode":
+                    propertyGrid.PropertyDefinitions.Clear();
+                    propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
+                    {
+                        TargetProperties = GetTargetProperties((int)e.NewValue),
+                        IsBrowsable = false
+                    });
+                    break;
+            }
+
             UpdateStateToControls();
         }
         #endregion
@@ -606,15 +623,36 @@ namespace TFlex.PackageManager.UI
                 key2 = comboBox2.SelectedValue.ToString();
                 propertyGrid.SelectedObject = self.Configurations[key1].Translators[key2];
 
-                string path = self.Configurations[key1].TargetDirectory;
-                if (path.Length > 0)
+                uint type = (self.Configurations[key1].Translators[key2] as Translator).Processing;
+
+                comboBox3.Items.Clear();
+
+                for (uint i = 0; i < type; i++)
                 {
-                    tvControl2.TargetDirectory = Path.Combine(path, key2);
+                    switch (i)
+                    {
+                        case 1: comboBox3.Items.Add("Export"); break;
+                        case 2: comboBox3.Items.Add("Import"); break;
+                    }
+                }
+
+                if (comboBox3.Items.Count > 0)
+                {
+                    comboBox3.SelectedIndex = 
+                        processing_index != -1 && 
+                        processing_index >= comboBox3.Items.Count - 1 ? processing_index : 0;
+                }
+
+                string o_path = self.Configurations[key1].TargetDirectory;
+                if (o_path.Length > 0)
+                {
+                    tvControl2.TargetDirectory = Path.Combine(o_path, key2);
                 }
             }
             else
             {
                 propertyGrid.SelectedObject = null;
+                comboBox3.Items.Clear();
             }
 
             UpdateStateToControls();
@@ -623,6 +661,26 @@ namespace TFlex.PackageManager.UI
             //    comboBox2.SelectedIndex,
             //    comboBox2.SelectedValue));
         } // translator collection
+
+        private void ComboBox3_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboBox3.SelectedIndex != -1)
+            {
+                processing_index = comboBox3.SelectedIndex;
+                UpdatePropertyDefinitions();
+
+                if (processing_index == 0)
+                {
+                    tvControl1.SearchPattern = "*.grb";
+                }
+                else if (key2 == "Step")
+                {
+                    tvControl1.SearchPattern = "*.stp";
+                }
+
+                tvControl1.InitLayout();
+            }
+        } // processing type
         #endregion
 
         #region statusbar
@@ -646,6 +704,119 @@ namespace TFlex.PackageManager.UI
         #endregion
 
         #region extension methods
+        /// <summary>
+        /// Update property definitions.
+        /// </summary>
+        private void UpdatePropertyDefinitions()
+        {
+            switch (key2)
+            {
+                case "Step":
+                    if (processing_index > 0)
+                    {
+                        int importMode = 0;
+                        propertyGrid.PropertyDefinitions.Clear();
+
+                        foreach (PropertyItem p in propertyGrid.Properties)
+                        {
+                            if (p.PropertyName == "ImportMode")
+                            {
+                                importMode = (int)p.Value;
+                                break;
+                            }
+                        }
+
+                        propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
+                        {
+                            TargetProperties = GetTargetProperties(importMode),
+                            IsBrowsable = false
+                        });
+                    }
+                    else
+                    {
+                        propertyGrid.PropertyDefinitions.Clear();
+                        propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
+                        {
+                            TargetProperties = new[]
+                            {
+                                "ImportMode",
+                                "Heal",
+                                "CreateAccurateEdges",
+                                "ImportSolidBodies",
+                                "ImportSheetBodies",
+                                "ImportWireBodies",
+                                "ImportMeshBodies",
+                                "ImportHideBodies",
+                                "ImportAnotations",
+                                "ImportOnlyFromActiveFilter",
+                                "Sewing",
+                                "CheckImportGeomerty",
+                                "UpdateProductStructure",
+                                "AddBodyRecordsInProductStructure"
+                            },
+                            IsBrowsable = false
+                        });
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Get target properties for browsable definition.
+        /// </summary>
+        /// <param name="mode">Import type.</param>
+        /// <returns></returns>
+        private string[] GetTargetProperties(int mode)
+        {
+            string[] properties;
+
+            if (mode != 0)
+            {
+                properties = new string[]
+                {
+                    "FileNameSuffix",
+                    "TemplateFileName",
+                    "Protocol",
+                    "ExportMode",
+                    "ColorSource",
+                    "ExportSolidBodies",
+                    "ExportSheetBodies",
+                    "ExportWireBodies",
+                    "Export3DPictures",
+                    "ExportAnotation",
+                    "ExportWelds",
+                    "ExportCurves",
+                    "ExportContours",
+                    "SimplifyGeometry"
+                };
+            }
+            else
+            {
+                properties = new string[]
+                {
+                    "FileNameSuffix",
+                    "TemplateFileName",
+                    "Protocol",
+                    "ExportMode",
+                    "ColorSource",
+                    "ExportSolidBodies",
+                    "ExportSheetBodies",
+                    "ExportWireBodies",
+                    "Export3DPictures",
+                    "ExportAnotation",
+                    "ExportWelds",
+                    "ExportCurves",
+                    "ExportContours",
+                    "SimplifyGeometry",
+                    "ImportWireBodies",
+                    "ImportMeshBodies",
+                    "ImportAnotations"
+                };
+            }
+
+            return properties;
+        }
+
         /// <summary>
         /// Extension method to query on save changes.
         /// </summary>
@@ -758,11 +929,20 @@ namespace TFlex.PackageManager.UI
             IntPtr value = Marshal.AllocHGlobal(size);
             Stopwatch watch = new Stopwatch();
             LogFile logFile = new LogFile(options);
-            Processing processing = new Processing(self.Configurations[key1], logFile);
+            ProcessingType mode = ProcessingType.None;
+
+            switch (processing_index)
+            {
+                case 0: mode = ProcessingType.Export; break;
+                case 1: mode = ProcessingType.Import; break;
+            }
+
+            Processing processing = new Processing(self.Configurations[key1], mode, logFile);
             
             logFile.CreateLogFile(Path.Combine(self.Configurations[key1].TargetDirectory, key2));
             logFile.AppendLine("Started processing");
-            logFile.AppendLine(string.Format("Translator:\t{0}", key2));
+            logFile.AppendLine(string.Format("Translator:\t\t{0}", key2));
+            logFile.AppendLine(string.Format("Processing mode:\t{0}", mode));
 
             watch.Start();
 
@@ -787,7 +967,7 @@ namespace TFlex.PackageManager.UI
 
             watch.Stop();
 
-            logFile.AppendLine(string.Format("\r\nTotal processing time: {0} ms", watch.ElapsedMilliseconds));
+            logFile.AppendLine(string.Format("\r\nTotal processing time:\t{0} ms", watch.ElapsedMilliseconds));
             logFile.SetContentsToLog();
             logFile.OpenLogFile();
 

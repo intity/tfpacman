@@ -420,7 +420,9 @@ namespace TFlex.PackageManager.Configuration
 
         internal override XElement NewTranslator(TranslatorType translator)
         {
-            XElement element = new XElement("translator", new XAttribute("id", translator),
+            XElement element = new XElement("translator", 
+                new XAttribute("id", translator), 
+                new XAttribute("processing", Processing),
                 new XElement("parameter",
                     new XAttribute("name", "PageNames"),
                     new XAttribute("value", pageNames.ToString("\r\n"))),
@@ -460,7 +462,7 @@ namespace TFlex.PackageManager.Configuration
 
         internal override void TranslatorTask(XElement element, int flag)
         {
-            //base.TranslatorTask(element, flag);
+            base.TranslatorTask(element, flag);
 
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)

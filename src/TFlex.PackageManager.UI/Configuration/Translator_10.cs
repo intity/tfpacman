@@ -25,19 +25,9 @@ namespace TFlex.PackageManager.Configuration
         public Translator_10()
         {
             protocol        = 1;
-            OutputExtension = "STP";
+            TargetExtension = "STP";
             i_values        = new int[1];
         }
-
-        #region internal properties
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
-        }
-        #endregion
 
         #region public properties
         /// <summary>
@@ -65,10 +55,21 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
+        #region internal properties
+        internal override bool IsChanged
+        {
+            get
+            {
+                return (isChanged | base.IsChanged);
+            }
+        }
+        #endregion
+
         #region internal methods
         internal override void OnLoaded()
         {
             i_values[0] = protocol;
+
             base.OnLoaded();
         }
 
@@ -77,13 +78,14 @@ namespace TFlex.PackageManager.Configuration
             if (!IsLoaded) return;
 
             isChanged = i_values[0] != protocol;
+
             base.OnChanged(index);
         }
 
         internal override void Export(Document document, string path, LogFile logFile)
         {
             ExportToStepProtocol stepProtocol = ExportToStepProtocol.AP203;
-            ExportTo3dMode exportMode = Mode == 0 
+            ExportTo3dMode exportMode = ExportMode == 0 
                 ? ExportTo3dMode.Assembly
                 : ExportTo3dMode.BodySet;
 
@@ -117,66 +119,25 @@ namespace TFlex.PackageManager.Configuration
 
             if (export.Export(path))
             {
-                logFile.AppendLine(string.Format("Export to:\t{0}", path));
+                logFile.AppendLine(string.Format("Export to:\t\t{0}", path));
             }
         }
 
-        internal override XElement NewTranslator(TranslatorType translator)
+        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
         {
-            XElement element = new XElement("translator", new XAttribute("id", translator),
-                new XElement("parameter",
-                    new XAttribute("name", "FileNameSuffix"),
-                    new XAttribute("value", FileNameSuffix)),
-                new XElement("parameter",
-                    new XAttribute("name", "TemplateFileName"),
-                    new XAttribute("value", TemplateFileName)),
-                new XElement("parameter",
-                    new XAttribute("name", "OutputExtension"),
-                    new XAttribute("value", OutputExtension)),
+            base.AppendTranslatorToXml(parent, translator);
+
+            string value = Enum.GetName(typeof(TranslatorType), translator);
+            parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter",
                     new XAttribute("name", "Protocol"),
-                    new XAttribute("value", Protocol)),
-                new XElement("parameter",
-                    new XAttribute("name", "Mode"),
-                    new XAttribute("value", Mode)),
-                new XElement("parameter",
-                    new XAttribute("name", "ColorSource"),
-                    new XAttribute("value", ColorSource)),
-                new XElement("parameter",
-                    new XAttribute("name", "Export3DPictures"),
-                    new XAttribute("value", Export3DPictures ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "ExportAnotation"),
-                    new XAttribute("value", ExportAnotation ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "ExportContours"),
-                    new XAttribute("value", ExportContours ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "ExportCurves"),
-                    new XAttribute("value", ExportCurves ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "ExportSheetBodies"),
-                    new XAttribute("value", ExportSheetBodies ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "ExportSolidBodies"),
-                    new XAttribute("value", ExportSolidBodies ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "ExportWelds"),
-                    new XAttribute("value", ExportWelds ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "ExportWireBodies"),
-                    new XAttribute("value", ExportWireBodies ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "SimplifyGeometry"),
-                    new XAttribute("value", SimplifyGeometry ? "1" : "0")));
-
-            return element;
+                    new XAttribute("value", Protocol)));
         }
 
         internal override void TranslatorTask(XElement element, int flag)
         {
             base.TranslatorTask(element, flag);
-
+            
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)
             {

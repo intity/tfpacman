@@ -52,7 +52,7 @@ namespace TFlex.PackageManager.Configuration
             biarcInterpolationForSplines         = 0;
             biarcInterpolationAccuracyForSplines = 0.1m;
 
-            OutputExtension = "DWG";
+            TargetExtension = "DWG";
 
             objState        = new byte[8];
             i_values        = new int[7];
@@ -84,9 +84,9 @@ namespace TFlex.PackageManager.Configuration
                     extension = value;
                     switch (extension)
                     {
-                        case 0: OutputExtension = "DWG"; break;
-                        case 1: OutputExtension = "DXF"; break;
-                        case 2: OutputExtension = "DXB"; break;
+                        case 0: TargetExtension = "DWG"; break;
+                        case 1: TargetExtension = "DXF"; break;
+                        case 2: TargetExtension = "DXB"; break;
                     }
                 }
             }
@@ -284,6 +284,11 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internal properties
+        internal override uint Processing
+        {
+            get { return (uint)ProcessingType.Export; }
+        }
+
         internal override bool IsChanged
         {
             get
@@ -389,8 +394,8 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("name", "TemplateFileName"),
                     new XAttribute("value", TemplateFileName)),
                 new XElement("parameter",
-                    new XAttribute("name", "OutputExtension"),
-                    new XAttribute("value", OutputExtension)),
+                    new XAttribute("name", "TargetExtension"),
+                    new XAttribute("value", TargetExtension)),
                 new XElement("parameter",
                     new XAttribute("name", "AutocadExportFileVersion"),
                     new XAttribute("value", AutocadExportFileVersion)),
@@ -424,7 +429,7 @@ namespace TFlex.PackageManager.Configuration
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)
             {
-                case "OutputExtension":
+                case "TargetExtension":
                     if (flag == 0)
                     {
                         switch (value)
@@ -435,7 +440,7 @@ namespace TFlex.PackageManager.Configuration
                         }
                     }
                     else
-                        value = OutputExtension;
+                        value = TargetExtension;
                     break;
                 case "AutocadExportFileVersion":
                     if (flag == 0)

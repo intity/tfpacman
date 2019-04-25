@@ -120,13 +120,16 @@
   <data name="category4" xml:space="preserve">
     <value>3D export options</value>
   </data>
+  <data name="category5" xml:space="preserve">
+    <value>3D import options</value>
+  </data>
   <data name="dn4_1" xml:space="preserve">
     <value>Export type</value>
-    <comment>Export type.</comment>
+    <comment>Export type definition.</comment>
   </data>
   <data name="dn4_10" xml:space="preserve">
-    <value>Export wire bodies</value>
-    <comment>Inclusion the wire body to model export.</comment>
+    <value>Export profiles</value>
+    <comment>Inclusion in export profiles.</comment>
   </data>
   <data name="dn4_11" xml:space="preserve">
     <value>Simplify geometry</value>
@@ -149,31 +152,103 @@
     <value>Material</value>
   </data>
   <data name="dn4_3" xml:space="preserve">
-    <value>Export 3D images</value>
-    <comment>Inclusion in the export of 3D images.</comment>
+    <value>Solid bodies</value>
+    <comment>Export solid bodies.</comment>
   </data>
   <data name="dn4_4" xml:space="preserve">
-    <value>Export annotations</value>
-    <comment>Inclusion the export annotations to model.</comment>
+    <value>Sheet bodies</value>
+    <comment>Export sheet bodies.</comment>
   </data>
   <data name="dn4_5" xml:space="preserve">
-    <value>Export profiles</value>
-    <comment>Inclusion the profiles to model export.</comment>
+    <value>Wire bodies</value>
+    <comment>Export wire bodies.</comment>
   </data>
   <data name="dn4_6" xml:space="preserve">
-    <value>Export curves</value>
-    <comment>Inclusion the curves of the model export.</comment>
+    <value>3D images</value>
+    <comment>Export 3D images.</comment>
   </data>
   <data name="dn4_7" xml:space="preserve">
-    <value>Export sheet bodies</value>
-    <comment>Inclusion the sheet body to model export.</comment>
+    <value>Annotations</value>
+    <comment>Export annotations.</comment>
   </data>
   <data name="dn4_8" xml:space="preserve">
-    <value>Export solid bodies</value>
-    <comment>Inclusion the solid body to model export.</comment>
+    <value>Welds</value>
+    <comment>Export welds.</comment>
   </data>
   <data name="dn4_9" xml:space="preserve">
-    <value>Export welds</value>
-    <comment>Inclusion the welds to model export.</comment>
+    <value>Curves</value>
+    <comment>Export curves.</comment>
+  </data>
+  <data name="dn5_1" xml:space="preserve">
+    <value>Import type</value>
+    <comment>Import type definition.</comment>
+  </data>
+  <data name="dn5_10" xml:space="preserve">
+    <value>Only on active layer</value>
+    <comment>Import bodies only from the active layer.</comment>
+  </data>
+  <data name="dn5_11" xml:space="preserve">
+    <value>Sewing</value>
+    <comment>Sewing accuracy in mm.</comment>
+  </data>
+  <data name="dn5_12" xml:space="preserve">
+    <value>Checking solid geometry</value>
+    <comment>Checking solid geometry at the end of the import.</comment>
+  </data>
+  <data name="dn5_13" xml:space="preserve">
+    <value>Update product structure</value>
+    <comment>Update the structure of the product at the end of the import.</comment>
+  </data>
+  <data name="dn5_14" xml:space="preserve">
+    <value>Add body records</value>
+    <comment>Add body records to the product structure.</comment>
+  </data>
+  <data name="dn5_1_0" xml:space="preserve">
+    <value>Assembly</value>
+  </data>
+  <data name="dn5_1_1" xml:space="preserve">
+    <value>Body Set</value>
+  </data>
+  <data name="dn5_1_2" xml:space="preserve">
+    <value>One body</value>
+  </data>
+  <data name="dn5_2" xml:space="preserve">
+    <value>Heal geometry</value>
+  </data>
+  <data name="dn5_2_0" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="dn5_2_1" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="dn5_2_2" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="dn5_3" xml:space="preserve">
+    <value>Create accurate edges</value>
+  </data>
+  <data name="dn5_4" xml:space="preserve">
+    <value>Solid bodies</value>
+    <comment>Import solid bodies.</comment>
+  </data>
+  <data name="dn5_5" xml:space="preserve">
+    <value>Sheet bodies</value>
+    <comment>Import sheet bodies.</comment>
+  </data>
+  <data name="dn5_6" xml:space="preserve">
+    <value>Wire bodies</value>
+    <comment>Import wire bodies.</comment>
+  </data>
+  <data name="dn5_7" xml:space="preserve">
+    <value>Mesh bodies</value>
+    <comment>Import mesh bodies as 3D images.</comment>
+  </data>
+  <data name="dn5_8" xml:space="preserve">
+    <value>Hidden bodies</value>
+    <comment>Import hidden bodies.</comment>
+  </data>
+  <data name="dn5_9" xml:space="preserve">
+    <value>Annotations</value>
+    <comment>Import annotations.</comment>
   </data>
 </root>

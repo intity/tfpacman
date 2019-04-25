@@ -13,6 +13,9 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Configuration
 {
+    /// <summary>
+    /// The Bitmap translator class.
+    /// </summary>
     [CustomCategoryOrder(Resource.TRANSLATOR_3, 3)]
     [CustomCategoryOrder(Resource.TRANSLATOR_3, 4)]
     public class Translator_3 : Translator_0
@@ -34,7 +37,7 @@ namespace TFlex.PackageManager.Configuration
             extension    = 0;
             imageOptions = new byte[2];
 
-            OutputExtension = "BMP";
+            TargetExtension = "BMP";
             objState        = new byte[2];
             b_values        = new bool[2];
         }
@@ -72,11 +75,11 @@ namespace TFlex.PackageManager.Configuration
                     extension = value;
                     switch (extension)
                     {
-                        case 0: OutputExtension = "BMP";  break;
-                        case 1: OutputExtension = "JPEG"; break;
-                        case 2: OutputExtension = "GIF";  break;
-                        case 3: OutputExtension = "TIFF"; break;
-                        case 4: OutputExtension = "PNG";  break;
+                        case 0: TargetExtension = "BMP";  break;
+                        case 1: TargetExtension = "JPEG"; break;
+                        case 2: TargetExtension = "GIF";  break;
+                        case 3: TargetExtension = "TIFF"; break;
+                        case 4: TargetExtension = "PNG";  break;
                     }
                 }
             }
@@ -174,15 +177,13 @@ namespace TFlex.PackageManager.Configuration
         internal override void Export(Document document, Dictionary<Page, string> pages, LogFile logFile)
         {
             ExportToBitmap export    = new ExportToBitmap(document);
-            ImageExport options      = ImageExport.None;
+            ImageExport options      =
+                    (screenLayers  ? ImageExport.ScreenLayers  : ImageExport.None) |
+                    (constructions ? ImageExport.Constructions : ImageExport.None);
             ImageExportFormat format = ImageExportFormat.Bmp;
 
             foreach (var p in pages)
             {
-                options =
-                    (screenLayers  ? ImageExport.ScreenLayers  : ImageExport.None) |
-                    (constructions ? ImageExport.Constructions : ImageExport.None);
-
                 switch (extension)
                 {
                     case 0:
@@ -226,8 +227,8 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("name", "TemplateFileName"),
                     new XAttribute("value", TemplateFileName)),
                 new XElement("parameter",
-                    new XAttribute("name", "OutputExtension"),
-                    new XAttribute("value", OutputExtension)),
+                    new XAttribute("name", "TargetExtension"),
+                    new XAttribute("value", TargetExtension)),
                 new XElement("parameter",
                     new XAttribute("name", "ImageOptions"),
                     new XAttribute("value", 
@@ -242,7 +243,7 @@ namespace TFlex.PackageManager.Configuration
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)
             {
-                case "OutputExtension":
+                case "TargetExtension":
                     if (flag == 0)
                     {
                         switch (value)
@@ -255,7 +256,7 @@ namespace TFlex.PackageManager.Configuration
                         }
                     }
                     else
-                        value = OutputExtension;
+                        value = TargetExtension;
                     break;
                 case "ImageOptions":
                     string[] values = value.Split(' ');

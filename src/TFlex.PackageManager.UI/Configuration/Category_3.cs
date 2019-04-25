@@ -20,7 +20,7 @@ namespace TFlex.PackageManager.Configuration
     public class Category_3 : Translator, INotifyDataErrorInfo
     {
         #region private fields
-        private string outputExtension;
+        private string targetExtension;
         private string fileNameSuffix;
         private string templateFileName;
 
@@ -34,7 +34,7 @@ namespace TFlex.PackageManager.Configuration
 
         public Category_3()
         {
-            outputExtension  = string.Empty;
+            targetExtension  = string.Empty;
             fileNameSuffix   = string.Empty;
             templateFileName = string.Empty;
 
@@ -120,17 +120,17 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// The output file extension.
+        /// The target extension.
         /// </summary>
         [Browsable(false)]
-        public string OutputExtension
+        public string TargetExtension
         {
-            get { return outputExtension; }
+            get { return targetExtension; }
             set
             {
-                if (outputExtension != value)
+                if (targetExtension != value)
                 {
-                    outputExtension = value;
+                    targetExtension = value;
                     OnChanged(15);
                 }
             }
@@ -149,7 +149,7 @@ namespace TFlex.PackageManager.Configuration
         {
             s_values[0] = fileNameSuffix;
             s_values[1] = templateFileName;
-            s_values[2] = outputExtension;
+            s_values[2] = targetExtension;
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
@@ -165,7 +165,7 @@ namespace TFlex.PackageManager.Configuration
             {
                 case 13: objState[0] = (byte)(s_values[0] != fileNameSuffix   ? 1 : 0); break;
                 case 14: objState[1] = (byte)(s_values[1] != templateFileName ? 1 : 0); break;
-                case 15: objState[2] = (byte)(s_values[2] != outputExtension  ? 1 : 0); break;
+                case 15: objState[2] = (byte)(s_values[2] != targetExtension  ? 1 : 0); break;
             }
 
             isChanged = false;

@@ -24,12 +24,15 @@ namespace TFlex.PackageManager.Common
         private Translator_9 translator_9;
         private Translator_10 translator_10;
         private TranslatorType translator_t;
+        private readonly ProcessingType mode;
         #endregion
 
-        public Processing(Header header, LogFile logFile)
+        public Processing(Header header, ProcessingType mode, LogFile logFile)
         {
             this.header  = header;
             this.logFile = logFile;
+            this.mode    = mode;
+
             translator_t = TranslatorType.Document;
         }
 
@@ -38,11 +41,13 @@ namespace TFlex.PackageManager.Common
         /// Processing file.
         /// </summary>
         /// <param name="translator"></param>
+        /// <param name="mode"></param>
         /// <param name="path"></param>
         internal void ProcessingFile(object translator, string path)
         {
             translator_0 = translator as Translator_0;
             categoryFile = translator as Category_3;
+            int importMode = 0;
 
             if (translator.GetType() == typeof(Translator_1))
             {
@@ -62,11 +67,37 @@ namespace TFlex.PackageManager.Common
             else if (translator.GetType() == typeof(Translator_10))
             {
                 translator_10 = translator as Translator_10;
-                translator_t = TranslatorType.Step;
+                translator_t  = TranslatorType.Step;
+
+                importMode = translator_10.ImportMode;
             }
 
-            Document document = Application.OpenDocument(path, false);
-            logFile.AppendLine(string.Format("Open document:\t{0}", path));
+            Document document = null;
+
+            switch (mode)
+            {
+                case ProcessingType.None:
+                case ProcessingType.Export:
+                    document = Application.OpenDocument(path, false);
+                    logFile.AppendLine(string.Format("Open document:\t\t{0}", path));
+                    break;
+                case ProcessingType.Import:
+                    string prototype = null;
+
+                    switch (importMode)
+                    {
+                        case 0:
+                        case 1:
+                            prototype = Resource.Prototype3dAssembly;
+                            break;
+                        case 2:
+                            prototype = Resource.Prototype3d;
+                            break;
+                    }
+
+                    document = Application.NewDocument(prototype);
+                    break;
+            }
 
             if (document == null)
             {
@@ -82,9 +113,23 @@ namespace TFlex.PackageManager.Common
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;
 
+            if (mode == ProcessingType.Import && importMode != 0)
+            {
+                string f_name = Path.GetFileNameWithoutExtension(path);
+                string d_path = Path.Combine(targetDirectory, f_name + ".grb");
+
+                if (document.SaveAs(d_path))
+                {
+                    if (importMode == 2)
+                        logFile.AppendLine(string.Format("Create new 3d part:\t{0}", d_path));
+                    else
+                        logFile.AppendLine(string.Format("Create new 3d assemly:\t{0}", d_path));
+                }
+            }
+
             document.BeginChanges(string.Format("Processing file: {0}", fileInfo.Name));
 
-            ProcessingDocument(document, targetDirectory);
+            ProcessingDocument(document, targetDirectory, path);
 
             if (document.Changed)
             {
@@ -319,7 +364,13 @@ namespace TFlex.PackageManager.Common
             return pages;
         }
 
-        private void ProcessingDocument(Document document, string targetDirectory)
+        /// <summary>
+        /// Processing document.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="targetDirectory"></param>
+        /// <param name="path"></param>
+        private void ProcessingDocument(Document document, string targetDirectory, string path)
         {
             switch (translator_t)
             {
@@ -330,9 +381,16 @@ namespace TFlex.PackageManager.Common
                     ProcessingPages(document, targetDirectory);
                     break;
                 case TranslatorType.Step:
-                    string path = Path.Combine(targetDirectory, 
-                        GetOutputFileName(document, null) + ".stp");
-                    translator_10.Export(document, path, logFile);
+                    switch (mode)
+                    {
+                        case ProcessingType.Export:
+                            string o_path = Path.Combine(targetDirectory, GetOutputFileName(document, null) + ".stp");
+                            translator_10.Export(document, o_path, logFile);
+                            break;
+                        case ProcessingType.Import:
+                            translator_10.Import(document, targetDirectory, path, logFile);
+                            break;
+                    }
                     break;
             }
         }
@@ -379,9 +437,9 @@ namespace TFlex.PackageManager.Common
                     }
                 }
 
-                logFile.AppendLine(string.Format("Page name:\t{0}",  i.Name));
-                logFile.AppendLine(string.Format("Page type:\t{0}",  i.PageType));
-                logFile.AppendLine(string.Format("Page scale:\t{0}", i.Scale.Value));
+                logFile.AppendLine(string.Format("Page name:\t\t{0}",  i.Name));
+                logFile.AppendLine(string.Format("Page type:\t\t{0}",  i.PageType));
+                logFile.AppendLine(string.Format("Page scale:\t\t{0}", i.Scale.Value));
 
                 //Debug.WriteLine(string.Format("Page name: {0}, flags: {1:X4}", i.Name, flags));
 
@@ -394,11 +452,11 @@ namespace TFlex.PackageManager.Common
 
                 if (pages.Where(p => p.PageType == i.PageType).Count() > 1)
                 {
-                    path += "_" + (count + 1).ToString() + "." + translator_0.OutputExtension.ToLower();
+                    path += "_" + (count + 1).ToString() + "." + translator_0.TargetExtension.ToLower();
                     count++;
                 }
                 else
-                    path += "." + translator_0.OutputExtension.ToLower();
+                    path += "." + translator_0.TargetExtension.ToLower();
 
                 processingPages.Add(i, path);
             }
@@ -416,7 +474,7 @@ namespace TFlex.PackageManager.Common
                     break;
             }
 
-            logFile.AppendLine(string.Format("Total pages:\t{0}", processingPages.Count));
+            logFile.AppendLine(string.Format("Total pages:\t\t{0}", processingPages.Count));
         }
 
         /// <summary>
@@ -458,8 +516,8 @@ namespace TFlex.PackageManager.Common
                     }
                 }
 
-                logFile.AppendLine(string.Format("Projection name:{0}", i.Name));
-                logFile.AppendLine(string.Format("Projection scale:{0}", i.Scale.Value));
+                logFile.AppendLine(string.Format("Projection name:\t{0}", i.Name));
+                logFile.AppendLine(string.Format("Projection scale:\t{0}", i.Scale.Value));
 
                 //Debug.WriteLine(string.Format("Projection name: {0}, flags: {1:X4}", i.Name, flags));
             }
