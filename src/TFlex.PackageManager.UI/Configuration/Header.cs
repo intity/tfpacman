@@ -641,18 +641,18 @@ namespace TFlex.PackageManager.Configuration
                     {
                         string[] values = value.Split(' ');
 
-                        translatorTypes.Document  = values[00] == "01" ? true : false;
-                        translatorTypes.Acad      = values[01] == "01" ? true : false;
-                        translatorTypes.Acis      = values[02] == "01" ? true : false;
-                        translatorTypes.Bitmap    = values[03] == "01" ? true : false;
-                        translatorTypes.Bmf       = values[04] == "01" ? true : false;
-                        translatorTypes.Emf       = values[05] == "01" ? true : false;
-                        translatorTypes.Iges      = values[06] == "01" ? true : false;
-                        translatorTypes.Jt        = values[07] == "01" ? true : false;
-                        translatorTypes.Parasolid = values[08] == "01" ? true : false;
-                        translatorTypes.Pdf       = values[09] == "01" ? true : false;
-                        translatorTypes.Step      = values[10] == "01" ? true : false;
-                        translatorTypes.Stl       = values[11] == "01" ? true : false;
+                        translatorTypes.Document  = values[00] == "01";
+                        translatorTypes.Acad      = values[01] == "01";
+                        translatorTypes.Acis      = values[02] == "01";
+                        translatorTypes.Bitmap    = values[03] == "01";
+                        translatorTypes.Bmf       = values[04] == "01";
+                        translatorTypes.Emf       = values[05] == "01";
+                        translatorTypes.Iges      = values[06] == "01";
+                        translatorTypes.Jt        = values[07] == "01";
+                        translatorTypes.Parasolid = values[08] == "01";
+                        translatorTypes.Pdf       = values[09] == "01";
+                        translatorTypes.Step      = values[10] == "01";
+                        translatorTypes.Stl       = values[11] == "01";
                     }
                     else
                         value = translatorTypes.ToString();
