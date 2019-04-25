@@ -117,6 +117,9 @@ namespace TFlex.PackageManager.Controls
             if (treeView.Items.Count > 0)
                 treeView.Items.Clear();
 
+            if (SelectedItems.Count > 0)
+                SelectedItems.Clear();
+
             if (Directory.Exists(targetDirectory))
             {
                 GetDirectories();
