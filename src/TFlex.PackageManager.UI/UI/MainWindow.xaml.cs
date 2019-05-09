@@ -929,20 +929,29 @@ namespace TFlex.PackageManager.UI
             IntPtr value = Marshal.AllocHGlobal(size);
             Stopwatch watch = new Stopwatch();
             LogFile logFile = new LogFile(options);
-            ProcessingType mode = ProcessingType.None;
+            TranslatorType t_mode = TranslatorType.Document;
+            ProcessingType p_mode = ProcessingType.None;
+
+            switch (key2)
+            {
+                case "Acad"  : t_mode = TranslatorType.Acad;   break;
+                case "Bitmap": t_mode = TranslatorType.Bitmap; break;
+                case "Pdf"   : t_mode = TranslatorType.Pdf;    break;
+                case "Step"  : t_mode = TranslatorType.Step;   break;
+            }
 
             switch (processing_index)
             {
-                case 0: mode = ProcessingType.Export; break;
-                case 1: mode = ProcessingType.Import; break;
+                case 0: p_mode = ProcessingType.Export; break;
+                case 1: p_mode = ProcessingType.Import; break;
             }
 
-            Processing processing = new Processing(self.Configurations[key1], mode, logFile);
+            Processing processing = new Processing(self.Configurations[key1], t_mode, p_mode, logFile);
             
             logFile.CreateLogFile(Path.Combine(self.Configurations[key1].TargetDirectory, key2));
             logFile.AppendLine("Started processing");
-            logFile.AppendLine(string.Format("Translator:\t\t{0}", key2));
-            logFile.AppendLine(string.Format("Processing mode:\t{0}", mode));
+            logFile.AppendLine(string.Format("Translator mode:\t{0}", key2));
+            logFile.AppendLine(string.Format("Processing mode:\t{0}", p_mode));
 
             watch.Start();
 

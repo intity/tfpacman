@@ -23,17 +23,16 @@ namespace TFlex.PackageManager.Common
         private Translator_3 translator_3;
         private Translator_9 translator_9;
         private Translator_10 translator_10;
-        private TranslatorType translator_t;
-        private readonly ProcessingType mode;
+        private readonly TranslatorType t_mode;
+        private readonly ProcessingType p_mode;
         #endregion
 
-        public Processing(Header header, ProcessingType mode, LogFile logFile)
+        public Processing(Header header, TranslatorType t_mode, ProcessingType p_mode, LogFile logFile)
         {
             this.header  = header;
+            this.p_mode  = p_mode;
+            this.t_mode  = t_mode;
             this.logFile = logFile;
-            this.mode    = mode;
-
-            translator_t = TranslatorType.Document;
         }
 
         #region internal methods
@@ -41,40 +40,41 @@ namespace TFlex.PackageManager.Common
         /// Processing file.
         /// </summary>
         /// <param name="translator"></param>
-        /// <param name="mode"></param>
         /// <param name="path"></param>
         internal void ProcessingFile(object translator, string path)
         {
             translator_0 = translator as Translator_0;
             categoryFile = translator as Category_3;
             int importMode = 0;
-
-            if (translator.GetType() == typeof(Translator_1))
-            {
-                translator_1 = translator as Translator_1;
-                translator_t = TranslatorType.Acad;
-            }
-            else if (translator.GetType() == typeof(Translator_3))
-            {
-                translator_3 = translator as Translator_3;
-                translator_t = TranslatorType.Bitmap;
-            }
-            else if (translator.GetType() == typeof(Translator_9))
-            {
-                translator_9 = translator as Translator_9;
-                translator_t = TranslatorType.Pdf;
-            }
-            else if (translator.GetType() == typeof(Translator_10))
-            {
-                translator_10 = translator as Translator_10;
-                translator_t  = TranslatorType.Step;
-
-                importMode = translator_10.ImportMode;
-            }
+            string d_path = null;
 
             Document document = null;
+            FileInfo fileInfo = new FileInfo(path);
+            string directory = fileInfo.Directory.FullName.Replace(
+                header.InitialCatalog,
+                header.TargetDirectory + "\\" + Enum.GetName(typeof(TranslatorType), t_mode));
+            string targetDirectory = Directory.Exists(directory)
+                ? directory
+                : Directory.CreateDirectory(directory).FullName;
 
-            switch (mode)
+            switch (t_mode)
+            {
+                case TranslatorType.Acad:
+                    translator_1 = translator as Translator_1;
+                    break;
+                case TranslatorType.Bitmap:
+                    translator_3 = translator as Translator_3;
+                    break;
+                case TranslatorType.Pdf:
+                    translator_9 = translator as Translator_9;
+                    break;
+                case TranslatorType.Step:
+                    translator_10 = translator as Translator_10;
+                    importMode = translator_10.ImportMode;
+                    break;
+            }
+
+            switch (p_mode)
             {
                 case ProcessingType.None:
                 case ProcessingType.Export:
@@ -83,15 +83,19 @@ namespace TFlex.PackageManager.Common
                     break;
                 case ProcessingType.Import:
                     string prototype = null;
+                    string f_name = Path.GetFileNameWithoutExtension(path);
+                    d_path = Path.Combine(targetDirectory, f_name + ".grb");
 
                     switch (importMode)
                     {
                         case 0:
                         case 1:
                             prototype = Resource.Prototype3dAssembly;
+                            logFile.AppendLine(string.Format("Create new 3d assemly:\t{0}", d_path));
                             break;
                         case 2:
                             prototype = Resource.Prototype3d;
+                            logFile.AppendLine(string.Format("Create new 3d part:\t{0}", d_path));
                             break;
                     }
 
@@ -105,28 +109,6 @@ namespace TFlex.PackageManager.Common
                 return;
             }
 
-            FileInfo fileInfo = new FileInfo(path);
-            string directory = fileInfo.Directory.FullName.Replace(
-                header.InitialCatalog,
-                header.TargetDirectory + "\\" + Enum.GetName(typeof(TranslatorType), translator_t));
-            string targetDirectory = Directory.Exists(directory)
-                ? directory
-                : Directory.CreateDirectory(directory).FullName;
-
-            if (mode == ProcessingType.Import && importMode != 0)
-            {
-                string f_name = Path.GetFileNameWithoutExtension(path);
-                string d_path = Path.Combine(targetDirectory, f_name + ".grb");
-
-                if (document.SaveAs(d_path))
-                {
-                    if (importMode == 2)
-                        logFile.AppendLine(string.Format("Create new 3d part:\t{0}", d_path));
-                    else
-                        logFile.AppendLine(string.Format("Create new 3d assemly:\t{0}", d_path));
-                }
-            }
-
             document.BeginChanges(string.Format("Processing file: {0}", fileInfo.Name));
 
             ProcessingDocument(document, targetDirectory, path);
@@ -134,8 +116,11 @@ namespace TFlex.PackageManager.Common
             if (document.Changed)
             {
                 document.EndChanges();
-                document.Save();
-                logFile.AppendLine("Document saved");
+
+                if (p_mode == ProcessingType.Import && importMode != 0 && d_path != null && document.SaveAs(d_path) || document.Save())
+                {
+                    logFile.AppendLine("Document saved");
+                }
             }
             else
                 document.CancelChanges();
@@ -336,15 +321,7 @@ namespace TFlex.PackageManager.Common
                 { PageType.BillOfMaterials, translator_0.PageTypes.BillOfMaterials }
             };
 
-            foreach(var i in types)
-            {
-                if (i.Key == page.PageType && i.Value)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return types[page.PageType];
         }
 
         /// <summary>
@@ -372,7 +349,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="path"></param>
         private void ProcessingDocument(Document document, string targetDirectory, string path)
         {
-            switch (translator_t)
+            switch (t_mode)
             {
                 case TranslatorType.Document:
                 case TranslatorType.Acad:
@@ -381,10 +358,11 @@ namespace TFlex.PackageManager.Common
                     ProcessingPages(document, targetDirectory);
                     break;
                 case TranslatorType.Step:
-                    switch (mode)
+                    switch (p_mode)
                     {
                         case ProcessingType.Export:
-                            string o_path = Path.Combine(targetDirectory, GetOutputFileName(document, null) + ".stp");
+                            string f_name = GetOutputFileName(document, null) + ".stp";
+                            string o_path = Path.Combine(targetDirectory, f_name);
                             translator_10.Export(document, o_path, logFile);
                             break;
                         case ProcessingType.Import:
@@ -461,7 +439,7 @@ namespace TFlex.PackageManager.Common
                 processingPages.Add(i, path);
             }
 
-            switch (translator_t)
+            switch (t_mode)
             {
                 case TranslatorType.Acad:
                     translator_1.Export(document, processingPages, logFile);
