@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Linq;
 using TFlex.Model;
@@ -7,15 +8,35 @@ using TFlex.PackageManager.Common;
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
+    /// Processing type enumeration.
+    /// </summary>
+    public enum ProcessingType : uint
+    {
+        None   = 0x0000,
+        Export = 0x0001,
+        Import = 0x0002
+    }
+
+    /// <summary>
     /// The translator base class.
     /// </summary>
     public class Translator : INotifyPropertyChanged
     {
         #region private fields
+        private uint processing;
         private bool isLoaded;
         #endregion
 
         #region internal properties
+        /// <summary>
+        /// Processing type.
+        /// </summary>
+        [Browsable(false)]
+        internal virtual uint Processing
+        {
+            get { return processing; }
+        }
+
         /// <summary>
         /// The translator configuration is changed.
         /// </summary>
@@ -65,6 +86,15 @@ namespace TFlex.PackageManager.Configuration
         internal virtual void Export(Document document, Dictionary<Page, string> pages, LogFile logFile) { }
 
         /// <summary>
+        /// The Import virtual method.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="targetDirectory"></param>
+        /// <param name="path"></param>
+        /// <param name="logFile"></param>
+        internal virtual void Import(Document document, string targetDirectory, string path, LogFile logFile) { }
+
+        /// <summary>
         /// Configuration task method.
         /// </summary>
         /// <param name="element"></param>
@@ -74,6 +104,15 @@ namespace TFlex.PackageManager.Configuration
         internal void ConfigurationTask(XElement element, int flag)
         {
             isLoaded = false;
+
+            if (flag == 0)
+            {
+                processing = uint.Parse(element.Attribute("processing").Value);
+            }
+            else
+            {
+                element.Attribute("processing").Value = processing.ToString();
+            }
 
             foreach (var i in element.Elements())
             {

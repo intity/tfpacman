@@ -12,6 +12,9 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Configuration
 {
+    /// <summary>
+    /// The PDF translator class.
+    /// </summary>
     [CustomCategoryOrder(Resource.TRANSLATOR_9, 4)]
     public class Translator_9 : Translator_0
     {
@@ -27,21 +30,11 @@ namespace TFlex.PackageManager.Configuration
 
         public Translator_9()
         {
-            OutputExtension = "PDF";
+            TargetExtension = "PDF";
 
             objState        = new byte[3];
             b_values        = new bool[3];
         }
-
-        #region internal properties
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
-        }
-        #endregion
 
         #region public properies
         /// <summary>
@@ -105,7 +98,22 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region methods
+        #region internal properties
+        internal override uint Processing
+        {
+            get { return (uint)ProcessingType.Export; }
+        }
+
+        internal override bool IsChanged
+        {
+            get
+            {
+                return (isChanged | base.IsChanged);
+            }
+        }
+        #endregion
+
+        #region internals methods
         internal override void OnLoaded()
         {
             b_values[0] = export3dModel;
@@ -198,8 +206,8 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("name", "TemplateFileName"),
                     new XAttribute("value", TemplateFileName)),
                 new XElement("parameter",
-                    new XAttribute("name", "OutputExtension"),
-                    new XAttribute("value", OutputExtension)),
+                    new XAttribute("name", "TargetExtension"),
+                    new XAttribute("value", TargetExtension)),
                 new XElement("parameter",
                     new XAttribute("name", "Export3dModel"),
                     new XAttribute("value", export3dModel ? "1" : "0")),

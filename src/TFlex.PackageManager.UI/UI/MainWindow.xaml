@@ -191,6 +191,9 @@
                 <ComboBox Name="comboBox2" 
                           Width="120"
                           SelectionChanged="ComboBox2_SelectionChanged"/>
+                <ComboBox Name="comboBox3" 
+                          Width="120"
+                          SelectionChanged="ComboBox3_SelectionChanged"/>
                 <Separator/>
                 <Button Name="button2_1" 
                         Click="Event2_1_Click" 

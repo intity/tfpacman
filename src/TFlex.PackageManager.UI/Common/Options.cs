@@ -125,7 +125,7 @@ namespace TFlex.PackageManager.Common
                     break;
                 case "EnableLogFile":
                     if (flag == 0)
-                        enableLogFile = (int)subKey.GetValue(name) > 0 ? true : false;
+                        enableLogFile = (int)subKey.GetValue(name) > 0;
                     else
                         subKey.SetValue(name, enableLogFile ? 1 : 0);
                     break;
