@@ -4,16 +4,15 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid;
-using System.ComponentModel;
 
 namespace TFlex.PackageManager.UI
 {
@@ -39,7 +38,7 @@ namespace TFlex.PackageManager.UI
         private string key1, key2;
         private int processing_index = -1;
 
-        private Thread thread;
+        private System.Threading.Thread thread;
         private bool stoped;
 
         private static IntPtr handle = IntPtr.Zero;
@@ -231,7 +230,7 @@ namespace TFlex.PackageManager.UI
                 handle = new WindowInteropHelper(this).Handle;
                 newWndProc = new NativeMethods.WndProc(WindowProc);
                 oldWndProc = NativeMethods.GetWindowLongPtr(handle, NativeMethods.GWLP_WNDPROC);
-                NativeMethods.SetWindowLongPtr(handle, NativeMethods.GWLP_WNDPROC, 
+                NativeMethods.SetWindowLongPtr(handle, NativeMethods.GWLP_WNDPROC,
                     Marshal.GetFunctionPointerForDelegate(newWndProc));
             }
 
@@ -305,8 +304,8 @@ namespace TFlex.PackageManager.UI
                     tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
                     break;
                 case "TargetDirectory":
-                    tvControl2.TargetDirectory = key2 != null 
-                        ? Path.Combine(self.Configurations[key1].TargetDirectory, key2) 
+                    tvControl2.TargetDirectory = key2 != null
+                        ? Path.Combine(self.Configurations[key1].TargetDirectory, key2)
                         : self.Configurations[key1].TargetDirectory;
                     break;
             }
@@ -464,7 +463,7 @@ namespace TFlex.PackageManager.UI
 
                 comboBox1.SelectedIndex = 0;
             }
-            
+
             ofd.Dispose();
         } // Open target directory
 
@@ -533,7 +532,7 @@ namespace TFlex.PackageManager.UI
         private void Event2_1_Click(object sender, RoutedEventArgs e)
         {
             stoped = false;
-            thread = new Thread(StartProcessing);
+            thread = new System.Threading.Thread(StartProcessing);
             thread.Start();
             button2_2.IsEnabled = true;
             menuItem2_2.IsEnabled = true;
@@ -572,7 +571,7 @@ namespace TFlex.PackageManager.UI
 
         private void Event4_2_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.Help.ShowHelp(null, 
+            System.Windows.Forms.Help.ShowHelp(null,
                 Path.Combine(Resource.AppDirectory, "TFPackageManager.chm"));
         } // Help
 
@@ -638,8 +637,8 @@ namespace TFlex.PackageManager.UI
 
                 if (comboBox3.Items.Count > 0)
                 {
-                    comboBox3.SelectedIndex = 
-                        processing_index != -1 && 
+                    comboBox3.SelectedIndex =
+                        processing_index != -1 &&
                         processing_index >= comboBox3.Items.Count - 1 ? processing_index : 0;
                 }
 
@@ -891,7 +890,7 @@ namespace TFlex.PackageManager.UI
                 }
             }
 
-            if (self.Configurations[key1].IsChanged && 
+            if (self.Configurations[key1].IsChanged &&
                 self.Configurations[key1].IsInvalid == false)
             {
                 menuItem1_4.IsEnabled = true;
@@ -903,7 +902,7 @@ namespace TFlex.PackageManager.UI
                 button1_4.IsEnabled = false;
             }
 
-            if (self.HasChanged && 
+            if (self.HasChanged &&
                 self.Configurations[key1].IsInvalid == false)
             {
                 menuItem1_5.IsEnabled = true;
@@ -947,7 +946,7 @@ namespace TFlex.PackageManager.UI
             }
 
             Processing processing = new Processing(self.Configurations[key1], t_mode, p_mode, logFile);
-            
+
             logFile.CreateLogFile(Path.Combine(self.Configurations[key1].TargetDirectory, key2));
             logFile.AppendLine("Started processing");
             logFile.AppendLine(string.Format("Translator mode:\t{0}", key2));
@@ -971,7 +970,6 @@ namespace TFlex.PackageManager.UI
                 count[0] += increment;
                 Marshal.Copy(count, 0, value, count.Length);
                 NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
-                
             }
 
             watch.Stop();
