@@ -4,16 +4,15 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid;
-using System.ComponentModel;
 
 namespace TFlex.PackageManager.UI
 {
@@ -38,7 +37,7 @@ namespace TFlex.PackageManager.UI
 
         private string key1, key2;
 
-        private Thread thread;
+        private System.Threading.Thread thread;
         private bool stoped;
 
         private static IntPtr handle = IntPtr.Zero;
@@ -516,7 +515,7 @@ namespace TFlex.PackageManager.UI
         private void Event2_1_Click(object sender, RoutedEventArgs e)
         {
             stoped = false;
-            thread = new Thread(StartProcessing);
+            thread = new System.Threading.Thread(StartProcessing);
             thread.Start();
             button2_2.IsEnabled = true;
             menuItem2_2.IsEnabled = true;
