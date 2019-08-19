@@ -174,7 +174,7 @@ namespace TFlex.PackageManager.Configuration
 
                 if (export.Export(path))
                 {
-                    logFile.AppendLine(string.Format("Export to:\t{0}", path));
+                    logFile.AppendLine(string.Format("Export to:\t\t{0}", path));
                 }
             }
             else
@@ -185,7 +185,7 @@ namespace TFlex.PackageManager.Configuration
 
                     if (export.Export(p.Value))
                     {
-                        logFile.AppendLine(string.Format("Export to:\t{0}", p.Value));
+                        logFile.AppendLine(string.Format("Export to:\t\t{0}", p.Value));
                     }
 
                     export.ExportPages.Clear();
