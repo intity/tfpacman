@@ -142,30 +142,26 @@
     <value>Andere</value>
   </data>
   <data name="dn1_4" xml:space="preserve">
-    <value>Speichern sie den seiten maßstab</value>
-    <comment>Ermöglicht das speichern der maßstab im quelldokument.</comment>
-  </data>
-  <data name="dn1_5" xml:space="preserve">
     <value>Seitentyp</value>
     <comment>Ermitteln sie die arten der zu verarbeitenden seiten.</comment>
   </data>
-  <data name="dn1_5_1" xml:space="preserve">
+  <data name="dn1_4_1" xml:space="preserve">
     <value>Üblich</value>
     <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
   </data>
-  <data name="dn1_5_2" xml:space="preserve">
+  <data name="dn1_4_2" xml:space="preserve">
     <value>Arbeitsebene</value>
     <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
   </data>
-  <data name="dn1_5_3" xml:space="preserve">
+  <data name="dn1_4_3" xml:space="preserve">
     <value>Hilfsgerät</value>
     <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
   </data>
-  <data name="dn1_5_4" xml:space="preserve">
+  <data name="dn1_4_4" xml:space="preserve">
     <value>Text</value>
     <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
   </data>
-  <data name="dn1_5_5" xml:space="preserve">
+  <data name="dn1_4_5" xml:space="preserve">
     <value>Spezifikation</value>
     <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
   </data>
@@ -186,10 +182,6 @@
     <comment>Bestimmen sie den maßstab der projektion.</comment>
   </data>
   <data name="dn2_4" xml:space="preserve">
-    <value>Speichern sie die projektion maßstab</value>
-    <comment>Ermöglicht das speichern der maßstab im quelldokument.</comment>
-  </data>
-  <data name="dn2_5" xml:space="preserve">
     <value>Aktivieren sie die projektions verarbeitung</value>
     <comment>Enthält einen projektions filter im verarbeitungs pool.</comment>
   </data>

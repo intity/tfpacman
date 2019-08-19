@@ -4,25 +4,46 @@
         Height="300" 
         Width="300" 
         WindowStyle="ToolWindow" 
-        ResizeMode="NoResize">
+        ResizeMode="NoResize" Loaded="Window_Loaded">
 
-    <DockPanel TextOptions.TextFormattingMode="Display" UseLayoutRounding="True">
+        <Grid TextOptions.TextFormattingMode="Display" 
+              UseLayoutRounding="True" Margin="10">
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="180"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="24"/>
+            </Grid.RowDefinitions>
+            
+            <TextBox Name="textBox" 
+                     Grid.Row="0" 
+                     TextWrapping="Wrap" 
+                     AcceptsReturn="True" 
+                     TextChanged="TextBox_TextChanged"/>
 
-        <StackPanel DockPanel.Dock="Bottom" 
-                    Margin="10" 
-                    Orientation="Horizontal" HorizontalAlignment="Right" Height="24">
-            <Button Name="button1" 
-                    Width="80" 
-                    Padding="2" 
-                    Click="Button1_Click">OK</Button>
-            <Button Name="button2" 
-                    Width="80" 
-                    Padding="2" 
-                    Margin="10,0,0,0" 
-                    Click="Button2_Click">Cancel</Button>
-        </StackPanel>
+            <CheckBox Name="checkBox" 
+                      Grid.Row="1" 
+                      Content="Exclude from search" 
+                      VerticalAlignment="Top" 
+                      Margin="0,6,0,0" 
+                      Padding="5,0,0,0" 
+                      Height="18"/>
 
-        <TextBox Name="textbox" TextWrapping="Wrap" AcceptsReturn="True" Margin="10" />
+            <StackPanel Grid.Row="2" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Right">
+                <Button Name="button_1" 
+                        Width="80" 
+                        Padding="2" 
+                        Margin="0,0,0,0" 
+                        Click="Button1_Click">OK</Button>
+                <Button Name="button_2" 
+                        Width="80" 
+                        Padding="2" 
+                        Margin="10,0,0,0" 
+                        Click="Button2_Click">Cancel</Button>
+            </StackPanel>
+            
+        </Grid>
 
-    </DockPanel>
 </Window>

@@ -142,34 +142,30 @@
     <value>Другой</value>
   </data>
   <data name="dn1_4" xml:space="preserve">
-    <value>Сохранить масштаб страницы</value>
-    <comment>Включает сохранение масштаба в исходном документе.</comment>
-  </data>
-  <data name="dn1_5" xml:space="preserve">
     <value>Тип страницы</value>
     <comment>Определение типов страниц для обработки.</comment>
   </data>
-  <data name="dn1_5_1" xml:space="preserve">
+  <data name="dn1_4_1" xml:space="preserve">
     <value>Обычная</value>
     <comment>Включает данный тип страницы в пул обработки.</comment>
   </data>
-  <data name="dn1_5_2" xml:space="preserve">
+  <data name="dn1_4_2" xml:space="preserve">
     <value>Рабочая плоскость</value>
     <comment>Включает данный тип страницы в пул обработки.</comment>
   </data>
-  <data name="dn1_5_3" xml:space="preserve">
+  <data name="dn1_4_3" xml:space="preserve">
     <value>Вспомогательная</value>
     <comment>Включает данный тип страницы в пул обработки.</comment>
   </data>
-  <data name="dn1_5_4" xml:space="preserve">
+  <data name="dn1_4_4" xml:space="preserve">
     <value>Текст</value>
     <comment>Включает данный тип страницы в пул обработки.</comment>
   </data>
-  <data name="dn1_5_5" xml:space="preserve">
+  <data name="dn1_4_5" xml:space="preserve">
     <value>Спецификация</value>
     <comment>Включает данный тип страницы в пул обработки.</comment>
   </data>
-  <data name="dn1_6" xml:space="preserve">
+  <data name="dn1_5" xml:space="preserve">
     <value>Проверить шаблон чертежа</value>
     <comment>Включает проверку наличия форматки на странице.</comment>
   </data>
@@ -186,10 +182,6 @@
     <comment>Определение масштаба проекции.</comment>
   </data>
   <data name="dn2_4" xml:space="preserve">
-    <value>Сохранить масштаб проекции</value>
-    <comment>Включает сохранение масштаба в исходном документе.</comment>
-  </data>
-  <data name="dn2_5" xml:space="preserve">
     <value>Включить обработку проекции</value>
     <comment>Включает в пул обработки фильтр проекции.</comment>
   </data>

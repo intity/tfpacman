@@ -27,13 +27,11 @@ namespace TFlex.PackageManager.Configuration
         private string [] pageNames;
         private bool excludePage;
         private decimal pageScale;
-        private bool savePageScale;
         private readonly PageTypes pageTypes;
         private bool checkDrawingTemplate;
         private string [] projectionNames;
         private bool excludeProjection;
         private decimal projectionScale;
-        private bool saveProjectionScale;
         private bool enableProcessingOfProjections;
 
         private string[] pg_names, pj_names;
@@ -54,9 +52,9 @@ namespace TFlex.PackageManager.Configuration
             projectionNames  = new string[] { };
             projectionScale  = 99999;
 
-            objState         = new byte[11];
+            objState         = new byte[9];
             pg_types         = new bool[5];
-            b_values         = new bool[6];
+            b_values         = new bool[4];
             m_values         = new decimal[2];
         }
 
@@ -91,12 +89,9 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// Exclude the page name from search.
+        /// Exclude the page names from search.
         /// </summary>
-        [PropertyOrder(2)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_2")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_2")]
+        [Browsable(false)]
         public bool ExcludePage
         {
             get { return excludePage; }
@@ -132,32 +127,12 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// Save change the page scale value in document.
+        /// The page type list.
         /// </summary>
         [PropertyOrder(4)]
         [CustomCategory(Resource.TRANSLATOR_0, "category1")]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_4")]
-        public bool SavePageScale
-        {
-            get { return savePageScale; }
-            set
-            {
-                if (savePageScale != value)
-                {
-                    savePageScale = value;
-                    OnChanged(4);
-                }
-            }
-        }
-
-        /// <summary>
-        /// The page type list.
-        /// </summary>
-        [PropertyOrder(5)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5")]
         [ExpandableObject]
         [Editor(typeof(PageTypesEditor), typeof(UITypeEditor))]
         public PageTypes PageTypes
@@ -168,10 +143,10 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Check the drawing template.
         /// </summary>
-        [PropertyOrder(6)]
+        [PropertyOrder(5)]
         [CustomCategory(Resource.TRANSLATOR_0, "category1")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_6")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_6")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5")]
         public bool CheckDrawingTemplate
         {
             get { return checkDrawingTemplate; }
@@ -180,7 +155,7 @@ namespace TFlex.PackageManager.Configuration
                 if (checkDrawingTemplate != value)
                 {
                     checkDrawingTemplate = value;
-                    OnChanged(6);
+                    OnChanged(5);
                 }
             }
         }
@@ -188,7 +163,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// The projection name list.
         /// </summary>
-        [PropertyOrder(7)]
+        [PropertyOrder(6)]
         [CustomCategory(Resource.TRANSLATOR_0, "category2")]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_1")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn2_1")]
@@ -202,18 +177,15 @@ namespace TFlex.PackageManager.Configuration
                 if (projectionNames != value)
                 {
                     projectionNames = value;
-                    OnChanged(7);
+                    OnChanged(6);
                 }
             }
         }
 
         /// <summary>
-        /// Exclude the projection name from search.
+        /// Exclude the projection names from search.
         /// </summary>
-        [PropertyOrder(8)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_2")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn2_2")]
+        [Browsable(false)]
         public bool ExcludeProjection
         {
             get { return excludeProjection; }
@@ -222,7 +194,7 @@ namespace TFlex.PackageManager.Configuration
                 if (excludeProjection != value)
                 {
                     excludeProjection = value;
-                    OnChanged(8);
+                    OnChanged(7);
                 }
             }
         }
@@ -230,7 +202,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// The projection scale value.
         /// </summary>
-        [PropertyOrder(9)]
+        [PropertyOrder(8)]
         [CustomCategory(Resource.TRANSLATOR_0, "category2")]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_3")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn2_3")]
@@ -243,27 +215,7 @@ namespace TFlex.PackageManager.Configuration
                 if (projectionScale != value)
                 {
                     projectionScale = value;
-                    OnChanged(9);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Save change the projection scale value in document.
-        /// </summary>
-        [PropertyOrder(10)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_4")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn2_4")]
-        public bool SaveProjectionScale
-        {
-            get { return saveProjectionScale; }
-            set
-            {
-                if (saveProjectionScale != value)
-                {
-                    saveProjectionScale = value;
-                    OnChanged(10);
+                    OnChanged(8);
                 }
             }
         }
@@ -271,10 +223,10 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Enable the processing of projections.
         /// </summary>
-        [PropertyOrder(11)]
+        [PropertyOrder(9)]
         [CustomCategory(Resource.TRANSLATOR_0, "category2")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_5")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn2_5")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_4")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn2_4")]
         public bool EnableProcessingOfProjections
         {
             get { return enableProcessingOfProjections; }
@@ -283,7 +235,7 @@ namespace TFlex.PackageManager.Configuration
                 if (enableProcessingOfProjections != value)
                 {
                     enableProcessingOfProjections = value;
-                    OnChanged(11);
+                    OnChanged(9);
                 }
             }
         }
@@ -307,12 +259,10 @@ namespace TFlex.PackageManager.Configuration
 
             b_values[0] = excludePage;
             m_values[0] = pageScale;
-            b_values[1] = savePageScale;
-            b_values[2] = checkDrawingTemplate;
-            b_values[3] = excludeProjection;
+            b_values[1] = checkDrawingTemplate;
+            b_values[2] = excludeProjection;
             m_values[1] = projectionScale;
-            b_values[4] = saveProjectionScale;
-            b_values[5] = enableProcessingOfProjections;
+            b_values[3] = enableProcessingOfProjections;
 
             pg_types[0] = pageTypes.Normal;
             pg_types[1] = pageTypes.Workplane;
@@ -351,56 +301,44 @@ namespace TFlex.PackageManager.Configuration
                         objState[2] = 0;
                     break;
                 case 4:
-                    if (b_values[1] != savePageScale)
-                        objState[3] = 1;
-                    else
-                        objState[3] = 0;
-                    break;
-                case 5:
                     if (pg_types[0] != pageTypes.Normal ||
                         pg_types[1] != pageTypes.Workplane ||
                         pg_types[2] != pageTypes.Auxiliary ||
                         pg_types[3] != pageTypes.Text ||
                         pg_types[4] != pageTypes.BillOfMaterials)
+                        objState[3] = 1;
+                    else
+                        objState[3] = 0;
+                    break;
+                case 5:
+                    if (b_values[1] != checkDrawingTemplate)
                         objState[4] = 1;
                     else
                         objState[4] = 0;
                     break;
                 case 6:
-                    if (b_values[2] != checkDrawingTemplate)
+                    if (!Enumerable.SequenceEqual(pj_names, projectionNames))
                         objState[5] = 1;
                     else
                         objState[5] = 0;
                     break;
                 case 7:
-                    if (!Enumerable.SequenceEqual(pj_names, projectionNames))
+                    if (b_values[2] != excludeProjection)
                         objState[6] = 1;
                     else
                         objState[6] = 0;
                     break;
                 case 8:
-                    if (b_values[3] != excludeProjection)
+                    if (m_values[1] != projectionScale)
                         objState[7] = 1;
                     else
                         objState[7] = 0;
                     break;
                 case 9:
-                    if (m_values[1] != projectionScale)
+                    if (b_values[3] != enableProcessingOfProjections)
                         objState[8] = 1;
                     else
                         objState[8] = 0;
-                    break;
-                case 10:
-                    if (b_values[4] != saveProjectionScale)
-                        objState[9] = 1;
-                    else
-                        objState[9] = 0;
-                    break;
-                case 11:
-                    if (b_values[5] != enableProcessingOfProjections)
-                        objState[10] = 1;
-                    else
-                        objState[10] = 0;
                     break;
             }
 
@@ -433,9 +371,6 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("name", "PageScale"),
                     new XAttribute("value", pageScale)),
                 new XElement("parameter",
-                    new XAttribute("name", "SavePageScale"),
-                    new XAttribute("value", savePageScale ? "1" : "0")),
-                new XElement("parameter",
                     new XAttribute("name", "PageTypes"),
                     new XAttribute("value", pageTypes.ToString())),
                 new XElement("parameter",
@@ -451,11 +386,14 @@ namespace TFlex.PackageManager.Configuration
                     new XAttribute("name", "ProjectionScale"),
                     new XAttribute("value", projectionScale)),
                 new XElement("parameter",
-                    new XAttribute("name", "SaveProjectionScale"),
-                    new XAttribute("value", saveProjectionScale ? "1" : "0")),
-                new XElement("parameter",
                     new XAttribute("name", "EnableProcessingOfProjections"),
-                    new XAttribute("value", enableProcessingOfProjections ? "1" : "0")));
+                    new XAttribute("value", enableProcessingOfProjections ? "1" : "0")),
+                new XElement("parameter",
+                    new XAttribute("name", "FileNameSuffix"),
+                    new XAttribute("value", FileNameSuffix)),
+                new XElement("parameter",
+                    new XAttribute("name", "TemplateFileName"),
+                    new XAttribute("value", TemplateFileName)));
 
             return element;
         }
@@ -489,12 +427,6 @@ namespace TFlex.PackageManager.Configuration
                             NumberStyles.Float, CultureInfo.InvariantCulture);
                     else
                         value = pageScale.ToString(CultureInfo.InvariantCulture);
-                    break;
-                case "SavePageScale":
-                    if (flag == 0)
-                        savePageScale = value == "1";
-                    else
-                        value = savePageScale ? "1" : "0";
                     break;
                 case "PageTypes":
                     if (flag == 0)
@@ -539,12 +471,6 @@ namespace TFlex.PackageManager.Configuration
                     else
                         value = projectionScale.ToString(CultureInfo.InvariantCulture);
                     break;
-                case "SaveProjectionScale":
-                    if (flag == 0)
-                        saveProjectionScale = value == "1";
-                    else
-                        value = saveProjectionScale ? "1" : "0";
-                    break;
                 case "EnableProcessingOfProjections":
                     if (flag == 0)
                         enableProcessingOfProjections = value == "1";
@@ -572,8 +498,8 @@ namespace TFlex.PackageManager.Configuration
 
         #region properties
         [PropertyOrder(1)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_1")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_1")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_1")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_1")]
         public bool Normal
         {
             get { return normal; }
@@ -588,8 +514,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(2)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_2")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_2")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_2")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_2")]
         public bool Workplane
         {
             get { return workplane; }
@@ -604,8 +530,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(3)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_3")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_3")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_3")]
         public bool Auxiliary
         {
             get { return auxiliary; }
@@ -620,8 +546,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(4)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_4")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_4")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_4")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_4")]
         public bool Text
         {
             get { return text; }
@@ -636,8 +562,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(5)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5_5")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5_5")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_5")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_5")]
         public bool BillOfMaterials
         {
             get { return billOfMaterials; }

@@ -105,6 +105,7 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\Options.cs" />
     <Compile Include="Common\Processing.cs" />
+    <Compile Include="Configuration\Package.cs" />
     <Compile Include="Configuration\Translator.cs" />
     <Compile Include="Configuration\Category_3.cs" />
     <Compile Include="Configuration\Translator3D.cs" />

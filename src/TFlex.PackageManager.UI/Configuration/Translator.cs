@@ -12,7 +12,7 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     public enum ProcessingType : uint
     {
-        None   = 0x0000,
+        SaveAs = 0x0000,
         Export = 0x0001,
         Import = 0x0002
     }

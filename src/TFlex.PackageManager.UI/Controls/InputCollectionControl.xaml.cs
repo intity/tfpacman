@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Configuration;
 using TFlex.PackageManager.UI;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
@@ -16,8 +17,6 @@ namespace TFlex.PackageManager.Controls
     /// </summary>
     public partial class InputCollectionControl : UserControl, ITypeEditor
     {
-        private ListValues imt;
-
         public InputCollectionControl()
         {
             InitializeComponent();
@@ -50,11 +49,26 @@ namespace TFlex.PackageManager.Controls
 
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            imt = new ListValues
+            bool excludeFromSearch = false;
+            PropertyItem pi = DataContext as PropertyItem;
+            Translator_0 tr = pi.Instance as Translator_0;
+
+            switch (pi.PropertyName)
+            {
+                case "PageNames":
+                    excludeFromSearch = tr.ExcludePage;
+                    break;
+                case "ProjectionNames":
+                    excludeFromSearch = tr.ExcludeProjection;
+                    break;
+            }
+
+            ListValues imt = new ListValues
             {
                 Owner = Window.GetWindow(Parent),
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                MultilineText = Value.ToString("\r\n")
+                MultilineText = Value.ToString("\r\n"),
+                ExcludeFromSeach = excludeFromSearch
             };
 
             if (imt.ShowDialog() == true)
@@ -64,6 +78,16 @@ namespace TFlex.PackageManager.Controls
                     : new string[] { };
 
                 textbox.Text = string.Format("[{0}]", Value.Length);
+                
+                switch (pi.PropertyName)
+                {
+                    case "PageNames":
+                        tr.ExcludePage = imt.ExcludeFromSeach;
+                        break;
+                    case "ProjectionNames":
+                        tr.ExcludeProjection = imt.ExcludeFromSeach;
+                        break;
+                }
             }
         }
     }

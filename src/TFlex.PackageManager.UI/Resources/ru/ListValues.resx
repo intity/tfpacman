@@ -123,6 +123,9 @@
   <data name="button2" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="checkBox" xml:space="preserve">
+    <value>Исключить из поиска</value>
+  </data>
   <data name="title" xml:space="preserve">
     <value>Список значений</value>
   </data>

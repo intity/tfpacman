@@ -35,8 +35,8 @@ namespace TFlex.PackageManager.UI
         private readonly string[] controls;
         private readonly string[] tooltips;
 
-        private string key1, key2;
-        private int processing_index = -1;
+        private string key1, key2, key3;
+        private readonly int processing_index = -1;
 
         private System.Threading.Thread thread;
         private bool stoped;
@@ -262,26 +262,7 @@ namespace TFlex.PackageManager.UI
 
         private void PropertyGrid_SelectedObjectChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (comboBox2.SelectedIndex != -1 && comboBox2.SelectedItem.ToString() == "Document")
-            {
-                if (propertyGrid.PropertyDefinitions.Count == 0)
-                {
-                    propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
-                    {
-                        TargetProperties = new[]
-                        {
-                            "SubDirectoryName",
-                            "FileNameSuffix",
-                            "TemplateFileName"
-                        },
-                        IsBrowsable = false
-                    });
-                }
-            }
-            else if (propertyGrid.PropertyDefinitions.Count > 0)
-            {
-                propertyGrid.PropertyDefinitions.Clear();
-            }
+            // ..
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -626,13 +607,18 @@ namespace TFlex.PackageManager.UI
 
                 comboBox3.Items.Clear();
 
-                for (uint i = 0; i < type; i++)
+                switch (type)
                 {
-                    switch (i)
-                    {
-                        case 1: comboBox3.Items.Add("Export"); break;
-                        case 2: comboBox3.Items.Add("Import"); break;
-                    }
+                    case 0:
+                        comboBox3.Items.Add("SaveAs");
+                        break;
+                    case 1:
+                        comboBox3.Items.Add("Export");
+                        break;
+                    case 3:
+                        comboBox3.Items.Add("Export");
+                        comboBox3.Items.Add("Import");
+                        break;
                 }
 
                 if (comboBox3.Items.Count > 0)
@@ -659,27 +645,34 @@ namespace TFlex.PackageManager.UI
             //Debug.WriteLine(string.Format("ComboBox2_SelectionChanged: [{0}, {1}]",
             //    comboBox2.SelectedIndex,
             //    comboBox2.SelectedValue));
-        } // translator collection
+        } // translator mode
 
         private void ComboBox3_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (comboBox3.SelectedIndex != -1)
             {
-                processing_index = comboBox3.SelectedIndex;
+                key3 = comboBox3.SelectedValue.ToString();
                 UpdatePropertyDefinitions();
 
-                if (processing_index == 0)
+                switch (key3)
                 {
-                    tvControl1.SearchPattern = "*.grb";
-                }
-                else if (key2 == "Step")
-                {
-                    tvControl1.SearchPattern = "*.stp";
+                    case "SaveAs":
+                    case "Export":
+                        tvControl1.SearchPattern = "*.grb";
+                        break;
+                    case "Import":                        
+                        switch (key2)
+                        {
+                            case "Step":
+                                tvControl1.SearchPattern = "*.stp";
+                                break;
+                        }
+                        break;
                 }
 
                 tvControl1.InitLayout();
             }
-        } // processing type
+        } // processing mode
         #endregion
 
         #region statusbar
@@ -711,7 +704,7 @@ namespace TFlex.PackageManager.UI
             switch (key2)
             {
                 case "Step":
-                    if (processing_index > 0)
+                    if (key3 == "Import")
                     {
                         int importMode = 0;
                         propertyGrid.PropertyDefinitions.Clear();
@@ -769,27 +762,7 @@ namespace TFlex.PackageManager.UI
         {
             string[] properties;
 
-            if (mode != 0)
-            {
-                properties = new string[]
-                {
-                    "FileNameSuffix",
-                    "TemplateFileName",
-                    "Protocol",
-                    "ExportMode",
-                    "ColorSource",
-                    "ExportSolidBodies",
-                    "ExportSheetBodies",
-                    "ExportWireBodies",
-                    "Export3DPictures",
-                    "ExportAnotation",
-                    "ExportWelds",
-                    "ExportCurves",
-                    "ExportContours",
-                    "SimplifyGeometry"
-                };
-            }
-            else
+            if (mode == 0)
             {
                 properties = new string[]
                 {
@@ -810,6 +783,26 @@ namespace TFlex.PackageManager.UI
                     "ImportWireBodies",
                     "ImportMeshBodies",
                     "ImportAnotations"
+                };
+            }
+            else
+            {
+                properties = new string[]
+                {
+                    "FileNameSuffix",
+                    "TemplateFileName",
+                    "Protocol",
+                    "ExportMode",
+                    "ColorSource",
+                    "ExportSolidBodies",
+                    "ExportSheetBodies",
+                    "ExportWireBodies",
+                    "Export3DPictures",
+                    "ExportAnotation",
+                    "ExportWelds",
+                    "ExportCurves",
+                    "ExportContours",
+                    "SimplifyGeometry"
                 };
             }
 
@@ -929,7 +922,7 @@ namespace TFlex.PackageManager.UI
             Stopwatch watch = new Stopwatch();
             LogFile logFile = new LogFile(options);
             TranslatorType t_mode = TranslatorType.Document;
-            ProcessingType p_mode = ProcessingType.None;
+            ProcessingType p_mode = ProcessingType.SaveAs;
 
             switch (key2)
             {
@@ -939,22 +932,23 @@ namespace TFlex.PackageManager.UI
                 case "Step"  : t_mode = TranslatorType.Step;   break;
             }
 
-            switch (processing_index)
+            switch (key3)
             {
-                case 0: p_mode = ProcessingType.Export; break;
-                case 1: p_mode = ProcessingType.Import; break;
+                case "Export": p_mode = ProcessingType.Export; break;
+                case "Import": p_mode = ProcessingType.Import; break;
             }
 
-            Processing processing = new Processing(self.Configurations[key1], t_mode, p_mode, logFile);
+            watch.Start();
+
+            string[] si = tvControl1.SelectedItems.OrderBy(i => i).Cast<string>().ToArray();
+            Processing processing = new Processing(self.Configurations[key1], si, t_mode, p_mode, logFile);
 
             logFile.CreateLogFile(Path.Combine(self.Configurations[key1].TargetDirectory, key2));
             logFile.AppendLine("Started processing");
             logFile.AppendLine(string.Format("Translator mode:\t{0}", key2));
             logFile.AppendLine(string.Format("Processing mode:\t{0}", p_mode));
 
-            watch.Start();
-
-            foreach (var i in tvControl1.SelectedItems)
+            foreach (var i in si)
             {
                 double increment = 100.0 / tvControl1.SelectedItems.Count;
 

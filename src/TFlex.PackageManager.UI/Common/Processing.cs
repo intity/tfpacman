@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.Model.Model3D;
 using TFlex.PackageManager.Configuration;
@@ -17,6 +18,7 @@ namespace TFlex.PackageManager.Common
         #region private fields
         private readonly Header header;
         private readonly LogFile logFile;
+        private readonly Package package;
         private Category_3   categoryFile;
         private Translator_0 translator_0;
         private Translator_1 translator_1;
@@ -27,12 +29,14 @@ namespace TFlex.PackageManager.Common
         private readonly ProcessingType p_mode;
         #endregion
 
-        public Processing(Header header, TranslatorType t_mode, ProcessingType p_mode, LogFile logFile)
+        public Processing(Header header, string[] si, TranslatorType t_mode, ProcessingType p_mode, LogFile logFile)
         {
             this.header  = header;
             this.p_mode  = p_mode;
             this.t_mode  = t_mode;
             this.logFile = logFile;
+
+            package = new Package(header, si, t_mode);
         }
 
         #region internal methods
@@ -40,13 +44,12 @@ namespace TFlex.PackageManager.Common
         /// Processing file.
         /// </summary>
         /// <param name="translator"></param>
-        /// <param name="path"></param>
+        /// <param name="path">Input file name path.</param>
         internal void ProcessingFile(object translator, string path)
         {
             translator_0 = translator as Translator_0;
             categoryFile = translator as Category_3;
             int importMode = 0;
-            string d_path = null;
 
             Document document = null;
             FileInfo fileInfo = new FileInfo(path);
@@ -56,6 +59,9 @@ namespace TFlex.PackageManager.Common
             string targetDirectory = Directory.Exists(directory)
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;
+            string d_path = p_mode == ProcessingType.SaveAs || p_mode == ProcessingType.Import
+                ? Path.Combine(targetDirectory, Path.GetFileNameWithoutExtension(path) + ".grb") 
+                : null;
 
             switch (t_mode)
             {
@@ -76,15 +82,16 @@ namespace TFlex.PackageManager.Common
 
             switch (p_mode)
             {
-                case ProcessingType.None:
+                case ProcessingType.SaveAs:
+                    document = Application.OpenDocument(path, false);
+                    logFile.AppendLine(string.Format("Open document:\t\t{0}", path));
+                    break;
                 case ProcessingType.Export:
                     document = Application.OpenDocument(path, false);
                     logFile.AppendLine(string.Format("Open document:\t\t{0}", path));
                     break;
                 case ProcessingType.Import:
                     string prototype = null;
-                    string f_name = Path.GetFileNameWithoutExtension(path);
-                    d_path = Path.Combine(targetDirectory, f_name + ".grb");
 
                     switch (importMode)
                     {
@@ -110,20 +117,18 @@ namespace TFlex.PackageManager.Common
             }
 
             document.BeginChanges(string.Format("Processing file: {0}", fileInfo.Name));
-
             ProcessingDocument(document, targetDirectory, path);
 
             if (document.Changed)
             {
-                document.EndChanges();
-
-                if (p_mode == ProcessingType.Import && importMode != 0 && d_path != null && document.SaveAs(d_path) || document.Save())
+                if (p_mode == ProcessingType.Export)
+                    document.CancelChanges();
+                else
                 {
-                    logFile.AppendLine("Document saved");
+                    document.EndChanges();
+                    document.Save();
                 }
             }
-            else
-                document.CancelChanges();
 
             document.Close();
             logFile.AppendLine("Document closed");
@@ -321,24 +326,7 @@ namespace TFlex.PackageManager.Common
                 { PageType.BillOfMaterials, translator_0.PageTypes.BillOfMaterials }
             };
 
-            return types[page.PageType];
-        }
-
-        /// <summary>
-        /// Get pages on type.
-        /// </summary>
-        /// <param name="document"></param>
-        /// <returns></returns>
-        private List<Page> GetPagesOnType(Document document)
-        {
-            List<Page> pages = new List<Page>();
-
-            foreach (var i in document.GetPages())
-            {
-                if (PageTypeExists(i) && (translator_0.PageNames.Count() > 0 ? translator_0.PageNames.Contains(i.Name) : true))
-                    pages.Add(i);
-            }
-            return pages;
+            return page.PageType != PageType.Dialog && types[page.PageType];
         }
 
         /// <summary>
@@ -346,12 +334,36 @@ namespace TFlex.PackageManager.Common
         /// </summary>
         /// <param name="document"></param>
         /// <param name="targetDirectory"></param>
-        /// <param name="path"></param>
+        /// <param name="path">Input file name path.</param>
         private void ProcessingDocument(Document document, string targetDirectory, string path)
         {
+            string f_name = t_mode == TranslatorType.Document || t_mode == TranslatorType.Step
+                ? GetOutputFileName(document, null)
+                : null;
+            string o_path;
+
             switch (t_mode)
             {
                 case TranslatorType.Document:
+                    string[] a_path = targetDirectory.Split('\\');
+                    string p_name = package.GetParentName(path);
+                    string n_path = p_name != null 
+                        ? targetDirectory.Replace(a_path[a_path.Length - 1], p_name) 
+                        : targetDirectory;
+
+                    if (n_path != targetDirectory)
+                        Directory.CreateDirectory(n_path);
+
+                    o_path = Path.Combine(n_path, f_name + ".grb");
+
+                    if (document.SaveAs(o_path))
+                    {
+                        logFile.AppendLine(string.Format("Document saved:\t\t{0}", o_path));
+                        package.SetAttributes(f_name, path, o_path);
+                        package.ReplaceLink(path, o_path);
+                        ProcessingPages(document, n_path);
+                    }
+                    break;
                 case TranslatorType.Acad:
                 case TranslatorType.Bitmap:
                 case TranslatorType.Pdf:
@@ -361,8 +373,7 @@ namespace TFlex.PackageManager.Common
                     switch (p_mode)
                     {
                         case ProcessingType.Export:
-                            string f_name = GetOutputFileName(document, null) + ".stp";
-                            string o_path = Path.Combine(targetDirectory, f_name);
+                            o_path = Path.Combine(targetDirectory, f_name + ".stp");
                             translator_10.Export(document, o_path, logFile);
                             break;
                         case ProcessingType.Import:
@@ -381,33 +392,45 @@ namespace TFlex.PackageManager.Common
         private void ProcessingPages(Document document, string targetDirectory)
         {
             int count = 0;
-            uint flags;
-            string path;
-            RegenerateOptions ro;
-            IEnumerable<Page> pages = GetPagesOnType(document);
+            string path = null;
             Dictionary<Page, string> processingPages = new Dictionary<Page, string>();
+            Dictionary<PageType, int> types = new Dictionary<PageType, int>
+            {
+                { PageType.Normal,          0 },
+                { PageType.Workplane,       0 },
+                { PageType.Auxiliary,       0 },
+                { PageType.Text,            0 },
+                { PageType.BillOfMaterials, 0 }
+            };
+            List<Page> pages = new List<Page>();
+
+            foreach (var p in document.GetPages())
+            {
+                uint flags = 0x0000;
+
+                flags |= (uint)(translator_0.PageNames.Contains(p.Name) ? 0x0001 : 0x0000);
+                flags |= (uint)(translator_0.ExcludePage                ? 0x0002 : 0x0000);
+                flags |= (uint)(PageTypeExists(p)                       ? 0x0004 : 0x0000);
+
+                if (!(flags == 0x0004 || flags == 0x0005))
+                    continue;
+
+                if (translator_0.CheckDrawingTemplate && !DrawingTemplateExists(document, p))
+                    continue;
+
+                types[p.PageType]++;
+                pages.Add(p);
+            }
 
             foreach (var i in pages)
             {
-                flags = 0x0000;
-
-                flags |= (uint)(translator_0.PageNames.Contains(i.Name) ? 0x0001 : 0x0000);
-                flags |= (uint)(translator_0.ExcludePage                ? 0x0002 : 0x0000);
-                flags |= (uint)(PageTypeExists(i)                       ? 0x0004 : 0x0000);
-
-                if (flags == 0x0000 || flags == 0x0007)
-                    continue;
-
-                if (translator_0.CheckDrawingTemplate && !DrawingTemplateExists(document, i))
-                    continue;
-
                 if (i.Scale.Value != (double)translator_0.PageScale && translator_0.PageScale != 99999)
                 {
                     i.Scale = new Parameter((double)translator_0.PageScale);
 
-                    if (translator_0.SavePageScale)
+                    if (t_mode == TranslatorType.Document)
                     {
-                        ro = new RegenerateOptions
+                        RegenerateOptions ro = new RegenerateOptions
                         {
                             Full = true
                         };
@@ -426,15 +449,18 @@ namespace TFlex.PackageManager.Common
                     ProcessingProjections(document, i.Name);
                 }
 
-                path = targetDirectory + "\\" + GetOutputFileName(document, i);
-
-                if (pages.Where(p => p.PageType == i.PageType).Count() > 1)
+                if (t_mode != TranslatorType.Document)
                 {
-                    path += "_" + (count + 1).ToString() + "." + translator_0.TargetExtension.ToLower();
-                    count++;
+                    path = targetDirectory + "\\" + GetOutputFileName(document, i);
+
+                    if (types[i.PageType] > 1)
+                    {
+                        path += "_" + (count + 1).ToString() + "." + translator_0.TargetExtension.ToLower();
+                        count++;
+                    }
+                    else
+                        path += "." + translator_0.TargetExtension.ToLower();
                 }
-                else
-                    path += "." + translator_0.TargetExtension.ToLower();
 
                 processingPages.Add(i, path);
             }
@@ -484,7 +510,7 @@ namespace TFlex.PackageManager.Common
                         : (double)translator_0.ProjectionScale;
                     i.Scale = new Parameter(scale);
 
-                    if (translator_0.SaveProjectionScale)
+                    if (t_mode == TranslatorType.Document)
                     {
                         ro = new RegenerateOptions
                         {
