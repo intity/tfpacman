@@ -125,10 +125,15 @@ namespace TFlex.PackageManager.Configuration
                     OnChanged(17);
                 }
             }
-        }   
+        }
         #endregion
 
         #region internal properties
+        internal override uint Processing
+        {
+            get { return (uint)ProcessingType.Export; }
+        }
+
         internal override bool IsChanged
         {
             get
@@ -209,7 +214,7 @@ namespace TFlex.PackageManager.Configuration
 
                 if (export.Export(p.Value, options, format))
                 {
-                    logFile.AppendLine(string.Format("Export to:\t{0}", p.Value));
+                    logFile.AppendLine(string.Format("Export to:\t\t{0}", p.Value));
                 }
             }
         }
