@@ -22,6 +22,7 @@ namespace TFlex.PackageManager.Configuration
         private Translator_1 translator_1;
         private Translator_2 translator_2;
         private Translator_3 translator_3;
+        private Translator_6 translator_6;
         private Translator_9 translator_9;
         private Translator_10 translator_10;
         private readonly ObservableDictionary<string, object> translators;
@@ -52,7 +53,7 @@ namespace TFlex.PackageManager.Configuration
             objState          = new byte[6];
             s_values          = new string[4];
             tr_types          = new bool[12];
-            tchanges          = new byte[6];
+            tchanges          = new byte[7];
         }
 
         #region event handlers
@@ -74,13 +75,17 @@ namespace TFlex.PackageManager.Configuration
             {
                 tchanges[3] = (byte)(translator_3.IsChanged ? 1 : 0);
             }
+            else if (sender.Equals(translator_6))
+            {
+                tchanges[4] = (byte)(translator_6.IsChanged ? 1 : 0);
+            }
             else if (sender.Equals(translator_9))
             {
-                tchanges[4] = (byte)(translator_9.IsChanged ? 1 : 0);
+                tchanges[5] = (byte)(translator_9.IsChanged ? 1 : 0);
             }
             else if (sender.Equals(translator_10))
             {
-                tchanges[5] = (byte)(translator_10.IsChanged ? 1 : 0);
+                tchanges[6] = (byte)(translator_10.IsChanged ? 1 : 0);
             }
 
             objState[5] = 0;
@@ -160,6 +165,19 @@ namespace TFlex.PackageManager.Configuration
                         }
 
                         translators.Add(e.PropertyName, translator_3);
+                    }
+                    break;
+                case "Iges":
+                    if (t_value = (sender as TranslatorTypes).Iges)
+                    {
+                        if (translator_6 == null)
+                        {
+                            translator_6 = new Translator_6();
+                            translator_6.PropertyChanged += Translator_PropertyChanged;
+                            translator_6.ErrorsChanged   += Translator_ErrorsChanged;
+                        }
+
+                        translators.Add(e.PropertyName, translator_6);
                     }
                     break;
                 case "Pdf":
@@ -444,6 +462,10 @@ namespace TFlex.PackageManager.Configuration
                         translatorTypes.Bitmap = true;
                         translator_3.ConfigurationTask(i, 0);
                         break;
+                    case "Iges":
+                        translatorTypes.Iges = true;
+                        translator_6.ConfigurationTask(i, 0);
+                        break;
                     case "Pdf":
                         translatorTypes.Pdf = true;
                         translator_9.ConfigurationTask(i, 0);
@@ -499,6 +521,12 @@ namespace TFlex.PackageManager.Configuration
                             translator_3.ConfigurationTask(i, 1);
                         }
                         break;
+                    case "Iges":
+                        if (t_value = translatorTypes.Iges)
+                        {
+                            translator_6.ConfigurationTask(i, 1);
+                        }
+                        break;
                     case "Pdf":
                         if (t_value = translatorTypes.Pdf)
                         {
@@ -542,6 +570,12 @@ namespace TFlex.PackageManager.Configuration
                         if (translator_3.IsLoaded == false)
                         {
                             translator_3.AppendTranslatorToXml(parent, TranslatorType.Bitmap);
+                        }
+                        break;
+                    case "Iges":
+                        if (translator_6.IsLoaded == false)
+                        {
+                            translator_6.AppendTranslatorToXml(parent, TranslatorType.Iges);
                         }
                         break;
                     case "Pdf":
@@ -832,7 +866,6 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        [Browsable(false)]
         [PropertyOrder(6)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_6")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_6")]

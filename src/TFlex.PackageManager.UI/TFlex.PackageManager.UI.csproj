@@ -113,6 +113,7 @@
     <Compile Include="Configuration\ConfigurationCollection.cs" />
     <Compile Include="Configuration\Translator_10.cs" />
     <Compile Include="Configuration\Translator_2.cs" />
+    <Compile Include="Configuration\Translator_6.cs" />
     <Compile Include="Controls\BiarcInterpolationControl.xaml.cs">
       <DependentUpon>BiarcInterpolationControl.xaml</DependentUpon>
     </Compile>
@@ -256,6 +257,15 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\de\Translator_6.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\en\Translator_6.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ru\Translator_6.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\de\Translator_10.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -318,6 +328,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\igs.ico" />
     <Resource Include="Resources\sat.ico" />
     <Resource Include="Resources\save_all.ico" />
     <Resource Include="Resources\start.ico" />

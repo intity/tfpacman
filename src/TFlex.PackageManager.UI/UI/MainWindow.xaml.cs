@@ -306,6 +306,7 @@ namespace TFlex.PackageManager.UI
                 case "Acad"    : t_value = (sender as TranslatorTypes).Acad;     break;
                 case "Acis"    : t_value = (sender as TranslatorTypes).Acis;     break;
                 case "Bitmap"  : t_value = (sender as TranslatorTypes).Bitmap;   break;
+                case "Iges"    : t_value = (sender as TranslatorTypes).Iges;     break;
                 case "Pdf"     : t_value = (sender as TranslatorTypes).Pdf;      break;
                 case "Step"    : t_value = (sender as TranslatorTypes).Step;     break;
             }
@@ -667,6 +668,9 @@ namespace TFlex.PackageManager.UI
                             case "Acis":
                                 tvControl1.SearchPattern = "*.sat";
                                 break;
+                            case "Iges":
+                                tvControl1.SearchPattern = "*.igs";
+                                break;
                             case "Step":
                                 tvControl1.SearchPattern = "*.stp";
                                 break;
@@ -708,6 +712,7 @@ namespace TFlex.PackageManager.UI
             switch (key2)
             {
                 case "Acis":
+                case "Iges":
                 case "Step":
                     if (key3 == "Import")
                     {
@@ -762,12 +767,12 @@ namespace TFlex.PackageManager.UI
         /// Get target properties for browsable definition.
         /// </summary>
         /// <param name="mode">Import type.</param>
-        /// <returns></returns>
+        /// <returns>Target properties.</returns>
         private string[] GetTargetProperties(int mode)
         {
             string[] properties;
 
-            if (mode == 0)
+            if (mode != 0)
             {
                 properties = new string[]
                 {
@@ -785,9 +790,8 @@ namespace TFlex.PackageManager.UI
                     "ExportCurves",
                     "ExportContours",
                     "SimplifyGeometry",
-                    "ImportWireBodies",
-                    "ImportMeshBodies",
-                    "ImportAnotations"
+                    "ConvertAnalyticGeometryToNurbs",
+                    "SaveSolidBodiesAsFaceSet"
                 };
             }
             else
@@ -807,7 +811,12 @@ namespace TFlex.PackageManager.UI
                     "ExportWelds",
                     "ExportCurves",
                     "ExportContours",
-                    "SimplifyGeometry"
+                    "SimplifyGeometry",
+                    "ConvertAnalyticGeometryToNurbs",
+                    "SaveSolidBodiesAsFaceSet",
+                    "ImportWireBodies",
+                    "ImportMeshBodies",
+                    "ImportAnotations"
                 };
             }
 
@@ -934,6 +943,7 @@ namespace TFlex.PackageManager.UI
                 case "Acad"  : t_mode = TranslatorType.Acad;   break;
                 case "Acis"  : t_mode = TranslatorType.Acis;   break;
                 case "Bitmap": t_mode = TranslatorType.Bitmap; break;
+                case "Iges"  : t_mode = TranslatorType.Iges;   break;
                 case "Pdf"   : t_mode = TranslatorType.Pdf;    break;
                 case "Step"  : t_mode = TranslatorType.Step;   break;
             }
