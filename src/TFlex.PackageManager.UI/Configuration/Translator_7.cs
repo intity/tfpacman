@@ -11,44 +11,43 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
-    /// The STEP-translator class.
+    /// The JT-translator class.
     /// </summary>
     [CustomCategoryOrder(Resource.TRANSLATOR_3D, 4)]
-    public class Translator_10 : Translator3D
+    public class Translator_7 : Translator3D
     {
         #region private fields
-        private int protocol;
+        private int version;
+
         private readonly int[] i_values;
         private bool isChanged;
         #endregion
 
-        public Translator_10()
+        public Translator_7()
         {
-            protocol        = 1;
-            TargetExtension = "STP";
+            TargetExtension = "JT";
             i_values        = new int[1];
         }
 
         #region public properties
         /// <summary>
-        /// Protocol to be used for export to Step.
-        /// (0) - AP203,
-        /// (1) - AP214,
-        /// (2) - AP242.
+        /// JT format version.
+        /// (0) - JT 8.1
+        /// (1) - JT 9.5
         /// </summary>
         [PropertyOrder(16)]
         [CustomCategory(Resource.TRANSLATOR_3D, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_10, "dn4_0")]
-        [CustomDescription(Resource.TRANSLATOR_10, "dn4_0")]
-        [ItemsSource(typeof(ProtocolItems))]
-        public int Protocol
+        [CustomDisplayName(Resource.TRANSLATOR_7, "dn4_0")]
+        [CustomDescription(Resource.TRANSLATOR_7, "dn4_0")]
+        [ItemsSource(typeof(JtVersions))]
+        public int Version
         {
-            get { return protocol; }
+            get { return version; }
             set
             {
-                if (protocol != value)
+                if (version != value)
                 {
-                    protocol = value;
+                    version = value;
                     OnChanged(16);
                 }
             }
@@ -68,7 +67,7 @@ namespace TFlex.PackageManager.Configuration
         #region internal methods
         internal override void OnLoaded()
         {
-            i_values[0] = protocol;
+            i_values[0] = version;
 
             base.OnLoaded();
         }
@@ -79,7 +78,7 @@ namespace TFlex.PackageManager.Configuration
 
             switch (index)
             {
-                case 16: isChanged = i_values[0] != protocol; break;
+                case 16: isChanged = i_values[0] != version; break;
             }
 
             base.OnChanged(index);
@@ -87,25 +86,24 @@ namespace TFlex.PackageManager.Configuration
 
         internal override void Export(Document document, string path, LogFile logFile)
         {
-            ExportToStepProtocol stepProtocol = ExportToStepProtocol.AP203;
-            ExportTo3dMode exportMode = ExportMode == 0 
+            ExportToJtVersion jtVersion = ExportToJtVersion.JT81;
+            ExportTo3dMode exportMode = ExportMode == 0
                 ? ExportTo3dMode.Assembly
                 : ExportTo3dMode.BodySet;
 
-            ExportTo3dColorSource colorSource = ColorSource == 0 
-                ? ExportTo3dColorSource.ToneColor 
+            ExportTo3dColorSource colorSource = ColorSource == 0
+                ? ExportTo3dColorSource.ToneColor
                 : ExportTo3dColorSource.MaterialColor;
 
-            switch (protocol)
+            switch (version)
             {
-                case 0: stepProtocol = ExportToStepProtocol.AP203; break;
-                case 1: stepProtocol = ExportToStepProtocol.AP214; break;
-                case 2: stepProtocol = ExportToStepProtocol.AP242; break;
+                case 0: jtVersion = ExportToJtVersion.JT81; break;
+                case 1: jtVersion = ExportToJtVersion.JT95; break;
             }
 
-            ExportToStep export = new ExportToStep(document)
+            ExportToJt export = new ExportToJt(document)
             {
-                Protocol          = stepProtocol,
+                Version           = jtVersion,
                 Mode              = exportMode,
                 ColorSource       = colorSource,
                 Export3DPictures  = Export3DPictures,
@@ -133,22 +131,22 @@ namespace TFlex.PackageManager.Configuration
             string value = Enum.GetName(typeof(TranslatorType), translator);
             parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
                 new XElement("parameter",
-                    new XAttribute("name", "Protocol"),
-                    new XAttribute("value", Protocol)));
+                    new XAttribute("name", "Version"),
+                    new XAttribute("value", Version)));
         }
 
         internal override void TranslatorTask(XElement element, int flag)
         {
             base.TranslatorTask(element, flag);
-            
+
             string value = element.Attribute("value").Value;
             switch (element.Attribute("name").Value)
             {
-                case "Protocol":
+                case "Version":
                     if (flag == 0)
-                        protocol = int.Parse(value);
+                        version = int.Parse(value);
                     else
-                        value = protocol.ToString();
+                        value = version.ToString();
                     break;
             }
             element.Attribute("value").Value = value;
@@ -157,15 +155,14 @@ namespace TFlex.PackageManager.Configuration
     }
 
 #pragma warning disable CA1812
-    internal class ProtocolItems : IItemsSource
+    internal class JtVersions : IItemsSource
     {
         public ItemCollection GetValues()
         {
             return new ItemCollection
             {
-                { 0, "AP203" },
-                { 1, "AP214" },
-                { 2, "AP242" }
+                { 0, "JT 8.1" },
+                { 1, "JT 9.5" }
             };
         }
     }

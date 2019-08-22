@@ -31,12 +31,13 @@ namespace TFlex.PackageManager.Editors
         {
             var types = propertyItem.Value as TranslatorTypes;
 
-            textBox.Text = string.Format("[{0}, {1}, {2}, {3}, {4}, {5}, {6}]", 
+            textBox.Text = string.Format("[{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}]", 
                 types.Document ? 1 : 0,
                 types.Acad     ? 1 : 0,
                 types.Acis     ? 1 : 0,
                 types.Bitmap   ? 1 : 0,
                 types.Iges     ? 1 : 0,
+                types.Jt       ? 1 : 0,
                 types.Pdf      ? 1 : 0,
                 types.Step     ? 1 : 0);
 

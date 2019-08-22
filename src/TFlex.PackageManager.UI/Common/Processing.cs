@@ -25,6 +25,7 @@ namespace TFlex.PackageManager.Common
         private Translator_2 translator_2;
         private Translator_3 translator_3;
         private Translator_6 translator_6;
+        private Translator_7 translator_7;
         private Translator_9 translator_9;
         private Translator_10 translator_10;
         private readonly TranslatorType t_mode;
@@ -80,6 +81,10 @@ namespace TFlex.PackageManager.Common
                 case TranslatorType.Iges:
                     translator_6 = translator as Translator_6;
                     importMode = translator_6.ImportMode;
+                    break;
+                case TranslatorType.Jt:
+                    translator_7 = translator as Translator_7;
+                    importMode = translator_7.ImportMode;
                     break;
                 case TranslatorType.Pdf:
                     translator_9 = translator as Translator_9;
@@ -401,6 +406,19 @@ namespace TFlex.PackageManager.Common
                             break;
                         case ProcessingType.Import:
                             translator_6.Import(document, targetDirectory, path, logFile);
+                            break;
+                    }
+                    break;
+                case TranslatorType.Jt:
+                    switch (p_mode)
+                    {
+                        case ProcessingType.Export:
+                            f_name = GetOutputFileName(document, null);
+                            o_path = Path.Combine(targetDirectory, f_name + ".jt");
+                            translator_7.Export(document, o_path, logFile);
+                            break;
+                        case ProcessingType.Import:
+                            translator_7.Import(document, targetDirectory, path, logFile);
                             break;
                     }
                     break;

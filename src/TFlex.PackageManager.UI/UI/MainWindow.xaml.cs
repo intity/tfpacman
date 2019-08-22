@@ -307,6 +307,7 @@ namespace TFlex.PackageManager.UI
                 case "Acis"    : t_value = (sender as TranslatorTypes).Acis;     break;
                 case "Bitmap"  : t_value = (sender as TranslatorTypes).Bitmap;   break;
                 case "Iges"    : t_value = (sender as TranslatorTypes).Iges;     break;
+                case "Jt"      : t_value = (sender as TranslatorTypes).Jt;       break;
                 case "Pdf"     : t_value = (sender as TranslatorTypes).Pdf;      break;
                 case "Step"    : t_value = (sender as TranslatorTypes).Step;     break;
             }
@@ -671,6 +672,9 @@ namespace TFlex.PackageManager.UI
                             case "Iges":
                                 tvControl1.SearchPattern = "*.igs";
                                 break;
+                            case "Jt":
+                                tvControl1.SearchPattern = "*.jt";
+                                break;
                             case "Step":
                                 tvControl1.SearchPattern = "*.stp";
                                 break;
@@ -713,6 +717,7 @@ namespace TFlex.PackageManager.UI
             {
                 case "Acis":
                 case "Iges":
+                case "Jt":
                 case "Step":
                     if (key3 == "Import")
                     {
@@ -778,6 +783,7 @@ namespace TFlex.PackageManager.UI
                 {
                     "FileNameSuffix",
                     "TemplateFileName",
+                    "Version",
                     "Protocol",
                     "ExportMode",
                     "ColorSource",
@@ -800,6 +806,7 @@ namespace TFlex.PackageManager.UI
                 {
                     "FileNameSuffix",
                     "TemplateFileName",
+                    "Version",
                     "Protocol",
                     "ExportMode",
                     "ColorSource",
@@ -944,6 +951,7 @@ namespace TFlex.PackageManager.UI
                 case "Acis"  : t_mode = TranslatorType.Acis;   break;
                 case "Bitmap": t_mode = TranslatorType.Bitmap; break;
                 case "Iges"  : t_mode = TranslatorType.Iges;   break;
+                case "Jt"    : t_mode = TranslatorType.Jt;     break;
                 case "Pdf"   : t_mode = TranslatorType.Pdf;    break;
                 case "Step"  : t_mode = TranslatorType.Step;   break;
             }

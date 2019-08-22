@@ -47,6 +47,7 @@ namespace TFlex.PackageManager.Controls
                 new BitmapImage(new Uri(Resource.BASE_URI + "tif.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "png.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "igs.ico")),
+                new BitmapImage(new Uri(Resource.BASE_URI + "jt.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "pdf.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "stp.ico"))
             };
@@ -219,8 +220,9 @@ namespace TFlex.PackageManager.Controls
                     case ".tiff": imageIndex = 10; break;
                     case ".png" : imageIndex = 11; break;
                     case ".igs" : imageIndex = 12; break;
-                    case ".pdf" : imageIndex = 13; break;
-                    case ".stp" : imageIndex = 14; break;
+                    case ".jt"  : imageIndex = 13; break;
+                    case ".pdf" : imageIndex = 14; break;
+                    case ".stp" : imageIndex = 15; break;
                 }
 
                 CustomTreeViewItem subitem = new CustomTreeViewItem
@@ -364,8 +366,9 @@ namespace TFlex.PackageManager.Controls
                     case ".tiff": imageIndex = 10; break;
                     case ".png" : imageIndex = 11; break;
                     case ".igs" : imageIndex = 12; break;
-                    case ".pdf" : imageIndex = 13; break;
-                    case ".stp" : imageIndex = 14; break;
+                    case ".jt"  : imageIndex = 13; break;
+                    case ".pdf" : imageIndex = 14; break;
+                    case ".stp" : imageIndex = 15; break;
                 }
 
                 item.ImageSource = imageSourceList[imageIndex];

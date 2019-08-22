@@ -30,6 +30,7 @@ namespace TFlex.PackageManager.Common
         public const string TRANSLATOR_1  = "Translator_1";
         public const string TRANSLATOR_3  = "Translator_3";
         public const string TRANSLATOR_6  = "Translator_6";
+        public const string TRANSLATOR_7  = "Translator_7";
         public const string TRANSLATOR_9  = "Translator_9";
         public const string TRANSLATOR_10 = "Translator_10";
         public const string TRANSLATOR_3D = "Translator_3D";
