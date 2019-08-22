@@ -112,6 +112,7 @@
     <Compile Include="Configuration\Header.cs" />
     <Compile Include="Configuration\ConfigurationCollection.cs" />
     <Compile Include="Configuration\Translator_10.cs" />
+    <Compile Include="Configuration\Translator_2.cs" />
     <Compile Include="Controls\BiarcInterpolationControl.xaml.cs">
       <DependentUpon>BiarcInterpolationControl.xaml</DependentUpon>
     </Compile>
@@ -317,6 +318,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\sat.ico" />
     <Resource Include="Resources\save_all.ico" />
     <Resource Include="Resources\start.ico" />
     <Resource Include="Resources\stop.ico" />

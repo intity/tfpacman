@@ -304,6 +304,7 @@ namespace TFlex.PackageManager.UI
             {
                 case "Document": t_value = (sender as TranslatorTypes).Document; break;
                 case "Acad"    : t_value = (sender as TranslatorTypes).Acad;     break;
+                case "Acis"    : t_value = (sender as TranslatorTypes).Acis;     break;
                 case "Bitmap"  : t_value = (sender as TranslatorTypes).Bitmap;   break;
                 case "Pdf"     : t_value = (sender as TranslatorTypes).Pdf;      break;
                 case "Step"    : t_value = (sender as TranslatorTypes).Step;     break;
@@ -663,6 +664,9 @@ namespace TFlex.PackageManager.UI
                     case "Import":                        
                         switch (key2)
                         {
+                            case "Acis":
+                                tvControl1.SearchPattern = "*.sat";
+                                break;
                             case "Step":
                                 tvControl1.SearchPattern = "*.stp";
                                 break;
@@ -703,6 +707,7 @@ namespace TFlex.PackageManager.UI
         {
             switch (key2)
             {
+                case "Acis":
                 case "Step":
                     if (key3 == "Import")
                     {
@@ -927,6 +932,7 @@ namespace TFlex.PackageManager.UI
             switch (key2)
             {
                 case "Acad"  : t_mode = TranslatorType.Acad;   break;
+                case "Acis"  : t_mode = TranslatorType.Acis;   break;
                 case "Bitmap": t_mode = TranslatorType.Bitmap; break;
                 case "Pdf"   : t_mode = TranslatorType.Pdf;    break;
                 case "Step"  : t_mode = TranslatorType.Step;   break;

@@ -22,6 +22,7 @@ namespace TFlex.PackageManager.Common
         private Category_3   categoryFile;
         private Translator_0 translator_0;
         private Translator_1 translator_1;
+        private Translator_2 translator_2;
         private Translator_3 translator_3;
         private Translator_9 translator_9;
         private Translator_10 translator_10;
@@ -67,6 +68,10 @@ namespace TFlex.PackageManager.Common
             {
                 case TranslatorType.Acad:
                     translator_1 = translator as Translator_1;
+                    break;
+                case TranslatorType.Acis:
+                    translator_2 = translator as Translator_2;
+                    importMode = translator_2.ImportMode;
                     break;
                 case TranslatorType.Bitmap:
                     translator_3 = translator as Translator_3;
@@ -337,9 +342,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="path">Input file name path.</param>
         private void ProcessingDocument(Document document, string targetDirectory, string path)
         {
-            string f_name = t_mode == TranslatorType.Document || t_mode == TranslatorType.Step
-                ? GetOutputFileName(document, null)
-                : null;
+            string f_name;
             string o_path;
 
             switch (t_mode)
@@ -354,6 +357,7 @@ namespace TFlex.PackageManager.Common
                     if (n_path != targetDirectory)
                         Directory.CreateDirectory(n_path);
 
+                    f_name = GetOutputFileName(document, null);
                     o_path = Path.Combine(n_path, f_name + ".grb");
 
                     if (document.SaveAs(o_path))
@@ -369,10 +373,24 @@ namespace TFlex.PackageManager.Common
                 case TranslatorType.Pdf:
                     ProcessingPages(document, targetDirectory);
                     break;
+                case TranslatorType.Acis:
+                    switch(p_mode)
+                    {
+                        case ProcessingType.Export:
+                            f_name = GetOutputFileName(document, null);
+                            o_path = Path.Combine(targetDirectory, f_name + ".sat");
+                            translator_2.Export(document, o_path, logFile);
+                            break;
+                        case ProcessingType.Import:
+                            translator_2.Import(document, targetDirectory, path, logFile);
+                            break;
+                    }
+                    break;
                 case TranslatorType.Step:
                     switch (p_mode)
                     {
                         case ProcessingType.Export:
+                            f_name = GetOutputFileName(document, null);
                             o_path = Path.Combine(targetDirectory, f_name + ".stp");
                             translator_10.Export(document, o_path, logFile);
                             break;

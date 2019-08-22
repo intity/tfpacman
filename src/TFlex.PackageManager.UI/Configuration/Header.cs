@@ -20,6 +20,7 @@ namespace TFlex.PackageManager.Configuration
         #region private fields
         private Translator_0 translator_0;
         private Translator_1 translator_1;
+        private Translator_2 translator_2;
         private Translator_3 translator_3;
         private Translator_9 translator_9;
         private Translator_10 translator_10;
@@ -51,7 +52,7 @@ namespace TFlex.PackageManager.Configuration
             objState          = new byte[6];
             s_values          = new string[4];
             tr_types          = new bool[12];
-            tchanges          = new byte[5];
+            tchanges          = new byte[6];
         }
 
         #region event handlers
@@ -65,17 +66,21 @@ namespace TFlex.PackageManager.Configuration
             {
                 tchanges[1] = (byte)(translator_1.IsChanged ? 1 : 0);
             }
+            else if (sender.Equals(translator_2))
+            {
+                tchanges[2] = (byte)(translator_2.IsChanged ? 1 : 0);
+            }
             else if (sender.Equals(translator_3))
             {
-                tchanges[2] = (byte)(translator_3.IsChanged ? 1 : 0);
+                tchanges[3] = (byte)(translator_3.IsChanged ? 1 : 0);
             }
             else if (sender.Equals(translator_9))
             {
-                tchanges[3] = (byte)(translator_9.IsChanged ? 1 : 0);
+                tchanges[4] = (byte)(translator_9.IsChanged ? 1 : 0);
             }
             else if (sender.Equals(translator_10))
             {
-                tchanges[4] = (byte)(translator_10.IsChanged ? 1 : 0);
+                tchanges[5] = (byte)(translator_10.IsChanged ? 1 : 0);
             }
 
             objState[5] = 0;
@@ -130,6 +135,19 @@ namespace TFlex.PackageManager.Configuration
 
                         translators.Add(e.PropertyName, translator_1);
                     }   
+                    break;
+                case "Acis":
+                    if (t_value = (sender as TranslatorTypes).Acis)
+                    {
+                        if (translator_2 == null)
+                        {
+                            translator_2 = new Translator_2();
+                            translator_2.PropertyChanged += Translator_PropertyChanged;
+                            translator_2.ErrorsChanged   += Translator_ErrorsChanged;
+                        }
+
+                        translators.Add(e.PropertyName, translator_2);
+                    }
                     break;
                 case "Bitmap":
                     if (t_value = (sender as TranslatorTypes).Bitmap)
@@ -418,6 +436,10 @@ namespace TFlex.PackageManager.Configuration
                         translatorTypes.Acad = true;
                         translator_1.ConfigurationTask(i, 0);
                         break;
+                    case "Acis":
+                        translatorTypes.Acis = true;
+                        translator_2.ConfigurationTask(i, 0);
+                        break;
                     case "Bitmap":
                         translatorTypes.Bitmap = true;
                         translator_3.ConfigurationTask(i, 0);
@@ -465,6 +487,12 @@ namespace TFlex.PackageManager.Configuration
                             translator_1.ConfigurationTask(i, 1);
                         }
                         break;
+                    case "Acis":
+                        if (t_value = translatorTypes.Acis)
+                        {
+                            translator_2.ConfigurationTask(i, 1);
+                        }
+                        break;
                     case "Bitmap":
                         if (t_value = translatorTypes.Bitmap)
                         {
@@ -502,6 +530,12 @@ namespace TFlex.PackageManager.Configuration
                         if (translator_1.IsLoaded == false)
                         {
                             translator_1.AppendTranslatorToXml(parent, TranslatorType.Acad);
+                        }
+                        break;
+                    case "Acis":
+                        if (translator_2.IsLoaded == false)
+                        {
+                            translator_2.AppendTranslatorToXml(parent, TranslatorType.Acis);
                         }
                         break;
                     case "Bitmap":
@@ -732,7 +766,6 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        [Browsable(false)]
         [PropertyOrder(2)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_2")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_2")]

@@ -40,6 +40,7 @@ namespace TFlex.PackageManager.Controls
                 new BitmapImage(new Uri(Resource.BASE_URI + "dwg.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "dxf.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "dxb.ico")),
+                new BitmapImage(new Uri(Resource.BASE_URI + "sat.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "bmp.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "jpg.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "gif.ico")),
@@ -210,13 +211,14 @@ namespace TFlex.PackageManager.Controls
                     case ".dwg" : imageIndex = 03; break;
                     case ".dxf" : imageIndex = 04; break;
                     case ".dxb" : imageIndex = 05; break;
-                    case ".bmp" : imageIndex = 06; break;
-                    case ".jpeg": imageIndex = 07; break;
-                    case ".gif" : imageIndex = 08; break;
-                    case ".tiff": imageIndex = 09; break;
-                    case ".png" : imageIndex = 10; break;
-                    case ".pdf" : imageIndex = 11; break;
-                    case ".stp" : imageIndex = 12; break;
+                    case ".sat" : imageIndex = 06; break;
+                    case ".bmp" : imageIndex = 07; break;
+                    case ".jpeg": imageIndex = 08; break;
+                    case ".gif" : imageIndex = 09; break;
+                    case ".tiff": imageIndex = 10; break;
+                    case ".png" : imageIndex = 11; break;
+                    case ".pdf" : imageIndex = 12; break;
+                    case ".stp" : imageIndex = 13; break;
                 }
 
                 CustomTreeViewItem subitem = new CustomTreeViewItem
@@ -353,13 +355,14 @@ namespace TFlex.PackageManager.Controls
                     case ".dwg" : imageIndex = 03; break;
                     case ".dxf" : imageIndex = 04; break;
                     case ".dxb" : imageIndex = 05; break;
-                    case ".bmp" : imageIndex = 06; break;
-                    case ".jpeg": imageIndex = 07; break;
-                    case ".gif" : imageIndex = 08; break;
-                    case ".tiff": imageIndex = 09; break;
-                    case ".png" : imageIndex = 10; break;
-                    case ".pdf" : imageIndex = 11; break;
-                    case ".stp" : imageIndex = 12; break;
+                    case ".sat" : imageIndex = 06; break;
+                    case ".bmp" : imageIndex = 07; break;
+                    case ".jpeg": imageIndex = 08; break;
+                    case ".gif" : imageIndex = 09; break;
+                    case ".tiff": imageIndex = 10; break;
+                    case ".png" : imageIndex = 11; break;
+                    case ".pdf" : imageIndex = 12; break;
+                    case ".stp" : imageIndex = 13; break;
                 }
 
                 item.ImageSource = imageSourceList[imageIndex];
