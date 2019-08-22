@@ -62,9 +62,6 @@ namespace TFlex.PackageManager.Common
             string targetDirectory = Directory.Exists(directory)
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;
-            string d_path = p_mode == ProcessingType.SaveAs || p_mode == ProcessingType.Import
-                ? Path.Combine(targetDirectory, Path.GetFileNameWithoutExtension(path) + ".grb") 
-                : null;
 
             switch (t_mode)
             {
@@ -106,21 +103,11 @@ namespace TFlex.PackageManager.Common
                     logFile.AppendLine(string.Format("Open document:\t\t{0}", path));
                     break;
                 case ProcessingType.Import:
-                    string prototype = null;
+                    string prototype = importMode == 2 
+                        ? Resource.Prototype3d 
+                        : Resource.Prototype3dAssembly;
 
-                    switch (importMode)
-                    {
-                        case 0:
-                        case 1:
-                            prototype = Resource.Prototype3dAssembly;
-                            logFile.AppendLine(string.Format("Create new 3d assemly:\t{0}", d_path));
-                            break;
-                        case 2:
-                            prototype = Resource.Prototype3d;
-                            logFile.AppendLine(string.Format("Create new 3d part:\t{0}", d_path));
-                            break;
-                    }
-
+                    logFile.AppendLine(string.Format("Open prototype:\t\t{0}", prototype));
                     document = Application.NewDocument(prototype);
                     break;
             }
@@ -131,7 +118,6 @@ namespace TFlex.PackageManager.Common
                 return;
             }
 
-            document.BeginChanges(string.Format("Processing file: {0}", fileInfo.Name));
             ProcessingDocument(document, targetDirectory, path);
 
             if (document.Changed)
@@ -354,6 +340,7 @@ namespace TFlex.PackageManager.Common
         {
             string f_name;
             string o_path;
+            string[] a_name = path.Split('\\');
 
             switch (t_mode)
             {
@@ -392,7 +379,14 @@ namespace TFlex.PackageManager.Common
                             translator_2.Export(document, o_path, logFile);
                             break;
                         case ProcessingType.Import:
+                            if (translator_2.ImportMode > 0)
+                            {
+                                f_name = a_name[a_name.Length - 1].Replace(".sat", ".grb");
+                                o_path = Path.Combine(targetDirectory, f_name);
+                                document.SaveAs(o_path);
+                            }
                             translator_2.Import(document, targetDirectory, path, logFile);
+                            logFile.AppendLine(string.Format("Document saved:\t\t{0}", document.FileName));
                             break;
                     }
                     break;
@@ -405,7 +399,14 @@ namespace TFlex.PackageManager.Common
                             translator_6.Export(document, o_path, logFile);
                             break;
                         case ProcessingType.Import:
+                            if (translator_6.ImportMode > 0)
+                            {
+                                f_name = a_name[a_name.Length - 1].Replace(".igs", ".grb");
+                                o_path = Path.Combine(targetDirectory, f_name);
+                                document.SaveAs(o_path);
+                            }
                             translator_6.Import(document, targetDirectory, path, logFile);
+                            logFile.AppendLine(string.Format("Document saved:\t\t{0}", document.FileName));
                             break;
                     }
                     break;
@@ -418,7 +419,14 @@ namespace TFlex.PackageManager.Common
                             translator_7.Export(document, o_path, logFile);
                             break;
                         case ProcessingType.Import:
+                            if (translator_7.ImportMode > 0)
+                            {
+                                f_name = a_name[a_name.Length - 1].Replace(".jt", ".grb");
+                                o_path = Path.Combine(targetDirectory, f_name);
+                                document.SaveAs(o_path);
+                            }
                             translator_7.Import(document, targetDirectory, path, logFile);
+                            logFile.AppendLine(string.Format("Document saved:\t\t{0}", document.FileName));
                             break;
                     }
                     break;
@@ -431,7 +439,14 @@ namespace TFlex.PackageManager.Common
                             translator_10.Export(document, o_path, logFile);
                             break;
                         case ProcessingType.Import:
+                            if (translator_10.ImportMode > 0)
+                            {
+                                f_name = a_name[a_name.Length - 1].Replace(".stp", ".grb");
+                                o_path = Path.Combine(targetDirectory, f_name);
+                                document.SaveAs(o_path);
+                            }
                             translator_10.Import(document, targetDirectory, path, logFile);
+                            logFile.AppendLine(string.Format("Document saved:\t\t{0}", document.FileName));
                             break;
                     }
                     break;
@@ -475,6 +490,8 @@ namespace TFlex.PackageManager.Common
                 types[p.PageType]++;
                 pages.Add(p);
             }
+
+            document.BeginChanges(string.Format("Processing file: {0}", document.FileName));
 
             foreach (var i in pages)
             {
