@@ -13,7 +13,6 @@ using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid;
-using System.Collections.Generic;
 
 namespace TFlex.PackageManager.UI
 {
@@ -65,7 +64,7 @@ namespace TFlex.PackageManager.UI
             treeListView2 = new CustomTreeView();
 
             tvControl2.Content = treeListView2;
-            tvControl2.SearchPattern = "*.grb|*.dwg|*.dxf|*.dxb|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.pdf|*.stp";
+            tvControl2.SearchPattern = "*.grb|*.dwg|*.dxf|*.dxb|*.sat|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.igs|*.jt|*.pdf|*.stp";
 
             options = new Common.Options();
             self = new ConfigurationCollection { TargetDirectory = options.UserDirectory };
@@ -332,7 +331,6 @@ namespace TFlex.PackageManager.UI
             var item = e.OriginalSource as PropertyItem;
             if (item.PropertyName == "ImportMode")
             {
-                importMode = (int)e.NewValue;
                 propertyGrid.PropertyDefinitions.Clear();
                 propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
                 {
