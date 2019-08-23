@@ -13,6 +13,7 @@ using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid;
+using System.Collections.Generic;
 
 namespace TFlex.PackageManager.UI
 {
@@ -36,7 +37,7 @@ namespace TFlex.PackageManager.UI
         private readonly string[] tooltips;
 
         private string key1, key2, key3;
-        private readonly int processing_index = -1;
+        private int importMode;
 
         private System.Threading.Thread thread;
         private bool stoped;
@@ -329,17 +330,15 @@ namespace TFlex.PackageManager.UI
         private void Translator_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
         {
             var item = e.OriginalSource as PropertyItem;
-
-            switch (item.PropertyName)
+            if (item.PropertyName == "ImportMode")
             {
-                case "ImportMode":
-                    propertyGrid.PropertyDefinitions.Clear();
-                    propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
-                    {
-                        TargetProperties = GetTargetProperties((int)e.NewValue),
-                        IsBrowsable = false
-                    });
-                    break;
+                importMode = (int)e.NewValue;
+                propertyGrid.PropertyDefinitions.Clear();
+                propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
+                {
+                    TargetProperties = GetTargetProperties((int)e.NewValue),
+                    IsBrowsable = false
+                });
             }
 
             UpdateStateToControls();
@@ -604,13 +603,22 @@ namespace TFlex.PackageManager.UI
             if (comboBox2.SelectedIndex != -1)
             {
                 key2 = comboBox2.SelectedValue.ToString();
-                propertyGrid.SelectedObject = self.Configurations[key1].Translators[key2];
+                object t_mode = self.Configurations[key1].Translators[key2];
+                propertyGrid.SelectedObject = t_mode;
 
-                uint type = (self.Configurations[key1].Translators[key2] as Translator).Processing;
+                switch (key2)
+                {
+                    case "Acis": importMode = (t_mode as Translator_2).ImportMode; break;
+                    case "Iges": importMode = (t_mode as Translator_6).ImportMode; break;
+                    case "Jt"  : importMode = (t_mode as Translator_7).ImportMode; break;
+                    case "Step": importMode = (t_mode as Translator_10).ImportMode; break;
+                }
+
+                uint p_mode = (t_mode as Translator).Processing;
 
                 comboBox3.Items.Clear();
 
-                switch (type)
+                switch (p_mode)
                 {
                     case 0:
                         comboBox3.Items.Add("SaveAs");
@@ -625,13 +633,9 @@ namespace TFlex.PackageManager.UI
                 }
 
                 if (comboBox3.Items.Count > 0)
-                {
-                    comboBox3.SelectedIndex =
-                        processing_index != -1 &&
-                        processing_index >= comboBox3.Items.Count - 1 ? processing_index : 0;
-                }
+                    comboBox3.SelectedIndex = 0;
 
-                string o_path = self.Configurations[key1].TargetDirectory;
+                var o_path = self.Configurations[key1].TargetDirectory;
                 if (o_path.Length > 0)
                 {
                     tvControl2.TargetDirectory = Path.Combine(o_path, key2);
@@ -713,58 +717,39 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         private void UpdatePropertyDefinitions()
         {
-            switch (key2)
+            propertyGrid.PropertyDefinitions.Clear();
+
+            if (key3 == "Import")
             {
-                case "Acis":
-                case "Iges":
-                case "Jt":
-                case "Step":
-                    if (key3 == "Import")
+                propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
+                {
+                    TargetProperties = GetTargetProperties(importMode),
+                    IsBrowsable = false
+                });
+            }
+            else
+            {
+                propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
+                {
+                    TargetProperties = new[]
                     {
-                        int importMode = 0;
-                        propertyGrid.PropertyDefinitions.Clear();
-
-                        foreach (PropertyItem p in propertyGrid.Properties)
-                        {
-                            if (p.PropertyName == "ImportMode")
-                            {
-                                importMode = (int)p.Value;
-                                break;
-                            }
-                        }
-
-                        propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
-                        {
-                            TargetProperties = GetTargetProperties(importMode),
-                            IsBrowsable = false
-                        });
-                    }
-                    else
-                    {
-                        propertyGrid.PropertyDefinitions.Clear();
-                        propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
-                        {
-                            TargetProperties = new[]
-                            {
-                                "ImportMode",
-                                "Heal",
-                                "CreateAccurateEdges",
-                                "ImportSolidBodies",
-                                "ImportSheetBodies",
-                                "ImportWireBodies",
-                                "ImportMeshBodies",
-                                "ImportHideBodies",
-                                "ImportAnotations",
-                                "ImportOnlyFromActiveFilter",
-                                "Sewing",
-                                "CheckImportGeomerty",
-                                "UpdateProductStructure",
-                                "AddBodyRecordsInProductStructure"
-                            },
-                            IsBrowsable = false
-                        });
-                    }
-                    break;
+                        "ImportMode",
+                        "Heal",
+                        "CreateAccurateEdges",
+                        "ImportSolidBodies",
+                        "ImportSheetBodies",
+                        "ImportWireBodies",
+                        "ImportMeshBodies",
+                        "ImportHideBodies",
+                        "ImportAnotations",
+                        "ImportOnlyFromActiveFilter",
+                        "Sewing",
+                        "CheckImportGeomerty",
+                        "UpdateProductStructure",
+                        "AddBodyRecordsInProductStructure"
+                    },
+                    IsBrowsable = false
+                });
             }
         }
 
