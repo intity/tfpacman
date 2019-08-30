@@ -32,7 +32,6 @@ namespace TFlex.PackageManager.Configuration
         private string [] projectionNames;
         private bool excludeProjection;
         private decimal projectionScale;
-        private bool enableProcessingOfProjections;
 
         private string[] pg_names, pj_names;
         private readonly byte[] objState;
@@ -52,9 +51,9 @@ namespace TFlex.PackageManager.Configuration
             projectionNames  = new string[] { };
             projectionScale  = 99999;
 
-            objState         = new byte[9];
+            objState         = new byte[8];
             pg_types         = new bool[5];
-            b_values         = new bool[4];
+            b_values         = new bool[3];
             m_values         = new decimal[2];
         }
 
@@ -219,26 +218,6 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
         }
-
-        /// <summary>
-        /// Enable the processing of projections.
-        /// </summary>
-        [PropertyOrder(9)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_4")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn2_4")]
-        public bool EnableProcessingOfProjections
-        {
-            get { return enableProcessingOfProjections; }
-            set
-            {
-                if (enableProcessingOfProjections != value)
-                {
-                    enableProcessingOfProjections = value;
-                    OnChanged(9);
-                }
-            }
-        }
         #endregion
 
         #region internal properties
@@ -262,7 +241,6 @@ namespace TFlex.PackageManager.Configuration
             b_values[1] = checkDrawingTemplate;
             b_values[2] = excludeProjection;
             m_values[1] = projectionScale;
-            b_values[3] = enableProcessingOfProjections;
 
             pg_types[0] = pageTypes.Normal;
             pg_types[1] = pageTypes.Workplane;
@@ -334,12 +312,6 @@ namespace TFlex.PackageManager.Configuration
                     else
                         objState[7] = 0;
                     break;
-                case 9:
-                    if (b_values[3] != enableProcessingOfProjections)
-                        objState[8] = 1;
-                    else
-                        objState[8] = 0;
-                    break;
             }
 
             isChanged = false;
@@ -385,9 +357,6 @@ namespace TFlex.PackageManager.Configuration
                 new XElement("parameter",
                     new XAttribute("name", "ProjectionScale"),
                     new XAttribute("value", projectionScale)),
-                new XElement("parameter",
-                    new XAttribute("name", "EnableProcessingOfProjections"),
-                    new XAttribute("value", enableProcessingOfProjections ? "1" : "0")),
                 new XElement("parameter",
                     new XAttribute("name", "FileNameSuffix"),
                     new XAttribute("value", FileNameSuffix)),
@@ -470,12 +439,6 @@ namespace TFlex.PackageManager.Configuration
                             NumberStyles.Float, CultureInfo.InvariantCulture);
                     else
                         value = projectionScale.ToString(CultureInfo.InvariantCulture);
-                    break;
-                case "EnableProcessingOfProjections":
-                    if (flag == 0)
-                        enableProcessingOfProjections = value == "1";
-                    else
-                        value = enableProcessingOfProjections ? "1" : "0";
                     break;
             }
             element.Attribute("value").Value = value;

@@ -181,8 +181,4 @@
     <value>Projektions maßstab</value>
     <comment>Bestimmen sie den maßstab der projektion.</comment>
   </data>
-  <data name="dn2_4" xml:space="preserve">
-    <value>Aktivieren sie die projektions verarbeitung</value>
-    <comment>Enthält einen projektions filter im verarbeitungs pool.</comment>
-  </data>
 </root>

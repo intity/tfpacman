@@ -181,8 +181,4 @@
     <value>Projection scale</value>
     <comment>The projection scale value.</comment>
   </data>
-  <data name="dn2_4" xml:space="preserve">
-    <value>Enable processing of projections</value>
-    <comment>Is enable a projection filter in the processing pool.</comment>
-  </data>
 </root>

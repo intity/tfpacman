@@ -181,8 +181,4 @@
     <value>Масштаб проекции</value>
     <comment>Определение масштаба проекции.</comment>
   </data>
-  <data name="dn2_4" xml:space="preserve">
-    <value>Включить обработку проекции</value>
-    <comment>Включает в пул обработки фильтр проекции.</comment>
-  </data>
 </root>

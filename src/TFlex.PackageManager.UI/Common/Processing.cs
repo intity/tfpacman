@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.Model.Model3D;
 using TFlex.PackageManager.Configuration;
@@ -461,8 +461,9 @@ namespace TFlex.PackageManager.Common
         private void ProcessingPages(Document document, string targetDirectory)
         {
             int count = 0;
+            uint flags;
             string path = null;
-            Dictionary<Page, string> processingPages = new Dictionary<Page, string>();
+            Dictionary<Page, string> o_pages = new Dictionary<Page, string>();
             Dictionary<PageType, int> types = new Dictionary<PageType, int>
             {
                 { PageType.Normal,          0 },
@@ -475,8 +476,7 @@ namespace TFlex.PackageManager.Common
 
             foreach (var p in document.GetPages())
             {
-                uint flags = 0x0000;
-
+                flags = 0x0000;
                 flags |= (uint)(translator_0.PageNames.Contains(p.Name) ? 0x0001 : 0x0000);
                 flags |= (uint)(translator_0.ExcludePage                ? 0x0002 : 0x0000);
                 flags |= (uint)(PageTypeExists(p)                       ? 0x0004 : 0x0000);
@@ -501,21 +501,17 @@ namespace TFlex.PackageManager.Common
 
                     if (t_mode == TranslatorType.Document)
                     {
-                        RegenerateOptions ro = new RegenerateOptions
-                        {
-                            Full = true
-                        };
-                        document.Regenerate(ro);
+                        document.Regenerate(new RegenerateOptions { Full = true });
                     }
                 }
 
-                logFile.AppendLine(string.Format("Page name:\t\t{0}",  i.Name));
-                logFile.AppendLine(string.Format("Page type:\t\t{0}",  i.PageType));
-                logFile.AppendLine(string.Format("Page scale:\t\t{0}", i.Scale.Value));
+                logFile.AppendLine(string.Format(CultureInfo.InvariantCulture, 
+                    "->Page:\t\t\t[name: {0}, scale: {1}, type: {2}]", 
+                    i.Name, i.Scale.Value, i.PageType));
 
                 //Debug.WriteLine(string.Format("Page name: {0}, flags: {1:X4}", i.Name, flags));
 
-                if (translator_0.EnableProcessingOfProjections)
+                if (translator_0.ProjectionScale != 99999)
                 {
                     ProcessingProjections(document, i.Name);
                 }
@@ -533,23 +529,23 @@ namespace TFlex.PackageManager.Common
                         path += "." + translator_0.TargetExtension.ToLower();
                 }
 
-                processingPages.Add(i, path);
+                o_pages.Add(i, path);
             }
 
             switch (t_mode)
             {
                 case TranslatorType.Acad:
-                    translator_1.Export(document, processingPages, logFile);
+                    translator_1.Export(document, o_pages, logFile);
                     break;
                 case TranslatorType.Bitmap:
-                    translator_3.Export(document, processingPages, logFile);
+                    translator_3.Export(document, o_pages, logFile);
                     break;
                 case TranslatorType.Pdf:
-                    translator_9.Export(document, processingPages, logFile);
+                    translator_9.Export(document, o_pages, logFile);
                     break;
             }
 
-            logFile.AppendLine(string.Format("Total pages:\t\t{0}", processingPages.Count));
+            logFile.AppendLine(string.Format("Total pages:\t\t{0}", o_pages.Count));
         }
 
         /// <summary>
@@ -560,39 +556,36 @@ namespace TFlex.PackageManager.Common
         private void ProcessingProjections(Document document, string pageName)
         {
             uint flags;
-            double scale;
-            RegenerateOptions ro;
 
             foreach (var i in document.GetProjections().Where(p => p.Page.Name == pageName))
             {
                 flags = 0x0000;
+                flags |= (uint)(translator_0.ProjectionNames.Length > 0       ? 0x0001 : 0x0000);
+                flags |= (uint)(translator_0.ProjectionNames.Contains(i.Name) ? 0x0002 : 0x0000);
+                flags |= (uint)(translator_0.ExcludeProjection                ? 0x0004 : 0x0000);
 
-                flags |= (uint)(translator_0.ProjectionNames.Contains(i.Name) ? 0x0001 : 0x0000);
-                flags |= (uint)(translator_0.ExcludeProjection                ? 0x0002 : 0x0000);
-                flags |= (uint)(translator_0.EnableProcessingOfProjections    ? 0x0004 : 0x0000);
-
-                if (flags == 0x0000 || flags == 0x0007)
+                if (!(flags == 0x0000 || flags == 0x0003))
                     continue;
 
-                if (i.Scale.Value != (double)translator_0.ProjectionScale)
-                {
-                    scale = translator_0.ProjectionScale == 99999 
-                        ? Parameter.Default().Value 
-                        : (double)translator_0.ProjectionScale;
-                    i.Scale = new Parameter(scale);
+                if (i.Scale.Value == (double)translator_0.ProjectionScale)
+                    continue;
 
-                    if (t_mode == TranslatorType.Document)
-                    {
-                        ro = new RegenerateOptions
-                        {
-                            Projections = true
-                        };
-                        document.Regenerate(ro);
-                    }
+                if (i.Scale.Value == Parameter.Default().Value && (double)translator_0.ProjectionScale == i.PageScale)
+                    continue;
+
+                double scale = (double)translator_0.ProjectionScale == i.PageScale
+                    ? Parameter.Default().Value 
+                    : (double)translator_0.ProjectionScale;
+
+                i.Scale = new Parameter(scale);
+
+                if (t_mode == TranslatorType.Document)
+                {
+                    document.Regenerate(new RegenerateOptions { Projections = true });
                 }
 
-                logFile.AppendLine(string.Format("Projection name:\t{0}", i.Name));
-                logFile.AppendLine(string.Format("Projection scale:\t{0}", i.Scale.Value));
+                logFile.AppendLine(string.Format(CultureInfo.InvariantCulture, 
+                    "-->Projection:\t\t[name: {0}, scale: {1}]", i.Name, scale));
 
                 //Debug.WriteLine(string.Format("Projection name: {0}, flags: {1:X4}", i.Name, flags));
             }
