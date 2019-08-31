@@ -477,11 +477,18 @@ namespace TFlex.PackageManager.Common
             foreach (var p in document.GetPages())
             {
                 flags = 0x0000;
-                flags |= (uint)(translator_0.PageNames.Contains(p.Name) ? 0x0001 : 0x0000);
-                flags |= (uint)(translator_0.ExcludePage                ? 0x0002 : 0x0000);
-                flags |= (uint)(PageTypeExists(p)                       ? 0x0004 : 0x0000);
+                flags |= (uint)(translator_0.PageNames.Length > 0       ? 0x0001 : 0x0000);
+                flags |= (uint)(translator_0.PageNames.Contains(p.Name) ? 0x0002 : 0x0000);
+                flags |= (uint)(translator_0.ExcludePage                ? 0x0004 : 0x0000);
+                flags |= (uint)(PageTypeExists(p)                       ? 0x0008 : 0x0000);
 
-                if (!(flags == 0x0004 || flags == 0x0005))
+                if (flags == 0x0000 || 
+                    flags == 0x0001 || 
+                    flags == 0x0003 || 
+                    flags == 0x0005 || 
+                    flags == 0x0007 || 
+                    flags == 0x0009 || 
+                    flags == 0x000F)
                     continue;
 
                 if (translator_0.CheckDrawingTemplate && !DrawingTemplateExists(document, p))
@@ -518,15 +525,28 @@ namespace TFlex.PackageManager.Common
 
                 if (t_mode != TranslatorType.Document)
                 {
+                    string suffix = string.Empty;
+                    string extension = "." + translator_0.TargetExtension.ToLower();
                     path = targetDirectory + "\\" + GetOutputFileName(document, i);
+
+                    switch (i.PageType)
+                    {
+                        case PageType.Normal:          suffix = "_T0"; break;
+                        case PageType.Workplane:       suffix = "_T1"; break;
+                        case PageType.Auxiliary:       suffix = "_T3"; break;
+                        case PageType.Text:            suffix = "_T4"; break;
+                        case PageType.BillOfMaterials: suffix = "_T5"; break;
+                    }
 
                     if (types[i.PageType] > 1)
                     {
-                        path += "_" + (count + 1).ToString() + "." + translator_0.TargetExtension.ToLower();
+                        path += "_" + (count + 1).ToString() + extension;
                         count++;
                     }
+                    else if (o_pages.ContainsValue(path + extension))
+                        path += suffix + extension;
                     else
-                        path += "." + translator_0.TargetExtension.ToLower();
+                        path += extension;
                 }
 
                 o_pages.Add(i, path);
@@ -564,7 +584,7 @@ namespace TFlex.PackageManager.Common
                 flags |= (uint)(translator_0.ProjectionNames.Contains(i.Name) ? 0x0002 : 0x0000);
                 flags |= (uint)(translator_0.ExcludeProjection                ? 0x0004 : 0x0000);
 
-                if (!(flags == 0x0000 || flags == 0x0003))
+                if (flags == 0x0001 || flags == 0x0007)
                     continue;
 
                 if (i.Scale.Value == (double)translator_0.ProjectionScale)
