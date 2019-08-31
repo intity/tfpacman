@@ -60,7 +60,7 @@ namespace TFlex.PackageManager.Configuration
         #region event handlers
         private void PageTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnChanged(5);
+            OnChanged(4);
         }
         #endregion
 
