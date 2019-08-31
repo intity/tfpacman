@@ -361,7 +361,7 @@ namespace TFlex.PackageManager.Common
                     if (document.SaveAs(o_path))
                     {
                         logFile.AppendLine(string.Format("Document saved:\t\t{0}", o_path));
-                        package.SetAttributes(f_name, path, o_path);
+                        package.SetAttributes(path, o_path);
                         package.ReplaceLink(path, o_path);
                         ProcessingPages(document, n_path);
                     }

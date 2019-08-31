@@ -46,10 +46,9 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Set attributes to XML-data.
         /// </summary>
-        /// <param name="name">File name.</param>
         /// <param name="i_path">Input file name path.</param>
         /// <param name="o_path">Output file name path.</param>
-        internal void SetAttributes(string name, string i_path, string o_path)
+        internal void SetAttributes(string i_path, string o_path)
         {
             var id = ConvertPathToID(i_path);
             var ip = i_path.Replace(header.InitialCatalog + "\\", "");
@@ -68,7 +67,6 @@ namespace TFlex.PackageManager.Configuration
                 File.Delete(old_path);
             }
 
-            element.Attribute("name").Value = name;
             element.Attribute("path").Value = op;
 
             data.Save(path);
@@ -95,7 +93,8 @@ namespace TFlex.PackageManager.Configuration
 
                 if (link != null)
                 {
-                    return e.Attribute("name").Value;
+                    string[] a_path = e.Attribute("path").Value.Split('\\');
+                    return a_path[a_path.Length - 1].Replace(".grb", "");
                 }
             }
 
@@ -209,12 +208,10 @@ namespace TFlex.PackageManager.Configuration
         {
             foreach (var e in si)
             {
-                string[] a_group = e.Split('\\');
                 string[] a_links = TFlex.Application.GetDocumentExternalFileLinks(e, true, false, true);
                 XElement e_links = new XElement("links");
                 XElement element = new XElement("element", 
                     new XAttribute("id", ConvertPathToID(e)), 
-                    new XAttribute("name", a_group[a_group.Length - 1].Replace(".grb", "")), 
                     new XAttribute("path", e.Replace(header.InitialCatalog + "\\", "")));
                 elms.Add(element);
 
@@ -222,7 +219,6 @@ namespace TFlex.PackageManager.Configuration
                 {
                     if (si.Contains(i))
                     {
-                        string ip = i.Replace(header.InitialCatalog + "\\", "");
                         e_links.Add(new XElement("link", new XAttribute("id", ConvertPathToID(i))));
                     }
                 }
