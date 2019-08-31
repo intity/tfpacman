@@ -17,8 +17,8 @@ namespace TFlex.PackageManager.Configuration
         private readonly Header header;
         private readonly string mode;
         private readonly string path;
-        private readonly XDocument data;
-        private readonly XElement elms;
+        private XDocument data;
+        private XElement elms;
         #endregion
 
         public Package(Header header, string[] si, TranslatorType t_mode)
@@ -27,28 +27,20 @@ namespace TFlex.PackageManager.Configuration
 
             mode = Enum.GetName(typeof(TranslatorType), t_mode);
             path = Path.Combine(header.TargetDirectory, mode, "package.xml");
-            elms = new XElement("elements");
-            data = new XDocument(new XDeclaration("1.0", "utf-8", null), 
-                   new XElement("package", new XAttribute("type", mode), elms));
-
-            if (File.Exists(path))
-                File.Delete(path);
 
             switch (t_mode)
             {
                 case TranslatorType.Document: InitPackage_0(si); break;
             }
-
-            data.Save(path);
         }
 
         #region internal methods
         /// <summary>
-        /// Set attributes to XML-data.
+        /// Set metadata to XML.
         /// </summary>
         /// <param name="i_path">Input file name path.</param>
         /// <param name="o_path">Output file name path.</param>
-        internal void SetAttributes(string i_path, string o_path)
+        internal void SetMetadata(string i_path, string o_path)
         {
             var id = ConvertPathToID(i_path);
             var ip = i_path.Replace(header.InitialCatalog + "\\", "");
@@ -59,7 +51,15 @@ namespace TFlex.PackageManager.Configuration
                 .FirstOrDefault();
 
             if (element == null)
+            {
+                element = new XElement("element", 
+                    new XAttribute("id", id), 
+                    new XAttribute("path", op), 
+                        GetLinksElement(i_path));
+                elms.Add(element);
+                data.Save(path);
                 return;
+            }
 
             var old_path = element.Attribute("path").Value;
             if (old_path != i_path && File.Exists(old_path))
@@ -68,7 +68,6 @@ namespace TFlex.PackageManager.Configuration
             }
 
             element.Attribute("path").Value = op;
-
             data.Save(path);
         }
 
@@ -201,31 +200,52 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
+        /// Get the links element for XML data.
+        /// </summary>
+        /// <param name="path">Document file name path.</param>
+        /// <returns>The links element data.</returns>
+        private XElement GetLinksElement(string path)
+        {
+            string[] a_links = TFlex.Application.GetDocumentExternalFileLinks(path, true, false, true);
+            XElement e_links = new XElement("links");
+
+            foreach (var i in a_links)
+            {
+                e_links.Add(new XElement("link", new XAttribute("id", ConvertPathToID(i))));
+            }
+
+            return e_links.Elements().Count() > 0 ? e_links : null;
+        }
+
+        /// <summary>
         /// Initialize package Document.
         /// </summary>
         /// <param name="si">Selected paths to items.</param>
         private void InitPackage_0(string[] si)
         {
+            if (File.Exists(path))
+            {
+                data = XDocument.Load(path);
+                elms = data.Element("package").Element("elements");
+                return;
+            }
+            else
+            {
+                elms = new XElement("elements");
+                data = new XDocument(new XDeclaration("1.0", "utf-8", null),
+                    new XElement("package", new XAttribute("type", mode), elms));
+            }
+
             foreach (var e in si)
             {
-                string[] a_links = TFlex.Application.GetDocumentExternalFileLinks(e, true, false, true);
-                XElement e_links = new XElement("links");
                 XElement element = new XElement("element", 
                     new XAttribute("id", ConvertPathToID(e)), 
-                    new XAttribute("path", e.Replace(header.InitialCatalog + "\\", "")));
+                    new XAttribute("path", e.Replace(header.InitialCatalog + "\\", "")), 
+                        GetLinksElement(e));
                 elms.Add(element);
-
-                foreach (var i in a_links)
-                {
-                    if (si.Contains(i))
-                    {
-                        e_links.Add(new XElement("link", new XAttribute("id", ConvertPathToID(i))));
-                    }
-                }
-
-                if (e_links.Elements().Count() > 0)
-                    element.Add(e_links);
             }
+
+            data.Save(path);
         }
         #endregion
     }
