@@ -165,6 +165,10 @@
     <value>Bill of materials</value>
     <comment>Includes this page type in the processing pool.</comment>
   </data>
+  <data name="dn1_4_6" xml:space="preserve">
+    <value>Electric circuit</value>
+    <comment>Includes this page type in the processing pool.</comment>
+  </data>
   <data name="dn1_5" xml:space="preserve">
     <value>Check drawing template</value>
     <comment>Check the drawing template.</comment>

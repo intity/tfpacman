@@ -324,7 +324,8 @@ namespace TFlex.PackageManager.Common
                 { PageType.Workplane,       translator_0.PageTypes.Workplane },
                 { PageType.Auxiliary,       translator_0.PageTypes.Auxiliary },
                 { PageType.Text,            translator_0.PageTypes.Text },
-                { PageType.BillOfMaterials, translator_0.PageTypes.BillOfMaterials }
+                { PageType.BillOfMaterials, translator_0.PageTypes.BillOfMaterials },
+                { PageType.Circuit,         translator_0.PageTypes.Circuit }
             };
 
             return page.PageType != PageType.Dialog && types[page.PageType];
@@ -470,7 +471,8 @@ namespace TFlex.PackageManager.Common
                 { PageType.Workplane,       0 },
                 { PageType.Auxiliary,       0 },
                 { PageType.Text,            0 },
-                { PageType.BillOfMaterials, 0 }
+                { PageType.BillOfMaterials, 0 },
+                { PageType.Circuit,         0 }
             };
             List<Page> pages = new List<Page>();
 
@@ -536,6 +538,7 @@ namespace TFlex.PackageManager.Common
                         case PageType.Auxiliary:       suffix = "_T3"; break;
                         case PageType.Text:            suffix = "_T4"; break;
                         case PageType.BillOfMaterials: suffix = "_T5"; break;
+                        case PageType.Circuit:         suffix = "_T6"; break;
                     }
 
                     if (types[i.PageType] > 1)

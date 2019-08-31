@@ -52,7 +52,7 @@ namespace TFlex.PackageManager.Configuration
             projectionScale  = 99999;
 
             objState         = new byte[8];
-            pg_types         = new bool[5];
+            pg_types         = new bool[6];
             b_values         = new bool[3];
             m_values         = new decimal[2];
         }
@@ -247,6 +247,7 @@ namespace TFlex.PackageManager.Configuration
             pg_types[2] = pageTypes.Auxiliary;
             pg_types[3] = pageTypes.Text;
             pg_types[4] = pageTypes.BillOfMaterials;
+            pg_types[5] = pageTypes.Circuit;
 
             for (int i = 0; i < objState.Length; i++)
                 objState[i] = 0;
@@ -283,7 +284,8 @@ namespace TFlex.PackageManager.Configuration
                         pg_types[1] != pageTypes.Workplane ||
                         pg_types[2] != pageTypes.Auxiliary ||
                         pg_types[3] != pageTypes.Text ||
-                        pg_types[4] != pageTypes.BillOfMaterials)
+                        pg_types[4] != pageTypes.BillOfMaterials || 
+                        pg_types[5] != pageTypes.Circuit)
                         objState[3] = 1;
                     else
                         objState[3] = 0;
@@ -407,6 +409,7 @@ namespace TFlex.PackageManager.Configuration
                         pageTypes.Auxiliary       = values[2] == "01";
                         pageTypes.Text            = values[3] == "01";
                         pageTypes.BillOfMaterials = values[4] == "01";
+                        pageTypes.Circuit         = values[5] == "01";
                     }
                     else
                         value = pageTypes.ToString();
@@ -457,6 +460,7 @@ namespace TFlex.PackageManager.Configuration
         private bool auxiliary;
         private bool text;
         private bool billOfMaterials;
+        private bool circuit;
         #endregion
 
         #region properties
@@ -539,18 +543,35 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
         }
+
+        [PropertyOrder(6)]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_6")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_6")]
+        public bool Circuit
+        {
+            get { return circuit; }
+            set
+            {
+                if (circuit != value)
+                {
+                    circuit = value;
+                    OnPropertyChanged("Circuit");
+                }
+            }
+        }
         #endregion
 
         #region methods
         public override string ToString()
         {
-            string[] values = new string[5];
+            string[] values = new string[6];
 
             values[0] = normal          ? "01" : "00";
             values[1] = workplane       ? "01" : "00";
             values[2] = auxiliary       ? "01" : "00";
             values[3] = text            ? "01" : "00";
             values[4] = billOfMaterials ? "01" : "00";
+            values[5] = circuit         ? "01" : "00";
 
             return values.ToString(" ");
         }
