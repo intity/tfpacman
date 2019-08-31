@@ -118,16 +118,6 @@ namespace TFlex.PackageManager.Common
         /// Prototype root catalog path.
         /// </summary>
         public static string PrototypePath { get; private set; }
-
-        /// <summary>
-        /// Path to prototype 3D part.
-        /// </summary>
-        public static string Prototype3d { get; private set; }
-
-        /// <summary>
-        /// Path to prototype 3D assembly.
-        /// </summary>
-        public static string Prototype3dAssembly { get; private set; }
         #endregion
 
         #region methods
@@ -172,12 +162,6 @@ namespace TFlex.PackageManager.Common
                     {
                         case "PrototypePath":
                             PrototypePath = (string)subKey.GetValue(i);
-                            break;
-                        case "Prototype3d_1":
-                            Prototype3d = (string)subKey.GetValue(i);
-                            break;
-                        case "Prototype3dAssembly_1":
-                            Prototype3dAssembly = (string)subKey.GetValue(i);
                             break;
                     }
                 }

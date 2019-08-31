@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TFlex.Configuration;
 using TFlex.Model;
 using TFlex.Model.Model3D;
 using TFlex.PackageManager.Configuration;
@@ -103,9 +104,13 @@ namespace TFlex.PackageManager.Common
                     logFile.AppendLine(string.Format("Open document:\t\t{0}", path));
                     break;
                 case ProcessingType.Import:
-                    string prototype = importMode == 2 
-                        ? Resource.Prototype3d 
-                        : Resource.Prototype3dAssembly;
+                    string prototype = null;
+                    using (Files files = new Files())
+                    {
+                        prototype = importMode == 2
+                            ? files.Prototype3DName
+                            : files.Prototype3DAssemblyName;
+                    }
 
                     logFile.AppendLine(string.Format("Open prototype:\t\t{0}", prototype));
                     document = Application.NewDocument(prototype);
