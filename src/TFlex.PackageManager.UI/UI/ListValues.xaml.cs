@@ -9,6 +9,9 @@ namespace TFlex.PackageManager.UI
     /// </summary>
     public partial class ListValues : Window
     {
+        string value1;
+        bool   value2;
+
         public ListValues()
         {
             InitializeComponent();
@@ -25,7 +28,7 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         public string MultilineText
         {
-            get { return textBox.Text; }
+            get => textBox.Text;
             set
             {
                 if (textBox.Text != value)
@@ -38,7 +41,7 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         public bool ExcludeFromSeach
         {
-            get { return checkBox.IsChecked ?? false; }
+            get => checkBox.IsChecked ?? false;
             set
             {
                 if (checkBox.IsChecked != value)
@@ -51,12 +54,17 @@ namespace TFlex.PackageManager.UI
         {
             if (textBox.Text.Length == 0)
                 checkBox.IsEnabled = false;
+
+            value1 = MultilineText;
+            value2 = ExcludeFromSeach;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (textBox.Text.Length > 0)
+            {
                 checkBox.IsEnabled = true;
+            }
             else
             {
                 checkBox.IsChecked = false;
@@ -66,7 +74,7 @@ namespace TFlex.PackageManager.UI
 
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            DialogResult = value1 != MultilineText || value2 != ExcludeFromSeach;
         } // OK
 
         private void Button2_Click(object sender, RoutedEventArgs e)

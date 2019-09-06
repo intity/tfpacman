@@ -2,11 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing.Design;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -20,26 +23,28 @@ namespace TFlex.PackageManager.Configuration
     public class Category_3 : Translator, INotifyDataErrorInfo
     {
         #region private fields
-        private string targetExtension;
-        private string fileNameSuffix;
-        private string templateFileName;
+        string targetExtension;
+        string fileNameSuffix;
+        string templateFileName;
 
-        private readonly byte[] objState;
-        private readonly string[] s_values;
-        private readonly string[] error_messages;
-        private readonly Dictionary<string, List<string>> objErrors;
+        readonly string[] error_messages;
+        readonly Dictionary<string, List<string>> objErrors;
 
-        private bool isChanged;
+        XAttribute data_3_1;
+        XAttribute data_3_2;
+        XAttribute data_3_3;
         #endregion
 
-        public Category_3()
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="extension">Target extension the file.</param>
+        public Category_3(string extension)
         {
-            targetExtension  = string.Empty;
+            targetExtension  = extension;
             fileNameSuffix   = string.Empty;
             templateFileName = string.Empty;
 
-            objState         = new byte[3];
-            s_values         = new string[3];
             objErrors        = new Dictionary<string, List<string>>();
             error_messages   = new string[]
             {
@@ -49,76 +54,6 @@ namespace TFlex.PackageManager.Configuration
         }
 
         #region public properties
-        /// <summary>
-        /// The file name suffix.
-        /// </summary>
-        [PropertyOrder(13)]
-        [CustomCategory(Resource.CATEGIRY_3, "category3")]
-        [CustomDisplayName(Resource.CATEGIRY_3, "dn3_2")]
-        [CustomDescription(Resource.CATEGIRY_3, "dn3_2")]
-        public string FileNameSuffix
-        {
-            get { return fileNameSuffix; }
-            set
-            {
-                if (fileNameSuffix != value)
-                {
-                    fileNameSuffix = value;
-                    char[] pattern = Path.GetInvalidFileNameChars();
-                    string error = string.Format(error_messages[0], pattern.ToString(""));
-
-                    if (IsPathValid(value, pattern))
-                    {
-                        RemoveError("FileNameSuffix", error);
-                    }
-                    else
-                    {
-                        AddError("FileNameSuffix", error);
-                    }
-
-                    OnChanged(13);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Template name of the file definition.
-        /// </summary>
-        [PropertyOrder(14)]
-        [CustomCategory(Resource.CATEGIRY_3, "category3")]
-        [CustomDisplayName(Resource.CATEGIRY_3, "dn3_3")]
-        [CustomDescription(Resource.CATEGIRY_3, "dn3_3")]
-        public string TemplateFileName
-        {
-            get { return templateFileName; }
-            set
-            {
-                if (templateFileName != value)
-                {
-                    templateFileName = value;
-                    string path = value;
-                    char[] pattern = Path.GetInvalidFileNameChars();
-                    string error = string.Format(error_messages[1], pattern.ToString(""));
-
-                    foreach (Match i in Regex.Matches(value, @"\{(.*?)\}"))
-                    {
-                        path = path.Replace(i.Value, "");
-                    }
-
-                    if (IsPathValid(path, pattern))
-                    {
-                        RemoveError("TemplateFileName", error);
-                    }
-                    else
-                    {
-                        AddError("TemplateFileName", error);
-                    }
-
-                    OnChanged(14);
-                }
-            }
-        }
-
         /// <summary>
         /// The target extension.
         /// </summary>
@@ -131,76 +66,136 @@ namespace TFlex.PackageManager.Configuration
                 if (targetExtension != value)
                 {
                     targetExtension = value;
-                    OnChanged(15);
+                    data_3_1.Value = value;
+
+                    OnPropertyChanged("TargetExtension");
                 }
             }
         }
-        #endregion
 
-        #region internal properties
-        internal override bool IsChanged
+        /// <summary>
+        /// The file name suffix.
+        /// </summary>
+        [PropertyOrder(13)]
+        [CustomCategory(Resource.CATEGIRY_3, "category3")]
+        [CustomDisplayName(Resource.CATEGIRY_3, "dn3_2")]
+        [CustomDescription(Resource.CATEGIRY_3, "dn3_2")]
+        [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
+        public string FileNameSuffix
         {
-            get { return (isChanged); }
+            get { return fileNameSuffix; }
+            set
+            {
+                if (fileNameSuffix != value)
+                {
+                    var name = "FileNameSuffix";
+
+                    fileNameSuffix = value;
+                    data_3_2.Value = value;
+
+                    char[] pattern = Path.GetInvalidFileNameChars();
+                    string error = string
+                        .Format(error_messages[0], pattern.ToString(""));
+
+                    if (IsPathValid(value, pattern))
+                    {
+                        RemoveError(name, error);
+                    }
+                    else
+                    {
+                        AddError(name, error);
+                    }
+
+                    OnPropertyChanged(name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Template name of the file definition.
+        /// </summary>
+        [PropertyOrder(14)]
+        [CustomCategory(Resource.CATEGIRY_3, "category3")]
+        [CustomDisplayName(Resource.CATEGIRY_3, "dn3_3")]
+        [CustomDescription(Resource.CATEGIRY_3, "dn3_3")]
+        [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
+        public string TemplateFileName
+        {
+            get { return templateFileName; }
+            set
+            {
+                if (templateFileName != value)
+                {
+                    var name = "TemplateFileName";
+
+                    templateFileName = value;
+                    data_3_3.Value = value;
+
+                    string path = value;
+                    char[] pattern = Path.GetInvalidFileNameChars();
+                    string error = string
+                        .Format(error_messages[1], pattern.ToString(""));
+
+                    foreach (Match i in Regex.Matches(value, @"\{(.*?)\}"))
+                    {
+                        path = path.Replace(i.Value, "");
+                    }
+
+                    if (IsPathValid(path, pattern))
+                    {
+                        RemoveError(name, error);
+                    }
+                    else
+                    {
+                        AddError(name, error);
+                    }
+
+                    OnPropertyChanged(name);
+                }
+            }
         }
         #endregion
 
         #region internal methods
-        internal override void OnLoaded()
+        internal override XElement NewTranslator()
         {
-            s_values[0] = fileNameSuffix;
-            s_values[1] = templateFileName;
-            s_values[2] = targetExtension;
+            XElement data = base.NewTranslator();
 
-            for (int i = 0; i < objState.Length; i++)
-                objState[i] = 0;
+            data_3_1 = new XAttribute("value", TargetExtension);
+            data_3_2 = new XAttribute("value", FileNameSuffix);
+            data_3_3 = new XAttribute("value", TemplateFileName);
 
-            base.OnLoaded();
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "TargetExtension"),
+                data_3_1));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "FileNameSuffix"),
+                data_3_2));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "TemplateFileName"),
+                data_3_3));
+
+            return data;
         }
 
-        internal override void OnChanged(int index)
+        internal override void LoadParameter(XElement element)
         {
-            if (!IsLoaded) return;
-
-            switch (index)
-            {
-                case 13: objState[0] = (byte)(s_values[0] != fileNameSuffix   ? 1 : 0); break;
-                case 14: objState[1] = (byte)(s_values[1] != templateFileName ? 1 : 0); break;
-                case 15: objState[2] = (byte)(s_values[2] != targetExtension  ? 1 : 0); break;
-            }
-
-            isChanged = false;
-
-            foreach (var i in objState)
-            {
-                if (i > 0)
-                {
-                    isChanged = true;
-                    break;
-                }
-            }
-
-            base.OnChanged(index);
-        }
-
-        internal override void TranslatorTask(XElement element, int flag)
-        {
-            string value = element.Attribute("value").Value;
+            var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
+                case "TargetExtension":
+                    targetExtension = a.Value;
+                    data_3_1 = a;
+                    break;
                 case "FileNameSuffix":
-                    if (flag == 0)
-                        fileNameSuffix = value;
-                    else
-                        value = fileNameSuffix;
+                    fileNameSuffix = a.Value;
+                    data_3_2 = a;
                     break;
                 case "TemplateFileName":
-                    if (flag == 0)
-                        templateFileName = value;
-                    else
-                        value = templateFileName;
+                    templateFileName = a.Value;
+                    data_3_3 = a;
                     break;
             }
-            element.Attribute("value").Value = value;
         }
         #endregion
 

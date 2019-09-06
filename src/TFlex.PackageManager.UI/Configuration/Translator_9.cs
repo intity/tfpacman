@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing.Design;
 using System.Linq;
 using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -19,22 +21,20 @@ namespace TFlex.PackageManager.Configuration
     public class Translator_9 : Translator_0
     {
         #region private field
-        private bool export3dModel;
-        private bool layers;
-        private bool combinePages;
+        bool export3dModel;
+        bool layers;
+        bool combinePages;
 
-        private readonly byte[] objState;
-        private readonly bool[] b_values;
-        private bool isChanged;
+        XAttribute data_4_1;
+        XAttribute data_4_2;
+        XAttribute data_4_3;
         #endregion
 
-        public Translator_9()
-        {
-            TargetExtension = "PDF";
-
-            objState        = new byte[3];
-            b_values        = new bool[3];
-        }
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="ext">Target extension the file.</param>
+        public Translator_9(string ext = "PDF") : base (ext) { }
 
         #region public properies
         /// <summary>
@@ -44,15 +44,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_9, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_1")]
         [CustomDescription(Resource.TRANSLATOR_9, "dn4_1")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Export3dModel
         {
-            get { return export3dModel; }
+            get => export3dModel;
             set
             {
                 if (export3dModel != value)
                 {
                     export3dModel = value;
-                    OnChanged(16);
+                    data_4_1.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("Export3dModel");
                 }
             }
         }
@@ -64,15 +67,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_9, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_2")]
         [CustomDescription(Resource.TRANSLATOR_9, "dn4_2")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Layers
         {
-            get { return layers; }
+            get => layers;
             set
             {
                 if (layers != value)
                 {
                     layers = value;
-                    OnChanged(17);
+                    data_4_2.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("Layers");
                 }
             }
         }
@@ -84,84 +90,44 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_9, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_9, "dn4_3")]
         [CustomDescription(Resource.TRANSLATOR_9, "dn4_3")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool CombinePages
         {
-            get { return combinePages; }
+            get => combinePages;
             set
             {
                 if (combinePages != value)
                 {
                     combinePages = value;
-                    OnChanged(18);
+                    data_4_3.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("CombinePages");
                 }
             }
         }
         #endregion
 
         #region internal properties
+        internal override TranslatorType Mode => TranslatorType.Pdf;
+
         internal override uint Processing
         {
-            get { return (uint)ProcessingType.Export; }
-        }
-
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
+            get => (uint)ProcessingMode.Export;
         }
         #endregion
 
         #region internals methods
-        internal override void OnLoaded()
-        {
-            b_values[0] = export3dModel;
-            b_values[1] = layers;
-            b_values[2] = combinePages;
-
-            for (int i = 0; i < objState.Length; i++)
-                objState[i] = 0;
-
-            base.OnLoaded();
-        }
-
-        internal override void OnChanged(int index)
-        {
-            if (!IsLoaded) return;
-
-            switch (index)
-            {
-                case 16: objState[0] = (byte)(b_values[0] != export3dModel ? 1 : 0); break;
-                case 17: objState[1] = (byte)(b_values[1] != layers        ? 1 : 0); break;
-                case 18: objState[2] = (byte)(b_values[2] != combinePages  ? 1 : 0); break;
-            }
-
-            isChanged = false;
-
-            foreach (var i in objState)
-            {
-                if (i > 0)
-                {
-                    isChanged = true;
-                    break;
-                }
-            }
-
-            base.OnChanged(index);
-        }
-
         internal override void Export(Document document, Dictionary<Page, string> pages, LogFile logFile)
         {
             ExportToPDF export = new ExportToPDF(document)
             {
                 IsSelectPagesDialogEnabled = false,
                 OpenExportFile             = false,
-                Export3DModel              = export3dModel,
-                Layers                     = layers
+                Export3DModel              = Export3dModel,
+                Layers                     = Layers
             };
 
-            if (combinePages)
+            if (CombinePages)
             {
                 string path = pages.Values.First();
 
@@ -193,59 +159,47 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
+        internal override XElement NewTranslator()
         {
-            base.AppendTranslatorToXml(parent, translator);
+            XElement data = base.NewTranslator();
 
-            string value = Enum.GetName(typeof(TranslatorType), translator);
-            parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
-                new XElement("parameter",
-                    new XAttribute("name", "FileNameSuffix"),
-                    new XAttribute("value", FileNameSuffix)),
-                new XElement("parameter",
-                    new XAttribute("name", "TemplateFileName"),
-                    new XAttribute("value", TemplateFileName)),
-                new XElement("parameter",
-                    new XAttribute("name", "TargetExtension"),
-                    new XAttribute("value", TargetExtension)),
-                new XElement("parameter",
-                    new XAttribute("name", "Export3dModel"),
-                    new XAttribute("value", export3dModel ? "1" : "0")),
-                new XElement("parameter", 
-                    new XAttribute("name", "Layers"), 
-                    new XAttribute("value", layers ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "CombinePages"),
-                    new XAttribute("value", combinePages ? "1" : "0")));
+            data_4_1 = new XAttribute("value", Export3dModel ? "1" : "0");
+            data_4_2 = new XAttribute("value", Layers        ? "1" : "0");
+            data_4_3 = new XAttribute("value", CombinePages  ? "1" : "0");
+
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "Export3dModel"),
+                data_4_1));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "Layers"),
+                data_4_2));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "CombinePages"),
+                data_4_3));
+
+            return data;
         }
 
-        internal override void TranslatorTask(XElement element, int flag)
+        internal override void LoadParameter(XElement element)
         {
-            base.TranslatorTask(element, flag);
+            base.LoadParameter(element);
 
-            string value = element.Attribute("value").Value;
+            var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
                 case "Export3dModel":
-                    if (flag == 0)
-                        export3dModel = value == "1" ? true : false;
-                    else
-                        value = export3dModel ? "1" : "0";
+                    export3dModel = a.Value == "1";
+                    data_4_1 = a;
                     break;
                 case "Layers":
-                    if (flag == 0)
-                        layers = value == "1" ? true : false;
-                    else
-                        value = layers ? "1" : "0";
+                    layers = a.Value == "1";
+                    data_4_2 = a;
                     break;
                 case "CombinePages":
-                    if (flag == 0)
-                        combinePages = value == "1" ? true : false;
-                    else
-                        value = combinePages ? "1" : "0";
+                    combinePages = a.Value == "1";
+                    data_4_3 = a;
                     break;
             }
-            element.Attribute("value").Value = value;
         }
         #endregion
     }

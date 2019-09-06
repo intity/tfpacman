@@ -30,10 +30,10 @@ namespace TFlex.PackageManager.Common
         private Translator_9 translator_9;
         private Translator_10 translator_10;
         private readonly TranslatorType t_mode;
-        private readonly ProcessingType p_mode;
+        private readonly ProcessingMode p_mode;
         #endregion
 
-        public Processing(Header header, string[] si, TranslatorType t_mode, ProcessingType p_mode, LogFile logFile)
+        public Processing(Header header, string[] si, TranslatorType t_mode, ProcessingMode p_mode, LogFile logFile)
         {
             this.header  = header;
             this.p_mode  = p_mode;
@@ -95,15 +95,15 @@ namespace TFlex.PackageManager.Common
 
             switch (p_mode)
             {
-                case ProcessingType.SaveAs:
+                case ProcessingMode.SaveAs:
                     document = Application.OpenDocument(path, false);
                     logFile.AppendLine(string.Format("Open document:\t\t{0}", path));
                     break;
-                case ProcessingType.Export:
+                case ProcessingMode.Export:
                     document = Application.OpenDocument(path, false);
                     logFile.AppendLine(string.Format("Open document:\t\t{0}", path));
                     break;
-                case ProcessingType.Import:
+                case ProcessingMode.Import:
                     string prototype = null;
                     using (Files files = new Files())
                     {
@@ -127,7 +127,7 @@ namespace TFlex.PackageManager.Common
 
             if (document.Changed)
             {
-                if (p_mode == ProcessingType.Export)
+                if (p_mode == ProcessingMode.Export)
                     document.CancelChanges();
                 else
                 {
@@ -379,12 +379,12 @@ namespace TFlex.PackageManager.Common
                 case TranslatorType.Acis:
                     switch(p_mode)
                     {
-                        case ProcessingType.Export:
+                        case ProcessingMode.Export:
                             f_name = GetOutputFileName(document, null);
                             o_path = Path.Combine(targetDirectory, f_name + ".sat");
                             translator_2.Export(document, o_path, logFile);
                             break;
-                        case ProcessingType.Import:
+                        case ProcessingMode.Import:
                             if (translator_2.ImportMode > 0)
                             {
                                 f_name = a_name[a_name.Length - 1].Replace(".sat", ".grb");
@@ -399,12 +399,12 @@ namespace TFlex.PackageManager.Common
                 case TranslatorType.Iges:
                     switch (p_mode)
                     {
-                        case ProcessingType.Export:
+                        case ProcessingMode.Export:
                             f_name = GetOutputFileName(document, null);
                             o_path = Path.Combine(targetDirectory, f_name + ".igs");
                             translator_6.Export(document, o_path, logFile);
                             break;
-                        case ProcessingType.Import:
+                        case ProcessingMode.Import:
                             if (translator_6.ImportMode > 0)
                             {
                                 f_name = a_name[a_name.Length - 1].Replace(".igs", ".grb");
@@ -419,12 +419,12 @@ namespace TFlex.PackageManager.Common
                 case TranslatorType.Jt:
                     switch (p_mode)
                     {
-                        case ProcessingType.Export:
+                        case ProcessingMode.Export:
                             f_name = GetOutputFileName(document, null);
                             o_path = Path.Combine(targetDirectory, f_name + ".jt");
                             translator_7.Export(document, o_path, logFile);
                             break;
-                        case ProcessingType.Import:
+                        case ProcessingMode.Import:
                             if (translator_7.ImportMode > 0)
                             {
                                 f_name = a_name[a_name.Length - 1].Replace(".jt", ".grb");
@@ -439,12 +439,12 @@ namespace TFlex.PackageManager.Common
                 case TranslatorType.Step:
                     switch (p_mode)
                     {
-                        case ProcessingType.Export:
+                        case ProcessingMode.Export:
                             f_name = GetOutputFileName(document, null);
                             o_path = Path.Combine(targetDirectory, f_name + ".stp");
                             translator_10.Export(document, o_path, logFile);
                             break;
-                        case ProcessingType.Import:
+                        case ProcessingMode.Import:
                             if (translator_10.ImportMode > 0)
                             {
                                 f_name = a_name[a_name.Length - 1].Replace(".stp", ".grb");

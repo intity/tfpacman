@@ -23,10 +23,12 @@
         <BitmapImage x:Key="icon_1_5" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/save_all.ico"/>
         <BitmapImage x:Key="icon_1_6" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/delete.ico"/>
         <BitmapImage x:Key="icon_1_7" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/property.ico"/>
-        <BitmapImage x:Key="icon_2_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/start.ico"/>
-        <BitmapImage x:Key="icon_2_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/stop.ico"/>
-        <BitmapImage x:Key="icon_2_3" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/clear_target_directory.ico"/>
-        <BitmapImage x:Key="icon_3_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/options.ico"/>
+        <BitmapImage x:Key="icon_2_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/undo.ico"/>
+        <BitmapImage x:Key="icon_2_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/redo.ico"/>
+        <BitmapImage x:Key="icon_3_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/start.ico"/>
+        <BitmapImage x:Key="icon_3_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/stop.ico"/>
+        <BitmapImage x:Key="icon_3_3" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/clear_target_directory.ico"/>
+        <BitmapImage x:Key="icon_4_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/options.ico"/>
     </Window.Resources>
 
     <DockPanel TextOptions.TextFormattingMode="Display" 
@@ -92,48 +94,65 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Name="menuItem2" 
-                      Header="Processing">
+                      Header="Edit">
                 <MenuItem Name="menuItem2_1" 
-                          Header="Start" 
+                          Header="Undo" 
                           Click="Event2_1_Click">
                     <MenuItem.Icon>
                         <c:CustomImage Source="{StaticResource icon_2_1}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Name="menuItem2_2" 
-                          Header="Stop" 
+                          Header="Redo" 
                           Click="Event2_2_Click">
                     <MenuItem.Icon>
                         <c:CustomImage Source="{StaticResource icon_2_2}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Name="menuItem2_3" 
-                          Header="Clean up target directory" 
-                          Click="Event2_3_Click">
-                    <MenuItem.Icon>
-                        <c:CustomImage Source="{StaticResource icon_2_3}" Width="16" Height="16"/>
-                    </MenuItem.Icon>
-                </MenuItem>
             </MenuItem>
             <MenuItem Name="menuItem3" 
-                      Header="Settings">
+                      Header="Processing">
                 <MenuItem Name="menuItem3_1" 
-                          Header="Options" 
+                          Header="Start" 
                           Click="Event3_1_Click">
                     <MenuItem.Icon>
                         <c:CustomImage Source="{StaticResource icon_3_1}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Name="menuItem3_2" 
+                          Header="Stop" 
+                          Click="Event3_2_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_3_2}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuItem3_3" 
+                          Header="Clean up target directory" 
+                          Click="Event3_3_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_3_3}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Name="menuItem4" 
-                      Header="?">
+                      Header="Settings">
                 <MenuItem Name="menuItem4_1" 
-                          Header="About Us" 
+                          Header="Options" 
                           Click="Event4_1_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_4_1}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Name="menuItem4_2" 
+            </MenuItem>
+            <MenuItem Name="menuItem5" 
+                      Header="?">
+                <MenuItem Name="menuItem5_1" 
+                          Header="About Us" 
+                          Click="Event5_1_Click">
+                </MenuItem>
+                <MenuItem Name="menuItem5_2" 
                           Header="Help" 
-                          Click="Event4_2_Click">
+                          Click="Event5_2_Click">
                 </MenuItem>
             </MenuItem>
         </Menu>
@@ -169,6 +188,17 @@
                         Click="Event1_6_Click" 
                         ToolTip="Delete configuration">
                     <c:CustomImage Source="{StaticResource icon_1_6}" Width="16" Height="16"/>
+                </Button>                
+                <Separator/>
+                <Button Name="button2_1" 
+                        Click="Event2_1_Click" 
+                        ToolTip="Undo">
+                    <c:CustomImage Source="{StaticResource icon_2_1}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button2_2" 
+                        Click="Event2_2_Click" 
+                        ToolTip="Redo">
+                    <c:CustomImage Source="{StaticResource icon_2_2}" Width="16" Height="16"/>
                 </Button>
                 <Separator/>
                 <Label Name="tb_label1" 
@@ -195,26 +225,26 @@
                           Width="120"
                           SelectionChanged="ComboBox3_SelectionChanged"/>
                 <Separator/>
-                <Button Name="button2_1" 
-                        Click="Event2_1_Click" 
-                        ToolTip="Start processing">
-                    <c:CustomImage Source="{StaticResource icon_2_1}" Width="16" Height="16"/>
-                </Button>
-                <Button Name="button2_2" 
-                        Click="Event2_2_Click" 
-                        ToolTip="Stop processing">
-                    <c:CustomImage Source="{StaticResource icon_2_2}" Width="16" Height="16"/>
-                </Button>
-                <Button Name="button2_3" 
-                        Click="Event2_3_Click" 
-                        ToolTip="Clean up target directory">
-                    <c:CustomImage Source="{StaticResource icon_2_3}" Width="16" Height="16"/>
-                </Button>
-                <Separator/>
                 <Button Name="button3_1" 
                         Click="Event3_1_Click" 
-                        ToolTip="Options">
+                        ToolTip="Start processing">
                     <c:CustomImage Source="{StaticResource icon_3_1}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button3_2" 
+                        Click="Event3_2_Click" 
+                        ToolTip="Stop processing">
+                    <c:CustomImage Source="{StaticResource icon_3_2}" Width="16" Height="16"/>
+                </Button>
+                <Button Name="button3_3" 
+                        Click="Event3_3_Click" 
+                        ToolTip="Clean up target directory">
+                    <c:CustomImage Source="{StaticResource icon_3_3}" Width="16" Height="16"/>
+                </Button>
+                <Separator/>
+                <Button Name="button4_1" 
+                        Click="Event4_1_Click" 
+                        ToolTip="Options">
+                    <c:CustomImage Source="{StaticResource icon_4_1}" Width="16" Height="16"/>
                 </Button>
             </ToolBar>
         </ToolBarTray>

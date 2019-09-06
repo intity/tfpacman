@@ -131,6 +131,9 @@
     <Compile Include="Controls\TreeViewControl.xaml.cs">
       <DependentUpon>TreeViewControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\CustomComboBoxEditor.cs" />
+    <Compile Include="Editors\CustomCheckBoxEditor.cs" />
+    <Compile Include="Editors\CustomTextBoxEditor.cs" />
     <Compile Include="Editors\TranslatorTypesEditor.cs" />
     <Compile Include="Editors\PageTypesEditor.cs" />
     <Compile Include="Common\CustomFolderBrowserDialog.cs" />
@@ -338,6 +341,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\redo.ico" />
     <Resource Include="Resources\igs.ico" />
     <Resource Include="Resources\sat.ico" />
     <Resource Include="Resources\save_all.ico" />
@@ -368,12 +372,19 @@
     <Resource Include="Resources\clear_target_directory.ico" />
     <Resource Include="Resources\stp.ico" />
     <Resource Include="Resources\jt.ico" />
+    <Resource Include="Resources\undo.ico" />
     <Content Include="Resources\refresh.ico" />
     <Resource Include="Resources\save.ico" />
     <Resource Include="Resources\options.ico" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.1\analyzers\dotnet\cs\Humanizer.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UndoRedoFramework\UndoRedoFramework.csproj">
+      <Project>{641578c7-4522-4158-867a-30aecbb3ee73}</Project>
+      <Name>UndoRedoFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

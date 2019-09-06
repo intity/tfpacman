@@ -3,24 +3,22 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using UndoRedoFramework;
 
-#pragma warning disable CA1721
-
-namespace TFlex.PackageManager.Controls
+namespace TFlex.PackageManager.Editors
 {
-    /// <summary>
-    /// Interaction logic for BiarcInterpolationControl.xaml
-    /// </summary>
-    public partial class BiarcInterpolationControl : UserControl, ITypeEditor
+    public partial class CustomTextBoxEditor : TextBox, ITypeEditor
     {
-        UndoRedo<decimal?> value;
+        UndoRedo<string> value;
 
-        public BiarcInterpolationControl()
+        public CustomTextBoxEditor()
         {
-            InitializeComponent();
+            Padding = new Thickness(3);
+            BorderBrush = Brushes.White;
             UndoRedoManager.CommandDone += UndoRedoManager_CommandDone;
         }
 
@@ -33,16 +31,16 @@ namespace TFlex.PackageManager.Controls
             {
                 case CommandDoneType.Undo:
                     if (UndoRedoManager.RedoCommands.Count() > 0 &&
-                        UndoRedoManager.RedoCommands.Last() == p.PropertyName && decimalUpDown.Value != value.Value)
+                        UndoRedoManager.RedoCommands.Last() == p.PropertyName && Text != value.Value)
                     {
-                        decimalUpDown.Value = value.Value;
+                        Text = value.Value;
                     }
                     break;
                 case CommandDoneType.Redo:
                     if (UndoRedoManager.UndoCommands.Count() > 0 &&
-                        UndoRedoManager.UndoCommands.Last() == p.PropertyName && decimalUpDown.Value != value.Value)
+                        UndoRedoManager.UndoCommands.Last() == p.PropertyName && Text != value.Value)
                     {
-                        decimalUpDown.Value = value.Value;
+                        Text = value.Value;
                     }
                     break;
             }
@@ -51,15 +49,16 @@ namespace TFlex.PackageManager.Controls
             //    p.PropertyName, p.Value, e.CommandDoneType));
         }
 
-        public decimal? Value
+        private static readonly DependencyProperty ValueProperty =
+            DependencyProperty.Register("Value", typeof(string), typeof(CustomTextBoxEditor),
+                new FrameworkPropertyMetadata(string.Empty,
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public string Value
         {
-            get => (decimal?)GetValue(ValueProperty);
+            get => (string)GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
-
-        private static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(decimal?), typeof(BiarcInterpolationControl),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public FrameworkElement ResolveEditor(PropertyItem propertyItem)
         {
@@ -72,25 +71,29 @@ namespace TFlex.PackageManager.Controls
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            decimalUpDown.ValueChanged += DecimalUpDown_ValueChanged;
-            value = new UndoRedo<decimal?>(Value);
+            Text = Value;
+            LostKeyboardFocus += TextBox_LostKeyboardFocus;
+            value = new UndoRedo<string>(Value);
 
             return this;
         }
 
-        private void DecimalUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void TextBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (!(DataContext is PropertyItem p))
-                return;
-            
-            if (value.Value != decimalUpDown.Value)
+            var p = DataContext as PropertyItem;
+            Value = Text;
+
+            if (value.Value != Text)
             {
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value.Value = decimalUpDown.Value;
+                    value.Value = Text;
                     UndoRedoManager.Commit();
                 }
             }
+
+            //Debug.WriteLine(string.Format("PropertyItem: [name: {0}, value: {1}, can undo: {2}, can redo: {3}]",
+            //    p.PropertyName, p.Value, UndoRedoManager.CanUndo, UndoRedoManager.CanRedo));
         }
     }
 }

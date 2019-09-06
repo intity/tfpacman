@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.ComponentModel;
+using System.Drawing.Design;
 using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -17,16 +18,22 @@ namespace TFlex.PackageManager.Configuration
     public class Translator_7 : Translator3D
     {
         #region private fields
-        private int version;
+        int version;
 
-        private readonly int[] i_values;
-        private bool isChanged;
+        XAttribute data_4_0;
         #endregion
 
-        public Translator_7()
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="ext">Target extension the file.</param>
+        public Translator_7(string ext = "JT") : base (ext)
         {
-            TargetExtension = "JT";
-            i_values        = new int[1];
+            data_4_0 = new XAttribute("value", "0");
+
+            Data.Add(new XElement("parameter",
+                new XAttribute("name", "Version"),
+                data_4_0));
         }
 
         #region public properties
@@ -39,51 +46,28 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_3D, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_7, "dn4_0")]
         [CustomDescription(Resource.TRANSLATOR_7, "dn4_0")]
-        [ItemsSource(typeof(JtVersions))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Version
         {
-            get { return version; }
+            get => version;
             set
             {
                 if (version != value)
                 {
                     version = value;
-                    OnChanged(16);
+                    data_4_0.Value = value.ToString();
+
+                    OnPropertyChanged("Version");
                 }
             }
         }
         #endregion
 
         #region internal properties
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
-        }
+        internal override TranslatorType Mode => TranslatorType.Jt;
         #endregion
 
         #region internal methods
-        internal override void OnLoaded()
-        {
-            i_values[0] = version;
-
-            base.OnLoaded();
-        }
-
-        internal override void OnChanged(int index)
-        {
-            if (!IsLoaded) return;
-
-            switch (index)
-            {
-                case 16: isChanged = i_values[0] != version; break;
-            }
-
-            base.OnChanged(index);
-        }
-
         internal override void Export(Document document, string path, LogFile logFile)
         {
             ExportToJtVersion jtVersion = ExportToJtVersion.JT81;
@@ -95,7 +79,7 @@ namespace TFlex.PackageManager.Configuration
                 ? ExportTo3dColorSource.ToneColor
                 : ExportTo3dColorSource.MaterialColor;
 
-            switch (version)
+            switch (Version)
             {
                 case 0: jtVersion = ExportToJtVersion.JT81; break;
                 case 1: jtVersion = ExportToJtVersion.JT95; break;
@@ -124,46 +108,31 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
+        internal override XElement NewTranslator()
         {
-            base.AppendTranslatorToXml(parent, translator);
+            XElement data = base.NewTranslator();
 
-            string value = Enum.GetName(typeof(TranslatorType), translator);
-            parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
-                new XElement("parameter",
-                    new XAttribute("name", "Version"),
-                    new XAttribute("value", Version)));
+            data_4_0 = new XAttribute("value", Version.ToString());
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "Version"),
+                data_4_0));
+
+            return data;
         }
 
-        internal override void TranslatorTask(XElement element, int flag)
+        internal override void LoadParameter(XElement element)
         {
-            base.TranslatorTask(element, flag);
+            base.LoadParameter(element);
 
-            string value = element.Attribute("value").Value;
+            var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
                 case "Version":
-                    if (flag == 0)
-                        version = int.Parse(value);
-                    else
-                        value = version.ToString();
+                    version = int.Parse(a.Value);
+                    data_4_0 = a;
                     break;
             }
-            element.Attribute("value").Value = value;
         }
         #endregion
-    }
-
-#pragma warning disable CA1812
-    internal class JtVersions : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, "JT 8.1" },
-                { 1, "JT 9.5" }
-            };
-        }
     }
 }

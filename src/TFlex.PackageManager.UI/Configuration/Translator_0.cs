@@ -24,45 +24,45 @@ namespace TFlex.PackageManager.Configuration
     public class Translator_0 : Category_3
     {
         #region private fields
-        private string [] pageNames;
-        private bool excludePage;
-        private decimal pageScale;
-        private readonly PageTypes pageTypes;
-        private bool checkDrawingTemplate;
-        private string [] projectionNames;
-        private bool excludeProjection;
-        private decimal projectionScale;
+        string [] pageNames;
+        bool excludePage;
+        decimal pageScale;
+        bool checkDrawingTemplate;
+        string[] projectionNames;
+        bool excludeProjection;
+        decimal projectionScale;
 
-        private string[] pg_names, pj_names;
-        private readonly byte[] objState;
-        private readonly bool[] pg_types;
-        private readonly bool[] b_values;
-        private readonly decimal[] m_values;
-        
-        private bool isChanged;
+        XAttribute data_1_1;
+        XAttribute data_1_2;
+        XAttribute data_1_3;
+        XAttribute data_1_4;
+        XAttribute data_1_5;
+        XAttribute data_2_1;
+        XAttribute data_2_2;
+        XAttribute data_2_3;
         #endregion
 
-        public Translator_0()
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="ext">Target extension the file.</param>
+        public Translator_0(string ext = "GRB") : base (ext)
         {
-            pageNames        = new string[] { };
-            pageScale        = 99999;
-            pageTypes        = new PageTypes { Normal = true };
-            pageTypes.PropertyChanged += PageTypes_PropertyChanged;
-            projectionNames  = new string[] { };
-            projectionScale  = 99999;
-
-            objState         = new byte[8];
-            pg_types         = new bool[6];
-            b_values         = new bool[3];
-            m_values         = new decimal[2];
+            pageNames            = new string[] { };
+            excludePage          = false;
+            pageScale            = 99999;
+            PageTypes            = new PageTypes();
+            PageTypes.PropertyChanged += PageTypes_PropertyChanged;
+            checkDrawingTemplate = false;
+            projectionNames      = new string[] { };
+            excludeProjection    = false;
+            projectionScale      = 99999;
         }
 
-        #region event handlers
         private void PageTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnChanged(4);
+            data_1_4.Value = (sender as PageTypes).ToString();
         }
-        #endregion
 
         #region public properties
         /// <summary>
@@ -76,13 +76,15 @@ namespace TFlex.PackageManager.Configuration
         [Editor(typeof(InputCollectionControl), typeof(UITypeEditor))]
         public string[] PageNames
         {
-            get { return pageNames; }
+            get => pageNames;
             set
             {
                 if (pageNames != value)
                 {
                     pageNames = value;
-                    OnChanged(1);
+                    data_1_1.Value = value.ToString("\r\n");
+
+                    OnPropertyChanged("PageNames");
                 }
             }
         }
@@ -93,13 +95,15 @@ namespace TFlex.PackageManager.Configuration
         [Browsable(false)]
         public bool ExcludePage
         {
-            get { return excludePage; }
+            get => excludePage;
             set
             {
                 if (excludePage != value)
                 {
                     excludePage = value;
-                    OnChanged(2);
+                    data_1_2.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("ExcludePage");
                 }
             }
         }
@@ -114,13 +118,16 @@ namespace TFlex.PackageManager.Configuration
         [Editor(typeof(InputScaleControl), typeof(UITypeEditor))]
         public decimal PageScale
         {
-            get { return pageScale; }
+            get => pageScale;
             set
             {
                 if (pageScale != value)
                 {
                     pageScale = value;
-                    OnChanged(3);
+                    data_1_3.Value = value
+                        .ToString(CultureInfo.InvariantCulture);
+
+                    OnPropertyChanged("PageScale");
                 }
             }
         }
@@ -134,10 +141,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_4")]
         [ExpandableObject]
         [Editor(typeof(PageTypesEditor), typeof(UITypeEditor))]
-        public PageTypes PageTypes
-        {
-            get { return (pageTypes); }
-        }
+        public PageTypes PageTypes { get; }
 
         /// <summary>
         /// Check the drawing template.
@@ -146,15 +150,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_0, "category1")]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_5")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool CheckDrawingTemplate
         {
-            get { return checkDrawingTemplate; }
+            get => checkDrawingTemplate;
             set
             {
                 if (checkDrawingTemplate != value)
                 {
                     checkDrawingTemplate = value;
-                    OnChanged(5);
+                    data_1_5.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("CheckDrawingTemplate");
                 }
             }
         }
@@ -170,13 +177,15 @@ namespace TFlex.PackageManager.Configuration
         [Editor(typeof(InputCollectionControl), typeof(UITypeEditor))]
         public string[] ProjectionNames
         {
-            get { return projectionNames; }
+            get => projectionNames;
             set
             {
                 if (projectionNames != value)
                 {
                     projectionNames = value;
-                    OnChanged(6);
+                    data_2_1.Value = value.ToString("\r\n");
+
+                    OnPropertyChanged("ProjectionNames");
                 }
             }
         }
@@ -187,13 +196,15 @@ namespace TFlex.PackageManager.Configuration
         [Browsable(false)]
         public bool ExcludeProjection
         {
-            get { return excludeProjection; }
+            get => excludeProjection;
             set
             {
                 if (excludeProjection != value)
                 {
                     excludeProjection = value;
-                    OnChanged(7);
+                    data_2_2.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("ExcludeProjection");
                 }
             }
         }
@@ -208,243 +219,120 @@ namespace TFlex.PackageManager.Configuration
         [Editor(typeof(InputScaleControl), typeof(UITypeEditor))]
         public decimal ProjectionScale
         {
-            get { return projectionScale; }
+            get => projectionScale;
             set
             {
                 if (projectionScale != value)
                 {
                     projectionScale = value;
-                    OnChanged(8);
+                    data_2_3.Value = value
+                        .ToString(CultureInfo.InvariantCulture);
+
+                    OnPropertyChanged("ProjectionScale");
                 }
             }
         }
         #endregion
 
         #region internal properties
-        internal override bool IsChanged
+        internal override TranslatorType Mode => TranslatorType.Document;
+
+        internal override uint Processing
         {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
+            get => (uint)ProcessingMode.SaveAs;
         }
         #endregion
 
         #region internal methods
-        internal override void OnLoaded()
+        internal override XElement NewTranslator()
         {
-            pg_names = (string[])pageNames.Clone();
-            pj_names = (string[])projectionNames.Clone();
+            XElement data = base.NewTranslator();
 
-            b_values[0] = excludePage;
-            m_values[0] = pageScale;
-            b_values[1] = checkDrawingTemplate;
-            b_values[2] = excludeProjection;
-            m_values[1] = projectionScale;
+            data_1_1 = new XAttribute("value", PageNames.ToString("\r\n"));
+            data_1_2 = new XAttribute("value", ExcludePage ? "1" : "0");
+            data_1_3 = new XAttribute("value", PageScale.ToString(CultureInfo.InvariantCulture));
+            data_1_4 = new XAttribute("value", PageTypes.ToString());
+            data_1_5 = new XAttribute("value", CheckDrawingTemplate ? "1" : "0");
+            data_2_1 = new XAttribute("value", ProjectionNames.ToString("\r\n"));
+            data_2_2 = new XAttribute("value", ExcludeProjection ? "1" : "0");
+            data_2_3 = new XAttribute("value", ProjectionScale.ToString(CultureInfo.InvariantCulture));
 
-            pg_types[0] = pageTypes.Normal;
-            pg_types[1] = pageTypes.Workplane;
-            pg_types[2] = pageTypes.Auxiliary;
-            pg_types[3] = pageTypes.Text;
-            pg_types[4] = pageTypes.BillOfMaterials;
-            pg_types[5] = pageTypes.Circuit;
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "PageNames"),
+                data_1_1));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ExcludePage"),
+                data_1_2));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "PageScale"),
+                data_1_3));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "PageTypes"),
+                data_1_4));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "CheckDrawingTemplate"),
+                data_1_5));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ProjectionNames"),
+                data_2_1));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ExcludeProjection"),
+                data_2_2));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ProjectionScale"),
+                data_2_3));
 
-            for (int i = 0; i < objState.Length; i++)
-                objState[i] = 0;
-
-            base.OnLoaded();
+            return data;
         }
 
-        internal override void OnChanged(int index)
+        internal override void LoadParameter(XElement element)
         {
-            if (!IsLoaded) return;
+            base.LoadParameter(element);
 
-            switch (index)
-            {
-                case 1:
-                    if (!Enumerable.SequenceEqual(pg_names, pageNames))
-                        objState[0] = 1;
-                    else
-                        objState[0] = 0;
-                    break;
-                case 2:
-                    if (b_values[0] != excludePage)
-                        objState[1] = 1;
-                    else
-                        objState[1] = 0;
-                    break;
-                case 3:
-                    if (m_values[0] != pageScale)
-                        objState[2] = 1;
-                    else
-                        objState[2] = 0;
-                    break;
-                case 4:
-                    if (pg_types[0] != pageTypes.Normal ||
-                        pg_types[1] != pageTypes.Workplane ||
-                        pg_types[2] != pageTypes.Auxiliary ||
-                        pg_types[3] != pageTypes.Text ||
-                        pg_types[4] != pageTypes.BillOfMaterials || 
-                        pg_types[5] != pageTypes.Circuit)
-                        objState[3] = 1;
-                    else
-                        objState[3] = 0;
-                    break;
-                case 5:
-                    if (b_values[1] != checkDrawingTemplate)
-                        objState[4] = 1;
-                    else
-                        objState[4] = 0;
-                    break;
-                case 6:
-                    if (!Enumerable.SequenceEqual(pj_names, projectionNames))
-                        objState[5] = 1;
-                    else
-                        objState[5] = 0;
-                    break;
-                case 7:
-                    if (b_values[2] != excludeProjection)
-                        objState[6] = 1;
-                    else
-                        objState[6] = 0;
-                    break;
-                case 8:
-                    if (m_values[1] != projectionScale)
-                        objState[7] = 1;
-                    else
-                        objState[7] = 0;
-                    break;
-            }
-
-            isChanged = false;
-
-            foreach (var i in objState)
-            {
-                if (i > 0)
-                {
-                    isChanged = true;
-                    break;
-                }
-            }
-
-            base.OnChanged(index);
-        }
-
-        internal override XElement NewTranslator(TranslatorType translator)
-        {
-            XElement element = new XElement("translator", 
-                new XAttribute("id", translator), 
-                new XAttribute("processing", Processing),
-                new XElement("parameter",
-                    new XAttribute("name", "PageNames"),
-                    new XAttribute("value", pageNames.ToString("\r\n"))),
-                new XElement("parameter",
-                    new XAttribute("name", "ExcludePage"),
-                    new XAttribute("value", excludePage ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "PageScale"),
-                    new XAttribute("value", pageScale)),
-                new XElement("parameter",
-                    new XAttribute("name", "PageTypes"),
-                    new XAttribute("value", pageTypes.ToString())),
-                new XElement("parameter",
-                    new XAttribute("name", "CheckDrawingTemplate"),
-                    new XAttribute("value", checkDrawingTemplate ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "ProjectionNames"),
-                    new XAttribute("value", projectionNames.ToString("\r\n"))),
-                new XElement("parameter",
-                    new XAttribute("name", "ExcludeProjection"),
-                    new XAttribute("value", excludeProjection ? "1" : "0")),
-                new XElement("parameter",
-                    new XAttribute("name", "ProjectionScale"),
-                    new XAttribute("value", projectionScale)),
-                new XElement("parameter",
-                    new XAttribute("name", "FileNameSuffix"),
-                    new XAttribute("value", FileNameSuffix)),
-                new XElement("parameter",
-                    new XAttribute("name", "TemplateFileName"),
-                    new XAttribute("value", TemplateFileName)));
-
-            return element;
-        }
-
-        internal override void TranslatorTask(XElement element, int flag)
-        {
-            base.TranslatorTask(element, flag);
-
-            string value = element.Attribute("value").Value;
+            var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
                 case "PageNames":
-                    if (flag == 0)
-                    {
-                        pageNames = value.Length > 0 
-                            ? value.Replace("\r", "").Split('\n') 
-                            : new string[] { };
-                    }
-                    else
-                        value = pageNames.ToString("\r\n");
+                    pageNames = a.Value.Length > 0 
+                        ? a.Value.Replace("\r", "").Split('\n') 
+                        : new string[] { };
+                    data_1_1 = a;
                     break;
                 case "ExcludePage":
-                    if (flag == 0)
-                        excludePage = value == "1";
-                    else
-                        value = excludePage ? "1" : "0";
+                    excludePage = a.Value == "1";
+                    data_1_2 = a;
                     break;
                 case "PageScale":
-                    if (flag == 0)
-                        pageScale = decimal.Parse(value, 
-                            NumberStyles.Float, CultureInfo.InvariantCulture);
-                    else
-                        value = pageScale.ToString(CultureInfo.InvariantCulture);
+                    pageScale = decimal.Parse(a.Value, 
+                        NumberStyles.Float, 
+                        CultureInfo.InvariantCulture);
+                    data_1_3 = a;
                     break;
                 case "PageTypes":
-                    if (flag == 0)
-                    {
-                        string[] values = value.Split(' ');
-
-                        pageTypes.Normal          = values[0] == "01";
-                        pageTypes.Workplane       = values[1] == "01";
-                        pageTypes.Auxiliary       = values[2] == "01";
-                        pageTypes.Text            = values[3] == "01";
-                        pageTypes.BillOfMaterials = values[4] == "01";
-                        pageTypes.Circuit         = values[5] == "01";
-                    }
-                    else
-                        value = pageTypes.ToString();
+                    PageTypes.SetValue(a.Value);
+                    data_1_4 = a;
                     break;
                 case "CheckDrawingTemplate":
-                    if (flag == 0)
-                        checkDrawingTemplate = value == "1";
-                    else
-                        value = checkDrawingTemplate ? "1" : "0";
+                    checkDrawingTemplate = a.Value == "1";
+                    data_1_5 = a;
                     break;
                 case "ProjectionNames":
-                    if (flag == 0)
-                    {
-                        projectionNames = value.Length > 0 
-                            ? value.Replace("\r", "").Split('\n') 
-                            : new string[] { };
-                    }
-                    else
-                        value = projectionNames.ToString("\r\n");
+                    projectionNames = a.Value.Length > 0 
+                        ? a.Value.Replace("\r", "").Split('\n') 
+                        : new string[] { };
+                    data_2_1 = a;
                     break;
                 case "ExcludeProjection":
-                    if (flag == 0)
-                        excludeProjection = value == "1";
-                    else
-                        value = excludeProjection ? "1" : "0";
+                    excludeProjection = a.Value == "1";
+                    data_2_2 = a;
                     break;
                 case "ProjectionScale":
-                    if (flag == 0)
-                        projectionScale = decimal.Parse(value, 
-                            NumberStyles.Float, CultureInfo.InvariantCulture);
-                    else
-                        value = projectionScale.ToString(CultureInfo.InvariantCulture);
+                    projectionScale = decimal.Parse(a.Value, 
+                        NumberStyles.Float, 
+                        CultureInfo.InvariantCulture);
+                    data_2_3 = a;
                     break;
             }
-            element.Attribute("value").Value = value;
         }
         #endregion
     }
@@ -455,21 +343,29 @@ namespace TFlex.PackageManager.Configuration
     public class PageTypes : INotifyPropertyChanged
     {
         #region private fields
-        private bool normal;
-        private bool workplane;
-        private bool auxiliary;
-        private bool text;
-        private bool billOfMaterials;
-        private bool circuit;
+        bool normal;
+        bool workplane;
+        bool auxiliary;
+        bool text;
+        bool billOfMaterials;
+        bool circuit;
         #endregion
 
-        #region properties
+        public PageTypes()
+        {
+            normal = true;
+        }
+
+        internal bool IsChanged { get; private set; }
+
+        #region public properties
         [PropertyOrder(1)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_1")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_1")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Normal
         {
-            get { return normal; }
+            get => normal;
             set
             {
                 if (normal != value)
@@ -483,9 +379,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(2)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_2")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_2")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Workplane
         {
-            get { return workplane; }
+            get => workplane;
             set
             {
                 if (workplane != value)
@@ -499,9 +396,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(3)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_3")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_3")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Auxiliary
         {
-            get { return auxiliary; }
+            get => auxiliary;
             set
             {
                 if (auxiliary != value)
@@ -515,9 +413,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(4)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_4")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_4")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Text
         {
-            get { return text; }
+            get => text;
             set
             {
                 if (text != value)
@@ -531,9 +430,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(5)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_5")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_5")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool BillOfMaterials
         {
-            get { return billOfMaterials; }
+            get => billOfMaterials;
             set
             {
                 if (billOfMaterials != value)
@@ -547,9 +447,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(6)]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_6")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_6")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Circuit
         {
-            get { return circuit; }
+            get => circuit;
             set
             {
                 if (circuit != value)
@@ -562,6 +463,18 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region methods
+        public void SetValue(string value)
+        {
+            string[] values = value.Split(' ');
+
+            normal          = values[0] == "01";
+            workplane       = values[1] == "01";
+            auxiliary       = values[2] == "01";
+            text            = values[3] == "01";
+            billOfMaterials = values[4] == "01";
+            circuit         = values[5] == "01";
+        }
+
         public override string ToString()
         {
             string[] values = new string[6];
@@ -578,8 +491,15 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region INotifyPropertyChanged members
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// The OpPropertyChanged event handler.
+        /// </summary>
+        /// <param name="name">Property name.</param>
         protected void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

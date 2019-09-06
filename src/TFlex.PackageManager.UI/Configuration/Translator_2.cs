@@ -12,10 +12,18 @@ namespace TFlex.PackageManager.Configuration
     [CustomCategoryOrder(Resource.TRANSLATOR_3D, 4)]
     public class Translator_2 : Translator3D
     {
-        public Translator_2()
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="ext">Target extension the file.</param>
+        public Translator_2(string ext = "SAT") : base (ext)
         {
-            TargetExtension = "SAT"; // SAT | SAB
+            //extension = SAT | SAB
         }
+
+        #region internal properties
+        internal override TranslatorType Mode => TranslatorType.Acis;
+        #endregion
 
         #region internal methods
         internal override void Export(Document document, string path, LogFile logFile)

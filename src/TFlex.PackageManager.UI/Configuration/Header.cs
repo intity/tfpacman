@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -18,27 +19,27 @@ namespace TFlex.PackageManager.Configuration
     public class Header : INotifyPropertyChanged
     {
         #region private fields
-        private Translator_0 translator_0;
-        private Translator_1 translator_1;
-        private Translator_2 translator_2;
-        private Translator_3 translator_3;
-        private Translator_6 translator_6;
-        private Translator_7 translator_7;
-        private Translator_9 translator_9;
-        private Translator_10 translator_10;
-        private readonly ObservableDictionary<string, object> translators;
+        Translator_0 translator_0;
+        Translator_1 translator_1;
+        Translator_2 translator_2;
+        Translator_3 translator_3;
+        Translator_6 translator_6;
+        Translator_7 translator_7;
+        Translator_9 translator_9;
+        Translator_10 translator_10;
 
-        private string configurationName;
-        private string initialCatalog;
-        private string targetDirectory;
-        private string inputExtension;
-        private readonly TranslatorTypes translatorTypes;
+        string configurationName;
+        string initialCatalog;
+        string targetDirectory;
+        string inputExtension;
+        XElement translators;
+        XAttribute data_1_1;
+        XAttribute data_1_2;
+        XAttribute data_1_3;
+        XAttribute data_1_4;
+        XAttribute data_1_5;
 
-        private readonly byte[] objState;
-        private readonly string[] s_values;
-        private readonly bool[] tr_types;
-        private readonly byte[] tchanges;
-        private bool isLoaded, isChanged, isInvalid;
+        bool isChanged;
         #endregion
 
         public Header()
@@ -47,226 +48,117 @@ namespace TFlex.PackageManager.Configuration
             initialCatalog    = string.Empty;
             targetDirectory   = string.Empty;
             inputExtension    = "*.grb";
-            translators       = new ObservableDictionary<string, object>();
-            translatorTypes   = new TranslatorTypes();
-            translatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
-
-            objState          = new byte[6];
-            s_values          = new string[4];
-            tr_types          = new bool[12];
-            tchanges          = new byte[8];
+            Translators       = new ObservableDictionary<string, object>();
+            TranslatorTypes   = new TranslatorTypes();
+            TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
         }
 
         #region event handlers
-        private void Translator_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void DataContext_Changed(object sender, XObjectChangeEventArgs e)
         {
-            if (sender.Equals(translator_0))
-            {
-                tchanges[0] = (byte)(translator_0.IsChanged ? 1 : 0);
-            }
-            else if (sender.Equals(translator_1))
-            {
-                tchanges[1] = (byte)(translator_1.IsChanged ? 1 : 0);
-            }
-            else if (sender.Equals(translator_2))
-            {
-                tchanges[2] = (byte)(translator_2.IsChanged ? 1 : 0);
-            }
-            else if (sender.Equals(translator_3))
-            {
-                tchanges[3] = (byte)(translator_3.IsChanged ? 1 : 0);
-            }
-            else if (sender.Equals(translator_6))
-            {
-                tchanges[4] = (byte)(translator_6.IsChanged ? 1 : 0);
-            }
-            else if (sender.Equals(translator_7))
-            {
-                tchanges[5] = (byte)(translator_7.IsChanged ? 1 : 0);
-            }
-            else if (sender.Equals(translator_9))
-            {
-                tchanges[6] = (byte)(translator_9.IsChanged ? 1 : 0);
-            }
-            else if (sender.Equals(translator_10))
-            {
-                tchanges[7] = (byte)(translator_10.IsChanged ? 1 : 0);
-            }
+            IsChanged = true;
 
-            objState[5] = 0;
-
-            foreach (var i in tchanges)
-            {
-                if (i > 0)
-                {
-                    objState[5] = 1;
-                    break;
-                }
-            }
-
-            OnChanged(5);
-
-            //Debug.WriteLine(string.Format("IsChanged [value: {0}]", isChanged));
+            Debug.WriteLine(string.Format("DataContext_Changed: [{0}]", e.ObjectChange));
         }
 
         private void Translator_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            isInvalid = (sender as Category_3).HasErrors;
+            IsInvalid = (sender as Category_3).HasErrors;
         }
 
         private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            bool t_value = false;
+            bool value = false;
+            var t_mode = sender as TranslatorTypes;
+            InitTranslator(e.PropertyName);
+            data_1_5.Value = t_mode.ToString();
 
             switch (e.PropertyName)
             {
                 case "Document":
-                    if (t_value = (sender as TranslatorTypes).Document)
-                    {
-                        if (translator_0 == null)
-                        {
-                            translator_0 = new Translator_0();
-                            translator_0.PropertyChanged += Translator_PropertyChanged;
-                            translator_0.ErrorsChanged   += Translator_ErrorsChanged;
-                        }
-
-                        translators.Add(e.PropertyName, translator_0);
-                    }
+                    if (value = t_mode.Document)
+                        translators.Add(translator_0.NewTranslator());
                     break;
                 case "Acad":
-                    if (t_value = (sender as TranslatorTypes).Acad)
-                    {
-                        if (translator_1 == null)
-                        {
-                            translator_1 = new Translator_1();
-                            translator_1.PropertyChanged += Translator_PropertyChanged;
-                            translator_1.ErrorsChanged   += Translator_ErrorsChanged;
-                        }
-
-                        translators.Add(e.PropertyName, translator_1);
-                    }   
+                    if (value = t_mode.Acad)
+                        translators.Add(translator_1.NewTranslator());
                     break;
                 case "Acis":
-                    if (t_value = (sender as TranslatorTypes).Acis)
-                    {
-                        if (translator_2 == null)
-                        {
-                            translator_2 = new Translator_2();
-                            translator_2.PropertyChanged += Translator_PropertyChanged;
-                            translator_2.ErrorsChanged   += Translator_ErrorsChanged;
-                        }
-
-                        translators.Add(e.PropertyName, translator_2);
-                    }
+                    if (value = t_mode.Acis)
+                        translators.Add(translator_2.NewTranslator());
                     break;
                 case "Bitmap":
-                    if (t_value = (sender as TranslatorTypes).Bitmap)
-                    {
-                        if (translator_3 == null)
-                        {
-                            translator_3 = new Translator_3();
-                            translator_3.PropertyChanged += Translator_PropertyChanged;
-                            translator_3.ErrorsChanged   += Translator_ErrorsChanged;
-                        }
-
-                        translators.Add(e.PropertyName, translator_3);
-                    }
+                    if (value = t_mode.Bitmap)
+                        translators.Add(translator_3.NewTranslator());
                     break;
                 case "Iges":
-                    if (t_value = (sender as TranslatorTypes).Iges)
-                    {
-                        if (translator_6 == null)
-                        {
-                            translator_6 = new Translator_6();
-                            translator_6.PropertyChanged += Translator_PropertyChanged;
-                            translator_6.ErrorsChanged   += Translator_ErrorsChanged;
-                        }
-
-                        translators.Add(e.PropertyName, translator_6);
-                    }
+                    if (value = t_mode.Iges)
+                        translators.Add(translator_6.NewTranslator());
                     break;
                 case "Jt":
-                    if (t_value = (sender as TranslatorTypes).Jt)
-                    {
-                        if (translator_7 == null)
-                        {
-                            translator_7 = new Translator_7();
-                            translator_7.PropertyChanged += Translator_PropertyChanged;
-                            translator_7.ErrorsChanged   += Translator_ErrorsChanged;
-                        }
-
-                        translators.Add(e.PropertyName, translator_7);
-                    }
+                    if (value = t_mode.Jt)
+                        translators.Add(translator_7.NewTranslator());
                     break;
                 case "Pdf":
-                    if (t_value = (sender as TranslatorTypes).Pdf)
-                    {
-                        if (translator_9 == null)
-                        {
-                            translator_9 = new Translator_9();
-                            translator_9.PropertyChanged += Translator_PropertyChanged;
-                            translator_9.ErrorsChanged   += Translator_ErrorsChanged;
-                        }
-
-                        translators.Add(e.PropertyName, translator_9);
-                    }
+                    if (value = t_mode.Pdf)
+                        translators.Add(translator_9.NewTranslator());
                     break;
                 case "Step":
-                    if (t_value = (sender as TranslatorTypes).Step)
-                    {
-                        if (translator_10 == null)
-                        {
-                            translator_10 = new Translator_10();
-                            translator_10.PropertyChanged += Translator_PropertyChanged;
-                            translator_10.ErrorsChanged   += Translator_ErrorsChanged;
-                        }
-
-                        translators.Add(e.PropertyName, translator_10);
-                    }
+                    if (value = t_mode.Step)
+                        translators.Add(translator_10.NewTranslator());
                     break;
             }
 
-            if (t_value)
+            if (!value)
             {
-                if (targetDirectory.Length > 0)
+                Translators.Remove(e.PropertyName);
+
+                foreach (var i in translators.Elements())
                 {
-                    string path = Path.Combine(targetDirectory, e.PropertyName);
-                    if (Directory.Exists(path) == false)
-                        Directory.CreateDirectory(path);
+                    if (i.Attribute("id").Value == e.PropertyName)
+                    {
+                        i.Remove();
+                        break;
+                    }
                 }
             }
-            else
-                translators.Remove(e.PropertyName);
-            //Debug.WriteLine(string.Format("TranslatorTypes_PropertyChanged [name: {0}, value: {1}]", 
-            //    e.PropertyName, t_value));
 
-            OnChanged(4);
+            Debug.WriteLine(string.Format("TranslatorTypes_PropertyChanged [name: {0}, value: {1}]",
+                e.PropertyName, value));
         }
         #endregion
 
         #region internal properties
         /// <summary>
+        /// XML data context.
+        /// </summary>
+        internal XDocument DataContext { get; private set; }
+
+        /// <summary>
         /// Translator list.
         /// </summary>
-        internal ObservableDictionary<string, object> Translators
-        {
-            get { return (translators); }
-        }
+        internal ObservableDictionary<string, object> Translators { get; }
 
         /// <summary>
         /// The configuration is changed.
         /// </summary>
-        internal bool IsChanged { get { return (isChanged); } }
-
-        /// <summary>
-        /// The configuration is loaded.
-        /// </summary>
-        internal bool IsLoaded { get { return (isLoaded); } }
+        internal bool IsChanged
+        {
+            get => isChanged;
+            private set
+            {
+                if (isChanged != value)
+                {
+                    isChanged = value;
+                    OnPropertyChanged("IsChanged");
+                }
+            }
+        }
 
         /// <summary>
         /// Validating this configuration properties.
         /// </summary>
-        internal bool IsInvalid { get { return (isInvalid); } }
+        internal bool IsInvalid { get; private set; }
 
         /// <summary>
         /// Configurations directory.
@@ -274,7 +166,7 @@ namespace TFlex.PackageManager.Configuration
         internal string UserDirectory { get; set; }
         #endregion
 
-        #region properties
+        #region public properties
         /// <summary>
         /// The configuration name definition.
         /// </summary>
@@ -284,13 +176,12 @@ namespace TFlex.PackageManager.Configuration
         [ReadOnly(true)]
         public string ConfigurationName
         {
-            get { return configurationName; }
+            get => configurationName;
             set
             {
                 if (configurationName != value)
                 {
                     configurationName = value;
-                    OnChanged(0);
                 }
             }
         }
@@ -310,7 +201,8 @@ namespace TFlex.PackageManager.Configuration
                 if (initialCatalog != value)
                 {
                     initialCatalog = value;
-                    OnChanged(1);
+                    data_1_2.Value = value;
+
                     OnPropertyChanged("InitialCatalog");
                 }
             }
@@ -325,13 +217,14 @@ namespace TFlex.PackageManager.Configuration
         [Editor(typeof(InputPathControl), typeof(UITypeEditor))]
         public string TargetDirectory
         {
-            get { return targetDirectory; }
+            get => targetDirectory;
             set
             {
                 if (targetDirectory != value)
                 {
                     targetDirectory = value;
-                    OnChanged(2);
+                    data_1_3.Value = value;
+
                     OnPropertyChanged("TargetDirectory");
                 }
             }
@@ -352,308 +245,185 @@ namespace TFlex.PackageManager.Configuration
                 if (inputExtension != value)
                 {
                     inputExtension = value;
-                    OnChanged(3);
                 }
             }
         }
 
+        /// <summary>
+        /// The translator types.
+        /// </summary>
         [PropertyOrder(5)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5")]
         [ExpandableObject]
         [Editor(typeof(TranslatorTypesEditor), typeof(UITypeEditor))]
-        public TranslatorTypes TranslatorTypes
-        {
-            get { return (translatorTypes); }
-        }
+        public TranslatorTypes TranslatorTypes { get; }
         #endregion
 
-        #region methods
+        #region private methods
         /// <summary>
-        /// Cloneable values this object on loaded.
+        /// Initialize the translator.
         /// </summary>
-        private void OnLoaded()
+        /// <param name="name">The translator name.</param>
+        private void InitTranslator(string name)
         {
-            s_values[00] = configurationName;
-            s_values[01] = initialCatalog;
-            s_values[02] = targetDirectory;
-            s_values[03] = inputExtension;
-
-            tr_types[00] = translatorTypes.Document;
-            tr_types[01] = translatorTypes.Acad;
-            tr_types[02] = translatorTypes.Acis;
-            tr_types[03] = translatorTypes.Bitmap;
-            tr_types[04] = translatorTypes.Bmf;
-            tr_types[05] = translatorTypes.Emf;
-            tr_types[06] = translatorTypes.Iges;
-            tr_types[07] = translatorTypes.Jt;
-            tr_types[08] = translatorTypes.Parasolid;
-            tr_types[09] = translatorTypes.Pdf;
-            tr_types[10] = translatorTypes.Step;
-            tr_types[11] = translatorTypes.Stl;
-
-            for (int i = 0; i < objState.Length; i++)
-                objState[i] = 0;
-
-            for (int i = 0; i < tchanges.Length; i++)
-                tchanges[i] = 0;
-
-            isLoaded = true;
-
-            if (isChanged)
+            switch (name)
             {
-                isChanged = false;
-                OnPropertyChanged("IsChanged");
-            }
-        }
-
-        /// <summary>
-        /// Verified this object a change and calls event for 'IsChanged' property.
-        /// </summary>
-        /// <param name="index">Property index.</param>
-        private void OnChanged(int index)
-        {
-            if (!isLoaded) return;
-
-            switch (index)
-            {
-                case 0: objState[0] = (byte)(s_values[0] != configurationName ? 1 : 0); break;
-                case 1: objState[1] = (byte)(s_values[1] != initialCatalog    ? 1 : 0); break;
-                case 2: objState[2] = (byte)(s_values[2] != targetDirectory   ? 1 : 0); break;
-                case 3: objState[3] = (byte)(s_values[3] != inputExtension    ? 1 : 0); break;
-                case 4:
-                    if (tr_types[00] != translatorTypes.Document || 
-                        tr_types[01] != translatorTypes.Acad || 
-                        tr_types[02] != translatorTypes.Acis || 
-                        tr_types[03] != translatorTypes.Bitmap || 
-                        tr_types[04] != translatorTypes.Bmf || 
-                        tr_types[05] != translatorTypes.Emf || 
-                        tr_types[06] != translatorTypes.Iges || 
-                        tr_types[07] != translatorTypes.Jt || 
-                        tr_types[08] != translatorTypes.Parasolid || 
-                        tr_types[09] != translatorTypes.Pdf || 
-                        tr_types[10] != translatorTypes.Step || 
-                        tr_types[11] != translatorTypes.Stl)
-                        objState[4] = 1;
-                    else
-                        objState[4] = 0;
+                case "Document":
+                    if (translator_0 == null)
+                    {
+                        translator_0 = new Translator_0();
+                        translator_0.ErrorsChanged += Translator_ErrorsChanged;
+                    }
+                    if (Translators.ContainsKey(name) == false)
+                        Translators.Add(name, translator_0);
+                    break;
+                case "Acad":
+                    if (translator_1 == null)
+                    {
+                        translator_1 = new Translator_1();
+                        translator_1.ErrorsChanged += Translator_ErrorsChanged;
+                    }
+                    if (Translators.ContainsKey(name) == false)
+                        Translators.Add(name, translator_1);
+                    break;
+                case "Acis":
+                    if (translator_2 == null)
+                    {
+                        translator_2 = new Translator_2();
+                        translator_2.ErrorsChanged += Translator_ErrorsChanged;
+                    }
+                    if (Translators.ContainsKey(name) == false)
+                        Translators.Add(name, translator_2);
+                    break;
+                case "Bitmap":
+                    if (translator_3 == null)
+                    {
+                        translator_3 = new Translator_3();
+                        translator_3.ErrorsChanged += Translator_ErrorsChanged;
+                    }
+                    if (Translators.ContainsKey(name) == false)
+                        Translators.Add(name, translator_3);
+                    break;
+                case "Iges":
+                    if (translator_6 == null)
+                    {
+                        translator_6 = new Translator_6();
+                        translator_6.ErrorsChanged += Translator_ErrorsChanged;
+                    }
+                    if (Translators.ContainsKey(name) == false)
+                        Translators.Add(name, translator_6);
+                    break;
+                case "Jt":
+                    if (translator_7 == null)
+                    {
+                        translator_7 = new Translator_7();
+                        translator_7.ErrorsChanged += Translator_ErrorsChanged;
+                    }
+                    if (Translators.ContainsKey(name) == false)
+                        Translators.Add(name, translator_7);
+                    break;
+                case "Pdf":
+                    if (translator_9 == null)
+                    {
+                        translator_9 = new Translator_9();
+                        translator_9.ErrorsChanged += Translator_ErrorsChanged;
+                    }
+                    if (Translators.ContainsKey(name) == false)
+                        Translators.Add(name, translator_9);
+                    break;
+                case "Step":
+                    if (translator_10 == null)
+                    {
+                        translator_10 = new Translator_10();
+                        translator_10.ErrorsChanged += Translator_ErrorsChanged;
+                    }
+                    if (Translators.ContainsKey(name) == false)
+                        Translators.Add(name, translator_10);
                     break;
             }
 
-            isChanged = false;
-
-            foreach (var i in objState)
+            if (TargetDirectory.Length > 0)
             {
-                if (i > 0)
-                {
-                    isChanged = true;
-                    break;
-                }
+                string path = Path.Combine(TargetDirectory, name);
+                if (Directory.Exists(path) == false)
+                    Directory.CreateDirectory(path);
             }
-
-            OnPropertyChanged("IsChanged");
         }
 
         /// <summary>
-        /// Extension method to get translators.
+        /// Load translators data.
         /// </summary>
-        /// <param name="element"></param>
-        internal void GetTranslators(XElement element)
+        internal void LoadTranslators()
         {
-            foreach (XElement i in element.Element("translators").Elements())
+            foreach (XElement i in translators.Elements())
             {
-                switch (i.Attribute("id").Value)
+                string name = i.Attribute("id").Value;
+                InitTranslator(name);
+
+                switch (name)
                 {
                     case "Document":
-                        translatorTypes.Document = true;
-                        translator_0.ConfigurationTask(i, 0);
+                        translator_0.LoadTranslator(i);
                         break;
                     case "Acad":
-                        translatorTypes.Acad = true;
-                        translator_1.ConfigurationTask(i, 0);
+                        translator_1.LoadTranslator(i);
                         break;
                     case "Acis":
-                        translatorTypes.Acis = true;
-                        translator_2.ConfigurationTask(i, 0);
+                        translator_2.LoadTranslator(i);
                         break;
                     case "Bitmap":
-                        translatorTypes.Bitmap = true;
-                        translator_3.ConfigurationTask(i, 0);
+                        translator_3.LoadTranslator(i);
                         break;
                     case "Iges":
-                        translatorTypes.Iges = true;
-                        translator_6.ConfigurationTask(i, 0);
+                        translator_6.LoadTranslator(i);
                         break;
                     case "Jt":
-                        translatorTypes.Jt = true;
-                        translator_7.ConfigurationTask(i, 0);
+                        translator_7.LoadTranslator(i);
                         break;
                     case "Pdf":
-                        translatorTypes.Pdf = true;
-                        translator_9.ConfigurationTask(i, 0);
+                        translator_9.LoadTranslator(i);
                         break;
                     case "Step":
-                        translatorTypes.Step = true;
-                        translator_10.ConfigurationTask(i, 0);
+                        translator_10.LoadTranslator(i);
                         break;
                 }
             }
         }
 
         /// <summary>
-        /// Extension method to set translators.
+        /// Create new configuration.
         /// </summary>
-        /// <param name="element"></param>
-        internal void SetTranslators(XElement element)
-        {
-            bool t_value = false;
-            XElement parent = element.Element("translators");
-            List<XElement> elements = new List<XElement>();
-
-            foreach (XElement e in parent.Elements())
-            {
-                elements.Add(e);
-            }
-
-            foreach (XElement i in elements)
-            {
-                switch (i.Attribute("id").Value)
-                {
-                    case "Document":
-                        if (t_value = translatorTypes.Document)
-                        {
-                            translator_0.ConfigurationTask(i, 1);
-                        }
-                        break;
-                    case "Acad":
-                        if (t_value = translatorTypes.Acad)
-                        {
-                            translator_1.ConfigurationTask(i, 1);
-                        }
-                        break;
-                    case "Acis":
-                        if (t_value = translatorTypes.Acis)
-                        {
-                            translator_2.ConfigurationTask(i, 1);
-                        }
-                        break;
-                    case "Bitmap":
-                        if (t_value = translatorTypes.Bitmap)
-                        {
-                            translator_3.ConfigurationTask(i, 1);
-                        }
-                        break;
-                    case "Iges":
-                        if (t_value = translatorTypes.Iges)
-                        {
-                            translator_6.ConfigurationTask(i, 1);
-                        }
-                        break;
-                    case "Jt":
-                        if (t_value = translatorTypes.Jt)
-                        {
-                            translator_7.ConfigurationTask(i, 1);
-                        }
-                        break;
-                    case "Pdf":
-                        if (t_value = translatorTypes.Pdf)
-                        {
-                            translator_9.ConfigurationTask(i, 1);
-                        }
-                        break;
-                    case "Step":
-                        if (t_value = translatorTypes.Step)
-                        {
-                            translator_10.ConfigurationTask(i, 1);
-                        }
-                        break;
-                }
-
-                if (!t_value) i.Remove();
-            }
-
-            foreach (var i in translators)
-            {
-                switch (i.Key)
-                {
-                    case "Document":
-                        if (translator_0.IsLoaded == false)
-                        {
-                            translator_0.AppendTranslatorToXml(parent, TranslatorType.Document);
-                        }
-                        break;
-                    case "Acad":
-                        if (translator_1.IsLoaded == false)
-                        {
-                            translator_1.AppendTranslatorToXml(parent, TranslatorType.Acad);
-                        }
-                        break;
-                    case "Acis":
-                        if (translator_2.IsLoaded == false)
-                        {
-                            translator_2.AppendTranslatorToXml(parent, TranslatorType.Acis);
-                        }
-                        break;
-                    case "Bitmap":
-                        if (translator_3.IsLoaded == false)
-                        {
-                            translator_3.AppendTranslatorToXml(parent, TranslatorType.Bitmap);
-                        }
-                        break;
-                    case "Iges":
-                        if (translator_6.IsLoaded == false)
-                        {
-                            translator_6.AppendTranslatorToXml(parent, TranslatorType.Iges);
-                        }
-                        break;
-                    case "Jt":
-                        if (translator_7.IsLoaded == false)
-                        {
-                            translator_7.AppendTranslatorToXml(parent, TranslatorType.Jt);
-                        }
-                        break;
-                    case "Pdf":
-                        if (translator_9.IsLoaded == false)
-                        {
-                            translator_9.AppendTranslatorToXml(parent, TranslatorType.Pdf);
-                        }
-                        break;
-                    case "Step":
-                        if (translator_10.IsLoaded == false)
-                        {
-                            translator_10.AppendTranslatorToXml(parent, TranslatorType.Step);
-                        }
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Create new configuration to Xml.
-        /// </summary>
-        /// <returns></returns>
+        /// <returns>The XML-data for new configuration.</returns>
         internal XDocument NewConfiguration()
         {
+            data_1_1 = new XAttribute("value", ConfigurationName);
+            data_1_2 = new XAttribute("value", InitialCatalog);
+            data_1_3 = new XAttribute("value", TargetDirectory);
+            data_1_4 = new XAttribute("value", InputExtension);
+            data_1_5 = new XAttribute("value", TranslatorTypes.ToString());
+
+            translators = new XElement("translators");
+
             XDocument document = new XDocument(
                 new XDeclaration("1.0", "utf-8", null),
                 new XElement("configuration", 
                     new XElement("header",
                         new XElement("parameter",
                             new XAttribute("name", "ConfigurationName"),
-                            new XAttribute("value", configurationName)),
+                            data_1_1),
                         new XElement("parameter",
                             new XAttribute("name", "InitialCatalog"),
-                            new XAttribute("value", initialCatalog)),
+                            data_1_2),
                         new XElement("parameter",
                             new XAttribute("name", "TargetDirectory"),
-                            new XAttribute("value", targetDirectory)),
+                            data_1_3),
                         new XElement("parameter",
                             new XAttribute("name", "InputExtension"),
-                            new XAttribute("value", inputExtension)),
+                            data_1_4),
                         new XElement("parameter",
                             new XAttribute("name", "TranslatorTypes"),
-                            new XAttribute("value", translatorTypes.ToString()))),
-                    new XElement("translators")));
+                            data_1_5)), translators));
 
             return document;
         }
@@ -666,39 +436,47 @@ namespace TFlex.PackageManager.Configuration
         /// </param>
         internal void ConfigurationTask(int flag)
         {
-            string path = UserDirectory + "\\" + configurationName + ".config";
+            var path = UserDirectory + "\\" + ConfigurationName + ".config";
+
+            if (flag == 0 && File.Exists(path))
+            {
+                DataContext = XDocument.Load(path);
+                translators = DataContext
+                    .Element("configuration")
+                    .Element("translators");
+
+                var header = DataContext
+                    .Element("configuration")
+                    .Element("header");
+
+                foreach (var p in header.Elements())
+                {
+                    LoadHeader(p);
+                }
+
+                LoadTranslators();
+                DataContext.Changed += DataContext_Changed;
+                IsChanged = false;
+            }
 
             if (flag != 2)
             {
-                XDocument document;
-                if (File.Exists(path))
-                    document = XDocument.Load(path);
-                else
-                    document = NewConfiguration();
-
-                XElement element = document.Element("configuration");
-
-                foreach (var i in element.Element("header").Elements())
+                if (DataContext == null)
                 {
-                    HeaderTask(i, flag);
+                    DataContext = NewConfiguration();
+                    DataContext.Changed += DataContext_Changed;
+                    IsChanged = false;
                 }
 
-                if (flag == 0)
+                if (flag == 1)
                 {
-                    GetTranslators(element);
+                    DataContext.Save(path);
+                    IsChanged = false;
                 }
-                else
-                {
-                    SetTranslators(element);
-                    element.Save(path);
-                }
-
-                OnLoaded();
             }
             else
             {
                 File.Delete(path);
-                isLoaded = false;
             }
 
             //Debug.WriteLine(string.Format("ConfigurationTask [flag: {0}, path: {1}]", flag, path));
@@ -707,60 +485,33 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Extension method for processing header parameters.
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="flag"></param>
-        private void HeaderTask(XElement element, int flag)
+        /// <param name="element">Source header element.</param>
+        private void LoadHeader(XElement element)
         {
-            string value = element.Attribute("value").Value;
+            var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
                 case "ConfigurationName":
-                    if (flag == 0)
-                        configurationName = value;
-                    else
-                        value = configurationName;
+                    configurationName = a.Value;
+                    data_1_1 = a;
                     break;
                 case "InitialCatalog":
-                    if (flag == 0)
-                        initialCatalog = value;
-                    else
-                        value = initialCatalog;
+                    initialCatalog = a.Value;
+                    data_1_2 = a;
                     break;
                 case "TargetDirectory":
-                    if (flag == 0)
-                        targetDirectory = value;
-                    else
-                        value = targetDirectory;
+                    targetDirectory = a.Value;
+                    data_1_3 = a;
                     break;
                 case "InputExtension":
-                    if (flag == 0)
-                        inputExtension = value;
-                    else
-                        value = inputExtension;
+                    inputExtension = a.Value;
+                    data_1_4 = a;
                     break;
                 case "TranslatorTypes":
-                    if (flag == 0)
-                    {
-                        string[] values = value.Split(' ');
-
-                        translatorTypes.Document  = values[00] == "01";
-                        translatorTypes.Acad      = values[01] == "01";
-                        translatorTypes.Acis      = values[02] == "01";
-                        translatorTypes.Bitmap    = values[03] == "01";
-                        translatorTypes.Bmf       = values[04] == "01";
-                        translatorTypes.Emf       = values[05] == "01";
-                        translatorTypes.Iges      = values[06] == "01";
-                        translatorTypes.Jt        = values[07] == "01";
-                        translatorTypes.Parasolid = values[08] == "01";
-                        translatorTypes.Pdf       = values[09] == "01";
-                        translatorTypes.Step      = values[10] == "01";
-                        translatorTypes.Stl       = values[11] == "01";
-                    }
-                    else
-                        value = translatorTypes.ToString();
+                    TranslatorTypes.SetValue(a.Value);
+                    data_1_5 = a;
                     break;
             }
-            element.Attribute("value").Value = value;
         }
         #endregion
 
@@ -787,27 +538,28 @@ namespace TFlex.PackageManager.Configuration
     public class TranslatorTypes : INotifyPropertyChanged
     {
         #region private fields
-        private bool document;
-        private bool acad;
-        private bool acis;
-        private bool bitmap;
-        private bool bmf;
-        private bool emf;
-        private bool iges;
-        private bool jt;
-        private bool parasolid;
-        private bool pdf;
-        private bool step;
-        private bool stl;
+        bool document;
+        bool acad;
+        bool acis;
+        bool bitmap;
+        bool bmf;
+        bool emf;
+        bool iges;
+        bool jt;
+        bool parasolid;
+        bool pdf;
+        bool step;
+        bool stl;
         #endregion
 
-        #region properties
+        #region public properties
         [PropertyOrder(0)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_0")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_0")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Document
         {
-            get { return document; }
+            get => document;
             set
             {
                 if (document != value)
@@ -821,9 +573,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(1)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_1")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_1")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Acad
         {
-            get { return acad; }
+            get => acad;
             set
             {
                 if (acad != value)
@@ -837,9 +590,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(2)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_2")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_2")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Acis
         {
-            get { return acis; }
+            get => acis;
             set
             {
                 if (acis != value)
@@ -853,9 +607,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(3)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_3")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_3")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Bitmap
         {
-            get { return bitmap; }
+            get => bitmap;
             set
             {
                 if (bitmap != value)
@@ -870,9 +625,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(4)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_4")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_4")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Bmf
         {
-            get { return bmf; }
+            get => bmf;
             set
             {
                 if (bmf != value)
@@ -887,9 +643,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(5)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_5")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_5")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Emf
         {
-            get { return emf; }
+            get => emf;
             set
             {
                 if (emf != value)
@@ -903,9 +660,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(6)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_6")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_6")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Iges
         {
-            get { return iges; }
+            get => iges;
             set
             {
                 if (iges != value)
@@ -919,9 +677,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(7)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_7")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_7")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Jt
         {
-            get { return jt; }
+            get => jt;
             set
             {
                 if (jt != value)
@@ -936,9 +695,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(8)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_8")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_8")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Parasolid
         {
-            get { return parasolid; }
+            get => parasolid;
             set
             {
                 if (parasolid != value)
@@ -952,9 +712,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(9)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_9")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_9")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Pdf
         {
-            get { return pdf; }
+            get => pdf;
             set
             {
                 if (pdf != value)
@@ -968,9 +729,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(10)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_10")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_10")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Step
         {
-            get { return step; }
+            get => step;
             set
             {
                 if (step != value)
@@ -985,9 +747,10 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(11)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5_11")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5_11")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Stl
         {
-            get { return stl; }
+            get => stl;
             set
             {
                 if (stl != value)
@@ -1000,6 +763,24 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region methods
+        public void SetValue(string value)
+        {
+            string[] values = value.Split(' ');
+
+            document  = values[00] == "01";
+            acad      = values[01] == "01";
+            acis      = values[02] == "01";
+            bitmap    = values[03] == "01";
+            bmf       = values[04] == "01";
+            emf       = values[05] == "01";
+            iges      = values[06] == "01";
+            jt        = values[07] == "01";
+            parasolid = values[08] == "01";
+            pdf       = values[09] == "01";
+            step      = values[10] == "01";
+            stl       = values[11] == "01";
+        }
+
         public override string ToString()
         {
             string[] values = new string[12];

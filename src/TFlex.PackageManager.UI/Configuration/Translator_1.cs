@@ -1,16 +1,16 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
 using System.Globalization;
-using System.Linq;
 using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Attributes;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-using System.Collections.Generic;
+using TFlex.PackageManager.Editors;
+using System.Linq;
 
 #pragma warning disable CA1707
 
@@ -24,25 +24,32 @@ namespace TFlex.PackageManager.Configuration
     public class Translator_1 : Translator_0
     {
         #region private fields
-        private int extension;
-        private int autocadExportFileVersion;
-        private int convertAreas;
-        private int convertToLines;
-        private int convertDimensions;
-        private int convertLineText;
-        private int convertMultitext;
-        private int biarcInterpolationForSplines;
-        private decimal biarcInterpolationAccuracyForSplines;
+        int extension;
+        int autocadExportFileVersion;
+        int convertAreas;
+        int convertToLines;
+        int convertDimensions;
+        int convertLineText;
+        int convertMultitext;
+        int biarcInterpolationForSplines;
+        decimal biarcInterpolationAccuracyForSplines;
 
-        private readonly byte[] objState;
-        private readonly int[] i_values;
-        private readonly decimal[] m_values;
-        private bool isChanged;
+        XAttribute data_3_2;
+        XAttribute data_4_1;
+        XAttribute data_4_2;
+        XAttribute data_4_3;
+        XAttribute data_4_4;
+        XAttribute data_4_5;
+        XAttribute data_4_6;
+        XAttribute data_4_7;
         #endregion
 
-        public Translator_1()
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="ext">Target extension the file.</param>
+        public Translator_1(string ext = "DWG") : base (ext)
         {
-            extension                            = 0;
             autocadExportFileVersion             = 3;
             convertAreas                         = 0;
             convertToLines                       = 1;
@@ -51,12 +58,6 @@ namespace TFlex.PackageManager.Configuration
             convertMultitext                     = 0;
             biarcInterpolationForSplines         = 0;
             biarcInterpolationAccuracyForSplines = 0.1m;
-
-            TargetExtension = "DWG";
-
-            objState        = new byte[8];
-            i_values        = new int[7];
-            m_values        = new decimal[1];
         }
 
         #region public properties
@@ -70,13 +71,10 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category3")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn3_1")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn3_1")]
-        [ItemsSource(typeof(ExtensionItems_1))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Extension
         {
-            get
-            {
-                return extension;
-            }
+            get => extension;
             set
             {
                 if (extension != value)
@@ -107,16 +105,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category3")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn3_2")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn3_2")]
-        [ItemsSource(typeof(AutocadExportFileVersionItems))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int AutocadExportFileVersion
         {
-            get { return autocadExportFileVersion; }
+            get => autocadExportFileVersion;
             set
             {
                 if (autocadExportFileVersion != value)
                 {
                     autocadExportFileVersion = value;
-                    OnChanged(16);
+                    data_3_2.Value = value.ToString();
+
+                    OnPropertyChanged("AutocadExportFileVersion");
                 }
             }
         }
@@ -130,16 +130,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_1")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_1")]
-        [ItemsSource(typeof(ConvertAreasItems))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertAreas
         {
-            get { return convertAreas; }
+            get => convertAreas;
             set
             {
                 if (convertAreas != value)
                 {
                     convertAreas = value;
-                    OnChanged(17);
+                    data_4_1.Value = value.ToString();
+
+                    OnPropertyChanged("ConvertAreas");
                 }
             }
         }
@@ -153,16 +155,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_2")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_2")]
-        [ItemsSource(typeof(ConvertToLinesItems))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertToLines
         {
-            get { return convertToLines; }
+            get => convertToLines;
             set
             {
                 if (convertToLines != value)
                 {
                     convertToLines = value;
-                    OnChanged(18);
+                    data_4_2.Value = value.ToString();
+
+                    OnPropertyChanged("ConvertToLines");
                 }
             }
         }
@@ -177,16 +181,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_3")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_3")]
-        [ItemsSource(typeof(ConvertDimensionsItems))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertDimensions
         {
-            get { return convertDimensions; }
+            get => convertDimensions;
             set
             {
                 if (convertDimensions != value)
                 {
                     convertDimensions = value;
-                    OnChanged(19);
+                    data_4_3.Value = value.ToString();
+
+                    OnPropertyChanged("ConvertDimensions");
                 }
             }
         }
@@ -200,16 +206,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_4")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_4")]
-        [ItemsSource(typeof(ConvertLineTextItems))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertLineText
         {
-            get { return convertLineText; }
+            get => convertLineText;
             set
             {
                 if (convertLineText != value)
                 {
                     convertLineText = value;
-                    OnChanged(20);
+                    data_4_4.Value = value.ToString();
+
+                    OnPropertyChanged("ConvertLineText");
                 }
             }
         }
@@ -224,16 +232,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_5")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_5")]
-        [ItemsSource(typeof(ConvertMultitextItems))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertMultitext
         {
-            get { return convertMultitext; }
+            get => convertMultitext;
             set
             {
                 if (convertMultitext != value)
                 {
                     convertMultitext = value;
-                    OnChanged(21);
+                    data_4_5.Value = value.ToString();
+
+                    OnPropertyChanged("ConvertMultitext");
                 }
             }
         }
@@ -247,16 +257,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_6")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_6")]
-        [ItemsSource(typeof(BiarcInterpolationForSplinesItems))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int BiarcInterpolationForSplines
         {
-            get { return biarcInterpolationForSplines; }
+            get => biarcInterpolationForSplines;
             set
             {
                 if (biarcInterpolationForSplines != value)
                 {
                     biarcInterpolationForSplines = value;
-                    OnChanged(22);
+                    data_4_6.Value = value.ToString();
+
+                    OnPropertyChanged("BiarcInterpolationForSplines");
                 }
             }
         }
@@ -271,81 +283,31 @@ namespace TFlex.PackageManager.Configuration
         [Editor(typeof(BiarcInterpolationControl), typeof(UITypeEditor))]
         public decimal BiarcInterpolationAccuracyForSplines
         {
-            get { return biarcInterpolationAccuracyForSplines; }
+            get => biarcInterpolationAccuracyForSplines;
             set
             {
                 if (biarcInterpolationAccuracyForSplines != value)
                 {
                     biarcInterpolationAccuracyForSplines = value;
-                    OnChanged(23);
+                    data_4_7.Value = value
+                        .ToString(CultureInfo.InvariantCulture);
+
+                    OnPropertyChanged("BiarcInterpolationAccuracyForSplines");
                 }
             }
         }
         #endregion
 
         #region internal properties
+        internal override TranslatorType Mode => TranslatorType.Acad;
+
         internal override uint Processing
         {
-            get { return (uint)ProcessingType.Export; }
-        }
-
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
+            get => (uint)ProcessingMode.Export;
         }
         #endregion
 
         #region internal methods
-        internal override void OnLoaded()
-        {
-            i_values[0] = autocadExportFileVersion;
-            i_values[1] = convertAreas;
-            i_values[2] = convertToLines;
-            i_values[3] = convertDimensions;
-            i_values[4] = convertLineText;
-            i_values[5] = convertMultitext;
-            i_values[6] = biarcInterpolationForSplines;
-            m_values[0] = biarcInterpolationAccuracyForSplines;
-
-            for (int i = 0; i < objState.Length; i++)
-                objState[i] = 0;
-
-            base.OnLoaded();
-        }
-
-        internal override void OnChanged(int index)
-        {
-            if (!IsLoaded) return;
-
-            switch (index)
-            {
-                case 16: objState[0] = (byte)(i_values[0] != autocadExportFileVersion             ? 1 : 0); break;
-                case 17: objState[1] = (byte)(i_values[1] != convertAreas                         ? 1 : 0); break;
-                case 18: objState[2] = (byte)(i_values[2] != convertToLines                       ? 1 : 0); break;
-                case 19: objState[3] = (byte)(i_values[3] != convertDimensions                    ? 1 : 0); break;
-                case 20: objState[4] = (byte)(i_values[4] != convertLineText                      ? 1 : 0); break;
-                case 21: objState[5] = (byte)(i_values[5] != convertMultitext                     ? 1 : 0); break;
-                case 22: objState[6] = (byte)(i_values[6] != biarcInterpolationForSplines         ? 1 : 0); break;
-                case 23: objState[7] = (byte)(m_values[0] != biarcInterpolationAccuracyForSplines ? 1 : 0); break;
-            }
-
-            isChanged = false;
-
-            foreach (var i in objState)
-            {
-                if (i > 0)
-                {
-                    isChanged = true;
-                    break;
-                }
-            }
-
-            base.OnChanged(index);
-        }
-
         internal override void Export(Document document, Dictionary<Page, string> pages, LogFile logFile)
         {
             ExportToDWG export1;
@@ -381,125 +343,105 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
+        internal override XElement NewTranslator()
         {
-            base.AppendTranslatorToXml(parent, translator);
+            XElement data = base.NewTranslator();
 
-            string value = Enum.GetName(typeof(TranslatorType), translator);
-            parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
-                new XElement("parameter",
-                    new XAttribute("name", "FileNameSuffix"),
-                    new XAttribute("value", FileNameSuffix)),
-                new XElement("parameter",
-                    new XAttribute("name", "TemplateFileName"),
-                    new XAttribute("value", TemplateFileName)),
-                new XElement("parameter",
-                    new XAttribute("name", "TargetExtension"),
-                    new XAttribute("value", TargetExtension)),
-                new XElement("parameter",
-                    new XAttribute("name", "AutocadExportFileVersion"),
-                    new XAttribute("value", AutocadExportFileVersion)),
-                new XElement("parameter",
-                    new XAttribute("name", "ConvertAreas"),
-                    new XAttribute("value", ConvertAreas)),
-                new XElement("parameter",
-                    new XAttribute("name", "ConvertToLines"),
-                    new XAttribute("value", ConvertToLines)),
-                new XElement("parameter",
-                    new XAttribute("name", "ConvertDimensions"),
-                    new XAttribute("value", ConvertDimensions)),
-                new XElement("parameter",
-                    new XAttribute("name", "ConvertLineText"),
-                    new XAttribute("value", ConvertLineText)),
-                new XElement("parameter",
-                    new XAttribute("name", "ConvertMultitext"),
-                    new XAttribute("value", ConvertMultitext)),
-                new XElement("parameter",
-                    new XAttribute("name", "BiarcInterpolationForSplines"),
-                    new XAttribute("value", BiarcInterpolationForSplines)),
-                new XElement("parameter",
-                    new XAttribute("name", "BiarcInterpolationAccuracyForSplines"),
-                    new XAttribute("value", BiarcInterpolationAccuracyForSplines)));
+            data_3_2 = new XAttribute("value", AutocadExportFileVersion.ToString());
+            data_4_1 = new XAttribute("value", ConvertAreas.ToString());
+            data_4_2 = new XAttribute("value", ConvertToLines.ToString());
+            data_4_3 = new XAttribute("value", ConvertDimensions.ToString());
+            data_4_4 = new XAttribute("value", ConvertLineText.ToString());
+            data_4_5 = new XAttribute("value", ConvertMultitext.ToString());
+            data_4_6 = new XAttribute("value", BiarcInterpolationForSplines.ToString());
+            data_4_7 = new XAttribute("value", BiarcInterpolationAccuracyForSplines
+                .ToString(CultureInfo.InvariantCulture));
+
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "AutocadExportFileVersion"),
+                data_3_2));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ConvertAreas"),
+                data_4_1));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ConvertToLines"),
+                data_4_2));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ConvertDimensions"),
+                data_4_3));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ConvertLineText"),
+                data_4_4));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ConvertMultitext"),
+                data_4_5));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "BiarcInterpolationForSplines"),
+                data_4_6));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "BiarcInterpolationAccuracyForSplines"),
+                data_4_7));
+
+            return data;
         }
 
-        internal override void TranslatorTask(XElement element, int flag)
+        internal override void LoadParameter(XElement element)
         {
-            base.TranslatorTask(element, flag);
+            base.LoadParameter(element);
 
-            string value = element.Attribute("value").Value;
+            var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
                 case "TargetExtension":
-                    if (flag == 0)
+                    switch (a.Value)
                     {
-                        switch (value)
-                        {
-                            case "DWG": extension = 0; break;
-                            case "DXF": extension = 1; break;
-                            case "DXB": extension = 2; break;
-                        }
+                        case "DWG": extension = 0; break;
+                        case "DXF": extension = 1; break;
+                        case "DXB": extension = 2; break;
                     }
-                    else
-                        value = TargetExtension;
                     break;
                 case "AutocadExportFileVersion":
-                    if (flag == 0)
-                        autocadExportFileVersion = int.Parse(value);
-                    else
-                        value = autocadExportFileVersion.ToString();
+                    autocadExportFileVersion = int.Parse(a.Value);
+                    data_3_2 = a;
                     break;
                 case "ConvertAreas":
-                    if (flag == 0)
-                        convertAreas = int.Parse(value);
-                    else
-                        value = convertAreas.ToString();
+                    convertAreas = int.Parse(a.Value);
+                    data_4_1 = a;
                     break;
                 case "ConvertToLines":
-                    if (flag == 0)
-                        convertToLines = int.Parse(value);
-                    else
-                        value = convertToLines.ToString();
+                    convertToLines = int.Parse(a.Value);
+                    data_4_2 = a;
                     break;
                 case "ConvertDimensions":
-                    if (flag == 0)
-                        convertDimensions = int.Parse(value);
-                    else
-                        value = convertDimensions.ToString();
+                    convertDimensions = int.Parse(a.Value);
+                    data_4_3 = a;
                     break;
                 case "ConvertLineText":
-                    if (flag == 0)
-                        convertLineText = int.Parse(value);
-                    else
-                        value = convertLineText.ToString();
+                    convertLineText = int.Parse(a.Value);
+                    data_4_4 = a;
                     break;
                 case "ConvertMultitext":
-                    if (flag == 0)
-                        convertMultitext = int.Parse(value);
-                    else
-                        value = convertMultitext.ToString();
+                    convertMultitext = int.Parse(a.Value);
+                    data_4_5 = a;
                     break;
                 case "BiarcInterpolationForSplines":
-                    if (flag == 0)
-                        biarcInterpolationForSplines = int.Parse(value);
-                    else
-                        value = biarcInterpolationForSplines.ToString();
+                    biarcInterpolationForSplines = int.Parse(a.Value);
+                    data_4_6 = a;
                     break;
                 case "BiarcInterpolationAccuracyForSplines":
-                    if (flag == 0)
-                        biarcInterpolationAccuracyForSplines = decimal.Parse(value,
-                            NumberStyles.Float, CultureInfo.InvariantCulture);
-                    else
-                        value = biarcInterpolationAccuracyForSplines.ToString(CultureInfo.InvariantCulture);
+                    biarcInterpolationAccuracyForSplines = decimal
+                        .Parse(a.Value, NumberStyles.Float, 
+                        CultureInfo.InvariantCulture);
+                    data_4_7 = a;
                     break;
             }
-            element.Attribute("value").Value = value;
         }
         #endregion
 
         #region private methods
         private void ExportTo(ExportToACAD export, Page page)
         {
-            switch (autocadExportFileVersion)
+            switch (AutocadExportFileVersion)
             {
                 case 0:
                     export.AutocadExportFileVersion = AutocadExportFileVersionType.efACAD12;
@@ -533,10 +475,10 @@ namespace TFlex.PackageManager.Configuration
             export.ConvertLineText   = ConvertLineText > 0;
             export.ConvertMultitext  = ConvertMultitext;
             // encoding ?
-            if (biarcInterpolationForSplines > 0)
+            if (BiarcInterpolationForSplines > 0)
             {
                 export.BiarcInterpolationForSplines = true;
-                export.BiarcInterpolationAccuracyForSplines = (double)biarcInterpolationAccuracyForSplines;
+                export.BiarcInterpolationAccuracyForSplines = (double)BiarcInterpolationAccuracyForSplines;
             }
             else
             {
@@ -548,111 +490,5 @@ namespace TFlex.PackageManager.Configuration
             export.Page = page;
         }
         #endregion
-    }
-
-#pragma warning disable CA1812
-    internal class ExtensionItems_1 : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, "DWG" },
-                { 1, "DXF" },
-                { 2, "DXB" }
-            };
-        }
-    }
-
-    internal class AutocadExportFileVersionItems : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0,   "12" }, 
-                { 1,   "13" }, 
-                { 2,   "14" }, 
-                { 3, "2000" }, 
-                { 4, "2004" }, 
-                { 5, "2007" }, 
-                { 6, "2010" }, 
-                { 7, "2013" }
-            };
-        }
-    }
-
-    internal class ConvertAreasItems : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_1_0", 0) },
-                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_1_1", 0) }
-            };
-        }
-    }
-
-    internal class ConvertToLinesItems : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_2_0", 0) },
-                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_2_1", 0) }
-            };
-        }
-    }
-
-    internal class ConvertDimensionsItems : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_3_0", 0) },
-                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_3_1", 0) },
-                { 2, Resource.GetString(Resource.TRANSLATOR_1, "dn4_3_2", 0) }
-            };
-        }
-    }
-
-    internal class ConvertLineTextItems : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_4_0", 0) },
-                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_4_1", 0) }
-            };
-        }
-    }
-
-    internal class ConvertMultitextItems : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_5_0", 0) },
-                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_5_1", 0) },
-                { 2, Resource.GetString(Resource.TRANSLATOR_1, "dn4_5_2", 0) }
-            };
-        }
-    }
-
-    internal class BiarcInterpolationForSplinesItems : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, Resource.GetString(Resource.TRANSLATOR_1, "dn4_6_0", 0) },
-                { 1, Resource.GetString(Resource.TRANSLATOR_1, "dn4_6_1", 0) }
-            };
-        }
     }
 }

@@ -159,31 +159,42 @@
     <comment>Выход из приложения</comment>
   </data>
   <data name="menuItem2" xml:space="preserve">
-    <value>Обработка</value>
+    <value>Правка</value>
   </data>
   <data name="menuItem2_1" xml:space="preserve">
+    <value>Отменить</value>
+    <comment>Отменить</comment>
+  </data>
+  <data name="menuItem2_2" xml:space="preserve">
+    <value>Повторить</value>
+    <comment>Повторить</comment>
+  </data>
+  <data name="menuItem3" xml:space="preserve">
+    <value>Обработка</value>
+  </data>
+  <data name="menuItem3_1" xml:space="preserve">
     <value>Старт</value>
     <comment>Запустить процесс обработки</comment>
   </data>
-  <data name="menuItem2_2" xml:space="preserve">
+  <data name="menuItem3_2" xml:space="preserve">
     <value>Стоп</value>
     <comment>Завершить процесс обработки</comment>
   </data>
-  <data name="menuItem2_3" xml:space="preserve">
+  <data name="menuItem3_3" xml:space="preserve">
     <value>Очистить каталог вывода</value>
     <comment>Очистить каталог вывода</comment>
   </data>
-  <data name="menuItem3" xml:space="preserve">
+  <data name="menuItem4" xml:space="preserve">
     <value>Настройки</value>
   </data>
-  <data name="menuItem3_1" xml:space="preserve">
+  <data name="menuItem4_1" xml:space="preserve">
     <value>Опции</value>
     <comment>Настройки приложения</comment>
   </data>
-  <data name="menuItem4_1" xml:space="preserve">
+  <data name="menuItem5_1" xml:space="preserve">
     <value>О программе</value>
   </data>
-  <data name="menuItem4_2" xml:space="preserve">
+  <data name="menuItem5_2" xml:space="preserve">
     <value>Справка</value>
   </data>
   <data name="message1" xml:space="preserve">
@@ -194,11 +205,11 @@
   </data>
   <data name="sb_label1" xml:space="preserve">
     <value>Iq {0}</value>
-    <comment>Кол-во файлов документов</comment>
+    <comment>Кол-во файлов ввода</comment>
   </data>
   <data name="sb_label2" xml:space="preserve">
     <value>Oq {0}</value>
-    <comment>Кол-во экспортированных файлов</comment>
+    <comment>Кол-во файлов вывода</comment>
   </data>
   <data name="sb_label3" xml:space="preserve">
     <value>Sq {0}</value>

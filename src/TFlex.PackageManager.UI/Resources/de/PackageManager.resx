@@ -159,31 +159,42 @@
     <comment>Anwendung beenden</comment>
   </data>
   <data name="menuItem2" xml:space="preserve">
-    <value>Verarbeitung</value>
+    <value>Bearbeiten</value>
   </data>
   <data name="menuItem2_1" xml:space="preserve">
+    <value>Rückgängig</value>
+    <comment>Rückgängig</comment>
+  </data>
+  <data name="menuItem2_2" xml:space="preserve">
+    <value>Wiederherstellen</value>
+    <comment>Wiederherstellen</comment>
+  </data>
+  <data name="menuItem3" xml:space="preserve">
+    <value>Verarbeitung</value>
+  </data>
+  <data name="menuItem3_1" xml:space="preserve">
     <value>Start</value>
     <comment>Verarbeitung starten</comment>
   </data>
-  <data name="menuItem2_2" xml:space="preserve">
+  <data name="menuItem3_2" xml:space="preserve">
     <value>Stoppen</value>
     <comment>Verarbeitung abschließen</comment>
   </data>
-  <data name="menuItem2_3" xml:space="preserve">
+  <data name="menuItem3_3" xml:space="preserve">
     <value>Bereinigen sie das zielverzeichnis</value>
     <comment>Bereinigen sie das zielverzeichnis</comment>
   </data>
-  <data name="menuItem3" xml:space="preserve">
+  <data name="menuItem4" xml:space="preserve">
     <value>Einstellungen</value>
   </data>
-  <data name="menuItem3_1" xml:space="preserve">
+  <data name="menuItem4_1" xml:space="preserve">
     <value>Optionen</value>
     <comment>Anwendungseinstellungen</comment>
   </data>
-  <data name="menuItem4_1" xml:space="preserve">
+  <data name="menuItem5_1" xml:space="preserve">
     <value>Über uns</value>
   </data>
-  <data name="menuItem4_2" xml:space="preserve">
+  <data name="menuItem5_2" xml:space="preserve">
     <value>Hilfe</value>
   </data>
   <data name="message1" xml:space="preserve">

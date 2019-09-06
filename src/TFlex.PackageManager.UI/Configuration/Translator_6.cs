@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.ComponentModel;
+using System.Drawing.Design;
 using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -17,21 +18,18 @@ namespace TFlex.PackageManager.Configuration
     public class Translator_6 : Translator3D
     {
         #region private fields
-        private bool convertAnalyticGeometryToNurbs;
-        private bool saveSolidBodiesAsFaceSet;
+        bool convertAnalyticGeometryToNurbs;
+        bool saveSolidBodiesAsFaceSet;
 
-        private readonly byte[] objState;
-        private readonly bool[] b_values;
-        private bool isChanged;
+        XAttribute data_4_0;
+        XAttribute data_4_1;
         #endregion
 
-        public Translator_6()
-        {
-            TargetExtension = "IGS";
-
-            objState        = new byte[2];
-            b_values        = new bool[2];
-        }
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="ext">Target extension the file.</param>
+        public Translator_6(string ext = "IGS") : base (ext) { }
 
         #region public properties
         /// <summary>
@@ -41,15 +39,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_3D, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_6, "dn4_0")]
         [CustomDescription(Resource.TRANSLATOR_6, "dn4_0")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ConvertAnalyticGeometryToNurbs
         {
-            get { return convertAnalyticGeometryToNurbs; }
+            get => convertAnalyticGeometryToNurbs;
             set
             {
                 if (convertAnalyticGeometryToNurbs != value)
                 {
                     convertAnalyticGeometryToNurbs = value;
-                    OnChanged(50);
+                    data_4_0.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("ConvertAnalyticGeometryToNurbs");
                 }
             }
         }
@@ -61,66 +62,28 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_3D, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_6, "dn4_1")]
         [CustomDescription(Resource.TRANSLATOR_6, "dn4_1")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool SaveSolidBodiesAsFaceSet
         {
-            get { return saveSolidBodiesAsFaceSet; }
+            get => saveSolidBodiesAsFaceSet;
             set
             {
                 if (saveSolidBodiesAsFaceSet != value)
                 {
                     saveSolidBodiesAsFaceSet = value;
-                    OnChanged(51);
+                    data_4_1.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("SaveSolidBodiesAsFaceSet");
                 }
             }
         }
         #endregion
 
         #region internal properties
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
-        }
+        internal override TranslatorType Mode => TranslatorType.Iges;
         #endregion
 
         #region internal methods
-        internal override void OnLoaded()
-        {
-            b_values[0] = convertAnalyticGeometryToNurbs;
-            b_values[1] = saveSolidBodiesAsFaceSet;
-
-            for (int i = 0; i < objState.Length; i++)
-                objState[i] = 0;
-
-            base.OnLoaded();
-        }
-
-        internal override void OnChanged(int index)
-        {
-            if (!IsLoaded) return;
-
-            switch (index)
-            {
-                case 50: objState[0] = (byte)(b_values[0] != convertAnalyticGeometryToNurbs ? 1 : 0); break;
-                case 51: objState[1] = (byte)(b_values[1] != saveSolidBodiesAsFaceSet       ? 1 : 0); break;
-            }
-
-            isChanged = false;
-
-            foreach (var i in objState)
-            {
-                if (i > 0)
-                {
-                    isChanged = true;
-                    break;
-                }
-            }
-
-            base.OnChanged(index);
-        }
-
         internal override void Export(Document document, string path, LogFile logFile)
         {
             ExportTo3dMode exportMode = ExportMode == 0
@@ -145,8 +108,8 @@ namespace TFlex.PackageManager.Configuration
                 ExportWireBodies  = ExportWireBodies,
                 SimplifyGeometry  = SimplifyGeometry,
                 ShowDialog        = false,
-                ConvertAnaliticGeometryToNurbs = convertAnalyticGeometryToNurbs,
-                SaveSolidBodiesAsFaceSet       = saveSolidBodiesAsFaceSet
+                ConvertAnaliticGeometryToNurbs = ConvertAnalyticGeometryToNurbs,
+                SaveSolidBodiesAsFaceSet       = SaveSolidBodiesAsFaceSet
             };
 
             if (export.Export(path))
@@ -155,41 +118,39 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
+        internal override XElement NewTranslator()
         {
-            base.AppendTranslatorToXml(parent, translator);
+            XElement data = base.NewTranslator();
 
-            string value = Enum.GetName(typeof(TranslatorType), translator);
-            parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
-                new XElement("parameter",
-                    new XAttribute("name", "ConvertAnalyticGeometryToNurbs"),
-                    new XAttribute("value", ConvertAnalyticGeometryToNurbs ? "1" : "0")),
-                new XElement("parameter", 
-                    new XAttribute("name", "SaveSolidBodiesAsFaceSet"), 
-                    new XAttribute("value", SaveSolidBodiesAsFaceSet ? "1" : "0")));
+            data_4_0 = new XAttribute("value", ConvertAnalyticGeometryToNurbs ? "1" : "0");
+            data_4_1 = new XAttribute("value", SaveSolidBodiesAsFaceSet ? "1" : "0");
+
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ConvertAnalyticGeometryToNurbs"),
+                data_4_0));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "SaveSolidBodiesAsFaceSet"),
+                data_4_1));
+
+            return data;
         }
 
-        internal override void TranslatorTask(XElement element, int flag)
+        internal override void LoadParameter(XElement element)
         {
-            base.TranslatorTask(element, flag);
+            base.LoadParameter(element);
 
-            string value = element.Attribute("value").Value;
+            var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
                 case "ConvertAnalyticGeometryToNurbs":
-                    if (flag == 0)
-                        convertAnalyticGeometryToNurbs = value == "1";
-                    else
-                        value = convertAnalyticGeometryToNurbs ? "1" : "0";
+                    convertAnalyticGeometryToNurbs = a.Value == "1";
+                    data_4_0 = a;
                     break;
                 case "SaveSolidBodiesAsFaceSet":
-                    if (flag == 0)
-                        saveSolidBodiesAsFaceSet = value == "1";
-                    else
-                        value = saveSolidBodiesAsFaceSet ? "1" : "0";
+                    saveSolidBodiesAsFaceSet = a.Value == "1";
+                    data_4_1 = a;
                     break;
             }
-            element.Attribute("value").Value = value;
         }
         #endregion
     }

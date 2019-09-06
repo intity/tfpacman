@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.ComponentModel;
+using System.Drawing.Design;
 using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -17,17 +18,16 @@ namespace TFlex.PackageManager.Configuration
     public class Translator_10 : Translator3D
     {
         #region private fields
-        private int protocol;
-        private readonly int[] i_values;
-        private bool isChanged;
+        int protocol;
+
+        XAttribute data_4_0;
         #endregion
 
-        public Translator_10()
-        {
-            protocol        = 1;
-            TargetExtension = "STP";
-            i_values        = new int[1];
-        }
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="ext">Target extension the file.</param>
+        public Translator_10(string ext = "STP") : base (ext) { }
 
         #region public properties
         /// <summary>
@@ -40,51 +40,28 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_3D, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_10, "dn4_0")]
         [CustomDescription(Resource.TRANSLATOR_10, "dn4_0")]
-        [ItemsSource(typeof(ProtocolItems))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Protocol
         {
-            get { return protocol; }
+            get => protocol;
             set
             {
                 if (protocol != value)
                 {
                     protocol = value;
-                    OnChanged(16);
+                    data_4_0.Value = value.ToString();
+
+                    OnPropertyChanged("Protocol");
                 }
             }
         }
         #endregion
 
         #region internal properties
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
-        }
+        internal override TranslatorType Mode => TranslatorType.Step;
         #endregion
 
         #region internal methods
-        internal override void OnLoaded()
-        {
-            i_values[0] = protocol;
-
-            base.OnLoaded();
-        }
-
-        internal override void OnChanged(int index)
-        {
-            if (!IsLoaded) return;
-
-            switch (index)
-            {
-                case 16: isChanged = i_values[0] != protocol; break;
-            }
-
-            base.OnChanged(index);
-        }
-
         internal override void Export(Document document, string path, LogFile logFile)
         {
             ExportToStepProtocol stepProtocol = ExportToStepProtocol.AP203;
@@ -96,7 +73,7 @@ namespace TFlex.PackageManager.Configuration
                 ? ExportTo3dColorSource.ToneColor 
                 : ExportTo3dColorSource.MaterialColor;
 
-            switch (protocol)
+            switch (Protocol)
             {
                 case 0: stepProtocol = ExportToStepProtocol.AP203; break;
                 case 1: stepProtocol = ExportToStepProtocol.AP214; break;
@@ -126,47 +103,31 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
+        internal override XElement NewTranslator()
         {
-            base.AppendTranslatorToXml(parent, translator);
+            XElement data = base.NewTranslator();
 
-            string value = Enum.GetName(typeof(TranslatorType), translator);
-            parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
-                new XElement("parameter",
-                    new XAttribute("name", "Protocol"),
-                    new XAttribute("value", Protocol)));
+            data_4_0 = new XAttribute("value", Protocol.ToString());
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "Protocol"),
+                data_4_0));
+
+            return data;
         }
 
-        internal override void TranslatorTask(XElement element, int flag)
+        internal override void LoadParameter(XElement element)
         {
-            base.TranslatorTask(element, flag);
-            
-            string value = element.Attribute("value").Value;
+            base.LoadParameter(element);
+
+            var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
                 case "Protocol":
-                    if (flag == 0)
-                        protocol = int.Parse(value);
-                    else
-                        value = protocol.ToString();
+                    protocol = int.Parse(a.Value);
+                    data_4_0 = a;
                     break;
             }
-            element.Attribute("value").Value = value;
         }
         #endregion
-    }
-
-#pragma warning disable CA1812
-    internal class ProtocolItems : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, "AP203" },
-                { 1, "AP214" },
-                { 2, "AP242" }
-            };
-        }
     }
 }

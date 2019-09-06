@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Drawing.Design;
 using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -21,37 +22,22 @@ namespace TFlex.PackageManager.Configuration
     public class Translator_3 : Translator_0
     {
         #region private fields
-        private const double px = 3.7795275590551;
-        private int extension;
-        private readonly byte[] imageOptions;
-        private bool screenLayers;
-        private bool constructions;
+        const double px = 3.7795275590551;
+        int extension;
+        bool screenLayers;
+        bool constructions;
 
-        private readonly byte[] objState;
-        private readonly bool[] b_values;
-        private bool isChanged;
+        XAttribute data_4_1;
+        XAttribute data_4_2;
         #endregion
 
-        public Translator_3()
-        {
-            extension    = 0;
-            imageOptions = new byte[2];
-
-            TargetExtension = "BMP";
-            objState        = new byte[2];
-            b_values        = new bool[2];
-        }
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="ext">Target extension the file.</param>
+        public Translator_3(string ext = "BMP") : base (ext) { }
 
         #region public properties
-        /// <summary>
-        /// Image options definition.
-        /// </summary>
-        [Browsable(false)]
-        public byte[] ImageOptions
-        {
-            get { return (imageOptions); }
-        }
-
         /// <summary>
         /// Image export formats:
         /// 0 - BMP,
@@ -64,10 +50,10 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_3, "category3")]
         [CustomDisplayName(Resource.TRANSLATOR_3, "dn3_1")]
         [CustomDescription(Resource.TRANSLATOR_3, "dn3_1")]
-        [ItemsSource(typeof(ExtensionItems_3))]
+        [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Extension
         {
-            get { return extension; }
+            get => extension;
             set
             {
                 if (extension != value)
@@ -92,16 +78,18 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_3, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_3, "dn4_1")]
         [CustomDescription(Resource.TRANSLATOR_3, "dn4_1")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ScreenLayers
         {
-            get { return screenLayers; }
+            get => screenLayers;
             set
             {
                 if (screenLayers != value)
                 {
                     screenLayers = value;
-                    imageOptions[0] = (byte)(screenLayers ? 1 : 0);
-                    OnChanged(16);
+                    data_4_1.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("ScreenLayers");
                 }
             }
         }
@@ -113,78 +101,39 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_3, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_3, "dn4_2")]
         [CustomDescription(Resource.TRANSLATOR_3, "dn4_2")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Constructions
         {
-            get { return constructions; }
+            get => constructions;
             set
             {
                 if (constructions != value)
                 {
                     constructions = value;
-                    imageOptions[1] = (byte)(constructions ? 1 : 0);
-                    OnChanged(17);
+                    data_4_2.Value = value ? "1" : "0";
+
+                    OnPropertyChanged("Constructions");
                 }
             }
         }
         #endregion
 
         #region internal properties
+        internal override TranslatorType Mode => TranslatorType.Bitmap;
+
         internal override uint Processing
         {
-            get { return (uint)ProcessingType.Export; }
-        }
-
-        internal override bool IsChanged
-        {
-            get
-            {
-                return (isChanged | base.IsChanged);
-            }
+            get => (uint)ProcessingMode.Export;
         }
         #endregion
 
         #region internal methods
-        internal override void OnLoaded()
-        {
-            b_values[0] = screenLayers;
-            b_values[1] = constructions;
-
-            for (int i = 0; i < objState.Length; i++)
-                objState[i] = 0;
-
-            base.OnLoaded();
-        }
-
-        internal override void OnChanged(int index)
-        {
-            if (!IsLoaded) return;
-
-            switch (index)
-            {
-                case 16: objState[0] = (byte)(b_values[0] != screenLayers  ? 1 : 0); break;
-                case 17: objState[1] = (byte)(b_values[1] != constructions ? 1 : 0); break;
-            }
-
-            isChanged = false;
-
-            foreach (var i in objState)
-            {
-                if (i > 0)
-                {
-                    isChanged = true;
-                    break;
-                }
-            }
-
-            base.OnChanged(index);
-        }
-
         internal override void Export(Document document, Dictionary<Page, string> pages, LogFile logFile)
         {
             ExportToBitmap export    = new ExportToBitmap(document);
             ImageExport options      =
-                    (screenLayers  ? ImageExport.ScreenLayers  : ImageExport.None) |
-                    (constructions ? ImageExport.Constructions : ImageExport.None);
+                    (ScreenLayers  ? ImageExport.ScreenLayers  : ImageExport.None) |
+                    (Constructions ? ImageExport.Constructions : ImageExport.None);
             ImageExportFormat format = ImageExportFormat.Bmp;
 
             foreach (var p in pages)
@@ -219,85 +168,50 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
-        internal override void AppendTranslatorToXml(XElement parent, TranslatorType translator)
+        internal override XElement NewTranslator()
         {
-            base.AppendTranslatorToXml(parent, translator);
+            XElement data = base.NewTranslator();
 
-            string value = Enum.GetName(typeof(TranslatorType), translator);
-            parent.Elements().Where(p => p.Attribute("id").Value == value).First().Add(
-                new XElement("parameter",
-                    new XAttribute("name", "FileNameSuffix"),
-                    new XAttribute("value", FileNameSuffix)),
-                new XElement("parameter",
-                    new XAttribute("name", "TemplateFileName"),
-                    new XAttribute("value", TemplateFileName)),
-                new XElement("parameter",
-                    new XAttribute("name", "TargetExtension"),
-                    new XAttribute("value", TargetExtension)),
-                new XElement("parameter",
-                    new XAttribute("name", "ImageOptions"),
-                    new XAttribute("value", 
-                    (imageOptions[0] == 1 ? "01" : "00") + " " + 
-                    (imageOptions[1] == 1 ? "01" : "00"))));
+            data_4_1 = new XAttribute("value", ScreenLayers ? "1" : "0");
+            data_4_2 = new XAttribute("value", Constructions ? "1" : "0");
+
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "ScreenLayers"),
+                data_4_1));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "Constructions"),
+                data_4_2));
+
+            return data;
         }
 
-        internal override void TranslatorTask(XElement element, int flag)
+        internal override void LoadParameter(XElement element)
         {
-            base.TranslatorTask(element, flag);
+            base.LoadParameter(element);
 
-            string value = element.Attribute("value").Value;
+            var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
                 case "TargetExtension":
-                    if (flag == 0)
+                    switch (a.Value)
                     {
-                        switch (value)
-                        {
-                            case "BMP" : extension = 0; break;
-                            case "JPEG": extension = 1; break;
-                            case "GIF" : extension = 2; break;
-                            case "TIFF": extension = 3; break;
-                            case "PNG" : extension = 4; break;
-                        }
+                        case "BMP" : extension = 0; break;
+                        case "JPEG": extension = 1; break;
+                        case "GIF" : extension = 2; break;
+                        case "TIFF": extension = 3; break;
+                        case "PNG" : extension = 4; break;
                     }
-                    else
-                        value = TargetExtension;
                     break;
-                case "ImageOptions":
-                    string[] values = value.Split(' ');
-
-                    if (flag == 0)
-                    {
-                        screenLayers  = values[0] == "01";
-                        constructions = values[1] == "01";
-                    }
-                    else
-                    {
-                        values[0] = screenLayers  ? "01" : "00";
-                        values[1] = constructions ? "01" : "00";
-
-                        value = values.ToString(" ");
-                    }
+                case "ScreenLayers":
+                    screenLayers = a.Value == "1";
+                    data_4_1 = a;
+                    break;
+                case "Constructions":
+                    constructions = a.Value == "1";
+                    data_4_2 = a;
                     break;
             }
-            element.Attribute("value").Value = value;
         }
         #endregion
-    }
-
-#pragma warning disable CA1812
-    internal class ExtensionItems_3 : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { 0, "BMP"  },
-                { 1, "JPEG" },
-                { 2, "GIF"  },
-                { 3, "TIFF" },
-                { 4, "PNG"  }
-            };
-        }
     }
 }

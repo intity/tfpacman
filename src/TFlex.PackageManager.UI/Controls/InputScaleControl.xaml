@@ -16,15 +16,13 @@
         </Grid.ColumnDefinitions>
         <ComboBox Name="comboBox" 
                   Grid.Column="0" 
-                  Width="Auto" 
-                  SelectionChanged="ComboBox_SelectionChanged"/>
+                  Width="Auto" />
         <xctk:DecimalUpDown Name="decimalUpDown" 
                             Grid.Column="1" 
                             Width="Auto" 
                             Increment="0.1"
                             Minimum="0.000001" 
                             Maximum="99999" 
-                            Value="{Binding Value}" 
-                            ValueChanged="DecimalUpDown_ValueChanged" />
+                            Value="{Binding Value}" />
     </Grid>
 </UserControl>

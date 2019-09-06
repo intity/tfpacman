@@ -8,39 +8,19 @@ using TFlex.PackageManager.Common;
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
-    /// The Translator type enumeration.
-    /// </summary>
-    public enum TranslatorType
-    {
-        Document,
-        Acad,
-        Acis,
-        Bitmap,
-        Bmf,
-        Emf,
-        Iges,
-        Jt,
-        Parasolid,
-        Pdf,
-        Step,
-        Stl
-    }
-
-    /// <summary>
     /// The ConfigurationCollection class.
     /// </summary>
     public class ConfigurationCollection
     {
         #region private fields
-        private readonly ObservableDictionary<string, Header> configurations;
         private readonly List<string> changedCofigurations;
         private string targetDirectory;
         #endregion
 
         public ConfigurationCollection()
         {
-            configurations       = new ObservableDictionary<string, Header>();
-            configurations.CollectionChanged += Configurations_CollectionChanged;
+            Configurations       = new ObservableDictionary<string, Header>();
+            Configurations.CollectionChanged += Configurations_CollectionChanged;
             changedCofigurations = new List<string>();
         }
 
@@ -57,7 +37,7 @@ namespace TFlex.PackageManager.Configuration
                 {
                     targetDirectory = value;
 
-                    configurations.Clear();
+                    Configurations.Clear();
                     GetConfigurations();
                 }
             }
@@ -66,17 +46,14 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Configuration list.
         /// </summary>
-        internal ObservableDictionary<string, Header> Configurations
-        {
-            get { return (configurations); }
-        }
+        internal ObservableDictionary<string, Header> Configurations { get; }
 
         /// <summary>
         /// Has changes configurations.
         /// </summary>
         internal bool HasChanged
         {
-            get { return (changedCofigurations.Count > 0); }
+            get => changedCofigurations.Count > 0;
         }
         #endregion
 
@@ -92,7 +69,6 @@ namespace TFlex.PackageManager.Configuration
             foreach (var i in Directory.GetFiles(targetDirectory, "*.config"))
             {
                 string name = Path.GetFileNameWithoutExtension(i);
-
                 Header header = new Header
                 {
                     UserDirectory = targetDirectory,
@@ -100,7 +76,7 @@ namespace TFlex.PackageManager.Configuration
                 };
 
                 header.ConfigurationTask(0);
-                configurations.Add(name, header);
+                Configurations.Add(name, header);
             }
 
             //Debug.WriteLine(string.Format("GetConfigurations [count: {0}]",
@@ -112,7 +88,7 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         internal void SetConfigurations()
         {
-            foreach (var i in configurations)
+            foreach (var i in Configurations)
             {
                 if (i.Value.IsChanged)
                     i.Value.ConfigurationTask(1);

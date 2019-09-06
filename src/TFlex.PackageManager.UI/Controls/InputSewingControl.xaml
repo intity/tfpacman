@@ -7,7 +7,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="30" 
-             d:DesignWidth="300">
+             d:DesignWidth="300" Loaded="UserControl_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="26"/>
@@ -16,15 +16,12 @@
         <CheckBox Name="checkBox" 
                   Grid.Column="0" 
                   HorizontalAlignment="Center" 
-                  VerticalAlignment="Center" 
-                  IsChecked="{Binding Value.IsChecked}"
-                  Checked="CheckBox_Checked" 
-                  Unchecked="CheckBox_Unchecked"/>
+                  VerticalAlignment="Center" />
         <xctk:DoubleUpDown Name="doubleUpDown" 
                            Grid.Column="1" 
                            Width="Auto" 
                            Increment="0.1" 
                            Minimum="0.1"
-                           Value="{Binding Value.Accuracy}"/>
+                           Value="{Binding Value}"/>
     </Grid>
 </UserControl>

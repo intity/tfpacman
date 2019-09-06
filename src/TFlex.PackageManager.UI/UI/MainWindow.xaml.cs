@@ -13,6 +13,7 @@ using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid;
+using UndoRedoFramework;
 
 namespace TFlex.PackageManager.UI
 {
@@ -67,7 +68,25 @@ namespace TFlex.PackageManager.UI
             tvControl2.SearchPattern = "*.grb|*.dwg|*.dxf|*.dxb|*.sat|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.igs|*.jt|*.pdf|*.stp";
 
             options = new Common.Options();
-            self = new ConfigurationCollection { TargetDirectory = options.UserDirectory };
+            
+
+            using (UndoRedoManager.Start("Init"))
+            {
+                self = new ConfigurationCollection
+                {
+                    TargetDirectory = options.UserDirectory
+                };
+                UndoRedoManager.FlushHistory();
+            }
+
+            UndoRedoManager.CommandDone += delegate
+            {
+                menuItem2_1.IsEnabled = UndoRedoManager.CanUndo;
+                menuItem2_2.IsEnabled = UndoRedoManager.CanRedo;
+
+                button2_1.IsEnabled = UndoRedoManager.CanUndo;
+                button2_2.IsEnabled = UndoRedoManager.CanRedo;
+            };
             #endregion
 
             #region initialize resources
@@ -111,10 +130,12 @@ namespace TFlex.PackageManager.UI
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_8", 0),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 0),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 0),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_2", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_3", 0),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_2", 0)
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem5_1", 0),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem5_2", 0)
             };
 
             tooltips = new string[]
@@ -128,13 +149,16 @@ namespace TFlex.PackageManager.UI
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 1),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 1),
                 Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_3", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1)
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_2", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_3", 1),
+                Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 1)
             };
 
             menuItem1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1", 0);
             menuItem2.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2", 0);
             menuItem3.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3", 0);
+            menuItem4.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem4", 0);
 
             menuItem1_1.Header = controls[0];
             menuItem1_2.Header = controls[1];
@@ -146,10 +170,12 @@ namespace TFlex.PackageManager.UI
             menuItem1_8.Header = controls[7];
             menuItem2_1.Header = controls[8];
             menuItem2_2.Header = controls[9];
-            menuItem2_3.Header = controls[10];
-            menuItem3_1.Header = controls[11];
-            menuItem4_1.Header = controls[12];
-            menuItem4_2.Header = controls[13];
+            menuItem3_1.Header = controls[10];
+            menuItem3_2.Header = controls[11];
+            menuItem3_3.Header = controls[12];
+            menuItem4_1.Header = controls[13];
+            menuItem5_1.Header = controls[14];
+            menuItem5_2.Header = controls[15];
 
             button1_1.ToolTip = tooltips[0];
             button1_2.ToolTip = tooltips[1];
@@ -160,8 +186,10 @@ namespace TFlex.PackageManager.UI
             button1_7.ToolTip = tooltips[6];
             button2_1.ToolTip = tooltips[7];
             button2_2.ToolTip = tooltips[8];
-            button2_3.ToolTip = tooltips[9];
-            button3_1.ToolTip = tooltips[10];
+            button3_1.ToolTip = tooltips[9];
+            button3_2.ToolTip = tooltips[10];
+            button3_3.ToolTip = tooltips[11];
+            button4_1.ToolTip = tooltips[12];
 
             sb_label1.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label1", 1);
             sb_label2.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label2", 1);
@@ -254,8 +282,13 @@ namespace TFlex.PackageManager.UI
 
             menuItem2_1.IsEnabled = false;
             menuItem2_2.IsEnabled = false;
-            button2_1.IsEnabled   = false;
-            button2_2.IsEnabled   = false;
+            menuItem3_1.IsEnabled = false;
+            menuItem3_2.IsEnabled = false;
+
+            button2_1.IsEnabled = false;
+            button2_2.IsEnabled = false;
+            button3_1.IsEnabled = false;
+            button3_2.IsEnabled = false;
 
             propertyGrid.PropertyValueChanged += Translator_PropertyValueChanged;
         }
@@ -338,8 +371,11 @@ namespace TFlex.PackageManager.UI
                     IsBrowsable = false
                 });
             }
-
+            
             UpdateStateToControls();
+
+            //Debug.WriteLine(string.Format("PropertyGrid_ValueChanged: [name: {0}, value: {1}]", 
+            //    item.PropertyName, item.Value));
         }
         #endregion
 
@@ -512,6 +548,19 @@ namespace TFlex.PackageManager.UI
 
         private void Event2_1_Click(object sender, RoutedEventArgs e)
         {
+            UndoRedoManager.Undo();
+            propertyGrid.Update();
+            
+        } // Undo
+
+        private void Event2_2_Click(object sender, RoutedEventArgs e)
+        {
+            UndoRedoManager.Redo();
+            propertyGrid.Update();
+        } // Redo
+
+        private void Event3_1_Click(object sender, RoutedEventArgs e)
+        {
             stoped = false;
             thread = new System.Threading.Thread(StartProcessing);
             thread.Start();
@@ -520,18 +569,18 @@ namespace TFlex.PackageManager.UI
             progressBar.Visibility = Visibility.Visible;
         } // Start processing
 
-        private void Event2_2_Click(object sender, RoutedEventArgs e)
+        private void Event3_2_Click(object sender, RoutedEventArgs e)
         {
             stoped = true;
         } // Stop processing
 
-        private void Event2_3_Click(object sender, RoutedEventArgs e)
+        private void Event3_3_Click(object sender, RoutedEventArgs e)
         {
             tvControl2.CleanTargetDirectory();
             UpdateStateToControls();
         } // Clear target directory
 
-        private void Event3_1_Click(object sender, RoutedEventArgs e)
+        private void Event4_1_Click(object sender, RoutedEventArgs e)
         {
             PropertiesUI optionsUI = new PropertiesUI(options)
             {
@@ -541,7 +590,7 @@ namespace TFlex.PackageManager.UI
             optionsUI.ShowDialog();
         } // Options
 
-        private void Event4_1_Click(object sender, RoutedEventArgs e)
+        private void Event5_1_Click(object sender, RoutedEventArgs e)
         {
             AboutUs aboutUs = new AboutUs
             {
@@ -550,7 +599,7 @@ namespace TFlex.PackageManager.UI
             aboutUs.ShowDialog();
         } // About Us
 
-        private void Event4_2_Click(object sender, RoutedEventArgs e)
+        private void Event5_2_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.Help.ShowHelp(null,
                 Path.Combine(Resource.AppDirectory, "TFPackageManager.chm"));
@@ -854,15 +903,19 @@ namespace TFlex.PackageManager.UI
                 menuItem1_5.IsEnabled = false; // save all
                 menuItem1_6.IsEnabled = false; // delete
                 menuItem1_7.IsEnabled = false; // properties
-                menuItem2_1.IsEnabled = false; // start
-                menuItem2_3.IsEnabled = false; // clear target directory
+                menuItem2_1.IsEnabled = false; // undo
+                menuItem2_2.IsEnabled = false; // redo
+                menuItem3_1.IsEnabled = false; // start
+                menuItem3_3.IsEnabled = false; // clear target directory
 
                 button1_4.IsEnabled = false;
                 button1_5.IsEnabled = false;
                 button1_6.IsEnabled = false;
                 button1_7.IsEnabled = false;
                 button2_1.IsEnabled = false;
-                button2_3.IsEnabled = false;
+                button2_2.IsEnabled = false;
+                button3_1.IsEnabled = false;
+                button3_3.IsEnabled = false;
                 return;
             }
             else
@@ -877,13 +930,13 @@ namespace TFlex.PackageManager.UI
 
                 if (tvControl2.CountFiles > 0)
                 {
-                    menuItem2_3.IsEnabled = true;
-                    button2_3.IsEnabled = true;
+                    menuItem3_3.IsEnabled = true;
+                    button3_3.IsEnabled = true;
                 }
                 else
                 {
-                    menuItem2_3.IsEnabled = false;
-                    button2_3.IsEnabled = false;
+                    menuItem3_3.IsEnabled = false;
+                    button3_3.IsEnabled = false;
                 }
             }
 
@@ -926,7 +979,7 @@ namespace TFlex.PackageManager.UI
             Stopwatch watch = new Stopwatch();
             LogFile logFile = new LogFile(options);
             TranslatorType t_mode = TranslatorType.Document;
-            ProcessingType p_mode = ProcessingType.SaveAs;
+            ProcessingMode p_mode = ProcessingMode.SaveAs;
 
             switch (key2)
             {
@@ -941,8 +994,8 @@ namespace TFlex.PackageManager.UI
 
             switch (key3)
             {
-                case "Export": p_mode = ProcessingType.Export; break;
-                case "Import": p_mode = ProcessingType.Import; break;
+                case "Export": p_mode = ProcessingMode.Export; break;
+                case "Import": p_mode = ProcessingMode.Import; break;
             }
 
             watch.Start();
