@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -36,37 +35,27 @@ namespace TFlex.PackageManager.Editors
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (UndoRedoManager.RedoCommands.Count() > 0 &&
-                        UndoRedoManager.RedoCommands.Last() == p.PropertyName)
-                    {
-                        if (checkBox.IsChecked != value1.Value)
-                        {
-                            checkBox.IsChecked = value1.Value;
-                            tr.Sewing = value1.Value;
-                        }
-
-                        if (doubleUpDown.Value != value2.Value)
-                            doubleUpDown.Value = value2.Value;
-                    }
+                    if (e.Caption == p.PropertyName) Do(tr);
                     break;
                 case CommandDoneType.Redo:
-                    if (UndoRedoManager.UndoCommands.Count() > 0 &&
-                        UndoRedoManager.UndoCommands.Last() == p.PropertyName)
-                    {
-                        if (checkBox.IsChecked != value1.Value)
-                        {
-                            checkBox.IsChecked = value1.Value;
-                            tr.Sewing = value1.Value;
-                        }
-
-                        if (doubleUpDown.Value != value2.Value)
-                            doubleUpDown.Value = value2.Value;
-                    }
+                    if (e.Caption == p.PropertyName) Do(tr);
                     break;
             }
 
             //Debug.WriteLine(string.Format("Action: [name: {0}, value: {1}, type: {2}]",
             //    p.PropertyName, p.Value, e.CommandDoneType));
+        }
+
+        private void Do(Translator3D tr)
+        {
+            if (checkBox.IsChecked != value1.Value)
+            {
+                checkBox.IsChecked = value1.Value;
+                tr.Sewing = value1.Value;
+            }
+
+            if (doubleUpDown.Value != value2.Value)
+                doubleUpDown.Value = value2.Value;
         }
 
         public double? Value
@@ -106,7 +95,8 @@ namespace TFlex.PackageManager.Editors
 
         private void DoubleUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            var p = DataContext as PropertyItem;
+            if (!(DataContext is PropertyItem p))
+                return;
 
             if (value2.Value != Value)
             {
@@ -114,6 +104,9 @@ namespace TFlex.PackageManager.Editors
                 {
                     value2.Value = Value;
                     UndoRedoManager.Commit();
+
+                    //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
+                    //    p.PropertyName, p.Value));
                 }
             }
         }
