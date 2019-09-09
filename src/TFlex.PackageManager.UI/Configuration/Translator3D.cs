@@ -616,7 +616,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
         [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_11")]
         [CustomDescription(Resource.TRANSLATOR_3D, "dn5_11")]
-        [Editor(typeof(InputSewingControl), typeof(UITypeEditor))]
+        [Editor(typeof(SewingEditor), typeof(UITypeEditor))]
         public double SewTolerance
         {
             get => sewTolerance;

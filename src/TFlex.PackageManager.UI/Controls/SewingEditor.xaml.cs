@@ -10,17 +10,17 @@ using UndoRedoFramework;
 
 #pragma warning disable CA1721
 
-namespace TFlex.PackageManager.Controls
+namespace TFlex.PackageManager.Editors
 {
     /// <summary>
-    /// Interaction logic for InputSewingControl.xaml
+    /// Interaction logic for SewingEditor.xaml
     /// </summary>
-    public partial class InputSewingControl : UserControl, ITypeEditor
+    public partial class SewingEditor : UserControl, ITypeEditor
     {
         UndoRedo<bool> value1;
         UndoRedo<double> value2;
 
-        public InputSewingControl()
+        public SewingEditor()
         {
             InitializeComponent();
             UndoRedoManager.CommandDone += UndoRedoManager_CommandDone;
@@ -80,7 +80,7 @@ namespace TFlex.PackageManager.Controls
         }
 
         private static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(double), typeof(InputSewingControl),
+            DependencyProperty.Register("Value", typeof(double), typeof(SewingEditor),
                 new FrameworkPropertyMetadata(0.0,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
