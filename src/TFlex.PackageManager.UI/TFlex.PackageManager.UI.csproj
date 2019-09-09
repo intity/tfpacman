@@ -121,6 +121,9 @@
     <Compile Include="Editors\CustomComboBoxEditor.xaml.cs">
       <DependentUpon>CustomComboBoxEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\CustomTextBoxEditor.xaml.cs">
+      <DependentUpon>CustomTextBoxEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\StringArrayEditor.xaml.cs">
       <DependentUpon>StringArrayEditor.xaml</DependentUpon>
     </Compile>
@@ -137,7 +140,6 @@
     <Compile Include="Editors\CustomCheckBoxEditor.xaml.cs">
       <DependentUpon>CustomCheckBoxEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\CustomTextBoxEditor.cs" />
     <Compile Include="Editors\TranslatorTypesEditor.cs" />
     <Compile Include="Editors\PageTypesEditor.cs" />
     <Compile Include="Common\CustomFolderBrowserDialog.cs" />
@@ -151,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\CustomComboBoxEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\CustomTextBoxEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
