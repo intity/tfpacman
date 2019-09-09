@@ -228,8 +228,8 @@ namespace TFlex.PackageManager.UI
             switch (uMsg)
             {
                 case WM_STOPPED_PROCESSING:
-                    button2_2.IsEnabled = false;
-                    menuItem2_2.IsEnabled = false;
+                    button3_2.IsEnabled = false;
+                    menuItem3_2.IsEnabled = false;
                     sb_label2.Content = string.Format(sblabels[1], tvControl2.CountFiles);
                     tvControl2.InitLayout();
                     UpdateStateToControls();
@@ -564,8 +564,8 @@ namespace TFlex.PackageManager.UI
             stoped = false;
             thread = new System.Threading.Thread(StartProcessing);
             thread.Start();
-            button2_2.IsEnabled = true;
-            menuItem2_2.IsEnabled = true;
+            button3_2.IsEnabled = true;
+            menuItem3_2.IsEnabled = true;
             progressBar.Visibility = Visibility.Visible;
         } // Start processing
 
@@ -745,13 +745,13 @@ namespace TFlex.PackageManager.UI
                 tvControl1.TargetDirectory.Length > 0 &&
                 tvControl2.TargetDirectory.Length > 0)
             {
-                menuItem2_1.IsEnabled = true;
-                button2_1.IsEnabled = true;
+                menuItem3_1.IsEnabled = true;
+                button3_1.IsEnabled = true;
             }
             else
             {
-                menuItem2_1.IsEnabled = false;
-                button2_1.IsEnabled = false;
+                menuItem3_1.IsEnabled = false;
+                button3_1.IsEnabled = false;
             }
 
             sb_label3.Content = string.Format(sblabels[2], tvControl1.SelectedItems.Count);
