@@ -14,19 +14,19 @@ using UndoRedoFramework;
 
 #pragma warning disable CA1721
 
-namespace TFlex.PackageManager.Controls
+namespace TFlex.PackageManager.Editors
 {
     /// <summary>
-    /// Interaction logic for InputPathControl.xaml
+    /// Interaction logic for PathEditor.xaml
     /// </summary>
-    public partial class InputPathControl : UserControl, ITypeEditor
+    public partial class PathEditor : UserControl, ITypeEditor
     {
         #region private fields
         readonly List<ImageSource> imageSources;
         UndoRedo<string> value;
         #endregion
 
-        public InputPathControl()
+        public PathEditor()
         {
             InitializeComponent();
 
@@ -74,7 +74,7 @@ namespace TFlex.PackageManager.Controls
         }
 
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(string), typeof(InputPathControl),
+            DependencyProperty.Register("Value", typeof(string), typeof(PathEditor),
                 new FrameworkPropertyMetadata(null, 
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 

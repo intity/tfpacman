@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="TFlex.PackageManager.Controls.InputPathControl"
+﻿<UserControl x:Class="TFlex.PackageManager.Editors.PathEditor"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TFlex.PackageManager.Controls"
+             xmlns:local="clr-namespace:TFlex.PackageManager.Editors"
              mc:Ignorable="d" 
              d:DesignHeight="20" 
              d:DesignWidth="300">
@@ -16,7 +16,7 @@
         <TextBox Grid.Column="0" 
                  BorderBrush="White" 
                  Padding="2" 
-                 Text="{Binding Value, RelativeSource={RelativeSource AncestorType=local:InputPathControl}}" 
+                 Text="{Binding Value, RelativeSource={RelativeSource AncestorType=local:PathEditor}}" 
                  IsReadOnly="True">
             
         </TextBox>

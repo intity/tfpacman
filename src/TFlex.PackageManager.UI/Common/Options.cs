@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Drawing.Design;
 using System.Windows;
 using TFlex.PackageManager.Attributes;
-using TFlex.PackageManager.Controls;
+using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Common
@@ -33,7 +33,7 @@ namespace TFlex.PackageManager.Common
         [PropertyOrder(1)]
         [CustomDisplayName(Resource.OPTIONS_UI, "dn1_1")]
         [CustomDescription(Resource.OPTIONS_UI, "dn1_1")]
-        [Editor(typeof(InputPathControl), typeof(UITypeEditor))]
+        [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string UserDirectory
         {
             get { return userDirectory; }

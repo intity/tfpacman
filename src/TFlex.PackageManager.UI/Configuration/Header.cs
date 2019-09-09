@@ -7,7 +7,6 @@ using System.Linq;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -192,7 +191,7 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(2)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_2")]
         [CustomDescription(Resource.HEADER_UI, "dn1_2")]
-        [Editor(typeof(InputPathControl), typeof(UITypeEditor))]
+        [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string InitialCatalog
         {
             get { return initialCatalog; }
@@ -214,7 +213,7 @@ namespace TFlex.PackageManager.Configuration
         [PropertyOrder(3)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_3")]
         [CustomDescription(Resource.HEADER_UI, "dn1_3")]
-        [Editor(typeof(InputPathControl), typeof(UITypeEditor))]
+        [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string TargetDirectory
         {
             get => targetDirectory;

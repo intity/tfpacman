@@ -122,8 +122,8 @@
       <DependentUpon>InputCollectionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Attributes\CustomDescriptionAttribute.cs" />
-    <Compile Include="Controls\InputPathControl.xaml.cs">
-      <DependentUpon>InputPathControl.xaml</DependentUpon>
+    <Compile Include="Editors\PathEditor.xaml.cs">
+      <DependentUpon>PathEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\SewingEditor.xaml.cs">
       <DependentUpon>SewingEditor.xaml</DependentUpon>
@@ -146,7 +146,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\InputPathControl.xaml">
+    <Page Include="Editors\PathEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
