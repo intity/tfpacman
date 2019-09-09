@@ -18,7 +18,7 @@ namespace TFlex.PackageManager.Editors
     public partial class SewingEditor : UserControl, ITypeEditor
     {
         UndoRedo<bool> value1;
-        UndoRedo<double> value2;
+        UndoRedo<double?> value2;
 
         public SewingEditor()
         {
@@ -45,10 +45,8 @@ namespace TFlex.PackageManager.Editors
                             tr.Sewing = value1.Value;
                         }
 
-                        if (Value != value2.Value)
-                            Value = value2.Value;
-
-                        Debug.WriteLine(string.Format("Undo: {0}", checkBox.IsChecked));
+                        if (doubleUpDown.Value != value2.Value)
+                            doubleUpDown.Value = value2.Value;
                     }
                     break;
                 case CommandDoneType.Redo:
@@ -61,10 +59,8 @@ namespace TFlex.PackageManager.Editors
                             tr.Sewing = value1.Value;
                         }
 
-                        if (Value != value2.Value)
-                            Value = value2.Value;
-
-                        Debug.WriteLine(string.Format("Redo: {0}", checkBox.IsChecked));
+                        if (doubleUpDown.Value != value2.Value)
+                            doubleUpDown.Value = value2.Value;
                     }
                     break;
             }
@@ -73,15 +69,15 @@ namespace TFlex.PackageManager.Editors
             //    p.PropertyName, p.Value, e.CommandDoneType));
         }
 
-        public double Value
+        public double? Value
         {
-            get => (double)GetValue(ValueProperty);
+            get => (double?)GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
 
         private static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(double), typeof(SewingEditor),
-                new FrameworkPropertyMetadata(0.0,
+            DependencyProperty.Register("Value", typeof(double?), typeof(SewingEditor),
+                new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public FrameworkElement ResolveEditor(PropertyItem propertyItem)
@@ -97,14 +93,13 @@ namespace TFlex.PackageManager.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
+            value1 = new UndoRedo<bool>(tr.Sewing);
+            value2 = new UndoRedo<double?>(Value);
+
             checkBox.IsChecked = tr.Sewing;
             checkBox.Checked += CheckBox_IsChecked;
             checkBox.Unchecked += CheckBox_IsChecked;
-            doubleUpDown.Value = Value;
             doubleUpDown.ValueChanged += DoubleUpDown_ValueChanged;
-
-            value1 = new UndoRedo<bool>(tr.Sewing);
-            value2 = new UndoRedo<double>(Value);
 
             return this;
         }
