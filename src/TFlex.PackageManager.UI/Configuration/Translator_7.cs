@@ -27,14 +27,7 @@ namespace TFlex.PackageManager.Configuration
         /// Constructor.
         /// </summary>
         /// <param name="ext">Target extension the file.</param>
-        public Translator_7(string ext = "JT") : base (ext)
-        {
-            data_4_0 = new XAttribute("value", "0");
-
-            Data.Add(new XElement("parameter",
-                new XAttribute("name", "Version"),
-                data_4_0));
-        }
+        public Translator_7(string ext = "JT") : base (ext) { }
 
         #region public properties
         /// <summary>
