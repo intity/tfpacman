@@ -118,6 +118,9 @@
     <Compile Include="Editors\BiarcInterpolationEditor.xaml.cs">
       <DependentUpon>BiarcInterpolationEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\CustomComboBoxEditor.xaml.cs">
+      <DependentUpon>CustomComboBoxEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\StringArrayEditor.xaml.cs">
       <DependentUpon>StringArrayEditor.xaml</DependentUpon>
     </Compile>
@@ -131,7 +134,6 @@
     <Compile Include="Controls\TreeViewControl.xaml.cs">
       <DependentUpon>TreeViewControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\CustomComboBoxEditor.cs" />
     <Compile Include="Editors\CustomCheckBoxEditor.xaml.cs">
       <DependentUpon>CustomCheckBoxEditor.xaml</DependentUpon>
     </Compile>
@@ -145,6 +147,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\CustomCheckBoxEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\CustomComboBoxEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
