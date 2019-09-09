@@ -69,23 +69,24 @@ namespace TFlex.PackageManager.Editors
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (UndoRedoManager.RedoCommands.Count() > 0 &&
-                        UndoRedoManager.RedoCommands.Last() == p.PropertyName && Value != value.Value)
+                    if (e.Caption == p.PropertyName)
                     {
                         decimalUpDown.Value = value.Value;
+
+                        //Debug.WriteLine(string.Format("Undo: [name: {0}, value: {1}]",
+                        //    p.PropertyName, p.Value));
                     }
                     break;
                 case CommandDoneType.Redo:
-                    if (UndoRedoManager.UndoCommands.Count() > 0 &&
-                        UndoRedoManager.UndoCommands.Last() == p.PropertyName && Value != value.Value)
+                    if (e.Caption == p.PropertyName)
                     {
                         decimalUpDown.Value = value.Value;
+
+                        //Debug.WriteLine(string.Format("Redo: [name: {0}, value: {1}]",
+                        //    p.PropertyName, p.Value));
                     }
                     break;
             }
-
-            //Debug.WriteLine(string.Format("Action: [name: {0}, value: {1}, type: {2}]",
-            //    p.PropertyName, p.Value, e.CommandDoneType));
         }
 
         public decimal? Value
@@ -137,6 +138,9 @@ namespace TFlex.PackageManager.Editors
                 {
                     value.Value = Value;
                     UndoRedoManager.Commit();
+
+                    //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
+                    //    p.PropertyName, p.Value));
                 }
             }
 
@@ -169,9 +173,6 @@ namespace TFlex.PackageManager.Editors
                 comboBox.Items.Add(other);
                 comboBox.SelectedIndex = 25;
             }
-
-            //Debug.WriteLine(string.Format("PropertyItem: [name: {0}, value: {1}, can undo: {2}, can redo: {3}]",
-            //    p.PropertyName, p.Value, UndoRedoManager.CanUndo, UndoRedoManager.CanRedo));
         }
     }
 }
