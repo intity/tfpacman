@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using TFlex.PackageManager.Common;
-using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using UndoRedoFramework;
@@ -20,7 +18,6 @@ namespace TFlex.PackageManager.Controls
     /// </summary>
     public partial class InputScaleControl : UserControl, ITypeEditor
     {
-        int index = -1;
         readonly Dictionary<string, decimal> scale;
         readonly string other;
         UndoRedo<decimal?> value;
@@ -113,47 +110,18 @@ namespace TFlex.PackageManager.Controls
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            decimalUpDown.Value = Value;
-            decimalUpDown.ValueChanged += DecimalUpDown_ValueChanged;
-            if (scale.ContainsValue(Value.Value))
-            {
-                for (int i = 0; i < scale.Count; i++)
-                {
-                    if (scale.ElementAt(i).Value == Value)
-                    {
-                        comboBox.SelectedIndex = i;
-                        break;
-                    }
-                }
-            }
-            else
-                comboBox.SelectedIndex = 0;
-
-            comboBox.SelectionChanged += ComboBox_SelectionChanged;
             value = new UndoRedo<decimal?>(Value);
+            comboBox.SelectionChanged += ComboBox_SelectionChanged;
+            decimalUpDown.ValueChanged += DecimalUpDown_ValueChanged;
 
             return this;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string[] _scale;
-
-            if (comboBox.SelectedIndex == 0 && decimalUpDown.Value == 99999)
-            {
-                decimalUpDown.IsEnabled = false;
-            }
-            else if (comboBox.SelectedIndex == 0 && decimalUpDown.Value != 99999)
+            if (comboBox.SelectedIndex != 25 && scale.ElementAt(comboBox.SelectedIndex).Value != Value)
             {
                 decimalUpDown.Value = scale.ElementAt(comboBox.SelectedIndex).Value;
-                decimalUpDown.IsEnabled = false;
-            }
-            else if (comboBox.SelectedIndex != index && (_scale = ((string)comboBox.SelectedValue).Split(':')).Length == 2)
-            {
-                decimal.TryParse(_scale[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal num1);
-                decimal.TryParse(_scale[1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal num2);
-
-                decimalUpDown.Value = (num1 / num2);
                 decimalUpDown.IsEnabled = true;
             }
         }
@@ -163,22 +131,32 @@ namespace TFlex.PackageManager.Controls
             if (!(DataContext is PropertyItem p))
                 return;
 
-            if (value.Value != decimalUpDown.Value)
+            if (value.Value != Value)
             {
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value.Value = decimalUpDown.Value;
+                    value.Value = Value;
                     UndoRedoManager.Commit();
                 }
             }
 
-            if (scale.ContainsValue(decimalUpDown.Value.Value))
+            if (comboBox.SelectedIndex != -1 && 
+                comboBox.SelectedIndex != 25 && scale.ElementAt(comboBox.SelectedIndex).Value == Value)
+                return;
+
+            if (Value.Value == 99999)
+            {
+                comboBox.SelectedIndex = 0;
+                decimalUpDown.IsEnabled = false;
+            }
+            else if (scale.ContainsValue(Value.Value))
             {
                 for (int i = 0; i < scale.Count; i++)
                 {
-                    if (scale.ElementAt(i).Value == decimalUpDown.Value.Value)
+                    if (scale.ElementAt(i).Value == Value.Value)
                     {
-                        comboBox.SelectedIndex = (index = i);
+                        comboBox.SelectedIndex = i;
+                        decimalUpDown.IsEnabled = true;
                         break;
                     }
                 }
