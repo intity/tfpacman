@@ -280,7 +280,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_1, "category4")]
         [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_7")]
         [CustomDescription(Resource.TRANSLATOR_1, "dn4_7")]
-        [Editor(typeof(BiarcInterpolationControl), typeof(UITypeEditor))]
+        [Editor(typeof(BiarcInterpolationEditor), typeof(UITypeEditor))]
         public decimal BiarcInterpolationAccuracyForSplines
         {
             get => biarcInterpolationAccuracyForSplines;

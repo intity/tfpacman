@@ -115,8 +115,8 @@
     <Compile Include="Configuration\Translator_2.cs" />
     <Compile Include="Configuration\Translator_6.cs" />
     <Compile Include="Configuration\Translator_7.cs" />
-    <Compile Include="Controls\BiarcInterpolationControl.xaml.cs">
-      <DependentUpon>BiarcInterpolationControl.xaml</DependentUpon>
+    <Compile Include="Editors\BiarcInterpolationEditor.xaml.cs">
+      <DependentUpon>BiarcInterpolationEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\InputCollectionControl.xaml.cs">
       <DependentUpon>InputCollectionControl.xaml</DependentUpon>
@@ -138,7 +138,7 @@
     <Compile Include="Editors\PageTypesEditor.cs" />
     <Compile Include="Common\CustomFolderBrowserDialog.cs" />
     <Compile Include="Common\Resource.cs" />
-    <Page Include="Controls\BiarcInterpolationControl.xaml">
+    <Page Include="Editors\BiarcInterpolationEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -9,16 +9,16 @@ using UndoRedoFramework;
 
 #pragma warning disable CA1721
 
-namespace TFlex.PackageManager.Controls
+namespace TFlex.PackageManager.Editors
 {
     /// <summary>
-    /// Interaction logic for BiarcInterpolationControl.xaml
+    /// Interaction logic for BiarcInterpolationEditor.xaml
     /// </summary>
-    public partial class BiarcInterpolationControl : UserControl, ITypeEditor
+    public partial class BiarcInterpolationEditor : UserControl, ITypeEditor
     {
         UndoRedo<decimal?> value;
 
-        public BiarcInterpolationControl()
+        public BiarcInterpolationEditor()
         {
             InitializeComponent();
             UndoRedoManager.CommandDone += UndoRedoManager_CommandDone;
@@ -58,7 +58,7 @@ namespace TFlex.PackageManager.Controls
         }
 
         private static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(decimal?), typeof(BiarcInterpolationControl),
+            DependencyProperty.Register("Value", typeof(decimal?), typeof(BiarcInterpolationEditor),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public FrameworkElement ResolveEditor(PropertyItem propertyItem)
