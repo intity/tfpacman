@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,13 +8,13 @@ using UndoRedoFramework;
 
 namespace TFlex.PackageManager.Editors
 {
-    public partial class CustomCheckBoxEditor : CheckBox, ITypeEditor
+    public partial class CustomCheckBoxEditor : UserControl, ITypeEditor
     {
-        UndoRedo<bool> value;
+        UndoRedo<bool?> value;
 
         public CustomCheckBoxEditor()
         {
-            Margin = new Thickness(5, 3, 5, 3);
+            InitializeComponent();
             UndoRedoManager.CommandDone += UndoRedoManager_CommandDone;
         }
 
@@ -27,33 +26,34 @@ namespace TFlex.PackageManager.Editors
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (UndoRedoManager.RedoCommands.Count() > 0 && 
-                        UndoRedoManager.RedoCommands.Last() == p.PropertyName && IsChecked != value.Value)
+                    if (e.Caption == p.PropertyName)
                     {
-                        IsChecked = value.Value;
+                        checkBox.IsChecked = value.Value;
+
+                        //Debug.WriteLine(string.Format("Undo: [name: {0}, value: {1}]",
+                        //    p.PropertyName, p.Value));
                     }
                     break;
                 case CommandDoneType.Redo:
-                    if (UndoRedoManager.UndoCommands.Count() > 0 && 
-                        UndoRedoManager.UndoCommands.Last() == p.PropertyName && IsChecked != value.Value)
+                    if (e.Caption == p.PropertyName)
                     {
-                        IsChecked = value.Value;
+                        checkBox.IsChecked = value.Value;
+
+                        //Debug.WriteLine(string.Format("Redo: [name: {0}, value: {1}]", 
+                        //    p.PropertyName, p.Value));
                     }
                     break;
             }
-
-            //Debug.WriteLine(string.Format("Action: [name: {0}, value: {1}, type: {2}]", 
-            //    p.PropertyName, p.Value, e.CommandDoneType));
         }
 
         private static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(bool), typeof(CustomCheckBoxEditor),
-                new FrameworkPropertyMetadata(false, 
+            DependencyProperty.Register("Value", typeof(bool?), typeof(CustomCheckBoxEditor),
+                new FrameworkPropertyMetadata(null, 
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public bool Value
+        public bool? Value
         {
-            get => (bool)GetValue(ValueProperty);
+            get => (bool?)GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
 
@@ -64,34 +64,33 @@ namespace TFlex.PackageManager.Editors
                 Source = propertyItem,
                 ValidatesOnExceptions = true,
                 ValidatesOnDataErrors = true,
-                Mode = propertyItem.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay
+                Mode = BindingMode.TwoWay
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            IsChecked = Value;
-            Checked += CheckBox_IsChecked;
-            Unchecked += CheckBox_IsChecked;
-            value = new UndoRedo<bool>(Value);
+            value = new UndoRedo<bool?>(Value);
+            checkBox.Checked += CheckBox_IsChecked;
+            checkBox.Unchecked += CheckBox_IsChecked;
 
             return this;
         }
 
         private void CheckBox_IsChecked(object sender, RoutedEventArgs e)
         {
-            var p = DataContext as PropertyItem;
-            Value = IsChecked.Value;
+            if (!(DataContext is PropertyItem p))
+                return;
 
-            if (value.Value != IsChecked)
+            if (value.Value != Value)
             {
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value.Value = IsChecked.Value;
+                    value.Value = Value;
                     UndoRedoManager.Commit();
+
+                    //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
+                    //    p.PropertyName, p.Value));
                 }
             }
-
-            //Debug.WriteLine(string.Format("PropertyItem: [name: {0}, value: {1}, can undo: {2}, can redo: {3}]",
-            //    p.PropertyName, p.Value, UndoRedoManager.CanUndo, UndoRedoManager.CanRedo));
         }
     }
 }

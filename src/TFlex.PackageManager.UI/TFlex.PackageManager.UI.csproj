@@ -132,13 +132,19 @@
       <DependentUpon>TreeViewControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\CustomComboBoxEditor.cs" />
-    <Compile Include="Editors\CustomCheckBoxEditor.cs" />
+    <Compile Include="Editors\CustomCheckBoxEditor.xaml.cs">
+      <DependentUpon>CustomCheckBoxEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\CustomTextBoxEditor.cs" />
     <Compile Include="Editors\TranslatorTypesEditor.cs" />
     <Compile Include="Editors\PageTypesEditor.cs" />
     <Compile Include="Common\CustomFolderBrowserDialog.cs" />
     <Compile Include="Common\Resource.cs" />
     <Page Include="Editors\BiarcInterpolationEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\CustomCheckBoxEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
