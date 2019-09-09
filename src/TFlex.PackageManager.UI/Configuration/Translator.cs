@@ -43,18 +43,11 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     public class Translator : INotifyPropertyChanged
     {
-        public Translator()
-        {
-            Data = new XElement("translator",
-                new XAttribute("id", Mode),
-                new XAttribute("processing", Processing));
-        }
-
         #region internal properties
         /// <summary>
         /// The XML-metadata to translator.
         /// </summary>
-        internal XElement Data { get; }
+        internal XElement Data { get; private set; }
 
         /// <summary>
         /// The translator type.
@@ -107,7 +100,9 @@ namespace TFlex.PackageManager.Configuration
 
         internal virtual XElement NewTranslator()
         {
-            return Data;
+            return Data = new XElement("translator", 
+                new XAttribute("id", Mode), 
+                new XAttribute("processing", Processing));
         }
 
         /// <summary>

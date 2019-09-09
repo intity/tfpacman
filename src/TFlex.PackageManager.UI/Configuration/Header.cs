@@ -76,35 +76,75 @@ namespace TFlex.PackageManager.Configuration
             {
                 case "Document":
                     if (value = t_mode.Document)
-                        translators.Add(translator_0.NewTranslator());
+                    {
+                        if (translator_0.Data == null)
+                            translators.Add(translator_0.NewTranslator());
+                        else
+                            translators.Add(translator_0.Data);
+                    }
                     break;
                 case "Acad":
                     if (value = t_mode.Acad)
-                        translators.Add(translator_1.NewTranslator());
+                    {
+                        if (translator_1.Data == null)
+                            translators.Add(translator_1.NewTranslator());
+                        else
+                            translators.Add(translator_1.Data);
+                    }
                     break;
                 case "Acis":
                     if (value = t_mode.Acis)
-                        translators.Add(translator_2.NewTranslator());
+                    {
+                        if (translator_2.Data == null)
+                            translators.Add(translator_2.NewTranslator());
+                        else
+                            translators.Add(translator_2.Data);
+                    }
                     break;
                 case "Bitmap":
                     if (value = t_mode.Bitmap)
-                        translators.Add(translator_3.NewTranslator());
+                    {
+                        if (translator_3.Data == null)
+                            translators.Add(translator_3.NewTranslator());
+                        else
+                            translators.Add(translator_3.Data);
+                    }
                     break;
                 case "Iges":
                     if (value = t_mode.Iges)
-                        translators.Add(translator_6.NewTranslator());
+                    {
+                        if (translator_6.Data == null)
+                            translators.Add(translator_6.NewTranslator());
+                        else
+                            translators.Add(translator_6.Data);
+                    }
                     break;
                 case "Jt":
                     if (value = t_mode.Jt)
-                        translators.Add(translator_7.NewTranslator());
+                    {
+                        if (translator_7.Data == null)
+                            translators.Add(translator_7.NewTranslator());
+                        else
+                            translators.Add(translator_7.Data);
+                    }
                     break;
                 case "Pdf":
                     if (value = t_mode.Pdf)
-                        translators.Add(translator_9.NewTranslator());
+                    {
+                        if (translator_9.Data == null)
+                            translators.Add(translator_9.NewTranslator());
+                        else
+                            translators.Add(translator_9.Data);
+                    }
                     break;
                 case "Step":
                     if (value = t_mode.Step)
-                        translators.Add(translator_10.NewTranslator());
+                    {
+                        if (translator_10.Data == null)
+                            translators.Add(translator_10.NewTranslator());
+                        else
+                            translators.Add(translator_10.Data);
+                    }
                     break;
             }
 
@@ -122,8 +162,8 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
 
-            Debug.WriteLine(string.Format("TranslatorTypes_PropertyChanged [name: {0}, value: {1}]",
-                e.PropertyName, value));
+            //Debug.WriteLine(string.Format("TranslatorTypes_PropertyChanged [name: {0}, value: {1}]",
+            //    e.PropertyName, value));
         }
         #endregion
 
