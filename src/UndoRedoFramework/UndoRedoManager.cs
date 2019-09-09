@@ -5,9 +5,9 @@ using System.Text;
 
 namespace UndoRedoFramework
 {
-	/// <summary>
-	/// The UndoRedoManager class.
-	/// </summary>
+    /// <summary>
+    /// The UndoRedoManager class.
+    /// </summary>
     public static class UndoRedoManager
     {
         private static readonly List<Command> history = new List<Command>();
@@ -21,16 +21,16 @@ namespace UndoRedoFramework
         {
             get { return currentPosition >= 0; }
         }
-		/// <summary>
-		/// Returns true if history has command that can be redone
-		/// </summary>
+        /// <summary>
+        /// Returns true if history has command that can be redone
+        /// </summary>
         public static bool CanRedo
         {
             get { return currentPosition < history.Count - 1; }
         }
-		/// <summary>
-		/// Undo last command from history list
-		/// </summary>
+        /// <summary>
+        /// Undo last command from history list
+        /// </summary>
         public static void Undo()
         {
             AssertNoCommand();
@@ -41,12 +41,12 @@ namespace UndoRedoFramework
                 {
                     member.OnUndo(command[member]);
                 }
-				OnCommandDone(CommandDoneType.Undo);
+                OnCommandDone(CommandDoneType.Undo, command.Caption);
             }
         }
-		/// <summary>
-		/// Repeats command that was undone before
-		/// </summary>
+        /// <summary>
+        /// Repeats command that was undone before
+        /// </summary>
         public static void Redo()
         {
             AssertNoCommand();
@@ -57,23 +57,23 @@ namespace UndoRedoFramework
                 {
                     member.OnRedo(command[member]);
                 }
-				OnCommandDone(CommandDoneType.Redo);
+                OnCommandDone(CommandDoneType.Redo, command.Caption);
             }
         }
-		/// <summary>
-		/// Start command. Any data changes must be done within a command.
-		/// </summary>
-		/// <param name="commandCaption"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Start command. Any data changes must be done within a command.
+        /// </summary>
+        /// <param name="commandCaption"></param>
+        /// <returns></returns>
         public static IDisposable Start(string commandCaption)
         {
             AssertNoCommand();
             CurrentCommand = new Command(commandCaption);
-			return CurrentCommand;
+            return CurrentCommand;
         }
-		/// <summary>
-		/// Commits current command and saves changes into history
-		/// </summary>
+        /// <summary>
+        /// Commits current command and saves changes into history
+        /// </summary>
         public static void Commit()
         {
             AssertCommand();
@@ -81,19 +81,19 @@ namespace UndoRedoFramework
                 member.OnCommit(CurrentCommand[member]);
 
             // add command to history (all redo records will be removed)
-			int count = history.Count - currentPosition - 1;
-			history.RemoveRange(currentPosition + 1, count);
+            int count = history.Count - currentPosition - 1;
+            history.RemoveRange(currentPosition + 1, count);
 
             history.Add(CurrentCommand);
             currentPosition++;
-			TruncateHistory(); 
-
+            TruncateHistory();
+            var caption = CurrentCommand.Caption;
             CurrentCommand = null;
-			OnCommandDone(CommandDoneType.Commit);
+            OnCommandDone(CommandDoneType.Commit, caption);
         }
-		/// <summary>
-		/// Rollback current command. It does not saves any changes done in current command.
-		/// </summary>
+        /// <summary>
+        /// Rollback current command. It does not saves any changes done in current command.
+        /// </summary>
         public static void Cancel()
         {
             AssertCommand();
@@ -101,24 +101,24 @@ namespace UndoRedoFramework
                 member.OnUndo(CurrentCommand[member]);
             CurrentCommand = null;
         }
-		/// <summary>
-		/// Clears all history. It does not affect current data but history only. 
-		/// It is usefull after any data initialization if you want forbid user to undo this initialization.
-		/// </summary>
+        /// <summary>
+        /// Clears all history. It does not affect current data but history only. 
+        /// It is usefull after any data initialization if you want forbid user to undo this initialization.
+        /// </summary>
         public static void FlushHistory()
         {
             CurrentCommand = null;
             currentPosition = -1;
             history.Clear();
         }
-		/// <summary>Checks there is no command started</summary>
+        /// <summary>Checks there is no command started</summary>
         internal static void AssertNoCommand()
         {
             if (CurrentCommand != null)
                 throw new InvalidOperationException("Previous command is not completed. Use UndoRedoManager.Commit() to complete current command.");
         }
 
-		/// <summary>Checks that command had been started</summary>
+        /// <summary>Checks that command had been started</summary>
         internal static void AssertCommand()
         {
             if (CurrentCommand == null)
@@ -130,31 +130,31 @@ namespace UndoRedoFramework
             get { return CurrentCommand != null; }
         }
 
-		/// <summary>Gets an enumeration of commands captions that can be undone.</summary>
-		/// <remarks>The first command in the enumeration will be undone first</remarks>
-		public static IEnumerable<string> UndoCommands
-		{
-			get
-			{
-				for (int i = currentPosition; i >= 0; i--)
-					yield return history[i].Caption;
-			}
-		}
-		/// <summary>Gets an enumeration of commands captions that can be redone.</summary>
-		/// <remarks>The first command in the enumeration will be redone first</remarks>
-		public static IEnumerable<string> RedoCommands
-		{
-			get
-			{
-				for (int i = currentPosition + 1; i < history.Count; i++)
-					yield return history[i].Caption;
-			}
-		}
+        /// <summary>Gets an enumeration of commands captions that can be undone.</summary>
+        /// <remarks>The first command in the enumeration will be undone first</remarks>
+        public static IEnumerable<string> UndoCommands
+        {
+            get
+            {
+                for (int i = currentPosition; i >= 0; i--)
+                    yield return history[i].Caption;
+            }
+        }
+        /// <summary>Gets an enumeration of commands captions that can be redone.</summary>
+        /// <remarks>The first command in the enumeration will be redone first</remarks>
+        public static IEnumerable<string> RedoCommands
+        {
+            get
+            {
+                for (int i = currentPosition + 1; i < history.Count; i++)
+                    yield return history[i].Caption;
+            }
+        }
 
-		public static event EventHandler<CommandDoneEventArgs> CommandDone;
-		static void OnCommandDone(CommandDoneType type)
-		{
-            CommandDone?.Invoke(null, new CommandDoneEventArgs(type));
+        public static event EventHandler<CommandDoneEventArgs> CommandDone;
+        static void OnCommandDone(CommandDoneType type, string caption)
+        {
+            CommandDone?.Invoke(null, new CommandDoneEventArgs(type, caption));
         }
 
         private static int maxHistorySize = 0;
@@ -166,10 +166,10 @@ namespace UndoRedoFramework
         public static int MaxHistorySize
         {
             get { return maxHistorySize; }
-            set 
+            set
             {
-				if (IsCommandStarted)
-					throw new InvalidOperationException("Max size may not be set while command is run.");
+                if (IsCommandStarted)
+                    throw new InvalidOperationException("Max size may not be set while command is run.");
                 if (value < 0)
                     throw new ArgumentOutOfRangeException("Value may not be less than 0");
                 maxHistorySize = value;
@@ -178,30 +178,32 @@ namespace UndoRedoFramework
         }
 
         private static void TruncateHistory()
-        {			
+        {
             if (maxHistorySize > 0)
-				if (history.Count > maxHistorySize)
-				{
-					int count = history.Count - maxHistorySize;
-					history.RemoveRange(0, count);
-					currentPosition -= count;
-				}
+                if (history.Count > maxHistorySize)
+                {
+                    int count = history.Count - maxHistorySize;
+                    history.RemoveRange(0, count);
+                    currentPosition -= count;
+                }
         }
-	
-	}
 
-	public enum CommandDoneType
-	{
-		Commit, Undo, Redo
-	}
+    }
 
-	public class CommandDoneEventArgs : EventArgs
-	{ 
-		public readonly CommandDoneType CommandDoneType;
-		public CommandDoneEventArgs(CommandDoneType type)
-		{
-			CommandDoneType = type;
-		}
-	}
+    public enum CommandDoneType
+    {
+        Commit, Undo, Redo
+    }
+
+    public class CommandDoneEventArgs : EventArgs
+    {
+        public readonly CommandDoneType CommandDoneType;
+        public readonly string Caption;
+        public CommandDoneEventArgs(CommandDoneType type, string caption)
+        {
+            CommandDoneType = type;
+            Caption = caption;
+        }
+    }
 
 }

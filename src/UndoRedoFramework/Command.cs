@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace UndoRedoFramework
 {
-    class Command : Dictionary<IUndoRedoMember, object>, IDisposable
+    internal class Command : Dictionary<IUndoRedoMember, object>, IDisposable
     {
         public readonly string Caption;
         public Command(string caption)
