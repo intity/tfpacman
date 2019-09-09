@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using TFlex.PackageManager.Common;
@@ -7,7 +8,7 @@ using TFlex.PackageManager.UI;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using UndoRedoFramework;
-using System.Linq;
+
 
 #pragma warning disable CA1721
 #pragma warning disable CA1819
@@ -36,12 +37,10 @@ namespace TFlex.PackageManager.Editors
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (UndoRedoManager.RedoCommands.Count() > 0 && 
-                        UndoRedoManager.RedoCommands.First() == p.PropertyName) Do();
+                    if (e.Caption == p.PropertyName) Do();
                     break;
                 case CommandDoneType.Redo:
-                    if (UndoRedoManager.UndoCommands.Count() > 0 && 
-                        UndoRedoManager.UndoCommands.First() == p.PropertyName) Do();
+                    if (e.Caption == p.PropertyName) Do();
                     break;
             }
 
@@ -159,6 +158,9 @@ namespace TFlex.PackageManager.Editors
                     value.Value = Value;
                     excludeFS.Value = imt.ExcludeFromSeach;
                     UndoRedoManager.Commit();
+
+                    //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
+                    //    pi.PropertyName, pi.Value));
                 }
             }
         }
