@@ -115,7 +115,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_0, "category1")]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_3")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_3")]
-        [Editor(typeof(InputScaleControl), typeof(UITypeEditor))]
+        [Editor(typeof(ScaleEditor), typeof(UITypeEditor))]
         public decimal PageScale
         {
             get => pageScale;
@@ -216,7 +216,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomCategory(Resource.TRANSLATOR_0, "category2")]
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_3")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn2_3")]
-        [Editor(typeof(InputScaleControl), typeof(UITypeEditor))]
+        [Editor(typeof(ScaleEditor), typeof(UITypeEditor))]
         public decimal ProjectionScale
         {
             get => projectionScale;

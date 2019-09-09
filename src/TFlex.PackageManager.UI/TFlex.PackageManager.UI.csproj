@@ -153,8 +153,8 @@
     <Compile Include="Converters\LevelToIndentConverter.cs" />
     <Compile Include="Common\NativeMethods.cs" />
     <Compile Include="Configuration\Translator_0.cs" />
-    <Compile Include="Controls\InputScaleControl.xaml.cs">
-      <DependentUpon>InputScaleControl.xaml</DependentUpon>
+    <Compile Include="Editors\ScaleEditor.xaml.cs">
+      <DependentUpon>ScaleEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Configuration\Translator_1.cs" />
     <Compile Include="Configuration\Translator_3.cs" />
@@ -226,7 +226,7 @@
     <None Include="Resources\de\AboutUs.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Page Include="Controls\InputScaleControl.xaml">
+    <Page Include="Editors\ScaleEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

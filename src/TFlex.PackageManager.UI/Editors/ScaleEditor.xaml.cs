@@ -11,18 +11,18 @@ using UndoRedoFramework;
 
 #pragma warning disable CA1721
 
-namespace TFlex.PackageManager.Controls
+namespace TFlex.PackageManager.Editors
 {
     /// <summary>
     /// Interaction logic for InputScaleControl.xaml
     /// </summary>
-    public partial class InputScaleControl : UserControl, ITypeEditor
+    public partial class ScaleEditor : UserControl, ITypeEditor
     {
         readonly Dictionary<string, decimal> scale;
         readonly string other;
         UndoRedo<decimal?> value;
 
-        public InputScaleControl()
+        public ScaleEditor()
         {
             InitializeComponent();
 
@@ -95,7 +95,7 @@ namespace TFlex.PackageManager.Controls
         }
 
         private static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(decimal?), typeof(InputScaleControl),
+            DependencyProperty.Register("Value", typeof(decimal?), typeof(ScaleEditor),
                 new FrameworkPropertyMetadata(null, 
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
