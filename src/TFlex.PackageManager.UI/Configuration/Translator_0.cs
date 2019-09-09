@@ -73,7 +73,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_1")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn1_1")]
         [ExpandableObject]
-        [Editor(typeof(InputCollectionControl), typeof(UITypeEditor))]
+        [Editor(typeof(StringArrayEditor), typeof(UITypeEditor))]
         public string[] PageNames
         {
             get => pageNames;
@@ -174,7 +174,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_1")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn2_1")]
         [ExpandableObject]
-        [Editor(typeof(InputCollectionControl), typeof(UITypeEditor))]
+        [Editor(typeof(StringArrayEditor), typeof(UITypeEditor))]
         public string[] ProjectionNames
         {
             get => projectionNames;

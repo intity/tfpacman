@@ -118,8 +118,8 @@
     <Compile Include="Editors\BiarcInterpolationEditor.xaml.cs">
       <DependentUpon>BiarcInterpolationEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\InputCollectionControl.xaml.cs">
-      <DependentUpon>InputCollectionControl.xaml</DependentUpon>
+    <Compile Include="Editors\StringArrayEditor.xaml.cs">
+      <DependentUpon>StringArrayEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Attributes\CustomDescriptionAttribute.cs" />
     <Compile Include="Editors\PathEditor.xaml.cs">
@@ -142,7 +142,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\InputCollectionControl.xaml">
+    <Page Include="Editors\StringArrayEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

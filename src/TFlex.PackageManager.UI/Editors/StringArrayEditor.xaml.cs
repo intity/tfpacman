@@ -12,17 +12,17 @@ using System.Linq;
 #pragma warning disable CA1721
 #pragma warning disable CA1819
 
-namespace TFlex.PackageManager.Controls
+namespace TFlex.PackageManager.Editors
 {
     /// <summary>
-    /// Interaction logic for InputCollectionControl.xaml
+    /// Interaction logic for StringArrayEditor.xaml
     /// </summary>
-    public partial class InputCollectionControl : UserControl, ITypeEditor
+    public partial class StringArrayEditor : UserControl, ITypeEditor
     {
         UndoRedo<string[]> value;
         UndoRedo<bool> excludeFS;
 
-        public InputCollectionControl()
+        public StringArrayEditor()
         {
             InitializeComponent();
             UndoRedoManager.CommandDone += UndoRedoManager_CommandDone;
@@ -80,7 +80,7 @@ namespace TFlex.PackageManager.Controls
         }
 
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(string[]), typeof(InputCollectionControl),
+            DependencyProperty.Register("Value", typeof(string[]), typeof(StringArrayEditor),
                 new FrameworkPropertyMetadata(null, 
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
