@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -32,23 +31,24 @@ namespace TFlex.PackageManager.Editors
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (UndoRedoManager.RedoCommands.Count() > 0 &&
-                        UndoRedoManager.RedoCommands.Last() == p.PropertyName && decimalUpDown.Value != value.Value)
+                    if (e.Caption == p.PropertyName)
                     {
                         decimalUpDown.Value = value.Value;
+
+                        //Debug.WriteLine(string.Format("Undo: [name: {0}, value: {1}]",
+                        //    p.PropertyName, p.Value));
                     }
                     break;
                 case CommandDoneType.Redo:
-                    if (UndoRedoManager.UndoCommands.Count() > 0 &&
-                        UndoRedoManager.UndoCommands.Last() == p.PropertyName && decimalUpDown.Value != value.Value)
+                    if (e.Caption == p.PropertyName)
                     {
                         decimalUpDown.Value = value.Value;
+
+                        //Debug.WriteLine(string.Format("Redo: [name: {0}, value: {1}]",
+                        //    p.PropertyName, p.Value));
                     }
                     break;
             }
-
-            //Debug.WriteLine(string.Format("Action: [name: {0}, value: {1}, type: {2}]",
-            //    p.PropertyName, p.Value, e.CommandDoneType));
         }
 
         public decimal? Value
@@ -59,7 +59,8 @@ namespace TFlex.PackageManager.Editors
 
         private static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(decimal?), typeof(BiarcInterpolationEditor),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+                new FrameworkPropertyMetadata(null, 
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public FrameworkElement ResolveEditor(PropertyItem propertyItem)
         {
@@ -68,12 +69,12 @@ namespace TFlex.PackageManager.Editors
                 Source = propertyItem,
                 ValidatesOnExceptions = true,
                 ValidatesOnDataErrors = true,
-                Mode = propertyItem.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay
+                Mode = BindingMode.TwoWay
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            decimalUpDown.ValueChanged += DecimalUpDown_ValueChanged;
             value = new UndoRedo<decimal?>(Value);
+            decimalUpDown.ValueChanged += DecimalUpDown_ValueChanged;
 
             return this;
         }
@@ -89,6 +90,9 @@ namespace TFlex.PackageManager.Editors
                 {
                     value.Value = decimalUpDown.Value;
                     UndoRedoManager.Commit();
+
+                    //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
+                    //    p.PropertyName, p.Value));
                 }
             }
         }
