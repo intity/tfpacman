@@ -125,7 +125,7 @@
     <Compile Include="Controls\InputPathControl.xaml.cs">
       <DependentUpon>InputPathControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SewingEditor.xaml.cs">
+    <Compile Include="Editors\SewingEditor.xaml.cs">
       <DependentUpon>SewingEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TreeViewControl.xaml.cs">
@@ -230,7 +230,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SewingEditor.xaml">
+    <Page Include="Editors\SewingEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
