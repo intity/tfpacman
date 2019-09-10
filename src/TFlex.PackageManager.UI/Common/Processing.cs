@@ -526,9 +526,9 @@ namespace TFlex.PackageManager.Common
 
                 //Debug.WriteLine(string.Format("Page name: {0}, flags: {1:X4}", i.Name, flags));
 
-                if (translator_0.ProjectionScale != 99999)
+                if (translator_0.PageScale != 99999)
                 {
-                    ProcessingProjections(document, i.Name);
+                    ProcessingProjections(document, i);
                 }
 
                 if (t_mode != TranslatorType.Document)
@@ -581,12 +581,12 @@ namespace TFlex.PackageManager.Common
         /// Extension method to processing projections.
         /// </summary>
         /// <param name="document"></param>
-        /// <param name="pageName"></param>
-        private void ProcessingProjections(Document document, string pageName)
+        /// <param name="page"></param>
+        private void ProcessingProjections(Document document, Page page)
         {
             uint flags;
 
-            foreach (var i in document.GetProjections().Where(p => p.Page.Name == pageName))
+            foreach (var i in document.GetProjections().Where(p => p.Page == page))
             {
                 flags = 0x0000;
                 flags |= (uint)(translator_0.ProjectionNames.Length > 0       ? 0x0001 : 0x0000);
@@ -596,13 +596,13 @@ namespace TFlex.PackageManager.Common
                 if (flags == 0x0001 || flags == 0x0007)
                     continue;
 
+                if (i.Scale.Value == Parameter.Default().Value && translator_0.ProjectionScale == 99999)
+                    continue;
+
                 if (i.Scale.Value == (double)translator_0.ProjectionScale)
                     continue;
 
-                if (i.Scale.Value == Parameter.Default().Value && (double)translator_0.ProjectionScale == i.PageScale)
-                    continue;
-
-                double scale = (double)translator_0.ProjectionScale == i.PageScale
+                double scale = translator_0.ProjectionScale == 99999
                     ? Parameter.Default().Value 
                     : (double)translator_0.ProjectionScale;
 
