@@ -101,12 +101,90 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// Get parent path.
+        /// Replace link to fragment.
+        /// </summary>
+        /// <param name="i_path">Input file name path.</param>
+        /// <param name="document">Current open document.</param>
+        internal void ReplaceLink(string i_path, Document document)
+        {
+            var data = GetChildData(i_path);
+            if (data.ID == null)
+                return;
+
+            foreach (var i in document.FileLinks)
+            {
+                if (i.FilePath == data.o_path)
+                    continue;
+
+                if (i.FilePath.Contains(data.i_path))
+                {
+                    i.FilePath = data.o_path;
+                    document.Regenerate(new RegenerateOptions { UpdateAllLinks = true });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Replace link to fragment.
+        /// </summary>
+        /// <param name="i_path">Input file name path.</param>
+        /// <param name="o_path">Output file name path.</param>
+        internal void ReplaceLink(string i_path, string o_path)
+        {
+            var data = GetParentData(i_path);
+            if (data.ID == null)
+                return;
+
+            var ip = i_path.Replace(header.InitialCatalog + "\\", "");
+            var op = o_path.Replace(header.TargetDirectory + "\\" + mode + "\\", "");
+            var pp = Path.Combine(header.TargetDirectory + "\\" + mode + "\\", data.o_path);
+
+            var document = TFlex.Application.OpenDocument(pp, false);
+            if (document == null)
+                return;
+
+            document.BeginChanges(string.Format("Replace link to: {0}", op));
+
+            foreach (var i in document.FileLinks)
+            {
+                if (i.FilePath == op)
+                    continue;
+
+                if (i.FilePath.Contains(ip))
+                {
+                    i.FilePath = op;
+                    document.Regenerate(new RegenerateOptions { UpdateAllLinks = true });
+                }
+            }
+
+            if (document.Changed)
+            {
+                document.EndChanges();
+                document.Save();
+            }
+            else
+                document.CancelChanges();
+
+            document.Close();
+        }
+        #endregion
+
+        #region private methods
+        struct Data
+        {
+            public string ID;
+            public string i_path;
+            public string o_path;
+        }
+
+        /// <summary>
+        /// Get parent data.
         /// </summary>
         /// <param name="path">Input file name path.</param>
-        /// <returns>Parent file name path.</returns>
-        internal string GetParentPath(string path)
+        /// <returns>The parent data.</returns>
+        private Data GetParentData(string path)
         {
+            Data data = new Data();
             var id = ConvertPathToID(path);
 
             foreach (var e in elms.Elements())
@@ -121,70 +199,46 @@ namespace TFlex.PackageManager.Configuration
 
                 if (link != null)
                 {
-                    return Path.Combine(header.TargetDirectory, mode, e.Attribute("path").Value);
+                    data.ID = e.Attribute("id").Value;
+                    data.i_path = null;
+                    data.o_path = e.Attribute("path").Value;
+                    break;
                 }
             }
 
-            return null;
+            return data;
         }
 
         /// <summary>
-        /// Replace link of fragment.
+        /// Get child data.
         /// </summary>
-        /// <param name="i_path">Input file name path.</param>
-        /// <param name="o_path">Output file name path.</param>
-        internal void ReplaceLink(string i_path, string o_path)
+        /// <param name="path">Input parent file name path.</param>
+        /// <returns>The child data.</returns>
+        private Data GetChildData(string path)
         {
-            var pp = GetParentPath(i_path);
-            if (pp == null)
-                return;
+            Data data = new Data();
+            string[] a_links = TFlex.Application
+                .GetDocumentExternalFileLinks(path, true, false, true);
 
-            var id = ConvertPathToID(i_path);
-            var ip = i_path.Replace(header.InitialCatalog + "\\", "");
-            var op = o_path.Replace(header.TargetDirectory + "\\" + mode + "\\", "");
-
-            foreach (var e in elms.Elements())
+            foreach (var i in a_links)
             {
-                var links = e.Element("links");
-                if (links == null)
-                    continue;
+                var id = ConvertPathToID(i);
 
-                var link = links.Elements()
-                    .Where(p => p.Attribute("id").Value == id)
-                    .FirstOrDefault();
-
-                if (link == null)
-                    return;
-
-                var document = TFlex.Application.OpenDocument(pp, false);
-                if (document == null)
-                    return;
-
-                document.BeginChanges(string.Format("Replace link to: {0}", op));
-
-                foreach (var i in document.FileLinks)
+                foreach (var e in elms.Elements())
                 {
-                    if (i.FilePath.Contains(ip))
+                    if (e.Attribute("id").Value == id)
                     {
-                        i.FilePath = op;
-                        document.Regenerate(new RegenerateOptions { UpdateAllLinks = true });
+                        data.ID = id;
+                        data.i_path = i.Replace(header.InitialCatalog + "\\", "");
+                        data.o_path = e.Attribute("path").Value;
+                        return data;
                     }
                 }
-
-                if (document.Changed)
-                {
-                    document.EndChanges();
-                    document.Save();
-                }
-                else
-                    document.CancelChanges();
-
-                document.Close();
             }
-        }
-        #endregion
 
-        #region private methods
+            return data;
+        }
+
         /// <summary>
         /// Convert path to ID.
         /// </summary>

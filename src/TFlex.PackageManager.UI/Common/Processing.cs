@@ -368,6 +368,7 @@ namespace TFlex.PackageManager.Common
                         logFile.AppendLine(string.Format("Document saved:\t\t{0}", o_path));
                         package.SetMetadata(path, o_path);
                         package.ReplaceLink(path, o_path);
+                        package.ReplaceLink(path, document);
                         ProcessingPages(document, n_path);
                     }
                     break;
