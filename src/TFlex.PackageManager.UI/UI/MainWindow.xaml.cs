@@ -790,7 +790,7 @@ namespace TFlex.PackageManager.UI
                         "ImportHideBodies",
                         "ImportAnotations",
                         "ImportOnlyFromActiveFilter",
-                        "Sewing",
+                        "SewTolerance",
                         "CheckImportGeomerty",
                         "UpdateProductStructure",
                         "AddBodyRecordsInProductStructure"
