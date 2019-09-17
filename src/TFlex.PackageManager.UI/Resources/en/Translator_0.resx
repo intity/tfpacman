@@ -123,6 +123,9 @@
   <data name="category2" xml:space="preserve">
     <value>Projection</value>
   </data>
+  <data name="category3" xml:space="preserve">
+    <value>Variables</value>
+  </data>
   <data name="dn1_1" xml:space="preserve">
     <value>Page names</value>
     <comment>The page name list.</comment>
@@ -184,5 +187,21 @@
   <data name="dn2_3" xml:space="preserve">
     <value>Projection scale</value>
     <comment>The projection scale value.</comment>
+  </data>
+  <data name="dn3_1" xml:space="preserve">
+    <value>Add variables</value>
+    <comment>Adding new variables.</comment>
+  </data>
+  <data name="dn3_2" xml:space="preserve">
+    <value>Edit variables</value>
+    <comment>Editing the attributes of variables.</comment>
+  </data>
+  <data name="dn3_3" xml:space="preserve">
+    <value>Rename variables</value>
+    <comment>Rename document variables.</comment>
+  </data>
+  <data name="dn3_4" xml:space="preserve">
+    <value>Remove variables</value>
+    <comment>Removing the document variables.</comment>
   </data>
 </root>

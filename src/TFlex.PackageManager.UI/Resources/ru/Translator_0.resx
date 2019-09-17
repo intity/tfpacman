@@ -123,6 +123,9 @@
   <data name="category2" xml:space="preserve">
     <value>Проекция</value>
   </data>
+  <data name="category3" xml:space="preserve">
+    <value>Переменные</value>
+  </data>
   <data name="dn1_1" xml:space="preserve">
     <value>Имя страницы</value>
     <comment>Коллекция имен страниц.</comment>
@@ -184,5 +187,21 @@
   <data name="dn2_3" xml:space="preserve">
     <value>Масштаб проекции</value>
     <comment>Определение масштаба проекции.</comment>
+  </data>
+  <data name="dn3_1" xml:space="preserve">
+    <value>Добавить переменные</value>
+    <comment>Добавление новых переменных.</comment>
+  </data>
+  <data name="dn3_2" xml:space="preserve">
+    <value>Редактировать переменные</value>
+    <comment>Изменение атрибутов переменных.</comment>
+  </data>
+  <data name="dn3_3" xml:space="preserve">
+    <value>Переименовать переменные</value>
+    <comment>Переименование переменных документа.</comment>
+  </data>
+  <data name="dn3_4" xml:space="preserve">
+    <value>Удалить переменные</value>
+    <comment>Удаление переменных документа.</comment>
   </data>
 </root>

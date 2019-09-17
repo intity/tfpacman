@@ -117,91 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category4" xml:space="preserve">
+  <data name="category5" xml:space="preserve">
     <value>3D Export optionen</value>
   </data>
-  <data name="category5" xml:space="preserve">
+  <data name="category6" xml:space="preserve">
     <value>3D Import optionen</value>
   </data>
-  <data name="dn4_1" xml:space="preserve">
+  <data name="dn5_1" xml:space="preserve">
     <value>Export typ</value>
     <comment>Export typ definition.</comment>
   </data>
-  <data name="dn4_10" xml:space="preserve">
+  <data name="dn5_10" xml:space="preserve">
     <value>Profile exportieren</value>
     <comment>Aufnahme in exportprofile.</comment>
   </data>
-  <data name="dn4_11" xml:space="preserve">
+  <data name="dn5_11" xml:space="preserve">
     <value>Geometrie vereinfachen</value>
     <comment>Modell geometrie vereinfachen.</comment>
-  </data>
-  <data name="dn4_1_0" xml:space="preserve">
-    <value>Versammlung</value>
-  </data>
-  <data name="dn4_1_1" xml:space="preserve">
-    <value>Körper gesetzt</value>
-  </data>
-  <data name="dn4_2" xml:space="preserve">
-    <value>Farbe</value>
-    <comment>Quelle für farbe.</comment>
-  </data>
-  <data name="dn4_2_0" xml:space="preserve">
-    <value>Tonfarbe</value>
-  </data>
-  <data name="dn4_2_1" xml:space="preserve">
-    <value>Material</value>
-  </data>
-  <data name="dn4_3" xml:space="preserve">
-    <value>Feste körper</value>
-    <comment>Festkörper exportieren.</comment>
-  </data>
-  <data name="dn4_4" xml:space="preserve">
-    <value>Blattkörper</value>
-    <comment>Blattkörper exportieren.</comment>
-  </data>
-  <data name="dn4_5" xml:space="preserve">
-    <value>Drahtkörper</value>
-    <comment>Drahtkörper exportieren.</comment>
-  </data>
-  <data name="dn4_6" xml:space="preserve">
-    <value>3D-Bilder</value>
-    <comment>Exportieren sie 3D-Bilder.</comment>
-  </data>
-  <data name="dn4_7" xml:space="preserve">
-    <value>Anmerkungen</value>
-    <comment>Anmerkungen exportieren.</comment>
-  </data>
-  <data name="dn4_8" xml:space="preserve">
-    <value>Schweißnähte</value>
-    <comment>Schweißnähte exportieren.</comment>
-  </data>
-  <data name="dn4_9" xml:space="preserve">
-    <value>Kurven</value>
-    <comment>Kurven exportieren.</comment>
-  </data>
-  <data name="dn5_1" xml:space="preserve">
-    <value>Import typ</value>
-    <comment>Import typ definition.</comment>
-  </data>
-  <data name="dn5_10" xml:space="preserve">
-    <value>Nur auf aktiver ebene</value>
-    <comment>Importieren sie körper nur aus der aktiven ebene.</comment>
-  </data>
-  <data name="dn5_11" xml:space="preserve">
-    <value>Nähen</value>
-    <comment>Nähgenauigkeit in mm.</comment>
-  </data>
-  <data name="dn5_12" xml:space="preserve">
-    <value>Volumengeometrie prüfen</value>
-    <comment>Überprüfen der volumenkörpergeometrie am ende des Imports.</comment>
-  </data>
-  <data name="dn5_13" xml:space="preserve">
-    <value>Produktstruktur aktualisieren</value>
-    <comment>Aktualisieren sie die struktur des produkts am ende des Imports.</comment>
-  </data>
-  <data name="dn5_14" xml:space="preserve">
-    <value>Fügen sie körperdatensätze hinzu</value>
-    <comment>Fügen sie der produktstruktur bodysätze hinzu.</comment>
   </data>
   <data name="dn5_1_0" xml:space="preserve">
     <value>Versammlung</value>
@@ -209,45 +141,113 @@
   <data name="dn5_1_1" xml:space="preserve">
     <value>Körper gesetzt</value>
   </data>
-  <data name="dn5_1_2" xml:space="preserve">
-    <value>Ein Körper</value>
-  </data>
   <data name="dn5_2" xml:space="preserve">
-    <value>Geometrie heilen</value>
+    <value>Farbe</value>
+    <comment>Quelle für farbe.</comment>
   </data>
   <data name="dn5_2_0" xml:space="preserve">
-    <value>Auto</value>
+    <value>Tonfarbe</value>
   </data>
   <data name="dn5_2_1" xml:space="preserve">
-    <value>Ja</value>
-  </data>
-  <data name="dn5_2_2" xml:space="preserve">
-    <value>Nein</value>
+    <value>Material</value>
   </data>
   <data name="dn5_3" xml:space="preserve">
-    <value>Erstellen sie genaue kanten</value>
+    <value>Feste körper</value>
+    <comment>Festkörper exportieren.</comment>
   </data>
   <data name="dn5_4" xml:space="preserve">
+    <value>Blattkörper</value>
+    <comment>Blattkörper exportieren.</comment>
+  </data>
+  <data name="dn5_5" xml:space="preserve">
+    <value>Drahtkörper</value>
+    <comment>Drahtkörper exportieren.</comment>
+  </data>
+  <data name="dn5_6" xml:space="preserve">
+    <value>3D-Bilder</value>
+    <comment>Exportieren sie 3D-Bilder.</comment>
+  </data>
+  <data name="dn5_7" xml:space="preserve">
+    <value>Anmerkungen</value>
+    <comment>Anmerkungen exportieren.</comment>
+  </data>
+  <data name="dn5_8" xml:space="preserve">
+    <value>Schweißnähte</value>
+    <comment>Schweißnähte exportieren.</comment>
+  </data>
+  <data name="dn5_9" xml:space="preserve">
+    <value>Kurven</value>
+    <comment>Kurven exportieren.</comment>
+  </data>
+  <data name="dn6_1" xml:space="preserve">
+    <value>Import typ</value>
+    <comment>Import typ definition.</comment>
+  </data>
+  <data name="dn6_10" xml:space="preserve">
+    <value>Nur auf aktiver ebene</value>
+    <comment>Importieren sie körper nur aus der aktiven ebene.</comment>
+  </data>
+  <data name="dn6_11" xml:space="preserve">
+    <value>Nähen</value>
+    <comment>Nähgenauigkeit in mm.</comment>
+  </data>
+  <data name="dn6_12" xml:space="preserve">
+    <value>Volumengeometrie prüfen</value>
+    <comment>Überprüfen der volumenkörpergeometrie am ende des Imports.</comment>
+  </data>
+  <data name="dn6_13" xml:space="preserve">
+    <value>Produktstruktur aktualisieren</value>
+    <comment>Aktualisieren sie die struktur des produkts am ende des Imports.</comment>
+  </data>
+  <data name="dn6_14" xml:space="preserve">
+    <value>Fügen sie körperdatensätze hinzu</value>
+    <comment>Fügen sie der produktstruktur bodysätze hinzu.</comment>
+  </data>
+  <data name="dn6_1_0" xml:space="preserve">
+    <value>Versammlung</value>
+  </data>
+  <data name="dn6_1_1" xml:space="preserve">
+    <value>Körper gesetzt</value>
+  </data>
+  <data name="dn6_1_2" xml:space="preserve">
+    <value>Ein Körper</value>
+  </data>
+  <data name="dn6_2" xml:space="preserve">
+    <value>Geometrie heilen</value>
+  </data>
+  <data name="dn6_2_0" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="dn6_2_1" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="dn6_2_2" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <data name="dn6_3" xml:space="preserve">
+    <value>Erstellen sie genaue kanten</value>
+  </data>
+  <data name="dn6_4" xml:space="preserve">
     <value>Feste körper</value>
     <comment>Festkörper importieren.</comment>
   </data>
-  <data name="dn5_5" xml:space="preserve">
+  <data name="dn6_5" xml:space="preserve">
     <value>Blattkörper</value>
     <comment>Blattkörper importieren.</comment>
   </data>
-  <data name="dn5_6" xml:space="preserve">
+  <data name="dn6_6" xml:space="preserve">
     <value>Drahtkörper</value>
     <comment>Drahtkörper importieren.</comment>
   </data>
-  <data name="dn5_7" xml:space="preserve">
+  <data name="dn6_7" xml:space="preserve">
     <value>Mesh körper</value>
     <comment>Importieren sie netzkörper als 3D-Bilder.</comment>
   </data>
-  <data name="dn5_8" xml:space="preserve">
+  <data name="dn6_8" xml:space="preserve">
     <value>Versteckte körper</value>
     <comment>Importieren sie verborgene körper.</comment>
   </data>
-  <data name="dn5_9" xml:space="preserve">
+  <data name="dn6_9" xml:space="preserve">
     <value>Anmerkungen</value>
     <comment>Anmerkungen importieren.</comment>
   </data>

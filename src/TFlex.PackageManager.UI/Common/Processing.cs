@@ -370,6 +370,7 @@ namespace TFlex.PackageManager.Common
                         package.ReplaceLink(path, o_path);
                         package.ReplaceLink(path, document);
                         ProcessingPages(document, n_path);
+                        ProcessingVariables(document);
                     }
                     break;
                 case TranslatorType.Acad:
@@ -461,7 +462,7 @@ namespace TFlex.PackageManager.Common
         }
 
         /// <summary>
-        /// Extension method to processing pages.
+        /// The extension method to processing pages.
         /// </summary>
         /// <param name="document"></param>
         /// <param name="targetDirectory"></param>
@@ -578,7 +579,7 @@ namespace TFlex.PackageManager.Common
         }
 
         /// <summary>
-        /// Extension method to processing projections.
+        /// The extension method to processing projections.
         /// </summary>
         /// <param name="document"></param>
         /// <param name="page"></param>
@@ -617,6 +618,141 @@ namespace TFlex.PackageManager.Common
                     "-->Projection:\t\t[name: {0}, scale: {1}]", i.Name, scale));
 
                 //Debug.WriteLine(string.Format("Projection name: {0}, flags: {1:X4}", i.Name, flags));
+            }
+        }
+
+        /// <summary>
+        /// The extension method to processing variables.
+        /// </summary>
+        /// <param name="document"></param>
+        private void ProcessingVariables(Document document)
+        {
+            foreach (var e in translator_0.AddVariables.Elements())
+            {
+                var name = e.Attributes().ElementAt(1).Value;
+                if (name == "")
+                    continue;
+                var type = name.Contains("$") ? "text" : "real";
+                var variable = document.FindVariable(name);
+                if (variable == null)
+                    variable = new Variable(document);
+                else
+                    continue;
+
+                foreach (var a in e.Attributes())
+                {
+                    switch (a.Name.ToString())
+                    {
+                        case "name":
+                            variable.Name = a.Value;
+                            break;
+                        case "group":
+                            variable.GroupName = a.Value;
+                            break;
+                        case "expression":
+                            variable.Expression = a.Value == "" 
+                                ? (type == "text" ? "" : "0") 
+                                : a.Value;
+                            break;
+                        case "external":
+                            if (variable.IsConstant)
+                                variable.External = a.Value == "1";
+                            break;
+                    }
+                }
+
+                logFile.AppendLine(string.Format(
+                        "->Variable:\t\t[action: add, name: {0}, group: {1}, expression: {2}, external: {3}]",
+                        variable.Name,
+                        variable.GroupName,
+                        variable.Expression,
+                        variable.External));
+            }
+
+            foreach (var e in translator_0.EditVariables.Elements())
+            {
+                var name = e.Attributes().ElementAt(1).Value;
+                if (name == "")
+                    continue;
+                var type = name.Contains("$") ? "text" : "real";
+                var variable = document.FindVariable(name);
+                if (variable == null)
+                    continue;
+
+                foreach (var a in e.Attributes())
+                {
+                    switch (a.Name.ToString())
+                    {
+                        case "group":
+                            variable.GroupName = a.Value;
+                            break;
+                        case "expression":
+                            variable.Expression = a.Value == ""
+                                ? (type == "text" ? "" : "0")
+                                : a.Value;
+                            break;
+                        case "external":
+                            if (variable.IsConstant)
+                                variable.External = a.Value == "1";
+                            break;
+                    }
+                }
+
+                logFile.AppendLine(string.Format(
+                        "->Variable:\t\t[action: edit, name: {0}, group: {1}, expression: {2}, external: {3}]",
+                        variable.Name,
+                        variable.GroupName,
+                        variable.Expression,
+                        variable.External));
+            }
+
+            bool hasRename = false;
+            foreach (var e in translator_0.RenameVariables.Elements())
+            {
+                var name1 = e.Attributes().ElementAt(1).Value;
+                var type1 = name1.Contains("$") ? "text" : "real";
+                if (name1 == "")
+                    continue;
+
+                var name2 = e.Attributes().ElementAt(2).Value;
+                var type2 = name2.Contains("$") ? "text" : "real";
+                if (name2 == "")
+                    continue;
+
+                if (type1 != type2)
+                    continue;
+
+                var variable = document.FindVariable(name2);
+                if (variable == null)
+                    continue;
+
+                variable.SetName(name1, true);
+                logFile.AppendLine(string.Format(
+                        "->Variable:\t\t[action: rename, new name: {0}, old name: {1}]",
+                        name1,
+                        name2));
+
+                hasRename = variable.Name == name1;
+            }
+
+            if (hasRename)
+                document.Regenerate(new RegenerateOptions { Full = true });
+
+            foreach (var e in translator_0.RemoveVariables.Elements())
+            {
+                var name = e.Attributes().ElementAt(1).Value;
+                if (name == "")
+                    continue;
+
+                var variable = document.FindVariable(name);
+                if (variable == null)
+                    continue;
+
+                if (document.DeleteObjects(new ObjectArray(variable), new DeleteOptions(true)))
+                {
+                    logFile.AppendLine(string.Format(
+                        "->Variable:\t\t[action: remove, name: {0}]", name));
+                }
             }
         }
         #endregion

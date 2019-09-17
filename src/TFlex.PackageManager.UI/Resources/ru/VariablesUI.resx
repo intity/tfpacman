@@ -117,8 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="dn5_0" xml:space="preserve">
-    <value>Протокол</value>
-    <comment>Протокол, который будет использоваться для экспорта в Step.</comment>
+  <data name="button_1" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="button_2" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="column_1" xml:space="preserve">
+    <value>Имя</value>
+    <comment>Имя переменной</comment>
+  </data>
+  <data name="column_2" xml:space="preserve">
+    <value>Исходное имя</value>
+    <comment>Исходное имя переменной</comment>
+  </data>
+  <data name="column_3" xml:space="preserve">
+    <value>Группа</value>
+    <comment>Имя группы</comment>
+  </data>
+  <data name="column_4" xml:space="preserve">
+    <value>Выражение</value>
+    <comment>Выражение</comment>
+  </data>
+  <data name="column_5" xml:space="preserve">
+    <value>Внешняя</value>
+    <comment>Внешняя переменная</comment>
   </data>
 </root>

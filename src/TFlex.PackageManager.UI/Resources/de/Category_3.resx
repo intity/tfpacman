@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category3" xml:space="preserve">
+  <data name="category4" xml:space="preserve">
     <value>Datei</value>
   </data>
-  <data name="dn3_2" xml:space="preserve">
+  <data name="dn4_2" xml:space="preserve">
     <value>Datei namen suffix</value>
     <comment>Fügt dem namen der ausgabedatei ein suffix hinzu.</comment>
   </data>
-  <data name="dn3_3" xml:space="preserve">
+  <data name="dn4_3" xml:space="preserve">
     <value>Dateinamens vorlage</value>
     <comment>Definieren sie eine vorlage für den namen der ausgabedatei.</comment>
   </data>

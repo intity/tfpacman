@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing.Design;
 using System.Globalization;
@@ -40,6 +42,10 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_2_1;
         XAttribute data_2_2;
         XAttribute data_2_3;
+        XElement data_3_1;
+        XElement data_3_2;
+        XElement data_3_3;
+        XElement data_3_4;
         #endregion
 
         /// <summary>
@@ -232,6 +238,46 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
         }
+
+        /// <summary>
+        /// Add variables.
+        /// </summary>
+        [PropertyOrder(9)]
+        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_1")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn3_1")]
+        [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
+        public XElement AddVariables { get => data_3_1; }
+
+        /// <summary>
+        /// Edit variables.
+        /// </summary>
+        [PropertyOrder(10)]
+        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_2")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn3_2")]
+        [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
+        public XElement EditVariables { get => data_3_2; }
+
+        /// <summary>
+        /// Rename variables.
+        /// </summary>
+        [PropertyOrder(11)]
+        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_3")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn3_3")]
+        [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
+        public XElement RenameVariables { get => data_3_3; }
+
+        /// <summary>
+        /// Remove variables.
+        /// </summary>
+        [PropertyOrder(12)]
+        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_4")]
+        [CustomDescription(Resource.TRANSLATOR_0, "dn3_4")]
+        [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
+        public XElement RemoveVariables { get => data_3_4; }
         #endregion
 
         #region internal properties
@@ -257,6 +303,11 @@ namespace TFlex.PackageManager.Configuration
             data_2_2 = new XAttribute("value", ExcludeProjection ? "1" : "0");
             data_2_3 = new XAttribute("value", ProjectionScale.ToString(CultureInfo.InvariantCulture));
 
+            data_3_1 = new XElement("parameter", new XAttribute("name", "AddVariables"));
+            data_3_2 = new XElement("parameter", new XAttribute("name", "EditVariables"));
+            data_3_3 = new XElement("parameter", new XAttribute("name", "RenameVariables"));
+            data_3_4 = new XElement("parameter", new XAttribute("name", "RemoveVariables"));
+
             data.Add(new XElement("parameter",
                 new XAttribute("name", "PageNames"),
                 data_1_1));
@@ -281,6 +332,11 @@ namespace TFlex.PackageManager.Configuration
             data.Add(new XElement("parameter",
                 new XAttribute("name", "ProjectionScale"),
                 data_2_3));
+
+            data.Add(data_3_1);
+            data.Add(data_3_2);
+            data.Add(data_3_3);
+            data.Add(data_3_4);
 
             return data;
         }
@@ -331,6 +387,18 @@ namespace TFlex.PackageManager.Configuration
                         NumberStyles.Float, 
                         CultureInfo.InvariantCulture);
                     data_2_3 = a;
+                    break;
+                case "AddVariables":
+                    data_3_1 = element;
+                    break;
+                case "EditVariables":
+                    data_3_2 = element;
+                    break;
+                case "RenameVariables":
+                    data_3_3 = element;
+                    break;
+                case "RemoveVariables":
+                    data_3_4 = element;
                     break;
             }
         }

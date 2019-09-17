@@ -14,7 +14,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The IGES-translator class.
     /// </summary>
-    [CustomCategoryOrder(Resource.TRANSLATOR_3D, 4)]
+    [CustomCategoryOrder(Resource.TRANSLATOR_3D, 5)]
     public class Translator_6 : Translator3D
     {
         #region private fields
@@ -36,9 +36,9 @@ namespace TFlex.PackageManager.Configuration
         /// Convert Analytic Geometry to Nurgs.
         /// </summary>
         [PropertyOrder(50)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_6, "dn4_0")]
-        [CustomDescription(Resource.TRANSLATOR_6, "dn4_0")]
+        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_6, "dn5_0")]
+        [CustomDescription(Resource.TRANSLATOR_6, "dn5_0")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ConvertAnalyticGeometryToNurbs
         {
@@ -59,9 +59,9 @@ namespace TFlex.PackageManager.Configuration
         /// Save solid bodies as face set.
         /// </summary>
         [PropertyOrder(51)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_6, "dn4_1")]
-        [CustomDescription(Resource.TRANSLATOR_6, "dn4_1")]
+        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_6, "dn5_1")]
+        [CustomDescription(Resource.TRANSLATOR_6, "dn5_1")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool SaveSolidBodiesAsFaceSet
         {

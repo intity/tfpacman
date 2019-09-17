@@ -798,6 +798,21 @@ namespace TFlex.PackageManager.UI
                     IsBrowsable = false
                 });
             }
+
+            if (key2 != "Document")
+            {
+                propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
+                {
+                    TargetProperties = new string[]
+                    {
+                        "AddVariables",
+                        "EditVariables",
+                        "RenameVariables",
+                        "RemoveVariables"
+                    },
+                    IsBrowsable = false
+                });
+            }
         }
 
         /// <summary>

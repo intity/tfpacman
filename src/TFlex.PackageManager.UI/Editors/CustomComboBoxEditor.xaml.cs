@@ -156,30 +156,30 @@ namespace TFlex.PackageManager.Editors
                     comboBox.Items.Add("2013");
                     break;
                 case "ConvertAreas":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_1_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_1_1", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_1_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_1_1", 0));
                     break;
                 case "ConvertToLines":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_2_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_2_1", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_2_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_2_1", 0));
                     break;
                 case "ConvertDimensions":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_3_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_3_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_3_2", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_3_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_3_1", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_3_2", 0));
                     break;
                 case "ConvertLineText":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_4_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_4_1", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_4_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_4_1", 0));
                     break;
                 case "ConvertMultitext":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_5_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_5_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_5_2", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_5_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_5_1", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_5_2", 0));
                     break;
                 case "BiarcInterpolationForSplines":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_6_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn4_6_1", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_6_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_6_1", 0));
                     break;
                 #endregion
                 #region Translator_7
@@ -197,27 +197,27 @@ namespace TFlex.PackageManager.Editors
                 #endregion
                 #region Translator_3D
                 case "ExportMode":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn4_1_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn4_1_1", 0));
-                    break;
-                case "ColorSource":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn4_2_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn4_2_1", 0));
-                    break;
-                case "ImportMode":
                     comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_1_0", 0));
                     comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_1_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_1_2", 0));
+                    break;
+                case "ColorSource":
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_1", 0));
+                    break;
+                case "ImportMode":
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_1_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_1_1", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_1_2", 0));
                     break;
                 case "Heal":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_2", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_1", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_2", 0));
                     break;
                 case "CreateAccurateEdges":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_2", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_0", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_1", 0));
+                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_2", 0));
                     break;
                     #endregion
             }

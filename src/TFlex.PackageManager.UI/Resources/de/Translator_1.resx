@@ -117,88 +117,88 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category3" xml:space="preserve">
+  <data name="category4" xml:space="preserve">
     <value>Datei</value>
   </data>
-  <data name="category4" xml:space="preserve">
+  <data name="category5" xml:space="preserve">
     <value>Export optionen</value>
     <comment>Umwandlung von bauelementen.</comment>
   </data>
-  <data name="dn3_1" xml:space="preserve">
+  <data name="dn4_1" xml:space="preserve">
     <value>Datei format</value>
     <comment>Ausgabe datei format.</comment>
   </data>
-  <data name="dn3_2" xml:space="preserve">
+  <data name="dn4_2" xml:space="preserve">
     <value>AutoCAD version</value>
     <comment>Ermitteln sie die version der AutoCAD datei.</comment>
   </data>
-  <data name="dn4_1" xml:space="preserve">
+  <data name="dn5_1" xml:space="preserve">
     <value>Konvertieren schraffur in</value>
     <comment>Schraffur konvertieren.</comment>
   </data>
-  <data name="dn4_1_0" xml:space="preserve">
+  <data name="dn5_1_0" xml:space="preserve">
     <value>Linien</value>
   </data>
-  <data name="dn4_1_1" xml:space="preserve">
+  <data name="dn5_1_1" xml:space="preserve">
     <value>Ausbrüten</value>
   </data>
-  <data name="dn4_2" xml:space="preserve">
+  <data name="dn5_2" xml:space="preserve">
     <value>Konvertieren sie linien in</value>
     <comment>Konvertieren von linien.</comment>
   </data>
-  <data name="dn4_2_0" xml:space="preserve">
+  <data name="dn5_2_0" xml:space="preserve">
     <value>Polylinien</value>
   </data>
-  <data name="dn4_2_1" xml:space="preserve">
+  <data name="dn5_2_1" xml:space="preserve">
     <value>Linien</value>
   </data>
-  <data name="dn4_3" xml:space="preserve">
+  <data name="dn5_3" xml:space="preserve">
     <value>Konvertieren dimensionen in</value>
     <comment>Dimensionen konvertieren.</comment>
   </data>
-  <data name="dn4_3_0" xml:space="preserve">
+  <data name="dn5_3_0" xml:space="preserve">
     <value>Dimensionen</value>
   </data>
-  <data name="dn4_3_1" xml:space="preserve">
+  <data name="dn5_3_1" xml:space="preserve">
     <value>Dimensionen und texte</value>
   </data>
-  <data name="dn4_3_2" xml:space="preserve">
+  <data name="dn5_3_2" xml:space="preserve">
     <value>Linien und texte</value>
   </data>
-  <data name="dn4_4" xml:space="preserve">
+  <data name="dn5_4" xml:space="preserve">
     <value>Konvertieren text in</value>
     <comment>Konvertieren von einzeiliger texten.</comment>
   </data>
-  <data name="dn4_4_0" xml:space="preserve">
+  <data name="dn5_4_0" xml:space="preserve">
     <value>Text</value>
   </data>
-  <data name="dn4_4_1" xml:space="preserve">
+  <data name="dn5_4_1" xml:space="preserve">
     <value>Einzeiliger text</value>
   </data>
-  <data name="dn4_5" xml:space="preserve">
+  <data name="dn5_5" xml:space="preserve">
     <value>Konvertieren sie multitexte</value>
     <comment>Multitext konvertierung.</comment>
   </data>
-  <data name="dn4_5_0" xml:space="preserve">
+  <data name="dn5_5_0" xml:space="preserve">
     <value>Selektiv</value>
   </data>
-  <data name="dn4_5_1" xml:space="preserve">
+  <data name="dn5_5_1" xml:space="preserve">
     <value>Multitexte</value>
   </data>
-  <data name="dn4_5_2" xml:space="preserve">
+  <data name="dn5_5_2" xml:space="preserve">
     <value>Einzeiliger texte</value>
   </data>
-  <data name="dn4_6" xml:space="preserve">
+  <data name="dn5_6" xml:space="preserve">
     <value>Konvertieren splines in</value>
     <comment>Splines mit kreisinterpolation exportieren.</comment>
   </data>
-  <data name="dn4_6_0" xml:space="preserve">
+  <data name="dn5_6_0" xml:space="preserve">
     <value>Polylinien</value>
   </data>
-  <data name="dn4_6_1" xml:space="preserve">
+  <data name="dn5_6_1" xml:space="preserve">
     <value>Polylinien mit Interpolation</value>
   </data>
-  <data name="dn4_7" xml:space="preserve">
+  <data name="dn5_7" xml:space="preserve">
     <value>Interpolations genauigkeit</value>
     <comment>Die genauigkeit der kreisinterpolation.</comment>
   </data>

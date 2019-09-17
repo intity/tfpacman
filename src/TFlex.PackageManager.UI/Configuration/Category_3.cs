@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
@@ -19,7 +18,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The class for file output category definition.
     /// </summary>
-    [CustomCategoryOrder(Resource.CATEGIRY_3, 3)]
+    [CustomCategoryOrder(Resource.CATEGIRY_4, 4)]
     public class Category_3 : Translator, INotifyDataErrorInfo
     {
         #region private fields
@@ -48,8 +47,8 @@ namespace TFlex.PackageManager.Configuration
             objErrors        = new Dictionary<string, List<string>>();
             error_messages   = new string[]
             {
-                Resource.GetString(Resource.CATEGIRY_3, "message2", 0),
-                Resource.GetString(Resource.CATEGIRY_3, "message3", 0)
+                Resource.GetString(Resource.CATEGIRY_4, "message2", 0),
+                Resource.GetString(Resource.CATEGIRY_4, "message3", 0)
             };
         }
 
@@ -77,9 +76,9 @@ namespace TFlex.PackageManager.Configuration
         /// The file name suffix.
         /// </summary>
         [PropertyOrder(13)]
-        [CustomCategory(Resource.CATEGIRY_3, "category3")]
-        [CustomDisplayName(Resource.CATEGIRY_3, "dn3_2")]
-        [CustomDescription(Resource.CATEGIRY_3, "dn3_2")]
+        [CustomCategory(Resource.CATEGIRY_4, "category4")]
+        [CustomDisplayName(Resource.CATEGIRY_4, "dn4_2")]
+        [CustomDescription(Resource.CATEGIRY_4, "dn4_2")]
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string FileNameSuffix
         {
@@ -115,9 +114,9 @@ namespace TFlex.PackageManager.Configuration
         /// Template name of the file definition.
         /// </summary>
         [PropertyOrder(14)]
-        [CustomCategory(Resource.CATEGIRY_3, "category3")]
-        [CustomDisplayName(Resource.CATEGIRY_3, "dn3_3")]
-        [CustomDescription(Resource.CATEGIRY_3, "dn3_3")]
+        [CustomCategory(Resource.CATEGIRY_4, "category4")]
+        [CustomDisplayName(Resource.CATEGIRY_4, "dn4_3")]
+        [CustomDescription(Resource.CATEGIRY_4, "dn4_3")]
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string TemplateFileName
         {

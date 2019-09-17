@@ -117,88 +117,88 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category3" xml:space="preserve">
+  <data name="category4" xml:space="preserve">
     <value>Файл</value>
   </data>
-  <data name="category4" xml:space="preserve">
+  <data name="category5" xml:space="preserve">
     <value>Параметры экспорта</value>
     <comment>Преобразование элементов построения.</comment>
   </data>
-  <data name="dn3_1" xml:space="preserve">
+  <data name="dn4_1" xml:space="preserve">
     <value>Формат файла</value>
     <comment>Формат файла вывода.</comment>
   </data>
-  <data name="dn3_2" xml:space="preserve">
+  <data name="dn4_2" xml:space="preserve">
     <value>Версия файла AutoCAD</value>
     <comment>Определение версии файла AutoCAD.</comment>
   </data>
-  <data name="dn4_1" xml:space="preserve">
+  <data name="dn5_1" xml:space="preserve">
     <value>Конвертировать штриховки в</value>
     <comment>Преобразование штриховки.</comment>
   </data>
-  <data name="dn4_1_0" xml:space="preserve">
+  <data name="dn5_1_0" xml:space="preserve">
     <value>Линии</value>
   </data>
-  <data name="dn4_1_1" xml:space="preserve">
+  <data name="dn5_1_1" xml:space="preserve">
     <value>Штриховки</value>
   </data>
-  <data name="dn4_2" xml:space="preserve">
+  <data name="dn5_2" xml:space="preserve">
     <value>Конвертировать линии в</value>
     <comment>Преобразование линий.</comment>
   </data>
-  <data name="dn4_2_0" xml:space="preserve">
+  <data name="dn5_2_0" xml:space="preserve">
     <value>Полилинии</value>
   </data>
-  <data name="dn4_2_1" xml:space="preserve">
+  <data name="dn5_2_1" xml:space="preserve">
     <value>Линии</value>
   </data>
-  <data name="dn4_3" xml:space="preserve">
+  <data name="dn5_3" xml:space="preserve">
     <value>Конвертировать размеры в</value>
     <comment>Преобразование размеров.</comment>
   </data>
-  <data name="dn4_3_0" xml:space="preserve">
+  <data name="dn5_3_0" xml:space="preserve">
     <value>Размеры</value>
   </data>
-  <data name="dn4_3_1" xml:space="preserve">
+  <data name="dn5_3_1" xml:space="preserve">
     <value>Размеры и тексты</value>
   </data>
-  <data name="dn4_3_2" xml:space="preserve">
+  <data name="dn5_3_2" xml:space="preserve">
     <value>Линии и тексты</value>
   </data>
-  <data name="dn4_4" xml:space="preserve">
+  <data name="dn5_4" xml:space="preserve">
     <value>Конвертировать текст в</value>
     <comment>Преобразование строчных текстов.</comment>
   </data>
-  <data name="dn4_4_0" xml:space="preserve">
+  <data name="dn5_4_0" xml:space="preserve">
     <value>Текст</value>
   </data>
-  <data name="dn4_4_1" xml:space="preserve">
+  <data name="dn5_4_1" xml:space="preserve">
     <value>Текст в одной строке</value>
   </data>
-  <data name="dn4_5" xml:space="preserve">
+  <data name="dn5_5" xml:space="preserve">
     <value>Конвертировать мультитексты</value>
     <comment>Преобразование мультитекстов.</comment>
   </data>
-  <data name="dn4_5_0" xml:space="preserve">
+  <data name="dn5_5_0" xml:space="preserve">
     <value>Выборочно</value>
   </data>
-  <data name="dn4_5_1" xml:space="preserve">
+  <data name="dn5_5_1" xml:space="preserve">
     <value>Мультитексты</value>
   </data>
-  <data name="dn4_5_2" xml:space="preserve">
+  <data name="dn5_5_2" xml:space="preserve">
     <value>Строчные тексты</value>
   </data>
-  <data name="dn4_6" xml:space="preserve">
+  <data name="dn5_6" xml:space="preserve">
     <value>Конвертировать сплайны в</value>
     <comment>Экспорт сплайнов с использованием круговой интерполяции.</comment>
   </data>
-  <data name="dn4_6_0" xml:space="preserve">
+  <data name="dn5_6_0" xml:space="preserve">
     <value>Полилинии</value>
   </data>
-  <data name="dn4_6_1" xml:space="preserve">
+  <data name="dn5_6_1" xml:space="preserve">
     <value>Полилинии с интерполяцией</value>
   </data>
-  <data name="dn4_7" xml:space="preserve">
+  <data name="dn5_7" xml:space="preserve">
     <value>Точность интерполяции</value>
     <comment>Точность круговой интерполяции.</comment>
   </data>

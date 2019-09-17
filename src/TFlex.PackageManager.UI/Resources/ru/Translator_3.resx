@@ -117,21 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category3" xml:space="preserve">
+  <data name="category4" xml:space="preserve">
     <value>Файл</value>
   </data>
-  <data name="category4" xml:space="preserve">
+  <data name="category5" xml:space="preserve">
     <value>Параметры экспорта</value>
   </data>
-  <data name="dn3_1" xml:space="preserve">
+  <data name="dn4_1" xml:space="preserve">
     <value>Формат файла</value>
     <comment>Формат файла растрового изображения.</comment>
   </data>
-  <data name="dn4_1" xml:space="preserve">
+  <data name="dn5_1" xml:space="preserve">
     <value>Экспортировать экранные слои</value>
     <comment>Экспорт экранных слоев чертежа.</comment>
   </data>
-  <data name="dn4_2" xml:space="preserve">
+  <data name="dn5_2" xml:space="preserve">
     <value>Экспортировать элементы построения</value>
     <comment>Экспорт элементов построения чертежа.</comment>
   </data>

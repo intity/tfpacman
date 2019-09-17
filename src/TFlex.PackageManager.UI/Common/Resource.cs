@@ -25,7 +25,8 @@ namespace TFlex.PackageManager.Common
         public const string MAIN_WINDOW   = "PackageManager";
         public const string LIST_VALUES   = "ListValues";
         public const string OPTIONS_UI    = "Options";
-        public const string CATEGIRY_3    = "Category_3";
+        public const string VARIABLES_UI  = "VariablesUI";
+        public const string CATEGIRY_4    = "Category_3";
         public const string TRANSLATOR_0  = "Translator_0";
         public const string TRANSLATOR_1  = "Translator_1";
         public const string TRANSLATOR_3  = "Translator_3";

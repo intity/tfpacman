@@ -117,18 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category4" xml:space="preserve">
+  <data name="category5" xml:space="preserve">
     <value>Параметры экспорта</value>
   </data>
-  <data name="dn4_1" xml:space="preserve">
+  <data name="dn5_1" xml:space="preserve">
     <value>Экспортировать 3D модель</value>
     <comment>Включает в экспорт 3D-модель, интегрированную в PDF.</comment>
   </data>
-  <data name="dn4_2" xml:space="preserve">
+  <data name="dn5_2" xml:space="preserve">
     <value>Экспортировать слои</value>
     <comment>Включает в экспорт слои документа.</comment>
   </data>
-  <data name="dn4_3" xml:space="preserve">
+  <data name="dn5_3" xml:space="preserve">
     <value>Объединить страницы в один файл</value>
     <comment>Объединение экспортированных страниц в один PDF-файл.</comment>
   </data>

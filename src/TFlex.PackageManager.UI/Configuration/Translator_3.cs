@@ -17,8 +17,8 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The Bitmap translator class.
     /// </summary>
-    [CustomCategoryOrder(Resource.TRANSLATOR_3, 3)]
     [CustomCategoryOrder(Resource.TRANSLATOR_3, 4)]
+    [CustomCategoryOrder(Resource.TRANSLATOR_3, 5)]
     public class Translator_3 : Translator_0
     {
         #region private fields
@@ -47,9 +47,9 @@ namespace TFlex.PackageManager.Configuration
         /// 4 - PNG
         /// </summary>
         [PropertyOrder(15)]
-        [CustomCategory(Resource.TRANSLATOR_3, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_3, "dn3_1")]
-        [CustomDescription(Resource.TRANSLATOR_3, "dn3_1")]
+        [CustomCategory(Resource.TRANSLATOR_3, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_3, "dn4_1")]
+        [CustomDescription(Resource.TRANSLATOR_3, "dn4_1")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Extension
         {
@@ -75,9 +75,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export the screen layers of the drawing.
         /// </summary>
         [PropertyOrder(16)]
-        [CustomCategory(Resource.TRANSLATOR_3, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_3, "dn4_1")]
-        [CustomDescription(Resource.TRANSLATOR_3, "dn4_1")]
+        [CustomCategory(Resource.TRANSLATOR_3, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_3, "dn5_1")]
+        [CustomDescription(Resource.TRANSLATOR_3, "dn5_1")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ScreenLayers
         {
@@ -98,9 +98,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export drawing elements.
         /// </summary>
         [PropertyOrder(17)]
-        [CustomCategory(Resource.TRANSLATOR_3, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_3, "dn4_2")]
-        [CustomDescription(Resource.TRANSLATOR_3, "dn4_2")]
+        [CustomCategory(Resource.TRANSLATOR_3, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_3, "dn5_2")]
+        [CustomDescription(Resource.TRANSLATOR_3, "dn5_2")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Constructions
         {

@@ -117,87 +117,87 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category3" xml:space="preserve">
+  <data name="category4" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="category4" xml:space="preserve">
+  <data name="category5" xml:space="preserve">
     <value>Export options</value>
   </data>
-  <data name="dn3_1" xml:space="preserve">
+  <data name="dn4_1" xml:space="preserve">
     <value>File format</value>
     <comment>The AutoCAD file format.</comment>
   </data>
-  <data name="dn3_2" xml:space="preserve">
+  <data name="dn4_2" xml:space="preserve">
     <value>AutoCAD file version</value>
     <comment>The AutoCAD file version definition.</comment>
   </data>
-  <data name="dn4_1" xml:space="preserve">
+  <data name="dn5_1" xml:space="preserve">
     <value>Convert hatching to</value>
     <comment>Convert hatching.</comment>
   </data>
-  <data name="dn4_1_0" xml:space="preserve">
+  <data name="dn5_1_0" xml:space="preserve">
     <value>Lines</value>
   </data>
-  <data name="dn4_1_1" xml:space="preserve">
+  <data name="dn5_1_1" xml:space="preserve">
     <value>Hatching</value>
   </data>
-  <data name="dn4_2" xml:space="preserve">
+  <data name="dn5_2" xml:space="preserve">
     <value>Convert line to</value>
     <comment>Convert line.</comment>
   </data>
-  <data name="dn4_2_0" xml:space="preserve">
+  <data name="dn5_2_0" xml:space="preserve">
     <value>Polylines</value>
   </data>
-  <data name="dn4_2_1" xml:space="preserve">
+  <data name="dn5_2_1" xml:space="preserve">
     <value>Lines</value>
   </data>
-  <data name="dn4_3" xml:space="preserve">
+  <data name="dn5_3" xml:space="preserve">
     <value>Convert dimensions to</value>
     <comment>Convert dimensions.</comment>
   </data>
-  <data name="dn4_3_0" xml:space="preserve">
+  <data name="dn5_3_0" xml:space="preserve">
     <value>Dimensions</value>
   </data>
-  <data name="dn4_3_1" xml:space="preserve">
+  <data name="dn5_3_1" xml:space="preserve">
     <value>Dimensions and texts</value>
   </data>
-  <data name="dn4_3_2" xml:space="preserve">
+  <data name="dn5_3_2" xml:space="preserve">
     <value>Lines and texts</value>
   </data>
-  <data name="dn4_4" xml:space="preserve">
+  <data name="dn5_4" xml:space="preserve">
     <value>Convert text to</value>
     <comment>Convert lowercase texts.</comment>
   </data>
-  <data name="dn4_4_0" xml:space="preserve">
+  <data name="dn5_4_0" xml:space="preserve">
     <value>Text</value>
   </data>
-  <data name="dn4_4_1" xml:space="preserve">
+  <data name="dn5_4_1" xml:space="preserve">
     <value>Text in single line one</value>
   </data>
-  <data name="dn4_5" xml:space="preserve">
+  <data name="dn5_5" xml:space="preserve">
     <value>Convert multitexts</value>
     <comment>Convert multitexts.</comment>
   </data>
-  <data name="dn4_5_0" xml:space="preserve">
+  <data name="dn5_5_0" xml:space="preserve">
     <value>Selectively</value>
   </data>
-  <data name="dn4_5_1" xml:space="preserve">
+  <data name="dn5_5_1" xml:space="preserve">
     <value>Multitexts</value>
   </data>
-  <data name="dn4_5_2" xml:space="preserve">
+  <data name="dn5_5_2" xml:space="preserve">
     <value>Texts in line</value>
   </data>
-  <data name="dn4_6" xml:space="preserve">
+  <data name="dn5_6" xml:space="preserve">
     <value>Convert splines to</value>
     <comment>Export splines using circular interpolation.</comment>
   </data>
-  <data name="dn4_6_0" xml:space="preserve">
+  <data name="dn5_6_0" xml:space="preserve">
     <value>Polylines</value>
   </data>
-  <data name="dn4_6_1" xml:space="preserve">
+  <data name="dn5_6_1" xml:space="preserve">
     <value>Polylines with interpolation</value>
   </data>
-  <data name="dn4_7" xml:space="preserve">
+  <data name="dn5_7" xml:space="preserve">
     <value>Biarc Interpolation</value>
     <comment>Accuracy of circular interpolation.</comment>
   </data>

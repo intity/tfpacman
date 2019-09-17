@@ -6,11 +6,9 @@ using System.Globalization;
 using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Attributes;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using TFlex.PackageManager.Editors;
-using System.Linq;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
 
@@ -19,8 +17,8 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The Acad translator class.
     /// </summary>
-    [CustomCategoryOrder(Resource.TRANSLATOR_1, 3)]
     [CustomCategoryOrder(Resource.TRANSLATOR_1, 4)]
+    [CustomCategoryOrder(Resource.TRANSLATOR_1, 5)]
     public class Translator_1 : Translator_0
     {
         #region private fields
@@ -68,9 +66,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - DXB
         /// </summary>
         [PropertyOrder(15)]
-        [CustomCategory(Resource.TRANSLATOR_1, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_1, "dn3_1")]
-        [CustomDescription(Resource.TRANSLATOR_1, "dn3_1")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_1")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn4_1")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Extension
         {
@@ -102,9 +100,9 @@ namespace TFlex.PackageManager.Configuration
         /// (7) - 2013
         /// </summary>
         [PropertyOrder(16)]
-        [CustomCategory(Resource.TRANSLATOR_1, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_1, "dn3_2")]
-        [CustomDescription(Resource.TRANSLATOR_1, "dn3_2")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_2")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn4_2")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int AutocadExportFileVersion
         {
@@ -127,9 +125,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - to hatching.
         /// </summary>
         [PropertyOrder(17)]
-        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_1")]
-        [CustomDescription(Resource.TRANSLATOR_1, "dn4_1")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn5_1")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn5_1")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertAreas
         {
@@ -152,9 +150,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - in a line.
         /// </summary>
         [PropertyOrder(18)]
-        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_2")]
-        [CustomDescription(Resource.TRANSLATOR_1, "dn4_2")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn5_2")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn5_2")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertToLines
         {
@@ -178,9 +176,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - in lines and texts.
         /// </summary>
         [PropertyOrder(19)]
-        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_3")]
-        [CustomDescription(Resource.TRANSLATOR_1, "dn4_3")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn5_3")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn5_3")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertDimensions
         {
@@ -203,9 +201,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - to line.
         /// </summary>
         [PropertyOrder(20)]
-        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_4")]
-        [CustomDescription(Resource.TRANSLATOR_1, "dn4_4")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn5_4")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn5_4")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertLineText
         {
@@ -229,9 +227,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - in texts in a line.
         /// </summary>
         [PropertyOrder(21)]
-        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_5")]
-        [CustomDescription(Resource.TRANSLATOR_1, "dn4_5")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn5_5")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn5_5")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ConvertMultitext
         {
@@ -254,9 +252,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - Polylines with interpolation.
         /// </summary>
         [PropertyOrder(22)]
-        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_6")]
-        [CustomDescription(Resource.TRANSLATOR_1, "dn4_6")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn5_6")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn5_6")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int BiarcInterpolationForSplines
         {
@@ -277,9 +275,9 @@ namespace TFlex.PackageManager.Configuration
         /// Accuracy of circular interpolation.
         /// </summary>
         [PropertyOrder(23)]
-        [CustomCategory(Resource.TRANSLATOR_1, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_1, "dn4_7")]
-        [CustomDescription(Resource.TRANSLATOR_1, "dn4_7")]
+        [CustomCategory(Resource.TRANSLATOR_1, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_1, "dn5_7")]
+        [CustomDescription(Resource.TRANSLATOR_1, "dn5_7")]
         [Editor(typeof(BiarcInterpolationEditor), typeof(UITypeEditor))]
         public decimal BiarcInterpolationAccuracyForSplines
         {

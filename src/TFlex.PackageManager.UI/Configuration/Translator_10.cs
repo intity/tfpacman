@@ -14,7 +14,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The STEP-translator class.
     /// </summary>
-    [CustomCategoryOrder(Resource.TRANSLATOR_3D, 4)]
+    [CustomCategoryOrder(Resource.TRANSLATOR_3D, 5)]
     public class Translator_10 : Translator3D
     {
         #region private fields
@@ -37,9 +37,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - AP242.
         /// </summary>
         [PropertyOrder(16)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category4")]
-        [CustomDisplayName(Resource.TRANSLATOR_10, "dn4_0")]
-        [CustomDescription(Resource.TRANSLATOR_10, "dn4_0")]
+        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resource.TRANSLATOR_10, "dn5_0")]
+        [CustomDescription(Resource.TRANSLATOR_10, "dn5_0")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Protocol
         {

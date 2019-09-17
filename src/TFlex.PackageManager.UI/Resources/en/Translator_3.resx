@@ -117,21 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category3" xml:space="preserve">
+  <data name="category4" xml:space="preserve">
     <value>Translator</value>
   </data>
-  <data name="category4" xml:space="preserve">
+  <data name="category5" xml:space="preserve">
     <value>Export options</value>
   </data>
-  <data name="dn3_1" xml:space="preserve">
+  <data name="dn4_1" xml:space="preserve">
     <value>File format</value>
     <comment>The format of the bitmap image.</comment>
   </data>
-  <data name="dn4_1" xml:space="preserve">
+  <data name="dn5_1" xml:space="preserve">
     <value>Export the screen layers</value>
     <comment>Export the screen layers of the drawing.</comment>
   </data>
-  <data name="dn4_2" xml:space="preserve">
+  <data name="dn5_2" xml:space="preserve">
     <value>Export the building elements</value>
     <comment>Export drawing elements.</comment>
   </data>

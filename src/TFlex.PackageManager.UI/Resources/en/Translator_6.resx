@@ -117,11 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="dn4_0" xml:space="preserve">
+  <data name="dn5_0" xml:space="preserve">
     <value>Convert Geometry to NURBS</value>
     <comment>Convert Analytic Geometry to Nurbs.</comment>
   </data>
-  <data name="dn4_1" xml:space="preserve">
+  <data name="dn5_1" xml:space="preserve">
     <value>Save bodies as face sets</value>
     <comment>Save solid bodies as face set.</comment>
   </data>
