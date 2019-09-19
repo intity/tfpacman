@@ -96,7 +96,7 @@ namespace TFlex.PackageManager.Configuration
                     string error = string
                         .Format(error_messages[0], pattern.ToString(""));
 
-                    if (IsPathValid(value, pattern))
+                    if (value.IsValid(pattern))
                     {
                         RemoveError(name, error);
                     }
@@ -140,7 +140,7 @@ namespace TFlex.PackageManager.Configuration
                         path = path.Replace(i.Value, "");
                     }
 
-                    if (IsPathValid(path, pattern))
+                    if (value.IsValid(pattern))
                     {
                         RemoveError(name, error);
                     }

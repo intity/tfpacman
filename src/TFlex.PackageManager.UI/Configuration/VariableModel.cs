@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Xml.Linq;
+using TFlex.PackageManager.Common;
 
 namespace TFlex.PackageManager.Configuration
 {
+    /// <summary>
+    /// The action definition to processing variables.
+    /// </summary>
     public enum VariableAction
     {
         Add,
@@ -15,7 +18,10 @@ namespace TFlex.PackageManager.Configuration
         Remove
     }
 
-    public class VariableModel
+    /// <summary>
+    /// The VariableModel class.
+    /// </summary>
+    public class VariableModel : INotifyPropertyChanged, INotifyDataErrorInfo
     {
         #region private fields
         int action;
@@ -31,6 +37,10 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_3;
         XAttribute data_4;
         XAttribute data_5;
+
+        readonly Dictionary<string, List<string>> objErrors;
+        readonly string[] error_messages;
+        readonly char[] pattern;
         #endregion
 
         public VariableModel()
@@ -43,6 +53,21 @@ namespace TFlex.PackageManager.Configuration
             data_3 = new XAttribute("group", "");
             data_4 = new XAttribute("expression", "");
             data_5 = new XAttribute("external", "0");
+
+            objErrors = new Dictionary<string, List<string>>();
+            error_messages = new string[]
+            {
+                Resource.GetString(Resource.VARIABLES_MD, "message_1", 0),
+                Resource.GetString(Resource.VARIABLES_MD, "message_2", 0)
+            };
+
+            pattern = new char[] {
+                '`', '~', '!', '@', '#', '%', '^',
+                '&', '*', '(', ')', '-', '+', '=',
+                '[', ']', '{', '}', '|', ';', ':',
+                '.', ',', '<', '>', '/', '?', ' ',
+                '\\', '\'', '"'
+            };
         }
 
         #region internal methods
@@ -92,6 +117,9 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="action"></param>
         internal void InitData(VariableAction action)
         {
+            if (Data.HasElements)
+                return;
+
             switch (action)
             {
                 case VariableAction.Add   : data_0.Value = "0"; break;
@@ -117,6 +145,7 @@ namespace TFlex.PackageManager.Configuration
                 {
                     action = value;
                     data_0.Value = value.ToString();
+                    OnPropertyChanged("Action");
                 }
             }
         }
@@ -133,6 +162,9 @@ namespace TFlex.PackageManager.Configuration
                 {
                     name = value;
                     data_1.Value = value;
+
+                    NameValidation("Name", value);
+                    OnPropertyChanged("Name");
                 }
             }
         }
@@ -149,6 +181,9 @@ namespace TFlex.PackageManager.Configuration
                 {
                     oldname = value;
                     data_2.Value = value;
+
+                    NameValidation("OldName", value);
+                    OnPropertyChanged("OldName");
                 }
             }
         }
@@ -165,6 +200,7 @@ namespace TFlex.PackageManager.Configuration
                 {
                     group = value;
                     data_3.Value = value;
+                    OnPropertyChanged("Group");
                 }
             }
         }
@@ -181,6 +217,7 @@ namespace TFlex.PackageManager.Configuration
                 {
                     expression = value;
                     data_4.Value = value;
+                    OnPropertyChanged("Expression");
                 }
             }
         }
@@ -197,11 +234,174 @@ namespace TFlex.PackageManager.Configuration
                 {
                     external = value;
                     data_5.Value = value ? "1" : "0";
+                    OnPropertyChanged("External");
                 }
             }
         }
         #endregion
 
         internal XElement Data { get; private set; }
+
+        public override string ToString()
+        {
+            VariableAction mode = VariableAction.Add;
+            switch (action)
+            {
+                case 1: mode = VariableAction.Edit;   break;
+                case 2: mode = VariableAction.Rename; break;
+                case 3: mode = VariableAction.Remove; break;
+            }
+
+            return string.Format(
+                "Action: {0}, Name: {1}, OldName: {2}, Expression: {3}, External: {4}", 
+                mode, Name, OldName, Expression, External);
+        }
+
+        #region INotifyPropertyChanged Members
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// The OpPropertyChanged event handler.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+        #endregion
+
+        #region INotifyDataErrorInfo Members
+        /// <summary>
+        /// Occurs when the validation errors have changed for 
+        /// a property or for the entire entity.
+        /// </summary>
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        /// <summary>
+        /// The RaiseErrorChanged event handler.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        protected void OnRaiseErrorChanged(string name)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(name));
+        }
+
+        /// <summary>
+        /// Gets a value that indicates whether the entity 
+        /// has validation errors.
+        /// </summary>
+        [Browsable(false)]
+        public bool HasErrors => objErrors.Count > 0;
+
+        /// <summary>
+        /// Gets the validation errors for a specified property or for 
+        /// the entire entity.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <returns>
+        /// The validation errors for the property or entity.
+        /// </returns>
+        public IEnumerable GetErrors(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return objErrors.Values;
+
+            objErrors.TryGetValue(name, out List<string> errors);
+            return errors;
+        }
+
+        /// <summary>
+        /// Add error to dictionary.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <param name="error">Error message.</param>
+        private void AddError(string name, string error)
+        {
+            if (objErrors.TryGetValue(name, out List<string> errors) == false)
+            {
+                errors = new List<string>();
+                objErrors.Add(name, errors);
+            }
+
+            if (errors.Contains(error) == false)
+            {
+                errors.Add(error);
+            }
+
+            OnRaiseErrorChanged(name);
+        }
+
+        /// <summary>
+        /// Remove error from dictionary.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <param name="error">Error message.</param>
+        private void RemoveError(string name, string error)
+        {
+            if (objErrors.TryGetValue(name, out List<string> errors))
+            {
+                errors.Remove(error);
+                errors.Clear();
+            }
+
+            if (errors == null)
+                return;
+
+            if (errors.Count == 0)
+            {
+                objErrors.Remove(name);
+                OnRaiseErrorChanged(name);
+            }
+        }
+
+        /// <summary>
+        /// Validate variable name.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <param name="value">Property value.</param>
+        private void NameValidation(string name, string value)
+        {
+            char[] chars = value.ToCharArray();
+            bool isDigit = chars.Length > 0 ? char.IsDigit(chars[0]) : false;
+            int iError = isDigit ? 0 : value.Length > 0 ? 1 : -1;
+
+            switch (iError)
+            {
+                case -1:
+                    if (HasErrors)
+                    {
+                        foreach (string error in GetErrors(name))
+                        {
+                            if (error == error_messages[0])
+                            {
+                                RemoveError(name, error_messages[0]);
+                                break;
+                            }
+                            else
+                            {
+                                RemoveError(name, error_messages[1]);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case 0:
+                    if (isDigit)
+                        AddError(name, error_messages[0]);
+                    else if (HasErrors)
+                        RemoveError(name, error_messages[0]);
+                    break;
+                case 1:
+                    if (!value.IsValid(pattern))
+                        AddError(name, error_messages[1]);
+                    else if (HasErrors)
+                        RemoveError(name, error_messages[1]);
+                    break;
+            }
+        }
+        #endregion
     }
 }

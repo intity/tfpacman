@@ -630,8 +630,6 @@ namespace TFlex.PackageManager.Common
             foreach (var e in translator_0.AddVariables.Elements())
             {
                 var name = e.Attributes().ElementAt(1).Value;
-                if (name == "")
-                    continue;
                 var type = name.Contains("$") ? "text" : "real";
                 var variable = document.FindVariable(name);
                 if (variable == null)
@@ -650,9 +648,7 @@ namespace TFlex.PackageManager.Common
                             variable.GroupName = a.Value;
                             break;
                         case "expression":
-                            variable.Expression = a.Value == "" 
-                                ? (type == "text" ? "" : "0") 
-                                : a.Value;
+                            variable.Expression = a.Value;
                             break;
                         case "external":
                             if (variable.IsConstant)
@@ -672,8 +668,6 @@ namespace TFlex.PackageManager.Common
             foreach (var e in translator_0.EditVariables.Elements())
             {
                 var name = e.Attributes().ElementAt(1).Value;
-                if (name == "")
-                    continue;
                 var type = name.Contains("$") ? "text" : "real";
                 var variable = document.FindVariable(name);
                 if (variable == null)
@@ -687,9 +681,7 @@ namespace TFlex.PackageManager.Common
                             variable.GroupName = a.Value;
                             break;
                         case "expression":
-                            variable.Expression = a.Value == ""
-                                ? (type == "text" ? "" : "0")
-                                : a.Value;
+                            variable.Expression = a.Value;
                             break;
                         case "external":
                             if (variable.IsConstant)
@@ -711,14 +703,8 @@ namespace TFlex.PackageManager.Common
             {
                 var name1 = e.Attributes().ElementAt(1).Value;
                 var type1 = name1.Contains("$") ? "text" : "real";
-                if (name1 == "")
-                    continue;
-
                 var name2 = e.Attributes().ElementAt(2).Value;
                 var type2 = name2.Contains("$") ? "text" : "real";
-                if (name2 == "")
-                    continue;
-
                 if (type1 != type2)
                     continue;
 
@@ -741,9 +727,6 @@ namespace TFlex.PackageManager.Common
             foreach (var e in translator_0.RemoveVariables.Elements())
             {
                 var name = e.Attributes().ElementAt(1).Value;
-                if (name == "")
-                    continue;
-
                 var variable = document.FindVariable(name);
                 if (variable == null)
                     continue;

@@ -47,5 +47,21 @@
             }
             return result;
         }
+
+        /// <summary>
+        /// Validating string on chars pattern.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="pattern"></param>
+        /// <returns>
+        /// Returns boolean value on the validation string result.
+        /// </returns>
+        public static bool IsValid(this string text, char[] pattern)
+        {
+            if (text.Length > 0 && text.IndexOfAny(pattern) >= 0)
+                return false;
+
+            return true;
+        }
     }
 }
