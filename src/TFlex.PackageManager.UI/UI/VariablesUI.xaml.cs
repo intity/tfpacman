@@ -119,7 +119,7 @@ namespace TFlex.PackageManager.UI
 
             if (value5)
             {
-                if (NameValidation(item))
+                if (RemoveOfEmptyName(item))
                     return;
 
                 e.Cancel = true;
@@ -127,7 +127,7 @@ namespace TFlex.PackageManager.UI
 
             if (value6)
             {
-                if (NameValidation(item))
+                if (RemoveOfEmptyName(item))
                     return;
 
                 e.Cancel = true;
@@ -203,13 +203,13 @@ namespace TFlex.PackageManager.UI
 
         #region extension methods
         /// <summary>
-        /// The name validation in data.
+        /// Remove of the empty name from data.
         /// </summary>
         /// <param name="item"></param>
         /// <returns>
         /// Returns true when the item is deleted, and false otherwise.
         /// </returns>
-        private bool NameValidation(VariableModel item)
+        private bool RemoveOfEmptyName(VariableModel item)
         {
             string[] names;
             if (action == VariableAction.Rename)
