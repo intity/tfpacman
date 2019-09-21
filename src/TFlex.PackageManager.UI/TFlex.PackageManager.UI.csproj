@@ -116,6 +116,7 @@
     <Compile Include="Configuration\Translator_6.cs" />
     <Compile Include="Configuration\Translator_7.cs" />
     <Compile Include="Configuration\VariableModel.cs" />
+    <Compile Include="Configuration\Variables.cs" />
     <Compile Include="Editors\BiarcInterpolationEditor.xaml.cs">
       <DependentUpon>BiarcInterpolationEditor.xaml</DependentUpon>
     </Compile>

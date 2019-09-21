@@ -30,13 +30,12 @@ namespace TFlex.PackageManager.Configuration
         string group;
         string expression;
         bool external;
-
-        XAttribute data_0;
-        XAttribute data_1;
-        XAttribute data_2;
-        XAttribute data_3;
-        XAttribute data_4;
-        XAttribute data_5;
+        readonly XAttribute data_0;
+        readonly XAttribute data_1;
+        readonly XAttribute data_2;
+        readonly XAttribute data_3;
+        readonly XAttribute data_4;
+        readonly XAttribute data_5;
 
         readonly Dictionary<string, List<string>> objErrors;
         readonly string[] error_messages;
@@ -45,20 +44,20 @@ namespace TFlex.PackageManager.Configuration
 
         public VariableModel()
         {
-            Data = new XElement("variable");
+            data_0 = new XAttribute("action", Action);
+            data_1 = new XAttribute("name", Name);
+            data_2 = new XAttribute("oldname", OldName);
+            data_3 = new XAttribute("group", Group);
+            data_4 = new XAttribute("expression", Expression);
+            data_5 = new XAttribute("external", External ? "1" : "0");
 
-            data_0 = new XAttribute("action", "0");
-            data_1 = new XAttribute("name", "");
-            data_2 = new XAttribute("oldname", "");
-            data_3 = new XAttribute("group", "");
-            data_4 = new XAttribute("expression", "");
-            data_5 = new XAttribute("external", "0");
+            Data.Add(data_0, data_1, data_2, data_3, data_4, data_5);
 
             objErrors = new Dictionary<string, List<string>>();
             error_messages = new string[]
             {
-                Resource.GetString(Resource.VARIABLES_MD, "message_1", 0),
-                Resource.GetString(Resource.VARIABLES_MD, "message_2", 0)
+                Resource.GetString(Resource.VARIABLES_MD, "message_0", 0),
+                Resource.GetString(Resource.VARIABLES_MD, "message_1", 0)
             };
 
             pattern = new char[] {
@@ -70,69 +69,12 @@ namespace TFlex.PackageManager.Configuration
             };
         }
 
-        #region internal methods
-        /// <summary>
-        /// Load data.
-        /// </summary>
-        /// <param name="element"></param>
-        internal void LoadData(XElement element)
-        {
-            foreach (var a in element.Attributes())
-            {
-                switch (a.Name.ToString())
-                {
-                    case "action":
-                        action = int.Parse(a.Value);
-                        data_0 = a;
-                        break;
-                    case "name":
-                        name = a.Value;
-                        data_1 = a;
-                        break;
-                    case "oldname":
-                        oldname = a.Value;
-                        data_2 = a;
-                        break;
-                    case "group":
-                        group = a.Value;
-                        data_3 = a;
-                        break;
-                    case "expression":
-                        expression = a.Value;
-                        data_4 = a;
-                        break;
-                    case "external":
-                        External = a.Value == "1";
-                        data_5 = a;
-                        break;
-                }
-            }
-
-            Data.Add(data_0, data_1, data_2, data_3, data_4, data_5);
-        }
-
-        /// <summary>
-        /// Initialize data.
-        /// </summary>
-        /// <param name="action"></param>
-        internal void InitData(VariableAction action)
-        {
-            if (Data.HasElements)
-                return;
-
-            switch (action)
-            {
-                case VariableAction.Add   : data_0.Value = "0"; break;
-                case VariableAction.Edit  : data_0.Value = "1"; break;
-                case VariableAction.Rename: data_0.Value = "2"; break;
-                case VariableAction.Remove: data_0.Value = "3"; break;
-            }
-
-            Data.Add(data_0, data_1, data_2, data_3, data_4, data_5);
-        }
-        #endregion
-
         #region public properties
+        /// <summary>
+        /// Variable data.
+        /// </summary>
+        public XElement Data { get; } = new XElement("variable");
+
         /// <summary>
         /// Processing mode for variable.
         /// </summary>
@@ -240,8 +182,6 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        internal XElement Data { get; private set; }
-
         public override string ToString()
         {
             VariableAction mode = VariableAction.Add;
@@ -317,8 +257,8 @@ namespace TFlex.PackageManager.Configuration
         /// Add error to dictionary.
         /// </summary>
         /// <param name="name">Property name.</param>
-        /// <param name="error">Error message.</param>
-        private void AddError(string name, string error)
+        /// <param name="index">Error message index.</param>
+        private void AddError(string name, int index)
         {
             if (objErrors.TryGetValue(name, out List<string> errors) == false)
             {
@@ -326,9 +266,9 @@ namespace TFlex.PackageManager.Configuration
                 objErrors.Add(name, errors);
             }
 
-            if (errors.Contains(error) == false)
+            if (errors.Contains(error_messages[index]) == false)
             {
-                errors.Add(error);
+                errors.Add(error_messages[index]);
             }
 
             OnRaiseErrorChanged(name);
@@ -338,12 +278,12 @@ namespace TFlex.PackageManager.Configuration
         /// Remove error from dictionary.
         /// </summary>
         /// <param name="name">Property name.</param>
-        /// <param name="error">Error message.</param>
-        private void RemoveError(string name, string error)
+        /// <param name="index">Error message index.</param>
+        private void RemoveError(string name, int index)
         {
             if (objErrors.TryGetValue(name, out List<string> errors))
             {
-                errors.Remove(error);
+                errors.Remove(error_messages[index]);
                 errors.Clear();
             }
 
@@ -377,12 +317,12 @@ namespace TFlex.PackageManager.Configuration
                         {
                             if (error == error_messages[0])
                             {
-                                RemoveError(name, error_messages[0]);
+                                RemoveError(name, 0);
                                 break;
                             }
                             else
                             {
-                                RemoveError(name, error_messages[1]);
+                                RemoveError(name, 1);
                                 break;
                             }
                         }
@@ -390,15 +330,15 @@ namespace TFlex.PackageManager.Configuration
                     break;
                 case 0:
                     if (isDigit)
-                        AddError(name, error_messages[0]);
+                        AddError(name, 0);
                     else if (HasErrors)
-                        RemoveError(name, error_messages[0]);
+                        RemoveError(name, 0);
                     break;
                 case 1:
                     if (!value.IsValid(pattern))
-                        AddError(name, error_messages[1]);
+                        AddError(name, 1);
                     else if (HasErrors)
-                        RemoveError(name, error_messages[1]);
+                        RemoveError(name, 1);
                     break;
             }
         }

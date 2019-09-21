@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Xml.Linq;
@@ -18,9 +17,8 @@ namespace TFlex.PackageManager.UI
     public partial class VariablesUI : Window
     {
         #region private fields
+        Variables variables;
         readonly VariableAction action;
-        readonly ObservableCollection<VariableModel> model;
-        XElement data;
         #endregion
 
         public VariablesUI(VariableAction action)
@@ -65,38 +63,24 @@ namespace TFlex.PackageManager.UI
                     break;
             }
             #endregion
-
-            model = new ObservableCollection<VariableModel>();
         }
 
         #region internal properties
         /// <summary>
         /// Data source.
         /// </summary>
-        internal XElement DataSource { get; set; }
+        internal Variables DataSource { get; set; }
         #endregion
 
         #region events
-        private void Data_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void Variables_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             VariableModel item;
-
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     item = e.NewItems[0] as VariableModel;
                     item.PropertyChanged += Variable_PropertyChanged;
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    item = e.OldItems[0] as VariableModel;
-                    foreach (var i in data.Elements())
-                    {
-                        if (XNode.DeepEquals(i, item.Data))
-                        {
-                            i.Remove();
-                            break;
-                        }
-                    }
                     break;
             }
         }
@@ -105,89 +89,72 @@ namespace TFlex.PackageManager.UI
         {
             if (e.EditAction != DataGridEditAction.Commit)
                 return;
-            
+
             var item = e.Row.Item as VariableModel;
 
             var value1 = item.Name == string.Empty;
             var value2 = item.Name != string.Empty && item.HasErrors;
             var value3 = item.OldName == string.Empty;
             var value4 = item.OldName != string.Empty && item.HasErrors;
-            var value5 = action != VariableAction.Rename && value1 || value2;
-            var value6 = action == VariableAction.Rename && (value1 || value2) | (value3 || value4);
 
-            //Debug.WriteLine(item.ToString());
-
-            if (value5)
+            if (action == VariableAction.Rename)
             {
-                if (RemoveOfEmptyName(item))
-                    return;
-
-                e.Cancel = true;
+                e.Cancel = (value1 || value2) | (value3 || value4);
             }
-
-            if (value6)
+            else
             {
-                if (RemoveOfEmptyName(item))
-                    return;
-
-                e.Cancel = true;
+                e.Cancel = value1 || value2;
             }
-
-            if (!(value5 | value6))
-            {
-                if (item.Data.HasAttributes == false)
-                {
-                    item.InitData(action);
-                    data.Add(item.Data);
-                }
-            }
-        }
-
-        private void Data_Changed(object sender, XObjectChangeEventArgs e)
-        {
-            button_1.IsEnabled = !XNode.DeepEquals(data, DataSource);
         }
 
         private void Variable_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!(sender is VariableModel item))
                 return;
-            
-            bool isEmptyName = action != VariableAction.Rename
-                ? item.Name == string.Empty
-                : item.Name == string.Empty || item.OldName == string.Empty;
 
-            button_1.IsEnabled = !(item.HasErrors || isEmptyName) 
-                ? !XNode.DeepEquals(data, DataSource) 
+            bool isEmpty = action == VariableAction.Rename 
+                ? item.Name == string.Empty | item.OldName == string.Empty
+                : item.Name == string.Empty;
+
+            button_1.IsEnabled = !(item.HasErrors || isEmpty) 
+                ? !XNode.DeepEquals(variables.Data, DataSource.Data) 
                 : false;
+        }
+
+        private void Data_Changed(object sender, XObjectChangeEventArgs e)
+        {
+            bool isEmpty = false;
+
+            if (sender is XElement element)
+            {
+                bool value1 = element.Attribute("name").Value == string.Empty;
+                bool value2 = element.Attribute("oldname").Value == string.Empty;
+                isEmpty = action == VariableAction.Rename ? value1 | value2 : value1;
+            }
+
+            button_1.IsEnabled = !isEmpty && !XNode.DeepEquals(variables.Data, DataSource.Data);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            data = new XElement(DataSource);
-
-            foreach (var i in data.Elements())
+            variables = DataSource.Clone() as Variables;
+            foreach (var i in variables)
             {
-                VariableModel variable = new VariableModel();
-                variable.LoadData(i);
-                variable.PropertyChanged += Variable_PropertyChanged;
-                model.Add(variable);
+                i.PropertyChanged += Variable_PropertyChanged;
             }
-
-            dataGrid.ItemsSource = model;
-            dataGrid.RowEditEnding  += DataGrid_RowEditEnding;
-            model.CollectionChanged += Data_CollectionChanged;
-            data.Changed += Data_Changed;
+            dataGrid.ItemsSource = variables;
+            dataGrid.RowEditEnding      += DataGrid_RowEditEnding;
+            variables.CollectionChanged += Variables_CollectionChanged;
+            variables.Data.Changed      += Data_Changed;
 
             button_1.IsEnabled = false;
         }
 
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            if (DataSource.HasElements)
-                DataSource.Elements().Remove();
+            DataSource.Clear();
 
-            foreach (var i in data.Elements())
+            foreach (var i in variables)
             {
                 DataSource.Add(i);
             }
@@ -202,41 +169,6 @@ namespace TFlex.PackageManager.UI
         #endregion
 
         #region extension methods
-        /// <summary>
-        /// Remove of the empty name from data.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns>
-        /// Returns true when the item is deleted, and false otherwise.
-        /// </returns>
-        private bool RemoveOfEmptyName(VariableModel item)
-        {
-            string[] names;
-            if (action == VariableAction.Rename)
-            {
-                names = new string[] { "name", "oldname" };
-            }
-            else
-            {
-                names = new string[] { "name" };
-            }
-
-            foreach (var i in data.Elements())
-            {
-                foreach (var name in names)
-                {
-                    if (i.Attribute(name).Value == string.Empty)
-                    {
-                        i.Remove();
-                        model.Remove(item);
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
         private Style GetHeaderStyle(string toolTip)
         {
             Style style = new Style(typeof(DataGridColumnHeader));

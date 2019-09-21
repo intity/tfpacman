@@ -1,14 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Data;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
 using System.Globalization;
-using System.Linq;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Editors;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -42,10 +38,6 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_2_1;
         XAttribute data_2_2;
         XAttribute data_2_3;
-        XElement data_3_1;
-        XElement data_3_2;
-        XElement data_3_3;
-        XElement data_3_4;
         #endregion
 
         /// <summary>
@@ -247,7 +239,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_1")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn3_1")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
-        public XElement AddVariables { get => data_3_1; }
+        public Variables AddVariables { get; } = new Variables("AddVariables");
 
         /// <summary>
         /// Edit variables.
@@ -257,7 +249,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_2")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn3_2")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
-        public XElement EditVariables { get => data_3_2; }
+        public Variables EditVariables { get; } = new Variables("EditVariables");
 
         /// <summary>
         /// Rename variables.
@@ -267,7 +259,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_3")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn3_3")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
-        public XElement RenameVariables { get => data_3_3; }
+        public Variables RenameVariables { get; } = new Variables("RenameVariables");
 
         /// <summary>
         /// Remove variables.
@@ -277,7 +269,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_4")]
         [CustomDescription(Resource.TRANSLATOR_0, "dn3_4")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
-        public XElement RemoveVariables { get => data_3_4; }
+        public Variables RemoveVariables { get; } = new Variables("RemoveVariables");
         #endregion
 
         #region internal properties
@@ -302,11 +294,6 @@ namespace TFlex.PackageManager.Configuration
             data_2_1 = new XAttribute("value", ProjectionNames.ToString("\r\n"));
             data_2_2 = new XAttribute("value", ExcludeProjection ? "1" : "0");
             data_2_3 = new XAttribute("value", ProjectionScale.ToString(CultureInfo.InvariantCulture));
-
-            data_3_1 = new XElement("parameter", new XAttribute("name", "AddVariables"));
-            data_3_2 = new XElement("parameter", new XAttribute("name", "EditVariables"));
-            data_3_3 = new XElement("parameter", new XAttribute("name", "RenameVariables"));
-            data_3_4 = new XElement("parameter", new XAttribute("name", "RemoveVariables"));
 
             data.Add(new XElement("parameter",
                 new XAttribute("name", "PageNames"),
@@ -333,10 +320,10 @@ namespace TFlex.PackageManager.Configuration
                 new XAttribute("name", "ProjectionScale"),
                 data_2_3));
 
-            data.Add(data_3_1);
-            data.Add(data_3_2);
-            data.Add(data_3_3);
-            data.Add(data_3_4);
+            data.Add(AddVariables.Data);
+            data.Add(EditVariables.Data);
+            data.Add(RenameVariables.Data);
+            data.Add(RemoveVariables.Data);
 
             return data;
         }
@@ -389,16 +376,16 @@ namespace TFlex.PackageManager.Configuration
                     data_2_3 = a;
                     break;
                 case "AddVariables":
-                    data_3_1 = element;
+                    AddVariables.LoadData(element);
                     break;
                 case "EditVariables":
-                    data_3_2 = element;
+                    EditVariables.LoadData(element);
                     break;
                 case "RenameVariables":
-                    data_3_3 = element;
+                    RenameVariables.LoadData(element);
                     break;
                 case "RemoveVariables":
-                    data_3_4 = element;
+                    RemoveVariables.LoadData(element);
                     break;
             }
         }

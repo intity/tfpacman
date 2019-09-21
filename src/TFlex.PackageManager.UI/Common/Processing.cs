@@ -627,35 +627,19 @@ namespace TFlex.PackageManager.Common
         /// <param name="document"></param>
         private void ProcessingVariables(Document document)
         {
-            foreach (var e in translator_0.AddVariables.Elements())
+            foreach (var e in translator_0.AddVariables)
             {
-                var name = e.Attributes().ElementAt(1).Value;
-                var type = name.Contains("$") ? "text" : "real";
-                var variable = document.FindVariable(name);
+                var variable = document.FindVariable(e.Name);
                 if (variable == null)
                     variable = new Variable(document);
                 else
                     continue;
 
-                foreach (var a in e.Attributes())
-                {
-                    switch (a.Name.ToString())
-                    {
-                        case "name":
-                            variable.Name = a.Value;
-                            break;
-                        case "group":
-                            variable.GroupName = a.Value;
-                            break;
-                        case "expression":
-                            variable.Expression = a.Value;
-                            break;
-                        case "external":
-                            if (variable.IsConstant)
-                                variable.External = a.Value == "1";
-                            break;
-                    }
-                }
+                variable.Name = e.Name;
+                variable.GroupName = e.Group;
+                variable.Expression = e.Expression;
+                if (variable.IsConstant)
+                    variable.External = e.External;
 
                 logFile.AppendLine(string.Format(
                         "->Variable:\t\t[action: add, name: {0}, group: {1}, expression: {2}, external: {3}]",
@@ -665,30 +649,16 @@ namespace TFlex.PackageManager.Common
                         variable.External));
             }
 
-            foreach (var e in translator_0.EditVariables.Elements())
+            foreach (var e in translator_0.EditVariables)
             {
-                var name = e.Attributes().ElementAt(1).Value;
-                var type = name.Contains("$") ? "text" : "real";
-                var variable = document.FindVariable(name);
+                var variable = document.FindVariable(e.Name);
                 if (variable == null)
                     continue;
 
-                foreach (var a in e.Attributes())
-                {
-                    switch (a.Name.ToString())
-                    {
-                        case "group":
-                            variable.GroupName = a.Value;
-                            break;
-                        case "expression":
-                            variable.Expression = a.Value;
-                            break;
-                        case "external":
-                            if (variable.IsConstant)
-                                variable.External = a.Value == "1";
-                            break;
-                    }
-                }
+                variable.GroupName = e.Group;
+                variable.Expression = e.Expression;
+                if (variable.IsConstant)
+                    variable.External = e.External;
 
                 logFile.AppendLine(string.Format(
                         "->Variable:\t\t[action: edit, name: {0}, group: {1}, expression: {2}, external: {3}]",
@@ -699,11 +669,11 @@ namespace TFlex.PackageManager.Common
             }
 
             bool hasRename = false;
-            foreach (var e in translator_0.RenameVariables.Elements())
+            foreach (var e in translator_0.RenameVariables)
             {
-                var name1 = e.Attributes().ElementAt(1).Value;
+                var name1 = e.Name;
                 var type1 = name1.Contains("$") ? "text" : "real";
-                var name2 = e.Attributes().ElementAt(2).Value;
+                var name2 = e.OldName;
                 var type2 = name2.Contains("$") ? "text" : "real";
                 if (type1 != type2)
                     continue;
@@ -724,17 +694,16 @@ namespace TFlex.PackageManager.Common
             if (hasRename)
                 document.Regenerate(new RegenerateOptions { Full = true });
 
-            foreach (var e in translator_0.RemoveVariables.Elements())
+            foreach (var e in translator_0.RemoveVariables)
             {
-                var name = e.Attributes().ElementAt(1).Value;
-                var variable = document.FindVariable(name);
+                var variable = document.FindVariable(e.Name);
                 if (variable == null)
                     continue;
 
                 if (document.DeleteObjects(new ObjectArray(variable), new DeleteOptions(true)))
                 {
                     logFile.AppendLine(string.Format(
-                        "->Variable:\t\t[action: remove, name: {0}]", name));
+                        "->Variable:\t\t[action: remove, name: {0}]", e.Name));
                 }
             }
         }
