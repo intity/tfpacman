@@ -30,18 +30,21 @@ namespace TFlex.PackageManager.Configuration
         string group;
         string expression;
         bool external;
-        readonly XAttribute data_0;
-        readonly XAttribute data_1;
-        readonly XAttribute data_2;
-        readonly XAttribute data_3;
-        readonly XAttribute data_4;
-        readonly XAttribute data_5;
+        XAttribute data_0;
+        XAttribute data_1;
+        XAttribute data_2;
+        XAttribute data_3;
+        XAttribute data_4;
+        XAttribute data_5;
 
-        readonly Dictionary<string, List<string>> objErrors;
-        readonly string[] error_messages;
-        readonly char[] pattern;
+        Dictionary<string, List<string>> objErrors;
+        string[] error_messages;
+        char[] pattern;
         #endregion
 
+        /// <summary>
+        /// The default constructor.
+        /// </summary>
         public VariableModel()
         {
             data_0 = new XAttribute("action", Action);
@@ -52,7 +55,27 @@ namespace TFlex.PackageManager.Configuration
             data_5 = new XAttribute("external", External ? "1" : "0");
 
             Data.Add(data_0, data_1, data_2, data_3, data_4, data_5);
+            InitResources();
+        }
 
+        /// <summary>
+        /// The constructor for preload data.
+        /// </summary>
+        /// <param name="data"></param>
+        public VariableModel(XElement data)
+        {
+            Data = data;
+
+            LoadData();
+            InitResources();
+        }
+
+        #region methods
+        /// <summary>
+        /// Initialize resources.
+        /// </summary>
+        private void InitResources()
+        {
             objErrors = new Dictionary<string, List<string>>();
             error_messages = new string[]
             {
@@ -68,6 +91,59 @@ namespace TFlex.PackageManager.Configuration
                 '\\', '\'', '"'
             };
         }
+
+        /// <summary>
+        /// Load data.
+        /// </summary>
+        private void LoadData()
+        {
+            foreach (var a in Data.Attributes())
+            {
+                switch (a.Name.ToString())
+                {
+                    case "action":
+                        action = int.Parse(a.Value);
+                        data_0 = a;
+                        break;
+                    case "name":
+                        name = a.Value;
+                        data_1 = a;
+                        break;
+                    case "oldname":
+                        oldname = a.Value;
+                        data_2 = a;
+                        break;
+                    case "group":
+                        group = a.Value;
+                        data_3 = a;
+                        break;
+                    case "expression":
+                        expression = a.Value;
+                        data_4 = a;
+                        break;
+                    case "external":
+                        external = a.Value == "1";
+                        data_5 = a;
+                        break;
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            VariableAction mode = VariableAction.Add;
+            switch (action)
+            {
+                case 1: mode = VariableAction.Edit;   break;
+                case 2: mode = VariableAction.Rename; break;
+                case 3: mode = VariableAction.Remove; break;
+            }
+
+            return string.Format(
+                "Action: {0}, Name: {1}, OldName: {2}, Expression: {3}, External: {4}", 
+                mode, Name, OldName, Expression, External);
+        }
+        #endregion
 
         #region public properties
         /// <summary>
@@ -181,21 +257,6 @@ namespace TFlex.PackageManager.Configuration
             }
         }
         #endregion
-
-        public override string ToString()
-        {
-            VariableAction mode = VariableAction.Add;
-            switch (action)
-            {
-                case 1: mode = VariableAction.Edit;   break;
-                case 2: mode = VariableAction.Rename; break;
-                case 3: mode = VariableAction.Remove; break;
-            }
-
-            return string.Format(
-                "Action: {0}, Name: {1}, OldName: {2}, Expression: {3}, External: {4}", 
-                mode, Name, OldName, Expression, External);
-        }
 
         #region INotifyPropertyChanged Members
         /// <summary>

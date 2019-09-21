@@ -26,20 +26,12 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="element">Parent element.</param>
         internal void LoadData(XElement element)
         {
+            Data = element;
+
             foreach (var e in element.Elements())
             {
-                Add(new VariableModel
-                {
-                    Action     = int.Parse(e.Attribute("action").Value),
-                    Name       = e.Attribute("name").Value,
-                    OldName    = e.Attribute("oldname").Value,
-                    Group      = e.Attribute("group").Value,
-                    Expression = e.Attribute("expression").Value,
-                    External   = e.Attribute("external").Value == "1"
-                });
+                Add(new VariableModel(e));
             }
-
-            Data = element;
         }
 
         /// <summary>
@@ -49,19 +41,7 @@ namespace TFlex.PackageManager.Configuration
         public object Clone()
         {
             var variables = new Variables(name);
-            foreach (var e in Data.Elements())
-            {
-                variables.Add(new VariableModel
-                {
-                    Action     = int.Parse(e.Attribute("action").Value),
-                    Name       = e.Attribute("name").Value,
-                    OldName    = e.Attribute("oldname").Value,
-                    Group      = e.Attribute("group").Value,
-                    Expression = e.Attribute("expression").Value,
-                    External   = e.Attribute("external").Value == "1"
-                });
-            }
-
+            variables.LoadData(new XElement(Data));
             return variables;
         }
         #endregion
@@ -71,7 +51,8 @@ namespace TFlex.PackageManager.Configuration
         #region Collection Members
         protected override void InsertItem(int index, VariableModel item)
         {
-            Data.Add(item.Data);
+            if (Data.Elements().Contains(item.Data) == false)
+                Data.Add(item.Data);
             base.InsertItem(index, item);
             //Debug.WriteLine(string.Format("InsertItem: [index: {0}]", index));
         }
