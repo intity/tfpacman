@@ -56,8 +56,8 @@ namespace TFlex.PackageManager.Configuration
             objErrors = new Dictionary<string, List<string>>();
             error_messages = new string[]
             {
-                Resource.GetString(Resource.VARIABLES_MD, "message_0", 0),
-                Resource.GetString(Resource.VARIABLES_MD, "message_1", 0)
+                Resource.GetString(Resource.VARIABLE_MODEL, "message_0", 0),
+                Resource.GetString(Resource.VARIABLE_MODEL, "message_1", 0)
             };
 
             pattern = new char[] {
