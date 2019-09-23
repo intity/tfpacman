@@ -382,22 +382,26 @@ namespace TFlex.PackageManager.UI
         #region menubar & toolbar events
         private void Event1_1_Click(object sender, RoutedEventArgs e)
         {
-            CommonSaveFileDialog sfd = new CommonSaveFileDialog
+            int index = comboBox1.SelectedIndex;
+            string newKey = null, directory = null;
+            using (var sfd = new CommonSaveFileDialog())
             {
-                Title            = controls[0],
-                InitialDirectory = self.TargetDirectory,
-                DefaultFileName  = string.Format("configuration_{0}", self.Configurations.Count),
-                DefaultExtension = "config"
-            };
+                sfd.Title = controls[0];
+                sfd.InitialDirectory = self.TargetDirectory;
+                sfd.DefaultFileName = string.Format("configuration_{0}", self.Configurations.Count);
+                sfd.DefaultExtension = "config";
+                sfd.Filters.Add(new CommonFileDialogFilter("Configuration Files", "*.config"));
 
-            sfd.Filters.Add(new CommonFileDialogFilter("Configuration Files", "*.config"));
+                if (sfd.ShowDialog() == CommonFileDialogResult.Cancel)
+                {
+                    sfd.Dispose();
+                    return;
+                }
 
-            if (sfd.ShowDialog() == CommonFileDialogResult.Cancel)
-                return;
-
-            string newKey = Path.GetFileNameWithoutExtension(sfd.FileName);
-            var directory = Path.GetDirectoryName(sfd.FileName);
-            int index     = comboBox1.SelectedIndex;
+                newKey = Path.GetFileNameWithoutExtension(sfd.FileName);
+                directory = Path.GetDirectoryName(sfd.FileName);
+                sfd.Dispose();
+            }
 
             if (directory != self.TargetDirectory)
             {
@@ -433,13 +437,10 @@ namespace TFlex.PackageManager.UI
             {
                 self.Configurations[key1] = header;
                 self.Configurations[key1].ConfigurationTask(1);
-
                 comboBox1.SelectedIndex = -1;
             }
 
             comboBox1.SelectedIndex = index;
-
-            sfd.Dispose();
         } // New configuration
 
         private void Event1_2_Click(object sender, RoutedEventArgs e)
@@ -449,22 +450,29 @@ namespace TFlex.PackageManager.UI
 
         private void Event1_3_Click(object sender, RoutedEventArgs e)
         {
-            CommonOpenFileDialog ofd = new CommonOpenFileDialog
+            string directory = null;
+            using (var ofd = new CommonOpenFileDialog())
             {
-                Title            = tooltips[2],
-                Multiselect      = false,
-                IsFolderPicker   = true,
-                InitialDirectory = self.TargetDirectory
-            };
+                ofd.Title = tooltips[2];
+                ofd.Multiselect = false;
+                ofd.IsFolderPicker = true;
+                ofd.InitialDirectory = self.TargetDirectory;
 
-            if (ofd.ShowDialog() == CommonFileDialogResult.Cancel)
-                return;
+                if (ofd.ShowDialog() == CommonFileDialogResult.Cancel)
+                {
+                    ofd.Dispose();
+                    return;
+                }
 
-            if (ofd.FileName != self.TargetDirectory)
+                directory = ofd.FileName;
+                ofd.Dispose();
+            }
+
+            if (directory != self.TargetDirectory)
             {
                 if (QueryOnSaveChanges())
                 {
-                    self.TargetDirectory = ofd.FileName;
+                    self.TargetDirectory = directory;
                     comboBox1.Items.Clear();
                 }
                 else
@@ -480,8 +488,6 @@ namespace TFlex.PackageManager.UI
 
                 comboBox1.SelectedIndex = 0;
             }
-
-            ofd.Dispose();
         } // Open target directory
 
         private void Event1_4_Click(object sender, RoutedEventArgs e)
