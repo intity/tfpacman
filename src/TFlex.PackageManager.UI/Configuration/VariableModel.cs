@@ -450,14 +450,18 @@ namespace TFlex.PackageManager.Configuration
             {
                 Resource.GetString(Resource.VARIABLE_MODEL, "message_2", 0),
                 Resource.GetString(Resource.VARIABLE_MODEL, "message_3", 0),
-                Resource.GetString(Resource.VARIABLE_MODEL, "message_4", 0),
+                Resource.GetString(Resource.VARIABLE_MODEL, "message_4", 0)
             };
         }
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var variable = (value as BindingGroup).Items[0] as VariableModel;
-            if (variable.Action == 2)
+            if (variable.HasErrors)
+            {
+                return new ValidationResult(false, null);
+            }
+            else if (variable.Action == 2)
             {
                 if (variable.Name == string.Empty | variable.OldName == string.Empty)
                 {
