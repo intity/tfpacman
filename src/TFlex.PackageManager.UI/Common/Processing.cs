@@ -671,24 +671,17 @@ namespace TFlex.PackageManager.Common
             bool hasRename = false;
             foreach (var e in translator_0.RenameVariables)
             {
-                var name1 = e.Name;
-                var type1 = name1.Contains("$") ? "text" : "real";
-                var name2 = e.OldName;
-                var type2 = name2.Contains("$") ? "text" : "real";
-                if (type1 != type2)
-                    continue;
-
-                var variable = document.FindVariable(name2);
+                var variable = document.FindVariable(e.OldName);
                 if (variable == null)
                     continue;
 
-                variable.SetName(name1, true);
+                variable.SetName(e.Name, true);
                 logFile.AppendLine(string.Format(
                         "->Variable:\t\t[action: rename, new name: {0}, old name: {1}]",
-                        name1,
-                        name2));
+                        e.Name,
+                        e.OldName));
 
-                hasRename = variable.Name == name1;
+                hasRename = variable.Name == e.Name;
             }
 
             if (hasRename)

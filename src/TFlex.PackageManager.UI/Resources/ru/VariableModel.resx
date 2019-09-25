@@ -123,4 +123,13 @@
   <data name="message_1" xml:space="preserve">
     <value>Неверный символ в имени переменной</value>
   </data>
+  <data name="message_2" xml:space="preserve">
+    <value>Имя переменной не может быть пустым</value>
+  </data>
+  <data name="message_3" xml:space="preserve">
+    <value>Имя новой переменной должно отличаться от старого имени</value>
+  </data>
+  <data name="message_4" xml:space="preserve">
+    <value>Несоответствие типов переменных</value>
+  </data>
 </root>

@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Xml.Linq;
 using TFlex.PackageManager.Common;
 
@@ -21,7 +25,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The VariableModel class.
     /// </summary>
-    public class VariableModel : INotifyPropertyChanged, INotifyDataErrorInfo
+    public class VariableModel : IEditableObject, INotifyPropertyChanged, INotifyDataErrorInfo, ICloneable
     {
         #region private fields
         int action;
@@ -258,6 +262,29 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
+        #region IEditableObject Members
+        private bool inEdit;
+
+        public void BeginEdit()
+        {
+            if (inEdit) return;
+            inEdit = true;
+        }
+
+        public void CancelEdit()
+        {
+            if (!inEdit) return;
+            inEdit = false;
+        }
+
+        public void EndEdit()
+        {
+            if (!inEdit) return;
+            inEdit = false;
+            OnPropertyChanged("EndEdit");
+        }
+        #endregion
+
         #region INotifyPropertyChanged Members
         /// <summary>
         /// Occurs when a property value changes.
@@ -404,5 +431,62 @@ namespace TFlex.PackageManager.Configuration
             }
         }
         #endregion
+
+        #region ICloneable Members
+        public object Clone()
+        {
+            return new VariableModel(new XElement(Data));
+        }
+        #endregion
+    }
+
+    public class VariableValidationRule : ValidationRule
+    {
+        readonly string[] error_messages;
+
+        public VariableValidationRule()
+        {
+            error_messages = new string[]
+            {
+                Resource.GetString(Resource.VARIABLE_MODEL, "message_2", 0),
+                Resource.GetString(Resource.VARIABLE_MODEL, "message_3", 0),
+                Resource.GetString(Resource.VARIABLE_MODEL, "message_4", 0),
+            };
+        }
+
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            var variable = (value as BindingGroup).Items[0] as VariableModel;
+            if (variable.Action == 2)
+            {
+                if (variable.Name == string.Empty | variable.OldName == string.Empty)
+                {
+                    return new ValidationResult(false, error_messages[0]);
+                }
+                else if (variable.Name == variable.OldName)
+                {
+                    return new ValidationResult(false, error_messages[1]);
+                }
+                else
+                {
+                    var name1 = variable.Name.Substring(0, 1);
+                    var name2 = variable.OldName.Substring(0, 1);
+                    var type1 = name1 == "$" ? "text" : "real";
+                    var type2 = name2 == "$" ? "text" : "real";
+                    if (type1 != type2)
+                    {
+                        return new ValidationResult(false, error_messages[2]);
+                    }
+                }
+            }
+            else
+            {
+                if (variable.Name == string.Empty)
+                {
+                    return new ValidationResult(false, error_messages[0]);
+                }
+            }
+            return ValidationResult.ValidResult;
+        }
     }
 }

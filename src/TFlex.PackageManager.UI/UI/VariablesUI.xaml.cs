@@ -80,59 +80,21 @@ namespace TFlex.PackageManager.UI
             {
                 case NotifyCollectionChangedAction.Add:
                     item = e.NewItems[0] as VariableModel;
+                    item.Action = (int)action;
                     item.PropertyChanged += Variable_PropertyChanged;
                     break;
-            }
-        }
-
-        private void DataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            if (e.EditAction != DataGridEditAction.Commit)
-                return;
-
-            var item = e.Row.Item as VariableModel;
-
-            var value1 = item.Name == string.Empty;
-            var value2 = item.Name != string.Empty && item.HasErrors;
-            var value3 = item.OldName == string.Empty;
-            var value4 = item.OldName != string.Empty && item.HasErrors;
-
-            if (action == VariableAction.Rename)
-            {
-                e.Cancel = (value1 || value2) | (value3 || value4);
-            }
-            else
-            {
-                e.Cancel = value1 || value2;
+                case NotifyCollectionChangedAction.Remove:
+                    button_1.IsEnabled = !XNode.DeepEquals(variables.Data, DataSource.Data);
+                    break;
             }
         }
 
         private void Variable_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!(sender is VariableModel item))
+            if (e.PropertyName != "EndEdit")
                 return;
 
-            bool isEmpty = action == VariableAction.Rename 
-                ? item.Name == string.Empty | item.OldName == string.Empty
-                : item.Name == string.Empty;
-
-            button_1.IsEnabled = !(item.HasErrors || isEmpty) 
-                ? !XNode.DeepEquals(variables.Data, DataSource.Data) 
-                : false;
-        }
-
-        private void Data_Changed(object sender, XObjectChangeEventArgs e)
-        {
-            bool isEmpty = false;
-
-            if (sender is XElement element)
-            {
-                bool value1 = element.Attribute("name").Value == string.Empty;
-                bool value2 = element.Attribute("oldname").Value == string.Empty;
-                isEmpty = action == VariableAction.Rename ? value1 | value2 : value1;
-            }
-
-            button_1.IsEnabled = !isEmpty && !XNode.DeepEquals(variables.Data, DataSource.Data);
+            button_1.IsEnabled = !XNode.DeepEquals(variables.Data, DataSource.Data);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -143,9 +105,7 @@ namespace TFlex.PackageManager.UI
                 i.PropertyChanged += Variable_PropertyChanged;
             }
             dataGrid.ItemsSource = variables;
-            dataGrid.RowEditEnding      += DataGrid_RowEditEnding;
             variables.CollectionChanged += Variables_CollectionChanged;
-            variables.Data.Changed      += Data_Changed;
 
             button_1.IsEnabled = false;
         }
