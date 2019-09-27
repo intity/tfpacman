@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -25,7 +23,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The VariableModel class.
     /// </summary>
-    public class VariableModel : IEditableObject, INotifyPropertyChanged, INotifyDataErrorInfo, ICloneable
+    public class VariableModel : IEditableObject, INotifyPropertyChanged, ICloneable
     {
         #region private fields
         int action;
@@ -40,10 +38,6 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_3;
         XAttribute data_4;
         XAttribute data_5;
-
-        Dictionary<string, List<string>> objErrors;
-        string[] error_messages;
-        char[] pattern;
         #endregion
 
         /// <summary>
@@ -59,7 +53,6 @@ namespace TFlex.PackageManager.Configuration
             data_5 = new XAttribute("external", External ? "1" : "0");
 
             Data.Add(data_0, data_1, data_2, data_3, data_4, data_5);
-            InitResources();
         }
 
         /// <summary>
@@ -69,33 +62,10 @@ namespace TFlex.PackageManager.Configuration
         public VariableModel(XElement data)
         {
             Data = data;
-
             LoadData();
-            InitResources();
         }
 
         #region methods
-        /// <summary>
-        /// Initialize resources.
-        /// </summary>
-        private void InitResources()
-        {
-            objErrors = new Dictionary<string, List<string>>();
-            error_messages = new string[]
-            {
-                Resource.GetString(Resource.VARIABLE_MODEL, "message_0", 0),
-                Resource.GetString(Resource.VARIABLE_MODEL, "message_1", 0)
-            };
-
-            pattern = new char[] {
-                '`', '~', '!', '@', '#', '%', '^',
-                '&', '*', '(', ')', '-', '+', '=',
-                '[', ']', '{', '}', '|', ';', ':',
-                '.', ',', '<', '>', '/', '?', ' ',
-                '\\', '\'', '"'
-            };
-        }
-
         /// <summary>
         /// Load data.
         /// </summary>
@@ -184,8 +154,6 @@ namespace TFlex.PackageManager.Configuration
                 {
                     name = value;
                     data_1.Value = value;
-
-                    NameValidation("Name", value);
                     OnPropertyChanged("Name");
                 }
             }
@@ -203,8 +171,6 @@ namespace TFlex.PackageManager.Configuration
                 {
                     oldname = value;
                     data_2.Value = value;
-
-                    NameValidation("OldName", value);
                     OnPropertyChanged("OldName");
                 }
             }
@@ -264,23 +230,34 @@ namespace TFlex.PackageManager.Configuration
 
         #region IEditableObject Members
         private bool inEdit;
+        private VariableModel backup;
 
         public void BeginEdit()
         {
             if (inEdit) return;
             inEdit = true;
+            backup = Clone() as VariableModel;
+            //Debug.WriteLine("BeginEdit");
         }
 
         public void CancelEdit()
         {
             if (!inEdit) return;
-            inEdit = false;
+            inEdit     = false;
+            Name       = backup.Name;
+            OldName    = backup.OldName;
+            Group      = backup.Group;
+            Expression = backup.Expression;
+            External   = backup.External;
+            //Debug.WriteLine("CancelEdit");
         }
 
         public void EndEdit()
         {
             if (!inEdit) return;
             inEdit = false;
+            backup = null;
+            //Debug.WriteLine("EndEdit");
             OnPropertyChanged("EndEdit");
         }
         #endregion
@@ -301,137 +278,6 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region INotifyDataErrorInfo Members
-        /// <summary>
-        /// Occurs when the validation errors have changed for 
-        /// a property or for the entire entity.
-        /// </summary>
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-        /// <summary>
-        /// The RaiseErrorChanged event handler.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        protected void OnRaiseErrorChanged(string name)
-        {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(name));
-        }
-
-        /// <summary>
-        /// Gets a value that indicates whether the entity 
-        /// has validation errors.
-        /// </summary>
-        [Browsable(false)]
-        public bool HasErrors => objErrors.Count > 0;
-
-        /// <summary>
-        /// Gets the validation errors for a specified property or for 
-        /// the entire entity.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <returns>
-        /// The validation errors for the property or entity.
-        /// </returns>
-        public IEnumerable GetErrors(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                return objErrors.Values;
-
-            objErrors.TryGetValue(name, out List<string> errors);
-            return errors;
-        }
-
-        /// <summary>
-        /// Add error to dictionary.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <param name="index">Error message index.</param>
-        private void AddError(string name, int index)
-        {
-            if (objErrors.TryGetValue(name, out List<string> errors) == false)
-            {
-                errors = new List<string>();
-                objErrors.Add(name, errors);
-            }
-
-            if (errors.Contains(error_messages[index]) == false)
-            {
-                errors.Add(error_messages[index]);
-            }
-
-            OnRaiseErrorChanged(name);
-        }
-
-        /// <summary>
-        /// Remove error from dictionary.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <param name="index">Error message index.</param>
-        private void RemoveError(string name, int index)
-        {
-            if (objErrors.TryGetValue(name, out List<string> errors))
-            {
-                errors.Remove(error_messages[index]);
-                errors.Clear();
-            }
-
-            if (errors == null)
-                return;
-
-            if (errors.Count == 0)
-            {
-                objErrors.Remove(name);
-                OnRaiseErrorChanged(name);
-            }
-        }
-
-        /// <summary>
-        /// Validate variable name.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <param name="value">Property value.</param>
-        private void NameValidation(string name, string value)
-        {
-            char[] chars = value.ToCharArray();
-            bool isDigit = chars.Length > 0 ? char.IsDigit(chars[0]) : false;
-            int iError = isDigit ? 0 : value.Length > 0 ? 1 : -1;
-
-            switch (iError)
-            {
-                case -1:
-                    if (HasErrors)
-                    {
-                        foreach (string error in GetErrors(name))
-                        {
-                            if (error == error_messages[0])
-                            {
-                                RemoveError(name, 0);
-                                break;
-                            }
-                            else
-                            {
-                                RemoveError(name, 1);
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case 0:
-                    if (isDigit)
-                        AddError(name, 0);
-                    else if (HasErrors)
-                        RemoveError(name, 0);
-                    break;
-                case 1:
-                    if (!value.IsValid(pattern))
-                        AddError(name, 1);
-                    else if (HasErrors)
-                        RemoveError(name, 1);
-                    break;
-            }
-        }
-        #endregion
-
         #region ICloneable Members
         public object Clone()
         {
@@ -440,11 +286,48 @@ namespace TFlex.PackageManager.Configuration
         #endregion
     }
 
-    public class VariableValidationRule : ValidationRule
+    public class CellValidation : ValidationRule
+    {
+        readonly string[] error_messages;
+        readonly char[] pattern;
+
+        public CellValidation()
+        {
+            error_messages = new string[]
+            {
+                Resource.GetString(Resource.VARIABLE_MODEL, "message_0", 0),
+                Resource.GetString(Resource.VARIABLE_MODEL, "message_1", 0)
+            };
+
+            pattern = new char[] {
+                '`', '~', '!', '@', '#', '%', '^',
+                '&', '*', '(', ')', '-', '+', '=',
+                '[', ']', '{', '}', '|', ';', ':',
+                '.', ',', '<', '>', '/', '?', ' ',
+                '\\', '\'', '"'
+            };
+        }
+
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            var str = value as string;
+            if (str.IsDigit(0))
+            {
+                return new ValidationResult(false, error_messages[0]);
+            }
+            else if (!str.IsValid(pattern))
+            {
+                return new ValidationResult(false, error_messages[1]);
+            }
+            return ValidationResult.ValidResult;
+        }
+    }
+
+    public class RowValidationRule : ValidationRule
     {
         readonly string[] error_messages;
 
-        public VariableValidationRule()
+        public RowValidationRule()
         {
             error_messages = new string[]
             {
@@ -457,11 +340,14 @@ namespace TFlex.PackageManager.Configuration
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var variable = (value as BindingGroup).Items[0] as VariableModel;
-            if (variable.HasErrors)
+            if (variable.Action != 2)
             {
-                return new ValidationResult(false, null);
+                if (variable.Name == string.Empty)
+                {
+                    return new ValidationResult(false, error_messages[0]);
+                }
             }
-            else if (variable.Action == 2)
+            else
             {
                 if (variable.Name == string.Empty | variable.OldName == string.Empty)
                 {
@@ -481,13 +367,6 @@ namespace TFlex.PackageManager.Configuration
                     {
                         return new ValidationResult(false, error_messages[2]);
                     }
-                }
-            }
-            else
-            {
-                if (variable.Name == string.Empty)
-                {
-                    return new ValidationResult(false, error_messages[0]);
                 }
             }
             return ValidationResult.ValidResult;

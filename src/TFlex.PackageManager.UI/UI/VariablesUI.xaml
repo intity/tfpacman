@@ -23,23 +23,25 @@
                   AutoGenerateColumns="False" 
                   VerticalGridLinesBrush="White" 
                   HorizontalGridLinesBrush="LightGray" 
-                  RowHeaderWidth="20" ItemsSource="{Binding}">
+                  RowHeaderWidth="20" ItemsSource="{Binding}"
+                  Validation.Error="DataGrid_Error">
             <DataGrid.Resources>
                 <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
                     <Setter Property="BorderThickness" Value="0"/>
                     <Style.Triggers>
                         <Trigger Property="Validation.HasError" Value="True">
                             <Setter Property="Background" Value="Red"/>
-                            <Setter Property="ToolTip" Value="{
-                                Binding RelativeSource={RelativeSource Self}, 
-                                Path=(Validation.Errors)/ErrorContent}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.Resources>
-            <DataGrid.RowValidationRules>
-                <l:VariableValidationRule ValidationStep="UpdatedValue"/>
-            </DataGrid.RowValidationRules>
+            <DataGrid.ItemBindingGroup>
+                <BindingGroup NotifyOnValidationError="True">
+                    <BindingGroup.ValidationRules>
+                        <l:RowValidationRule ValidationStep="UpdatedValue"/>
+                    </BindingGroup.ValidationRules>
+                </BindingGroup>
+            </DataGrid.ItemBindingGroup>
             <DataGrid.RowValidationErrorTemplate>
                 <ControlTemplate>
                     <Grid Margin="0,-2,0,-2" 
@@ -48,12 +50,17 @@
                         AncestorType={x:Type DataGridRow}}, 
                         Path=(Validation.Errors)/ErrorContent}">
                         <Ellipse StrokeThickness="0" 
-                                 Fill="Red" Width="{TemplateBinding FontSize}" 
-                                 Height="{TemplateBinding FontSize}"/>
+                                 Fill="Red" 
+                                 Width="{TemplateBinding FontSize}" 
+                                 Height="{TemplateBinding FontSize}" 
+                                 VerticalAlignment="Top" 
+                                 Margin="0,4,0,0"/>
                         <TextBlock Text="!" 
                                    FontSize="{TemplateBinding FontSize}" 
-                                   FontWeight="Bold" Foreground="White" 
-                                   HorizontalAlignment="Center"/>
+                                   FontWeight="Bold" 
+                                   Foreground="White" 
+                                   HorizontalAlignment="Center" 
+                                   Margin="0,2,0,0"/>
                     </Grid>
                 </ControlTemplate>
             </DataGrid.RowValidationErrorTemplate>
@@ -61,17 +68,31 @@
                 <DataGridTextColumn x:Name="column_1" 
                                     Header="Name" 
                                     Width="*" 
-                                    EditingElementStyle="{StaticResource errorStyle}" 
-                                    Binding="{Binding Name, 
-                    UpdateSourceTrigger=PropertyChanged, 
-                    ValidatesOnNotifyDataErrors=True}" />
+                                    EditingElementStyle="{StaticResource errorStyle}">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="Name" 
+                                 UpdateSourceTrigger="PropertyChanged" 
+                                 NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <l:CellValidation ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
                 <DataGridTextColumn x:Name="column_2" 
                                     Header="Old Name" 
                                     Width="*" 
-                                    EditingElementStyle="{StaticResource errorStyle}" 
-                                    Binding="{Binding OldName, 
-                    UpdateSourceTrigger=PropertyChanged, 
-                    ValidatesOnNotifyDataErrors=True}" />
+                                    EditingElementStyle="{StaticResource errorStyle}">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="OldName" 
+                                 UpdateSourceTrigger="PropertyChanged" 
+                                 NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <l:CellValidation ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
                 <DataGridTextColumn x:Name="column_3" 
                                     Header="Group" 
                                     Width="*" 
@@ -124,15 +145,18 @@
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right">
             <Button Name="button_1" 
+                    Content="OK"
                     Width="80" 
                     Padding="2" 
                     Margin="0,0,0,0" 
-                    Click="Button1_Click">OK</Button>
+                    Click="Button1_Click">
+            </Button>
             <Button Name="button_2" 
+                    Content="Cancel"
                     Width="80" 
                     Padding="2" 
                     Margin="10,0,0,0" 
-                    Click="Button2_Click">Cancel</Button>
+                    Click="Button2_Click"/>
         </StackPanel>
 
     </Grid>

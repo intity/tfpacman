@@ -72,7 +72,24 @@ namespace TFlex.PackageManager.UI
         internal Variables DataSource { get; set; }
         #endregion
 
+        #region private properties
+        private bool IsValid { get; set; } = true;
+        #endregion
+
         #region events
+        private void DataGrid_Error(object sender, ValidationErrorEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case ValidationErrorEventAction.Added:
+                    IsValid = button_1.IsEnabled = false;
+                    break;
+                case ValidationErrorEventAction.Removed:
+                    IsValid = true;
+                    break;
+            }
+        }
+
         private void Variables_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             VariableModel item;
@@ -94,7 +111,7 @@ namespace TFlex.PackageManager.UI
             if (e.PropertyName != "EndEdit")
                 return;
 
-            button_1.IsEnabled = !XNode.DeepEquals(variables.Data, DataSource.Data);
+            button_1.IsEnabled = IsValid && !XNode.DeepEquals(variables.Data, DataSource.Data);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

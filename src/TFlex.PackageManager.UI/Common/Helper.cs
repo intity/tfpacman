@@ -63,5 +63,19 @@
 
             return true;
         }
+
+        /// <summary>
+        /// Validating a character by index in a string for a digit.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="index"></param>
+        /// <returns>
+        /// Returns boolean value on the validation string result.
+        /// </returns>
+        public static bool IsDigit(this string value, int index)
+        {
+            char[] chars = value.ToCharArray();
+            return chars.Length > 0 ? char.IsDigit(chars[index]) : false;
+        }
     }
 }
