@@ -5,21 +5,29 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TFlex.PackageManager.Editors"
              mc:Ignorable="d" 
-             d:DesignHeight="20" 
+             d:DesignHeight="22" 
              d:DesignWidth="300">
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="22"/>
         </Grid.ColumnDefinitions>
-        <TextBox Name="textbox" Text="[0]"
+        <TextBox Name="textbox" 
+                 Text="[0]"
                  Grid.Column="0" 
+                 Grid.ColumnSpan="2"
                  BorderBrush="White" 
-                 Padding="0" 
+                 Padding="2" 
+                 Height="22"
                  IsReadOnly="True">
-            
         </TextBox>
-        <Button Name="buton1" Content="..." Grid.Column="1" Width="Auto" Click="Button1_Click" />
+        <Button Name="buton1" 
+                Content="..." 
+                Grid.Column="1" 
+                Width="Auto" 
+                Height="Auto" 
+                Margin="1"
+                Click="Button1_Click" />
     </Grid>
 </UserControl>
