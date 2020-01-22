@@ -298,28 +298,36 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0">
+            <Grid Grid.Column="0" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="29"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <xctk:PropertyGrid x:Name="inputPath1" 
                                    ShowTitle="False" 
                                    ShowSearchBox="False" 
                                    ShowSortOptions="False" 
-                                   ShowSummary="False"/>
-                <l:TreeViewControl x:Name="tvControl1"/>
-            </StackPanel>
+                                   ShowSummary="False" Grid.Row="0"/>
+                <l:TreeViewControl x:Name="tvControl1" Grid.Row="1"/>
+            </Grid>
             <GridSplitter Grid.Column="1" 
                           Grid.Row="0" 
                           Width="4" 
                           HorizontalAlignment="Stretch" 
                           VerticalAlignment="Stretch" 
                           ResizeDirection="Columns"/>
-            <StackPanel Orientation="Vertical" Grid.Column="2" Grid.Row="0">
+            <Grid Grid.Column="2" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="29"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <xctk:PropertyGrid x:Name="inputPath2" 
                                    ShowTitle="False" 
                                    ShowSearchBox="False" 
                                    ShowSortOptions="False" 
-                                   ShowSummary="False"/>
-                <l:TreeViewControl x:Name="tvControl2"/>
-            </StackPanel>
+                                   ShowSummary="False" Grid.Row="0"/>
+                <l:TreeViewControl x:Name="tvControl2" Grid.Row="1"/>
+            </Grid>
             <GridSplitter Grid.Column="3" 
                           Grid.Row="0"
                           Width="4"
