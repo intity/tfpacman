@@ -13,7 +13,7 @@ namespace TFlex
     public static class ApiLoader
     {
         #region private fields
-        private const string API_VERSION = "16.0.60.0";
+        private const string API_VERSION = "16.0.61.0";
         private static List<string> folders;
         private static bool isLoaded;
         #endregion
