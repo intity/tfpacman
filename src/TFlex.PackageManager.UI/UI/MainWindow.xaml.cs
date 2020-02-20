@@ -90,8 +90,6 @@ namespace TFlex.PackageManager.UI
             #endregion
 
             #region initialize resources
-            Resource.InitPaths();
-
             messages = new string[]
             {
                 Resource.GetString(Resource.MAIN_WINDOW, "message1", 0),

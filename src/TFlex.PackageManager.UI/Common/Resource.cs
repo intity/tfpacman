@@ -115,67 +115,9 @@ namespace TFlex.PackageManager.Common
                     userDirectory = value;
             }
         }
-
-        /// <summary>
-        /// Prototype root catalog path.
-        /// </summary>
-        public static string PrototypePath { get; private set; }
         #endregion
 
         #region methods
-        /// <summary>
-        /// Initialize paths.
-        /// </summary>
-        public static void InitPaths()
-        {
-            try
-            {
-                string path = @"Software\Top Systems\";
-                string type = null;
-                string version = Application.Version.Major.ToString();
-
-                switch (Application.Product)
-                {
-                    case Application.ProductType.TFlexCad3D: type = "3D"; break;
-                    case Application.ProductType.TFlexCadSE: type = "SE"; break;
-                }
-
-                switch (Application.InterfaceLanguage)
-                {
-                    case Application.Language.Russian:
-                        path += string.Format("T-FLEX CAD {0} {1}\\Rus", type, version);
-                        break;
-                    case Application.Language.English:
-                        path += string.Format("T-FLEX CAD {0} {1}\\Eng", type, version);
-                        break;
-                    case Application.Language.German:
-                        path += string.Format("TENADO CAD {0} {1}\\Ger", type, version);
-                        break;
-                }
-
-                RegistryKey subKey = Registry.LocalMachine.OpenSubKey(path, false);
-
-                if (subKey == null)
-                    return;
-
-                foreach (var i in subKey.GetValueNames())
-                {
-                    switch (i)
-                    {
-                        case "PrototypePath":
-                            PrototypePath = (string)subKey.GetValue(i);
-                            break;
-                    }
-                }
-
-                subKey.Close();
-            }
-            catch (ArgumentException e)
-            {
-                MessageBox.Show(e.Message);
-            }
-        }
-
         /// <summary>
         /// The method for get resource data.
         /// </summary>
