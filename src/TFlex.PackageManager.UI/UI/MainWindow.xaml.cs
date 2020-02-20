@@ -23,7 +23,7 @@ namespace TFlex.PackageManager.UI
     public partial class MainWindow : Window
     {
         #region private fields
-        private readonly ConfigurationCollection self;
+        private readonly ConfigurationCollection conf;
 
         private readonly CustomTreeView treeListView1;
         private readonly CustomTreeView treeListView2;
@@ -72,7 +72,7 @@ namespace TFlex.PackageManager.UI
 
             using (UndoRedoManager.Start("Init"))
             {
-                self = new ConfigurationCollection
+                conf = new ConfigurationCollection
                 {
                     TargetDirectory = options.UserDirectory
                 };
@@ -262,13 +262,13 @@ namespace TFlex.PackageManager.UI
 
             propertyGrid.SelectedObjectChanged += PropertyGrid_SelectedObjectChanged;
 
-            if (comboBox1.Items.Count == 0 && self.Configurations.Count > 0)
+            if (comboBox1.Items.Count == 0 && conf.Configurations.Count > 0)
             {
-                for (int i = 0; i < self.Configurations.Count; i++)
+                for (int i = 0; i < conf.Configurations.Count; i++)
                 {
-                    self.Configurations.ElementAt(i).Value.PropertyChanged += Header_PropertyChanged;
-                    self.Configurations.ElementAt(i).Value.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
-                    comboBox1.Items.Add(self.Configurations.ElementAt(i).Key);
+                    conf.Configurations.ElementAt(i).Value.PropertyChanged += Header_PropertyChanged;
+                    conf.Configurations.ElementAt(i).Value.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
+                    comboBox1.Items.Add(conf.Configurations.ElementAt(i).Key);
                 }
 
                 comboBox1.SelectedIndex = 0;
@@ -313,12 +313,12 @@ namespace TFlex.PackageManager.UI
             switch (e.PropertyName)
             {
                 case "InitialCatalog":
-                    tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
+                    tvControl1.TargetDirectory = conf.Configurations[key1].InitialCatalog;
                     break;
                 case "TargetDirectory":
                     tvControl2.TargetDirectory = key2 != null
-                        ? Path.Combine(self.Configurations[key1].TargetDirectory, key2)
-                        : self.Configurations[key1].TargetDirectory;
+                        ? Path.Combine(conf.Configurations[key1].TargetDirectory, key2)
+                        : conf.Configurations[key1].TargetDirectory;
                     break;
             }
 
@@ -385,8 +385,8 @@ namespace TFlex.PackageManager.UI
             using (var sfd = new CommonSaveFileDialog())
             {
                 sfd.Title = controls[0];
-                sfd.InitialDirectory = self.TargetDirectory;
-                sfd.DefaultFileName = string.Format("configuration_{0}", self.Configurations.Count);
+                sfd.InitialDirectory = conf.TargetDirectory;
+                sfd.DefaultFileName = string.Format("configuration_{0}", conf.Configurations.Count);
                 sfd.DefaultExtension = "config";
                 sfd.Filters.Add(new CommonFileDialogFilter("Configuration Files", "*.config"));
 
@@ -401,11 +401,11 @@ namespace TFlex.PackageManager.UI
                 sfd.Dispose();
             }
 
-            if (directory != self.TargetDirectory)
+            if (directory != conf.TargetDirectory)
             {
                 if (QueryOnSaveChanges())
                 {
-                    self.TargetDirectory = directory;
+                    conf.TargetDirectory = directory;
                     comboBox1.Items.Clear();
                 }
                 else
@@ -425,16 +425,16 @@ namespace TFlex.PackageManager.UI
             {
                 key1 = newKey;
 
-                self.Configurations.Add(key1, header);
-                self.Configurations[key1].ConfigurationTask(1);
+                conf.Configurations.Add(key1, header);
+                conf.Configurations[key1].ConfigurationTask(1);
 
                 comboBox1.Items.Add(key1);
                 index = comboBox1.Items.Count - 1;
             }
             else
             {
-                self.Configurations[key1] = header;
-                self.Configurations[key1].ConfigurationTask(1);
+                conf.Configurations[key1] = header;
+                conf.Configurations[key1].ConfigurationTask(1);
                 comboBox1.SelectedIndex = -1;
             }
 
@@ -454,7 +454,7 @@ namespace TFlex.PackageManager.UI
                 ofd.Title = tooltips[2];
                 ofd.Multiselect = false;
                 ofd.IsFolderPicker = true;
-                ofd.InitialDirectory = self.TargetDirectory;
+                ofd.InitialDirectory = conf.TargetDirectory;
 
                 if (ofd.ShowDialog() == CommonFileDialogResult.Cancel)
                 {
@@ -466,20 +466,20 @@ namespace TFlex.PackageManager.UI
                 ofd.Dispose();
             }
 
-            if (directory != self.TargetDirectory)
+            if (directory != conf.TargetDirectory)
             {
                 if (QueryOnSaveChanges())
                 {
-                    self.TargetDirectory = directory;
+                    conf.TargetDirectory = directory;
                     comboBox1.Items.Clear();
                 }
                 else
                     return;
             }
 
-            if (self.Configurations.Count > 0)
+            if (conf.Configurations.Count > 0)
             {
-                foreach (var i in self.Configurations.Keys)
+                foreach (var i in conf.Configurations.Keys)
                 {
                     comboBox1.Items.Add(i);
                 }
@@ -490,13 +490,13 @@ namespace TFlex.PackageManager.UI
 
         private void Event1_4_Click(object sender, RoutedEventArgs e)
         {
-            self.Configurations[key1].ConfigurationTask(1);
+            conf.Configurations[key1].ConfigurationTask(1);
             UpdateStateToControls();
         } // Save configuration
 
         private void Event1_5_Click(object sender, RoutedEventArgs e)
         {
-            self.SetConfigurations();
+            conf.SetConfigurations();
             UpdateStateToControls();
         } // Save all configurations
 
@@ -513,7 +513,7 @@ namespace TFlex.PackageManager.UI
                 int index = -1;
                 string oldKey = key1;
 
-                foreach (var i in self.Configurations)
+                foreach (var i in conf.Configurations)
                 {
                     if (i.Key == oldKey)
                     {
@@ -526,8 +526,8 @@ namespace TFlex.PackageManager.UI
                     }
                 }
 
-                self.Configurations[oldKey].ConfigurationTask(2);
-                self.Configurations.Remove(oldKey);
+                conf.Configurations[oldKey].ConfigurationTask(2);
+                conf.Configurations.Remove(oldKey);
                 comboBox1.Items.Remove(oldKey);
                 comboBox1.SelectedIndex = index;
 
@@ -537,7 +537,7 @@ namespace TFlex.PackageManager.UI
 
         private void Event1_7_Click(object sender, RoutedEventArgs e)
         {
-            PropertiesUI headerUI = new PropertiesUI(self.Configurations[key1])
+            PropertiesUI headerUI = new PropertiesUI(conf.Configurations[key1])
             {
                 Title = tooltips[6],
                 Owner = this
@@ -614,18 +614,18 @@ namespace TFlex.PackageManager.UI
             if (comboBox1.SelectedIndex != -1)
             {
                 key1 = comboBox1.SelectedValue.ToString();
-                tvControl1.TargetDirectory = self.Configurations[key1].InitialCatalog;
-                inputPath1.SelectedObject  = self.Configurations[key1];
-                inputPath2.SelectedObject  = self.Configurations[key1];
+                tvControl1.TargetDirectory = conf.Configurations[key1].InitialCatalog;
+                inputPath1.SelectedObject  = conf.Configurations[key1];
+                inputPath2.SelectedObject  = conf.Configurations[key1];
 
                 string[] items1 = comboBox2.Items.OfType<string>().ToArray();
-                string[] items2 = self.Configurations[key1].Translators.Keys.ToArray();
+                string[] items2 = conf.Configurations[key1].Translators.Keys.ToArray();
 
                 if (!Enumerable.SequenceEqual(items1, items2))
                 {
                     comboBox2.Items.Clear();
 
-                    foreach (var i in self.Configurations[key1].Translators)
+                    foreach (var i in conf.Configurations[key1].Translators)
                     {
                         comboBox2.Items.Add(i.Key);
                     }
@@ -654,7 +654,7 @@ namespace TFlex.PackageManager.UI
             if (comboBox2.SelectedIndex != -1)
             {
                 key2 = comboBox2.SelectedValue.ToString();
-                object t_mode = self.Configurations[key1].Translators[key2];
+                object t_mode = conf.Configurations[key1].Translators[key2];
                 propertyGrid.SelectedObject = t_mode;
 
                 switch (key2)
@@ -686,7 +686,7 @@ namespace TFlex.PackageManager.UI
                 if (comboBox3.Items.Count > 0)
                     comboBox3.SelectedIndex = 0;
 
-                var o_path = self.Configurations[key1].TargetDirectory;
+                var o_path = conf.Configurations[key1].TargetDirectory;
                 if (o_path.Length > 0)
                 {
                     tvControl2.TargetDirectory = Path.Combine(o_path, key2);
@@ -887,7 +887,7 @@ namespace TFlex.PackageManager.UI
         /// <returns></returns>
         private bool QueryOnSaveChanges()
         {
-            if (self.HasChanged)
+            if (conf.HasChanged)
             {
                 MessageBoxResult result = MessageBox.Show(
                     messages[1],
@@ -898,7 +898,7 @@ namespace TFlex.PackageManager.UI
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        self.SetConfigurations();
+                        conf.SetConfigurations();
                         UpdateStateToControls();
                         break;
                     case MessageBoxResult.Cancel:
@@ -916,7 +916,7 @@ namespace TFlex.PackageManager.UI
         {
             //Debug.WriteLine("UpdateStateToControls");
 
-            if (self.Configurations.Count() == 0)
+            if (conf.Configurations.Count() == 0)
             {
                 menuItem1_4.IsEnabled = false; // save
                 menuItem1_5.IsEnabled = false; // save all
@@ -959,8 +959,8 @@ namespace TFlex.PackageManager.UI
                 }
             }
 
-            if (self.Configurations[key1].IsChanged &&
-                self.Configurations[key1].IsInvalid == false)
+            if (conf.Configurations[key1].IsChanged &&
+                conf.Configurations[key1].IsInvalid == false)
             {
                 menuItem1_4.IsEnabled = true;
                 button1_4.IsEnabled = true;
@@ -971,8 +971,8 @@ namespace TFlex.PackageManager.UI
                 button1_4.IsEnabled = false;
             }
 
-            if (self.HasChanged &&
-                self.Configurations[key1].IsInvalid == false)
+            if (conf.HasChanged &&
+                conf.Configurations[key1].IsInvalid == false)
             {
                 menuItem1_5.IsEnabled = true;
                 button1_5.IsEnabled = true;
@@ -1020,9 +1020,9 @@ namespace TFlex.PackageManager.UI
             watch.Start();
 
             string[] si = tvControl1.SelectedItems.OrderBy(i => i).Cast<string>().ToArray();
-            Processing processing = new Processing(self.Configurations[key1], si, t_mode, p_mode, logFile);
+            Processing processing = new Processing(conf.Configurations[key1], si, t_mode, p_mode, logFile);
 
-            logFile.CreateLogFile(Path.Combine(self.Configurations[key1].TargetDirectory, key2));
+            logFile.CreateLogFile(Path.Combine(conf.Configurations[key1].TargetDirectory, key2));
             logFile.AppendLine("Started processing");
             logFile.AppendLine(string.Format("Translator mode:\t{0}", key2));
             logFile.AppendLine(string.Format("Processing mode:\t{0}", p_mode));
@@ -1038,7 +1038,7 @@ namespace TFlex.PackageManager.UI
                 }
 
                 logFile.AppendLine("\n");
-                processing.ProcessingFile(self.Configurations[key1].Translators[key2], i.ToString());
+                processing.ProcessingFile(conf.Configurations[key1].Translators[key2], i.ToString());
 
                 count[0] += increment;
                 Marshal.Copy(count, 0, value, count.Length);
