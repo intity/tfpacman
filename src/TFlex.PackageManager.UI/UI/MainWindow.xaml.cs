@@ -1027,6 +1027,7 @@ namespace TFlex.PackageManager.UI
             IntPtr value = Marshal.AllocHGlobal(size);
             TranslatorType t_mode = TranslatorType.Document;
             ProcessingMode p_mode = ProcessingMode.SaveAs;
+            TFlex.Application.FileLinksAutoRefresh = TFlex.Application.FileLinksRefreshMode.AutoRefresh;
 
             switch (key2)
             {
