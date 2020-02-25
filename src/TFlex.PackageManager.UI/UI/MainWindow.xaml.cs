@@ -589,7 +589,7 @@ namespace TFlex.PackageManager.UI
         {
             PropertiesUI optionsUI = new PropertiesUI(options)
             {
-                Title = controls[11],
+                Title = controls[13],
                 Owner = this
             };
             optionsUI.ShowDialog();

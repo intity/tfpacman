@@ -7,10 +7,10 @@ namespace TFlex.PackageManager.UI
     /// </summary>
     public partial class PropertiesUI : Window
     {
-        public PropertiesUI(object self)
+        public PropertiesUI(object obj)
         {
             InitializeComponent();
-            propertyGrid.SelectedObject = self;
+            propertyGrid.SelectedObject = obj;
         }
     }
 }
