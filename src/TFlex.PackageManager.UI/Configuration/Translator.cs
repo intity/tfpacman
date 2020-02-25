@@ -67,7 +67,7 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="document"></param>
         /// <param name="path"></param>
         /// <param name="logFile"></param>
-        internal virtual void Export(Document document, string path, LogFile logFile) { }
+        internal virtual void Export(Document document, string path, Logging logFile) { }
 
         /// <summary>
         /// The Export virtual method.
@@ -75,7 +75,7 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="document"></param>
         /// <param name="pages"></param>
         /// <param name="logFile"></param>
-        internal virtual void Export(Document document, Dictionary<Page, string> pages, LogFile logFile) { }
+        internal virtual void Export(Document document, Dictionary<Page, string> pages, Logging logFile) { }
 
         /// <summary>
         /// The Import virtual method.
@@ -84,7 +84,7 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="targetDirectory"></param>
         /// <param name="path"></param>
         /// <param name="logFile"></param>
-        internal virtual void Import(Document document, string targetDirectory, string path, LogFile logFile) { }
+        internal virtual void Import(Document document, string targetDirectory, string path, Logging logFile) { }
 
         /// <summary>
         /// The method to loaded translator.

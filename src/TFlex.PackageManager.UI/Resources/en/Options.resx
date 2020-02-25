@@ -122,7 +122,7 @@
     <comment>Root configuration directory.</comment>
   </data>
   <data name="dn1_2" xml:space="preserve">
-    <value>Enable Log file</value>
-    <comment>Enable the output of data processing in the log file.</comment>
+    <value>Open Log file</value>
+    <comment>Open the log file when processing is complete.</comment>
   </data>
 </root>

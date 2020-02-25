@@ -17,7 +17,7 @@ namespace TFlex.PackageManager.Common
     {
         #region private fields
         private string userDirectory;
-        private bool enableLogFile;
+        private bool openLogFile;
         #endregion
 
         public Options()
@@ -48,19 +48,19 @@ namespace TFlex.PackageManager.Common
         }
 
         /// <summary>
-        /// Enable the output of data processing in the log file.
+        /// Open the log file when processing is complete.
         /// </summary>
         [PropertyOrder(2)]
         [CustomDisplayName(Resource.OPTIONS_UI, "dn1_2")]
         [CustomDescription(Resource.OPTIONS_UI, "dn1_2")]
-        public bool EnableLogFile
+        public bool OpenLogFile
         {
-            get { return enableLogFile; }
+            get { return openLogFile; }
             set
             {
-                if (enableLogFile != value)
+                if (openLogFile != value)
                 {
-                    enableLogFile = value;
+                    openLogFile = value;
                     OptionsTask(1);
                 }
             }
@@ -123,11 +123,11 @@ namespace TFlex.PackageManager.Common
                     else
                         subKey.SetValue(name, userDirectory);
                     break;
-                case "EnableLogFile":
+                case "OpenLogFile":
                     if (flag == 0)
-                        enableLogFile = (int)subKey.GetValue(name) > 0;
+                        openLogFile = (int)subKey.GetValue(name) > 0;
                     else
-                        subKey.SetValue(name, enableLogFile ? 1 : 0);
+                        subKey.SetValue(name, openLogFile ? 1 : 0);
                     break;
             }
         }

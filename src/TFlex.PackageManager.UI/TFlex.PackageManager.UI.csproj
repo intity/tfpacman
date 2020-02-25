@@ -100,7 +100,7 @@
     <Compile Include="Attributes\CustomDisplayNameAttribute.cs" />
     <Compile Include="Common\CustomImage.cs" />
     <Compile Include="Common\Helper.cs" />
-    <Compile Include="Common\LogFile.cs" />
+    <Compile Include="Common\Logging.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\Options.cs" />
     <Compile Include="Common\Processing.cs" />
@@ -181,6 +181,7 @@
     <Compile Include="Editors\VariablesEditor.xaml.cs">
       <DependentUpon>VariablesEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\ProcItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

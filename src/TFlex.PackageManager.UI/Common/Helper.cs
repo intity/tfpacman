@@ -1,4 +1,8 @@
-﻿namespace TFlex.PackageManager.Common
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace TFlex.PackageManager.Common
 {
     internal static class Helper
     {
@@ -76,6 +80,20 @@
         {
             char[] chars = value.ToCharArray();
             return chars.Length > 0 ? char.IsDigit(chars[index]) : false;
+        }
+
+        /// <summary>
+        /// Convert path to GUID.
+        /// </summary>
+        /// <param name="path">File name path.</param>
+        /// <returns>Returns GUID to string format.</returns>
+        public static string ToGUID(this string path)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(path));
+                return new Guid(hash).ToString("D").ToUpper();
+            }
         }
     }
 }

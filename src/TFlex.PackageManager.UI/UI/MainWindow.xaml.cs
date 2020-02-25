@@ -14,6 +14,8 @@ using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using UndoRedoFramework;
+using System.Collections.Generic;
+using TFlex.PackageManager.Model;
 
 namespace TFlex.PackageManager.UI
 {
@@ -68,7 +70,6 @@ namespace TFlex.PackageManager.UI
             tvControl2.SearchPattern = "*.grb|*.dwg|*.dxf|*.dxb|*.sat|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.igs|*.jt|*.pdf|*.stp";
 
             options = new Common.Options();
-            
 
             using (UndoRedoManager.Start("Init"))
             {
@@ -992,11 +993,38 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         private void StartProcessing()
         {
-            double[] count = { 0.0 };
-            var size = Marshal.SizeOf(count[0]) * count.Length;
+            string logFile = Path
+                .Combine(conf.Configurations[key1].TargetDirectory, key2, 
+                Resource.LOG_FILE);
+
+            using (StreamWriter logger = new StreamWriter(logFile))
+            {
+                try
+                {
+                    ProcessingTask(logger);
+                    logger.Close();
+
+                    if (options.OpenLogFile)
+                        Process.Start("notepad.exe", logFile);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+            }
+        }
+
+        private void ProcessingTask(StreamWriter logger)
+        {
+            List<ProcItem> pItems = new List<ProcItem>();
+            string[] items = tvControl1.SelectedItems.OrderBy(i => i).Cast<string>().ToArray();
+            for (int i = 0; i < items.Length; i++)
+                pItems.Add(new ProcItem(items[i]));
+
+            double[] counter = { 0.0 };
+            double increment = 100.0 / items.Length;
+            var size = Marshal.SizeOf(counter[0]) * counter.Length;
             IntPtr value = Marshal.AllocHGlobal(size);
-            Stopwatch watch = new Stopwatch();
-            LogFile logFile = new LogFile(options);
             TranslatorType t_mode = TranslatorType.Document;
             ProcessingMode p_mode = ProcessingMode.SaveAs;
 
@@ -1017,44 +1045,37 @@ namespace TFlex.PackageManager.UI
                 case "Import": p_mode = ProcessingMode.Import; break;
             }
 
-            watch.Start();
+            Logging logging = new Logging(logger);
+            Processing proc = new Processing(conf.Configurations[key1], pItems, t_mode, p_mode, logging);
 
-            string[] si = tvControl1.SelectedItems.OrderBy(i => i).Cast<string>().ToArray();
-            Processing processing = new Processing(conf.Configurations[key1], si, t_mode, p_mode, logFile);
+            logging.WriteLine(LogLevel.INFO, "Started processing");
+            logging.WriteLine(LogLevel.INFO, 
+                string.Format("Translator [type: {0}, mode: {1}]", t_mode, p_mode));
 
-            logFile.CreateLogFile(Path.Combine(conf.Configurations[key1].TargetDirectory, key2));
-            logFile.AppendLine("Started processing");
-            logFile.AppendLine(string.Format("Translator mode:\t{0}", key2));
-            logFile.AppendLine(string.Format("Processing mode:\t{0}", p_mode));
-
-            foreach (var i in si)
+            foreach (var i in pItems)
             {
-                double increment = 100.0 / tvControl1.SelectedItems.Count;
-
                 if (stoped)
                 {
                     NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+                    logging.WriteLine(LogLevel.INFO, "Processing stopped");
                     break;
                 }
 
-                logFile.AppendLine("\n");
-                processing.ProcessingFile(conf.Configurations[key1].Translators[key2], i.ToString());
+                logging.WriteLine(LogLevel.INFO, string.Format("Processing [path: {0}]", 
+                    i.IPath));
+                proc.ProcessingFile(conf.Configurations[key1].Translators[key2], i);
 
-                count[0] += increment;
-                Marshal.Copy(count, 0, value, count.Length);
+                counter[0] += increment;
+                Marshal.Copy(counter, 0, value, counter.Length);
                 NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
             }
 
-            watch.Stop();
-
-            logFile.AppendLine(string.Format("\r\nTotal processing time:\t{0} ms", watch.ElapsedMilliseconds));
-            logFile.SetContentsToLog();
-            logFile.OpenLogFile();
-
-            count[0] = 100;
-            Marshal.Copy(count, 0, value, count.Length);
+            counter[0] = 100;
+            Marshal.Copy(counter, 0, value, counter.Length);
             NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
             NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+
+            logging.WriteLine(LogLevel.INFO, "Processing ending");
         }
         #endregion
     }

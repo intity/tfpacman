@@ -122,7 +122,7 @@
     <comment>Root konfigurationsverzeichnis</comment>
   </data>
   <data name="dn1_2" xml:space="preserve">
-    <value>Protokolldatei aktivieren</value>
-    <comment>Aktivieren sie die ausgabe der datenverarbeitung in der protokolldatei.</comment>
+    <value>Protokolldatei öffnen</value>
+    <comment>Öffnen sie die protokolldatei, wenn die verarbeitung abgeschlossen ist.</comment>
   </data>
 </root>

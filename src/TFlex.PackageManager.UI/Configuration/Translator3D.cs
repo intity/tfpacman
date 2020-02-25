@@ -710,7 +710,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internal methods
-        internal override void Import(Document document, string targetDirectory, string path, LogFile logFile)
+        internal override void Import(Document document, string targetDirectory, string path, Logging logging)
         {
             ImportFrom3dOption option = ImportFrom3dOption.Auto;
 
@@ -763,7 +763,7 @@ namespace TFlex.PackageManager.Configuration
 
             if (import.Import(path))
             {
-                logFile.AppendLine(string.Format("Import to:\t\t{0}", path));
+                logging.WriteLine(LogLevel.INFO, string.Format(">>> Import from [path: {0}]", path));
             }
         }
 

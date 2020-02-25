@@ -117,7 +117,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internals methods
-        internal override void Export(Document document, Dictionary<Page, string> pages, LogFile logFile)
+        internal override void Export(Document document, Dictionary<Page, string> pages, Logging logging)
         {
             ExportToPDF export = new ExportToPDF(document)
             {
@@ -140,7 +140,7 @@ namespace TFlex.PackageManager.Configuration
 
                 if (export.Export(path))
                 {
-                    logFile.AppendLine(string.Format("Export to:\t\t{0}", path));
+                    logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", path));
                 }
             }
             else
@@ -151,7 +151,7 @@ namespace TFlex.PackageManager.Configuration
 
                     if (export.Export(p.Value))
                     {
-                        logFile.AppendLine(string.Format("Export to:\t\t{0}", p.Value));
+                        logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", p.Value));
                     }
 
                     export.ExportPages.Clear();

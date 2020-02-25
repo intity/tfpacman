@@ -306,7 +306,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internal methods
-        internal override void Export(Document document, Dictionary<Page, string> pages, LogFile logFile)
+        internal override void Export(Document document, Dictionary<Page, string> pages, Logging logging)
         {
             ExportToDWG export1;
             ExportToDXF export2;
@@ -336,7 +336,7 @@ namespace TFlex.PackageManager.Configuration
 
                 if (result)
                 {
-                    logFile.AppendLine(string.Format("Export to:\t\t{0}", p.Value));
+                    logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", p.Value));
                 }
             }
         }

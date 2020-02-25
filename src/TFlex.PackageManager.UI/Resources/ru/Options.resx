@@ -122,7 +122,7 @@
     <comment>Корневой каталог конфигураций.</comment>
   </data>
   <data name="dn1_2" xml:space="preserve">
-    <value>Включить файл журнала</value>
-    <comment>Включить вывод данных процесса обработки в файл журнала.</comment>
+    <value>Открыть файл журнала</value>
+    <comment>Открыть файл журнала после завершения обработки.</comment>
   </data>
 </root>

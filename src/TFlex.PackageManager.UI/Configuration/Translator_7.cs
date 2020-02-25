@@ -61,7 +61,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internal methods
-        internal override void Export(Document document, string path, LogFile logFile)
+        internal override void Export(Document document, string path, Logging logging)
         {
             ExportToJtVersion jtVersion = ExportToJtVersion.JT81;
             ExportTo3dMode exportMode = ExportMode == 0
@@ -97,7 +97,7 @@ namespace TFlex.PackageManager.Configuration
 
             if (export.Export(path))
             {
-                logFile.AppendLine(string.Format("Export to:\t\t{0}", path));
+                logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", path));
             }
         }
 
