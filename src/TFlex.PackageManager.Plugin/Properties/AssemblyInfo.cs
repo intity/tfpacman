@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TFlex.PackageManager.Plugin")]
-[assembly: AssemblyCopyright("Copyright ©  2019 intity")]
+[assembly: AssemblyCopyright("Copyright ©  2020 intity")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
