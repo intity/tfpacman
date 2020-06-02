@@ -8,6 +8,8 @@ using System.Security.AccessControl;
 using System.Windows;
 using Microsoft.Win32;
 
+#pragma warning disable CA1303
+
 namespace TFlex
 {
     public static class ApiLoader
@@ -160,8 +162,10 @@ namespace TFlex
                 MessageBox.Show(string.Format(CultureInfo.InvariantCulture, 
                     "Error loading assembly {0}.\n\nDescription:\n{1}", 
                     args.Name, e.Message),
-                    "Error", 
-                    MessageBoxButton.OK, 
+#pragma warning disable CA1303
+                    "Error",
+#pragma warning restore
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 return null;
             }
