@@ -119,7 +119,10 @@ namespace TFlex
                 return path;
 
             if (API_VERSION != (string)key.GetValue("SetupProductVersion"))
+            {
+                key.Close();
                 return path;
+            }
 
             path = (string)key.GetValue("SetupHelpPath", string.Empty);
             key.Close();
