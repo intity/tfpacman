@@ -89,7 +89,7 @@ namespace TFlex
         public static void ExitSession()
         {
             Application.ExitSession();
-            Debug.WriteLine("ExitSession");
+            //Debug.WriteLine("ExitSession");
         }
         #endregion
 
@@ -106,7 +106,10 @@ namespace TFlex
                 RegistryKeyPermissionCheck.ReadSubTree,
                 RegistryRights.ReadKey);
 
-            if (key == null || API_VERSION != (string)key.GetValue("SetupProductVersion"))
+            if (key == null)
+                return path;
+
+            if (API_VERSION != (string)key.GetValue("SetupProductVersion"))
                 return path;
 
             path = (string)key.GetValue("SetupHelpPath", string.Empty);
