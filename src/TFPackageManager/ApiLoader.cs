@@ -17,14 +17,22 @@ namespace TFlex
         #region private fields
         private const string API_VERSION = "16.0.68.0";
         private static List<string> folders;
-        private static bool isLoaded;
+        private static readonly string error_msg = string.Format(
+            CultureInfo.InvariantCulture, 
+            "T-FLEX CAD {0} version not installed", API_VERSION);
         #endregion
+
+        /// <summary>
+        /// T-FLEX CAD API is Loaded.
+        /// </summary>
+        public static bool IsLoaded { get; private set; }
 
         #region public methods
         /// <summary>
-        /// Preload T-FLEX API.
+        /// Preload T-FLEX CAD API.
         /// </summary>
-        public static void Preload()
+        /// <returns></returns>
+        public static bool Preload()
         {
             folders = new List<string>();
 
@@ -48,21 +56,22 @@ namespace TFlex
 
             if (folders.Count == 0)
             {
-                throw new FileNotFoundException("T-FLEX CAD not installed");
+                MessageBox.Show(error_msg, "T-FLEX");
+                return false;
             }
 
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+            return true;
         }
 
         /// <summary>
-        /// Initialize T-FLEX API.
+        /// Initialize T-FLEX CAD API session.
         /// </summary>
-        /// <returns></returns>
         public static bool InitSession()
         {
-            if (!isLoaded)
+            if (!IsLoaded)
             {
-                throw new FileNotFoundException("T-FLEX API not installed");
+                throw new FileNotFoundException(error_msg);
             }
 
             ApplicationSessionSetup setup = new ApplicationSessionSetup
@@ -84,7 +93,7 @@ namespace TFlex
         }
 
         /// <summary>
-        /// Exit the T-FLEX API session.
+        /// Exit the T-FLEX CAD API session.
         /// </summary>
         public static void ExitSession()
         {
@@ -132,7 +141,7 @@ namespace TFlex
                 string name = args.Name;
 #pragma warning disable CA1307
                 int index = name.IndexOf(",");
-#pragma warning restore
+#pragma warning restore CA1307
                 if (index > 0)
                     name = name.Substring(0, index);
 
@@ -150,7 +159,7 @@ namespace TFlex
 
                     if ((assembly = Assembly.LoadFile(fileName)) != null)
                     {
-                        isLoaded = true;
+                        IsLoaded = true;
 
                         //Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, 
                         //    "AssemblyResolve [assembly loaded: {0}]",
@@ -165,9 +174,7 @@ namespace TFlex
                 MessageBox.Show(string.Format(CultureInfo.InvariantCulture, 
                     "Error loading assembly {0}.\n\nDescription:\n{1}", 
                     args.Name, e.Message),
-#pragma warning disable CA1303
                     "Error",
-#pragma warning restore
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 return null;

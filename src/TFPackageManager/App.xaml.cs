@@ -10,17 +10,26 @@ namespace TFlex.PackageManager
     {
         void AppStartup(object sender, StartupEventArgs args)
         {
-            ApiLoader.Preload();
-            ApiLoader.InitSession();
+            if (ApiLoader.Preload())
+            {
+                ApiLoader.InitSession();
 
-            UI.MainWindow packageManager = new UI.MainWindow();
-            packageManager.Show();
-            packageManager.Closed += PackageManager_Closed;
+                UI.MainWindow packageManager = new UI.MainWindow();
+                packageManager.Show();
+                packageManager.Closed += PackageManager_Closed;
+            }
+            else
+            {
+                Shutdown();
+            }
         }
 
         private void PackageManager_Closed(object sender, EventArgs e)
         {
-            ApiLoader.ExitSession();
+            if (ApiLoader.IsLoaded)
+            {
+                ApiLoader.ExitSession();
+            }
         }
     }
 }
