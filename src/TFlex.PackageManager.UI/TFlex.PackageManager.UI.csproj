@@ -7,7 +7,7 @@
     <ProjectGuid>{3C1ADB5C-B793-453C-8017-8AECCB374556}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TFlex.PackageManager</RootNamespace>
+    <RootNamespace>TFlex.PackageManager.UI</RootNamespace>
     <AssemblyName>TFlex.PackageManager.UI</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -203,8 +203,8 @@
     <Compile Include="UI\ListValues.xaml.cs">
       <DependentUpon>ListValues.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="UI\Main.xaml.cs">
+      <DependentUpon>Main.xaml</DependentUpon>
     </Compile>
     <None Include="packages.config" />
     <None Include="Resources\en\Translator_1.resx">
@@ -288,7 +288,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\MainWindow.xaml">
+    <Page Include="UI\Main.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

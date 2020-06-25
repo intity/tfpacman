@@ -1,5 +1,5 @@
-using System;
 using System.Windows;
+using TFlex.PackageManager.UI;
 
 namespace TFlex.PackageManager
 {
@@ -10,26 +10,10 @@ namespace TFlex.PackageManager
     {
         void AppStartup(object sender, StartupEventArgs args)
         {
-            if (ApiLoader.Preload())
-            {
-                ApiLoader.InitSession();
+            APILoader.Initialize();
 
-                UI.MainWindow packageManager = new UI.MainWindow();
-                packageManager.Show();
-                packageManager.Closed += PackageManager_Closed;
-            }
-            else
-            {
-                Shutdown();
-            }
-        }
-
-        private void PackageManager_Closed(object sender, EventArgs e)
-        {
-            if (ApiLoader.IsLoaded)
-            {
-                ApiLoader.ExitSession();
-            }
+            MainWindow = new Main();
+            MainWindow.Show();
         }
     }
 }

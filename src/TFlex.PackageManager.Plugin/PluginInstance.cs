@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
 using TFlex.Model;
+using TFlex.PackageManager.Common;
+using TFlex.PackageManager.UI;
 
 namespace TFlex.PackageManager.Plugin
 {
@@ -25,8 +27,8 @@ namespace TFlex.PackageManager.Plugin
         /// <param name="factory"></param>
         public PluginInstance(Factory factory) : base(factory)
         {
-            command1 = Common.Resource.GetString(PLUGIN, "command1", 0);
-            toolbar1 = Common.Resource.GetString(PLUGIN, "toolbar1", 0);
+            command1 = Resource.GetString(PLUGIN, "command1", 0);
+            toolbar1 = Resource.GetString(PLUGIN, "toolbar1", 0);
         }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace TFlex.PackageManager.Plugin
                     base.OnCommand(document, id);
                     break;
                 case Commands.PackageManager:
-                    UI.MainWindow tfpacman = new UI.MainWindow();
+                    Main tfpacman = new Main();
                     tfpacman.Show();
                     break;
             }

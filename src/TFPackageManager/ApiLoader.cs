@@ -1,189 +1,170 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Security.AccessControl;
-using System.Windows;
 using Microsoft.Win32;
 
 #pragma warning disable CA1303
+#pragma warning disable CA1305
+#pragma warning disable CA1307
 
 namespace TFlex
 {
-    public static class ApiLoader
+    public static class APILoader
     {
         #region private fields
-        private const string API_VERSION = "16.0.68.0";
-        private static List<string> folders;
-        private static readonly string error_msg = string.Format(
-            CultureInfo.InvariantCulture, 
-            "T-FLEX CAD {0} version not installed", API_VERSION);
+        private static string folder;
+        private static Version version;
         #endregion
-
-        /// <summary>
-        /// T-FLEX CAD API is Loaded.
-        /// </summary>
-        public static bool IsLoaded { get; private set; }
 
         #region public methods
         /// <summary>
-        /// Preload T-FLEX CAD API.
+        /// Initialize T-FLEX CAD API.
         /// </summary>
-        /// <returns></returns>
-        public static bool Preload()
+        public static void Initialize()
         {
-            folders = new List<string>();
+            version = new Version("16.0.68.0"); // minimum supported version
 
-            string[] products = new string[]
+            if ((folder = GetFolder()) == null)
             {
-                @"T-FLEX CAD 3D 16\Rus",
-                @"T-FLEX CAD SE 16\Rus",
-                @"T-FLEX CAD 3D 16\Eng",
-                @"T-FLEX CAD SE 16\Eng",
-                @"TENADO CAD 3D 16\Ger",
-                @"TENADO CAD SE 16\Ger"
-            };
-
-            string path = null;
-
-            foreach (var i in products)
-            {
-                if ((path = GetPath(i)).Length > 0)
-                    folders.Add(path);
-            }
-
-            if (folders.Count == 0)
-            {
-                MessageBox.Show(error_msg, "T-FLEX");
-                return false;
+                throw new FileNotFoundException("T-FLEX CAD not installed");
             }
 
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
-            return true;
+
+            if (!InitializeAPI())
+            {
+                throw new InvalidOperationException("Initialize API failed");
+            }
         }
 
         /// <summary>
-        /// Initialize T-FLEX CAD API session.
+        /// Terminate T-FLEX CAD API session.
         /// </summary>
-        public static bool InitSession()
+        public static void Terminate()
         {
-            if (!IsLoaded)
+            if (folder != null)
             {
-                throw new FileNotFoundException(error_msg);
+                Application.ExitSession();
+                folder = null;
             }
-
-            ApplicationSessionSetup setup = new ApplicationSessionSetup
-            {
-                ReadOnly = false,
-                ProtectionLicense = ApplicationSessionSetup.License.Auto
-            };
-
-            if (Application.InitSession(setup))
-            {
-                //Debug.WriteLine(string.Format("InitSession [product: {0}, language: {1}]",
-                //    Application.Product,
-                //    Application.InterfaceLanguage));
-
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Exit the T-FLEX CAD API session.
-        /// </summary>
-        public static void ExitSession()
-        {
-            Application.ExitSession();
-            //Debug.WriteLine("ExitSession");
         }
         #endregion
 
         #region private methods
-        private static string GetPath(string product)
+        private static bool InitializeAPI()
         {
-            string path = string.Empty;
-
-            if (string.IsNullOrEmpty(product))
-                return path;
-
-            string regPath  = @"SOFTWARE\Top Systems\" + product;
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(regPath,
-                RegistryKeyPermissionCheck.ReadSubTree,
-                RegistryRights.ReadKey);
-
-            if (key == null)
-                return path;
-
-            if (API_VERSION != (string)key.GetValue("SetupProductVersion"))
+            var setup = new ApplicationSessionSetup
             {
-                key.Close();
-                return path;
+                ReadOnly = false
+            };
+
+            return Application.InitSession(setup);
+        }
+
+        private static string GetFolder()
+        {
+            var root = @"SOFTWARE\Top Systems\";
+            var rootKey = Registry.LocalMachine.OpenSubKey(root);
+            if (rootKey == null)
+                return null;
+
+            string result = null;
+            using (rootKey)
+            {
+                foreach (var product in rootKey.GetSubKeyNames())
+                {
+                    switch (product)
+                    {
+                        case "T-FLEX CAD 3D 16":
+                        case "T-FLEX CAD SE 16":
+                        case "TENADO CAD 3D 16":
+                        case "TENADO CAD SE 16":
+                            if (result == null)
+                                result = GetPath_1(rootKey, product);
+                            break;
+                    }
+                }
             }
 
-            path = (string)key.GetValue("SetupHelpPath", string.Empty);
-            key.Close();
+            rootKey.Close();
+            return result;
+        }
 
-            if (path.Length > 0 && path[path.Length - 1] != '\\')
-                path += @"\";
+        private static string GetPath_1(RegistryKey rootKey, string product)
+        {
+            var pKey = rootKey.OpenSubKey(product);
+            if (pKey == null)
+                return null;
 
+            string result = null;
+            foreach (var language in pKey.GetSubKeyNames())
+            {
+                switch (language)
+                {
+                    case "Rus":
+                    case "Eng":
+                    case "Ger":
+                        if (result == null)
+                            result = GetPath_2(pKey, language);
+                        break;
+                }
+            }
+
+            pKey.Close();
+            return result;
+        }
+
+        private static string GetPath_2(RegistryKey pKey, string language)
+        {
+            string path = null;
+
+            var lKey = pKey.OpenSubKey(language);
+            if (lKey == null)
+                return null;
+
+            var pv = new Version((string)lKey.GetValue("SetupProductVersion"));
+            if (pv.Major == version.Major && pv.Build >= version.Build)
+            {
+                path = (string)lKey.GetValue("SetupHelpPath");
+                if (!Directory.Exists(path))
+                    path = null;
+            }
+
+            lKey.Close();
             return path;
         }
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            if (folders == null || folders.Count == 0)
+            if (folder == null)
                 return null;
 
             try
             {
-                Assembly assembly;
                 string name = args.Name;
-#pragma warning disable CA1307
                 int index = name.IndexOf(",");
-#pragma warning restore CA1307
                 if (index > 0)
-                    name = name.Substring(0, index);
-
-                foreach (string path in folders)
                 {
-                    if (!Directory.Exists(path))
-                        continue;
-
-                    string fileName = string.Format(CultureInfo.InvariantCulture, "{0}{1}.dll", path, name);
-
-                    if (!File.Exists(fileName))
-                        continue;
-
-                    Directory.SetCurrentDirectory(path);
-
-                    if ((assembly = Assembly.LoadFile(fileName)) != null)
-                    {
-                        IsLoaded = true;
-
-                        //Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, 
-                        //    "AssemblyResolve [assembly loaded: {0}]",
-                        //    assembly.FullName));
-                    }
-
-                    return assembly;
+                    name = name.Substring(0, index);
                 }
+
+                if (!Path.HasExtension(name))
+                {
+                    name = Path.ChangeExtension(name, "dll");
+                }
+
+                var path = Path.Combine(folder, name);
+                if (!File.Exists(path))
+                {
+                    return null;
+                }
+
+                return Assembly.LoadFile(path);
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
-                MessageBox.Show(string.Format(CultureInfo.InvariantCulture, 
-                    "Error loading assembly {0}.\n\nDescription:\n{1}", 
-                    args.Name, e.Message),
-                    "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
                 return null;
             }
-
-            return null;
         }
         #endregion
     }

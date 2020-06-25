@@ -3,26 +3,26 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
-using TFlex.PackageManager.Controls;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Configuration;
+using TFlex.PackageManager.Controls;
+using TFlex.PackageManager.Model;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using UndoRedoFramework;
-using System.Collections.Generic;
-using TFlex.PackageManager.Model;
 
 namespace TFlex.PackageManager.UI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Main.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Main : Window
     {
         #region private fields
         private readonly ConfigurationCollection conf;
@@ -52,7 +52,7 @@ namespace TFlex.PackageManager.UI
         const int WM_INCREMENT_PROGRESS = 0x0401;
         #endregion
 
-        public MainWindow()
+        public Main()
         {
             InitializeComponent();
             Title = Resource.AppName;
