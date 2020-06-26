@@ -273,12 +273,8 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internal properties
-        internal override TranslatorType Mode => TranslatorType.Document;
-
-        internal override uint Processing
-        {
-            get => (uint)ProcessingMode.SaveAs;
-        }
+        internal override TranslatorType TMode => TranslatorType.Document;
+        internal override ProcessingMode PMode => ProcessingMode.SaveAs;
         #endregion
 
         #region internal methods

@@ -57,7 +57,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internal properties
-        internal override TranslatorType Mode => TranslatorType.Jt;
+        internal override TranslatorType TMode => TranslatorType.Jt;
         #endregion
 
         #region internal methods

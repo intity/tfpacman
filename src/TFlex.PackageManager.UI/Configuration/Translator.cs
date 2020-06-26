@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Xml.Linq;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
@@ -50,14 +49,14 @@ namespace TFlex.PackageManager.Configuration
         internal XElement Data { get; private set; }
 
         /// <summary>
-        /// The translator type.
+        /// Translator type.
         /// </summary>
-        internal virtual TranslatorType Mode { get; }
+        internal virtual TranslatorType TMode { get; }
 
         /// <summary>
-        /// Processing type.
+        /// Processing mode.
         /// </summary>
-        internal virtual uint Processing { get; }
+        internal virtual ProcessingMode PMode { get; }
         #endregion
 
         #region internal methods
@@ -66,16 +65,16 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         /// <param name="document"></param>
         /// <param name="path"></param>
-        /// <param name="logFile"></param>
-        internal virtual void Export(Document document, string path, Logging logFile) { }
+        /// <param name="logging"></param>
+        internal virtual void Export(Document document, string path, Logging logging) { }
 
         /// <summary>
         /// The Export virtual method.
         /// </summary>
         /// <param name="document"></param>
         /// <param name="pages"></param>
-        /// <param name="logFile"></param>
-        internal virtual void Export(Document document, Dictionary<Page, string> pages, Logging logFile) { }
+        /// <param name="logging"></param>
+        internal virtual void Export(Document document, Dictionary<Page, string> pages, Logging logging) { }
 
         /// <summary>
         /// The Import virtual method.
@@ -83,8 +82,8 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="document"></param>
         /// <param name="targetDirectory"></param>
         /// <param name="path"></param>
-        /// <param name="logFile"></param>
-        internal virtual void Import(Document document, string targetDirectory, string path, Logging logFile) { }
+        /// <param name="logging"></param>
+        internal virtual void Import(Document document, string targetDirectory, string path, Logging logging) { }
 
         /// <summary>
         /// The method to loaded translator.
@@ -101,8 +100,8 @@ namespace TFlex.PackageManager.Configuration
         internal virtual XElement NewTranslator()
         {
             return Data = new XElement("translator", 
-                new XAttribute("id", Mode), 
-                new XAttribute("processing", Processing));
+                new XAttribute("id", TMode), 
+                new XAttribute("processing", (uint)PMode));
         }
 
         /// <summary>

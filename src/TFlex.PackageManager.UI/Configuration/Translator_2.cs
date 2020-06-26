@@ -22,7 +22,7 @@ namespace TFlex.PackageManager.Configuration
         }
 
         #region internal properties
-        internal override TranslatorType Mode => TranslatorType.Acis;
+        internal override TranslatorType TMode => TranslatorType.Acis;
         #endregion
 
         #region internal methods

@@ -80,7 +80,7 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internal properties
-        internal override TranslatorType Mode => TranslatorType.Iges;
+        internal override TranslatorType TMode => TranslatorType.Iges;
         #endregion
 
         #region internal methods

@@ -703,9 +703,9 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internal properties
-        internal override uint Processing
+        internal override ProcessingMode PMode
         {
-            get => (uint)(ProcessingMode.Import | ProcessingMode.Export);
+            get => (ProcessingMode.Import | ProcessingMode.Export);
         }
         #endregion
 

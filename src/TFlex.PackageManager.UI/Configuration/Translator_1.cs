@@ -297,12 +297,8 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region internal properties
-        internal override TranslatorType Mode => TranslatorType.Acad;
-
-        internal override uint Processing
-        {
-            get => (uint)ProcessingMode.Export;
-        }
+        internal override TranslatorType TMode => TranslatorType.Acad;
+        internal override ProcessingMode PMode => ProcessingMode.Export;
         #endregion
 
         #region internal methods

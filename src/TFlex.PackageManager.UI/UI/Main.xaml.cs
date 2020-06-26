@@ -25,28 +25,28 @@ namespace TFlex.PackageManager.UI
     public partial class Main : Window
     {
         #region private fields
-        private readonly ConfigurationCollection conf;
+        readonly ConfigurationCollection conf;
 
-        private readonly CustomTreeView treeListView1;
-        private readonly CustomTreeView treeListView2;
+        readonly CustomTreeView treeListView1;
+        readonly CustomTreeView treeListView2;
 
-        private readonly Common.Options options;
+        readonly Common.Options options;
 
-        private readonly string[] tblabels;
-        private readonly string[] sblabels;
-        private readonly string[] messages;
-        private readonly string[] controls;
-        private readonly string[] tooltips;
+        readonly string[] tblabels;
+        readonly string[] sblabels;
+        readonly string[] messages;
+        readonly string[] controls;
+        readonly string[] tooltips;
 
-        private string key1, key2, key3;
-        private int importMode;
+        string key1, key2, key3;
+        int importMode;
 
-        private System.Threading.Thread thread;
-        private bool stoped;
+        System.Threading.Thread thread;
+        bool stoped;
 
-        private static IntPtr handle = IntPtr.Zero;
-        private static IntPtr oldWndProc = IntPtr.Zero;
-        private NativeMethods.WndProc newWndProc;
+        static IntPtr handle = IntPtr.Zero;
+        static IntPtr oldWndProc = IntPtr.Zero;
+        NativeMethods.WndProc newWndProc;
 
         const int WM_STOPPED_PROCESSING = 0x0400;
         const int WM_INCREMENT_PROGRESS = 0x0401;
@@ -655,22 +655,22 @@ namespace TFlex.PackageManager.UI
             if (comboBox2.SelectedIndex != -1)
             {
                 key2 = comboBox2.SelectedValue.ToString();
-                object t_mode = conf.Configurations[key1].Translators[key2];
-                propertyGrid.SelectedObject = t_mode;
+                object obj = conf.Configurations[key1].Translators[key2];
+                propertyGrid.SelectedObject = obj;
 
                 switch (key2)
                 {
-                    case "Acis": importMode = (t_mode as Translator_2).ImportMode; break;
-                    case "Iges": importMode = (t_mode as Translator_6).ImportMode; break;
-                    case "Jt"  : importMode = (t_mode as Translator_7).ImportMode; break;
-                    case "Step": importMode = (t_mode as Translator_10).ImportMode; break;
+                    case "Acis":
+                    case "Iges":
+                    case "Jt":
+                    case "Step":
+                        importMode = (obj as Translator3D).ImportMode;
+                        break;
                 }
-
-                uint p_mode = (t_mode as Translator).Processing;
 
                 comboBox3.Items.Clear();
 
-                switch (p_mode)
+                switch ((uint)(obj as Translator).PMode)
                 {
                     case 0:
                         comboBox3.Items.Add("SaveAs");
@@ -1016,6 +1016,8 @@ namespace TFlex.PackageManager.UI
 
         private void ProcessingTask(StreamWriter logger)
         {
+            Header header = conf.Configurations[key1];
+            object translator = conf.Configurations[key1].Translators[key2];
             List<ProcItem> pItems = new List<ProcItem>();
             string[] items = tvControl1.SelectedItems.OrderBy(i => i).Cast<string>().ToArray();
             for (int i = 0; i < items.Length; i++)
@@ -1025,56 +1027,44 @@ namespace TFlex.PackageManager.UI
             double increment = 100.0 / items.Length;
             var size = Marshal.SizeOf(counter[0]) * counter.Length;
             IntPtr value = Marshal.AllocHGlobal(size);
-            TranslatorType t_mode = TranslatorType.Document;
-            ProcessingMode p_mode = ProcessingMode.SaveAs;
+
             TFlex.Application.FileLinksAutoRefresh = TFlex.Application.FileLinksRefreshMode.AutoRefresh;
 
-            switch (key2)
-            {
-                case "Acad"  : t_mode = TranslatorType.Acad;   break;
-                case "Acis"  : t_mode = TranslatorType.Acis;   break;
-                case "Bitmap": t_mode = TranslatorType.Bitmap; break;
-                case "Iges"  : t_mode = TranslatorType.Iges;   break;
-                case "Jt"    : t_mode = TranslatorType.Jt;     break;
-                case "Pdf"   : t_mode = TranslatorType.Pdf;    break;
-                case "Step"  : t_mode = TranslatorType.Step;   break;
-            }
-
-            switch (key3)
-            {
-                case "Export": p_mode = ProcessingMode.Export; break;
-                case "Import": p_mode = ProcessingMode.Import; break;
-            }
-
             Logging logging = new Logging(logger);
-            Processing proc = new Processing(conf.Configurations[key1], pItems, t_mode, p_mode, logging);
+            Processing proc = new Processing(header, translator, logging);
 
             logging.WriteLine(LogLevel.INFO, "Started processing");
             logging.WriteLine(LogLevel.INFO, 
-                string.Format("Translator [type: {0}, mode: {1}]", t_mode, p_mode));
+                string.Format("Translator [type: {0}, mode: {1}]", 
+                (translator as Translator).TMode, 
+                (translator as Translator).PMode));
 
             foreach (var i in pItems)
             {
                 if (stoped)
                 {
-                    NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+                    NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, 
+                        IntPtr.Zero, IntPtr.Zero);
                     logging.WriteLine(LogLevel.INFO, "Processing stopped");
                     break;
                 }
 
-                logging.WriteLine(LogLevel.INFO, string.Format("Processing [path: {0}]", 
-                    i.IPath));
-                proc.ProcessingFile(conf.Configurations[key1].Translators[key2], i);
+                logging.WriteLine(LogLevel.INFO, 
+                    string.Format("Processing [path: {0}]", i.IPath));
+                proc.ProcessingFile(i);
 
                 counter[0] += increment;
                 Marshal.Copy(counter, 0, value, counter.Length);
-                NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
+                NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, 
+                    IntPtr.Zero, value);
             }
 
             counter[0] = 100;
             Marshal.Copy(counter, 0, value, counter.Length);
-            NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, IntPtr.Zero, value);
-            NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, IntPtr.Zero, IntPtr.Zero);
+            NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, 
+                IntPtr.Zero, value);
+            NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, 
+                IntPtr.Zero, IntPtr.Zero);
 
             logging.WriteLine(LogLevel.INFO, "Processing ending");
         }
