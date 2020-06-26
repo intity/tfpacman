@@ -115,7 +115,9 @@ namespace TFlex.PackageManager.Common
                 bi.pidlRoot = IntPtr.Zero;
 
             bi.lpszTitle = data.Description;
-            bi.ulFlags   = NativeMethods.BIF_RETURNONLYFSDIRS | NativeMethods.BIF_NONEWFOLDERBUTTON;
+            bi.ulFlags   = NativeMethods.BIF_RETURNONLYFSDIRS | 
+                           NativeMethods.BIF_NONEWFOLDERBUTTON | 
+                           NativeMethods.BIF_EDITBOX;
             bi.lpfn      = new NativeMethods.BrowseCallbackProc(BrowseCallbackHandler);
             //
             // Initialization data, used in BrowseCallbackHandler
