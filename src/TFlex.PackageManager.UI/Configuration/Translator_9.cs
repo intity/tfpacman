@@ -109,7 +109,6 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Pdf;
-        internal override ProcessingMode PMode => ProcessingMode.Export;
         #endregion
 
         #region internals methods

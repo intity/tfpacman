@@ -702,13 +702,6 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region internal properties
-        internal override ProcessingMode PMode
-        {
-            get => (ProcessingMode.Import | ProcessingMode.Export);
-        }
-        #endregion
-
         #region internal methods
         internal override void Import(Document document, string targetDirectory, string path, Logging logging)
         {

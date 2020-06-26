@@ -22,7 +22,6 @@ namespace TFlex.PackageManager.Common
         readonly Header header;
         readonly Logging logging;
         readonly Package package;
-        readonly Translator_0 tr_0;
         readonly Translator_1 tr_1;
         readonly Translator_2 tr_2;
         readonly Translator_3 tr_3;
@@ -44,9 +43,8 @@ namespace TFlex.PackageManager.Common
             this.header     = header;
             this.logging    = logging;
             this.translator = translator;
-            this.tr_0       = translator as Translator_0;
 
-            switch (tr_0.TMode)
+            switch ((translator as Translator).TMode)
             {
                 case TranslatorType.Acad:
                     tr_1 = translator as Translator_1;
@@ -71,7 +69,7 @@ namespace TFlex.PackageManager.Common
                     break;
             }
 
-            package = new Package(header, tr_0.TMode);
+            package = new Package(header, (translator as Translator).TMode);
         }
 
         #region internal methods
@@ -81,16 +79,18 @@ namespace TFlex.PackageManager.Common
         /// <param name="item">The Processing Item Object.</param>
         internal void ProcessingFile(ProcItem item)
         {
+            var tr = translator as Translator;
+
             Document document = null;
             FileInfo fileInfo = new FileInfo(item.IPath);
             string directory = fileInfo.Directory.FullName.Replace(
                 header.InitialCatalog,
-                header.TargetDirectory + "\\" + tr_0.TMode);
+                header.TargetDirectory + "\\" + tr.TMode);
             string targetDirectory = Directory.Exists(directory)
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;
 
-            switch (tr_0.PMode)
+            switch (tr.PMode)
             {
                 case ProcessingMode.SaveAs:
                 case ProcessingMode.Export:
@@ -98,17 +98,18 @@ namespace TFlex.PackageManager.Common
                         logging.WriteLine(LogLevel.INFO, ">>> Document Opened");
                     break;
                 case ProcessingMode.Import:
+                    int iMode = (translator as Translator3D).ImportMode;
                     string prototype = null;
                     using (Files files = new Files())
                     {
-                        prototype = (translator as Translator3D).ImportMode == 2
+                        prototype = iMode == 2
                             ? files.Prototype3DName
                             : files.Prototype3DAssemblyName;
                     }
 
                     if ((document = Application.NewDocument(prototype)) != null)
-                        logging.WriteLine(LogLevel.INFO, 
-                            string.Format(">>> Allocated new Document from Prototype: [path: {0}]", 
+                        logging.WriteLine(LogLevel.INFO,
+                            string.Format(">>> Allocated new Document from Prototype: [path: {0}]",
                             prototype));
                     break;
             }
@@ -124,7 +125,7 @@ namespace TFlex.PackageManager.Common
 
             if (document.Changed)
             {
-                if (tr_0.PMode == ProcessingMode.Export)
+                if (tr.PMode == ProcessingMode.Export)
                     document.CancelChanges();
                 else
                 {
@@ -343,6 +344,8 @@ namespace TFlex.PackageManager.Common
         /// <returns></returns>
         private bool PageTypeExists(Page page)
         {
+            var tr_0 = translator as Translator_0;
+
             Dictionary<PageType, bool> types = new Dictionary<PageType, bool>
             {
                 { PageType.Normal,          tr_0.PageTypes.Normal },
@@ -364,7 +367,8 @@ namespace TFlex.PackageManager.Common
         /// <param name="oPath"></param>
         private void ReplaceLink(Document document, FileLink link, string oPath)
         {
-            string path = header.TargetDirectory + "\\" + tr_0.TMode + "\\";
+            var tr = translator as Translator;
+            string path = header.TargetDirectory + "\\" + tr.TMode + "\\";
             link.FilePath = oPath.Replace(path, "");
             logging.WriteLine(LogLevel.INFO,
                 string.Format("--> Link Replaced [id: 0x{0:X8}, path: {1}]",
@@ -379,6 +383,7 @@ namespace TFlex.PackageManager.Common
         /// <returns>Variables Count.</returns>
         private int VariablesCount()
         {
+            var tr_0 = translator as Translator_0;
             List<string> variables = new List<string>();
 
             foreach (var i in tr_0.AddVariables)
@@ -415,9 +420,10 @@ namespace TFlex.PackageManager.Common
         /// <param name="item">The Processing Item Object.</param>
         private void ProcessingDocument(Document document, string targetDirectory, ProcItem item)
         {
+            var tr = translator as Translator;
             string[] aPath = item.IPath.Split('\\');
 
-            switch (tr_0.TMode)
+            switch (tr.TMode)
             {
                 case TranslatorType.Document:
                     var oDir   = GetOutputDirectory(targetDirectory, item);
@@ -443,7 +449,7 @@ namespace TFlex.PackageManager.Common
                     ProcessingPages(document, targetDirectory);
                     break;
                 case TranslatorType.Acis:
-                    switch(tr_0.PMode)
+                    switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
                             item.FName = GetOutputFileName(document, null);
@@ -458,14 +464,14 @@ namespace TFlex.PackageManager.Common
                                 document.SaveAs(item.OPath);
                             }
                             tr_2.Import(document, targetDirectory, item.IPath, logging);
-                            logging.WriteLine(LogLevel.INFO, 
-                                string.Format(">>> Document Saved [path: {0}]", 
+                            logging.WriteLine(LogLevel.INFO,
+                                string.Format(">>> Document Saved [path: {0}]",
                                 document.FileName));
                             break;
                     }
                     break;
                 case TranslatorType.Iges:
-                    switch (tr_0.PMode)
+                    switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
                             item.FName = GetOutputFileName(document, null);
@@ -480,14 +486,14 @@ namespace TFlex.PackageManager.Common
                                 document.SaveAs(item.OPath);
                             }
                             tr_6.Import(document, targetDirectory, item.IPath, logging);
-                            logging.WriteLine(LogLevel.INFO, 
-                                string.Format(">>> Document Saved [path: {0}]", 
+                            logging.WriteLine(LogLevel.INFO,
+                                string.Format(">>> Document Saved [path: {0}]",
                                 document.FileName));
                             break;
                     }
                     break;
                 case TranslatorType.Jt:
-                    switch (tr_0.PMode)
+                    switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
                             item.FName = GetOutputFileName(document, null);
@@ -502,14 +508,14 @@ namespace TFlex.PackageManager.Common
                                 document.SaveAs(item.OPath);
                             }
                             tr_7.Import(document, targetDirectory, item.IPath, logging);
-                            logging.WriteLine(LogLevel.INFO, 
-                                string.Format(">>> Document Saved [path: {0}]", 
+                            logging.WriteLine(LogLevel.INFO,
+                                string.Format(">>> Document Saved [path: {0}]",
                                 document.FileName));
                             break;
                     }
                     break;
                 case TranslatorType.Step:
-                    switch (tr_0.PMode)
+                    switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
                             item.FName = GetOutputFileName(document, null);
@@ -617,6 +623,7 @@ namespace TFlex.PackageManager.Common
                 { PageType.Circuit,         0 }
             };
             List<Page> pages = new List<Page>();
+            var tr_0 = translator as Translator_0;
 
             foreach (var p in document.GetPages())
             {
@@ -728,6 +735,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="page"></param>
         private void ProcessingProjections(Document document, Page page)
         {
+            var tr_0 = translator as Translator_0;
             var projections = document.GetProjections().Where(p => p.Page == page);
             if (projections.Count() > 0)
             {
@@ -782,6 +790,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="document"></param>
         private void ProcessingVariables(Document document)
         {
+            var tr_0 = translator as Translator_0;
             int len = VariablesCount();
             if (len > 0)
             {

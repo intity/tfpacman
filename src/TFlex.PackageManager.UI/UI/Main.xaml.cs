@@ -657,28 +657,23 @@ namespace TFlex.PackageManager.UI
                 key2 = comboBox2.SelectedValue.ToString();
                 object obj = conf.Configurations[key1].Translators[key2];
                 propertyGrid.SelectedObject = obj;
+                comboBox3.Items.Clear();
 
                 switch (key2)
                 {
+                    case "Document":
+                        comboBox3.Items.Add("SaveAs");
+                        break;
+                    case "Acad":
+                    case "Bitmap":
+                    case "Pdf":
+                        comboBox3.Items.Add("Export");
+                        break;
                     case "Acis":
                     case "Iges":
                     case "Jt":
                     case "Step":
                         importMode = (obj as Translator3D).ImportMode;
-                        break;
-                }
-
-                comboBox3.Items.Clear();
-
-                switch ((uint)(obj as Translator).PMode)
-                {
-                    case 0:
-                        comboBox3.Items.Add("SaveAs");
-                        break;
-                    case 1:
-                        comboBox3.Items.Add("Export");
-                        break;
-                    case 3:
                         comboBox3.Items.Add("Export");
                         comboBox3.Items.Add("Import");
                         break;
@@ -712,14 +707,20 @@ namespace TFlex.PackageManager.UI
             {
                 key3 = comboBox3.SelectedValue.ToString();
                 UpdatePropertyDefinitions();
+                var obj = conf.Configurations[key1].Translators[key2];
 
                 switch (key3)
                 {
                     case "SaveAs":
-                    case "Export":
+                        (obj as Translator).PMode = ProcessingMode.SaveAs;
                         tvControl1.SearchPattern = "*.grb";
                         break;
-                    case "Import":                        
+                    case "Export":
+                        (obj as Translator).PMode = ProcessingMode.Export;
+                        tvControl1.SearchPattern = "*.grb";
+                        break;
+                    case "Import":
+                        (obj as Translator).PMode = ProcessingMode.Import;
                         switch (key2)
                         {
                             case "Acis":

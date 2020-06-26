@@ -30,11 +30,11 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// Processing type enumeration.
     /// </summary>
-    public enum ProcessingMode : uint
+    public enum ProcessingMode
     {
-        SaveAs = 0x0000,
-        Export = 0x0001,
-        Import = 0x0002
+        SaveAs,
+        Export,
+        Import
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Processing mode.
         /// </summary>
-        internal virtual ProcessingMode PMode { get; }
+        internal ProcessingMode PMode { get; set; }
         #endregion
 
         #region internal methods

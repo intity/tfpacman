@@ -81,6 +81,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="TFlex.CAD.Strings">
+      <HintPath>C:\Program Files\T-FLEX CAD 16\Program\TFlex.CAD.Strings.dll</HintPath>
+    </Reference>
     <Reference Include="TFlexAPI">
       <HintPath>C:\Program Files\T-FLEX CAD 16\Program\TFlexAPI.dll</HintPath>
       <Private>False</Private>

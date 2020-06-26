@@ -274,7 +274,6 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Document;
-        internal override ProcessingMode PMode => ProcessingMode.SaveAs;
         #endregion
 
         #region internal methods
