@@ -25,6 +25,7 @@ namespace TFlex.PackageManager.Configuration
         string targetExtension;
         string fileNameSuffix;
         string templateFileName;
+        bool moveFiles;
 
         readonly string[] error_messages;
         readonly Dictionary<string, List<string>> objErrors;
@@ -32,6 +33,7 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_3_1;
         XAttribute data_3_2;
         XAttribute data_3_3;
+        XAttribute data_3_4;
         #endregion
 
         /// <summary>
@@ -153,6 +155,28 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
         }
+
+        /// <summary>
+        /// Moving all output files in target directory.
+        /// </summary>
+        [PropertyOrder(15)]
+        [CustomCategory(Resource.CATEGIRY_4, "category4")]
+        [CustomDisplayName(Resource.CATEGIRY_4, "dn4_4")]
+        [CustomDescription(Resource.CATEGIRY_4, "dn4_4")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
+        public bool MoveFiles
+        {
+            get => moveFiles;
+            set
+            {
+                if (moveFiles != value)
+                {
+                    moveFiles = value;
+                    data_3_4.Value = value ? "1" : "0";
+                    OnPropertyChanged("MoveFiles");
+                }
+            }
+        }
         #endregion
 
         #region internal methods
@@ -163,6 +187,7 @@ namespace TFlex.PackageManager.Configuration
             data_3_1 = new XAttribute("value", TargetExtension);
             data_3_2 = new XAttribute("value", FileNameSuffix);
             data_3_3 = new XAttribute("value", TemplateFileName);
+            data_3_4 = new XAttribute("value", MoveFiles ? "1" : "0");
 
             data.Add(new XElement("parameter",
                 new XAttribute("name", "TargetExtension"),
@@ -173,6 +198,9 @@ namespace TFlex.PackageManager.Configuration
             data.Add(new XElement("parameter",
                 new XAttribute("name", "TemplateFileName"),
                 data_3_3));
+            data.Add(new XElement("parameter", 
+                new XAttribute("name", "MoveFiles"), 
+                data_3_4));
 
             return data;
         }
@@ -193,6 +221,10 @@ namespace TFlex.PackageManager.Configuration
                 case "TemplateFileName":
                     templateFileName = a.Value;
                     data_3_3 = a;
+                    break;
+                case "MoveFiles":
+                    moveFiles = a.Value == "1";
+                    data_3_4 = a;
                     break;
             }
         }

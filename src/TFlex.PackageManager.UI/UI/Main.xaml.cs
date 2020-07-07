@@ -836,6 +836,7 @@ namespace TFlex.PackageManager.UI
                 {
                     "FileNameSuffix",
                     "TemplateFileName",
+                    "MoveFiles",
                     "Version",
                     "Protocol",
                     "ExportMode",
@@ -859,6 +860,7 @@ namespace TFlex.PackageManager.UI
                 {
                     "FileNameSuffix",
                     "TemplateFileName",
+                    "MoveFiles",
                     "Version",
                     "Protocol",
                     "ExportMode",
@@ -1060,6 +1062,11 @@ namespace TFlex.PackageManager.UI
                     IntPtr.Zero, value);
             }
 
+            if ((translator as Category_3).MoveFiles)
+            {
+                PostProcessing(header, translator);
+            }
+
             counter[0] = 100;
             Marshal.Copy(counter, 0, value, counter.Length);
             NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, 
@@ -1068,6 +1075,37 @@ namespace TFlex.PackageManager.UI
                 IntPtr.Zero, IntPtr.Zero);
 
             logging.WriteLine(LogLevel.INFO, "Processing ending");
+        }
+
+        private void PostProcessing(Header header, object translator)
+        {
+            var obj = (translator as Category_3);
+            var ext = "." + obj.TargetExtension.ToLower();
+            var dir = Path.Combine(header.TargetDirectory, obj.TMode.ToString());
+            string[] files = Directory
+                .GetFiles(dir, "*" + ext, SearchOption.AllDirectories);
+
+            foreach (var i in files)
+            {
+                if (dir == Path.GetDirectoryName(i))
+                    continue;
+
+                var name = Path.GetFileNameWithoutExtension(i);
+                var path = Path.Combine(dir, name + ext);
+                if (File.Exists(path))
+                {
+                    name += "_" + i.ToGUID();
+                    path = Path.Combine(dir, name + ext);
+                }
+
+                File.Move(i, path);
+            }
+
+            string[] dirs = Directory.GetDirectories(dir);
+            foreach (var d in dirs)
+            {
+                Directory.Delete(d, true);
+            }
         }
         #endregion
     }
