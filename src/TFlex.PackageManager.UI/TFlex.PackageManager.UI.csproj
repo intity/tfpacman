@@ -110,6 +110,7 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\Options.cs" />
     <Compile Include="Common\Processing.cs" />
+    <Compile Include="Configuration\Modules.cs" />
     <Compile Include="Configuration\Package.cs" />
     <Compile Include="Configuration\Translator.cs" />
     <Compile Include="Configuration\Category_3.cs" />
@@ -147,7 +148,9 @@
     <Compile Include="Editors\CustomCheckBoxEditor.xaml.cs">
       <DependentUpon>CustomCheckBoxEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\TranslatorTypesEditor.cs" />
+    <Compile Include="Editors\ModulesEditor.xaml.cs">
+      <DependentUpon>ModulesEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\PageTypesEditor.cs" />
     <Compile Include="Common\CustomFolderBrowserDialog.cs" />
     <Compile Include="Common\Resource.cs" />
@@ -271,6 +274,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Editors\ModulesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Editors\VariablesEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -302,6 +309,15 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\de\Modules.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\en\Modules.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ru\Modules.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\de\VariableModel.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

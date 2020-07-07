@@ -117,91 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category1" xml:space="preserve">
-    <value>Страницы</value>
+  <data name="dn1_5_0" xml:space="preserve">
+    <value>Seiten</value>
+    <comment>Modul zur verarbeitung von dokument seiten.</comment>
   </data>
-  <data name="category2" xml:space="preserve">
-    <value>Проекции</value>
+  <data name="dn1_5_1" xml:space="preserve">
+    <value>Projektionen</value>
+    <comment>Modul zur verarbeitung von dokument projektionen.</comment>
   </data>
-  <data name="category3" xml:space="preserve">
-    <value>Переменные</value>
+  <data name="dn1_5_2" xml:space="preserve">
+    <value>Variablen</value>
+    <comment>Modul zur verarbeitung von dokument variablen.</comment>
   </data>
-  <data name="dn1_1" xml:space="preserve">
-    <value>Имя страницы</value>
-    <comment>Коллекция имен страниц.</comment>
-  </data>
-  <data name="dn1_2" xml:space="preserve">
-    <value>Исключить страницу из поиска</value>
-    <comment>Исключает коллекцию страниц из поиска.</comment>
-  </data>
-  <data name="dn1_3" xml:space="preserve">
-    <value>Масштаб страницы</value>
-    <comment>Определение масштаба страницы.</comment>
-  </data>
-  <data name="dn1_3_1" xml:space="preserve">
-    <value>Из документа</value>
-  </data>
-  <data name="dn1_3_2" xml:space="preserve">
-    <value>Другой</value>
-  </data>
-  <data name="dn1_4" xml:space="preserve">
-    <value>Тип страницы</value>
-    <comment>Определение типов страниц для обработки.</comment>
-  </data>
-  <data name="dn1_4_1" xml:space="preserve">
-    <value>Обычная</value>
-    <comment>Включает данный тип страницы в пул обработки.</comment>
-  </data>
-  <data name="dn1_4_2" xml:space="preserve">
-    <value>Рабочая плоскость</value>
-    <comment>Включает данный тип страницы в пул обработки.</comment>
-  </data>
-  <data name="dn1_4_3" xml:space="preserve">
-    <value>Вспомогательная</value>
-    <comment>Включает данный тип страницы в пул обработки.</comment>
-  </data>
-  <data name="dn1_4_4" xml:space="preserve">
-    <value>Текст</value>
-    <comment>Включает данный тип страницы в пул обработки.</comment>
-  </data>
-  <data name="dn1_4_5" xml:space="preserve">
-    <value>Спецификация</value>
-    <comment>Включает данный тип страницы в пул обработки.</comment>
-  </data>
-  <data name="dn1_4_6" xml:space="preserve">
-    <value>Электрическая схема</value>
-    <comment>Включает данный тип страницы в пул обработки.</comment>
-  </data>
-  <data name="dn1_5" xml:space="preserve">
-    <value>Проверить шаблон чертежа</value>
-    <comment>Включает проверку наличия форматки на странице.</comment>
-  </data>
-  <data name="dn2_1" xml:space="preserve">
-    <value>Имя проекции</value>
-    <comment>Коллекция имен проекций.</comment>
-  </data>
-  <data name="dn2_2" xml:space="preserve">
-    <value>Исключить проекцию из поиска</value>
-    <comment>Исключает проекцию из поиска.</comment>
-  </data>
-  <data name="dn2_3" xml:space="preserve">
-    <value>Масштаб проекции</value>
-    <comment>Определение масштаба проекции.</comment>
-  </data>
-  <data name="dn3_1" xml:space="preserve">
-    <value>Добавить переменные</value>
-    <comment>Добавление новых переменных.</comment>
-  </data>
-  <data name="dn3_2" xml:space="preserve">
-    <value>Редактировать переменные</value>
-    <comment>Изменение атрибутов переменных.</comment>
-  </data>
-  <data name="dn3_3" xml:space="preserve">
-    <value>Переименовать переменные</value>
-    <comment>Переименование переменных документа.</comment>
-  </data>
-  <data name="dn3_4" xml:space="preserve">
-    <value>Удалить переменные</value>
-    <comment>Удаление переменных документа.</comment>
+  <data name="dn1_5_3" xml:space="preserve">
+    <value>Dateien</value>
+    <comment>Modul zur verarbeitung des formats des ausgabe dateinamens.</comment>
   </data>
 </root>

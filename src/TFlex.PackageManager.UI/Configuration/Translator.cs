@@ -17,14 +17,10 @@ namespace TFlex.PackageManager.Configuration
         Acad,
         Acis,
         Bitmap,
-        Bmf,
-        Emf,
         Iges,
         Jt,
-        Parasolid,
         Pdf,
-        Step,
-        Stl
+        Step
     }
 
     /// <summary>
@@ -56,7 +52,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Processing mode.
         /// </summary>
-        internal ProcessingMode PMode { get; set; }
+        internal virtual ProcessingMode PMode { get; set; }
         #endregion
 
         #region internal methods
@@ -97,11 +93,15 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
+        /// <summary>
+        /// Create XML-data for new translator.
+        /// </summary>
+        /// <returns></returns>
         internal virtual XElement NewTranslator()
         {
             return Data = new XElement("translator", 
-                new XAttribute("id", TMode), 
-                new XAttribute("processing", (uint)PMode));
+                new XAttribute("type", (int)TMode), 
+                new XAttribute("mode", (int)PMode));
         }
 
         /// <summary>

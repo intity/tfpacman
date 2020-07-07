@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
 using System.IO;
-using System.Linq;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -31,14 +31,19 @@ namespace TFlex.PackageManager.Configuration
         string initialCatalog;
         string targetDirectory;
         string inputExtension;
-        XElement translators;
+        object modules;
+        object translator;
+        XElement tr_data;
         XAttribute data_1_1;
         XAttribute data_1_2;
         XAttribute data_1_3;
         XAttribute data_1_4;
         XAttribute data_1_5;
 
+        int m_index;
+        int processing;
         bool isChanged;
+        readonly Dictionary<int, object> translators;
         #endregion
 
         public Header()
@@ -47,9 +52,24 @@ namespace TFlex.PackageManager.Configuration
             initialCatalog    = string.Empty;
             targetDirectory   = string.Empty;
             inputExtension    = "*.grb";
-            Translators       = new ObservableDictionary<string, object>();
-            TranslatorTypes   = new TranslatorTypes();
-            TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
+            translators       = new Dictionary<int, object>();
+
+            TModules = new List<object>
+            {
+                new M0(),  // Document
+                new M1(),  // Acad
+                new M2(),  // Acis
+                new M1(),  // Bitmap
+                new M2(),  // Iges
+                new M2(),  // Jt
+                new M1(),  // Pdf
+                new M2()   // Step
+            };
+
+            foreach (var m in TModules)
+            {
+                (m as Modules).PropertyChanged += Modules_PropertyChanged;
+            }
         }
 
         #region event handlers
@@ -57,113 +77,37 @@ namespace TFlex.PackageManager.Configuration
         {
             IsChanged = true;
 
-            Debug.WriteLine(string.Format("DataContext_Changed: [{0}]", e.ObjectChange));
+            //Debug.WriteLine(string.Format("DataContext_Changed: [{0}]", 
+            //    e.ObjectChange));
         }
 
         private void Translator_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
             IsInvalid = (sender as Category_3).HasErrors;
         }
-
-        private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        
+        private void Modules_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            bool value = false;
-            var t_mode = sender as TranslatorTypes;
-            InitTranslator(e.PropertyName);
-            data_1_5.Value = t_mode.ToString();
+            var m = sender as Modules;
+            string[] values = data_1_5.Value.Split(' ');
 
             switch (e.PropertyName)
             {
-                case "Document":
-                    if (value = t_mode.Document)
-                    {
-                        if (translator_0.Data == null)
-                            translators.Add(translator_0.NewTranslator());
-                        else
-                            translators.Add(translator_0.Data);
-                    }
+                case "Pages":
+                    values[0] = m.Pages       ? "1" : "0";
                     break;
-                case "Acad":
-                    if (value = t_mode.Acad)
-                    {
-                        if (translator_1.Data == null)
-                            translators.Add(translator_1.NewTranslator());
-                        else
-                            translators.Add(translator_1.Data);
-                    }
+                case "Projections":
+                    values[1] = m.Projections ? "1" : "0";
                     break;
-                case "Acis":
-                    if (value = t_mode.Acis)
-                    {
-                        if (translator_2.Data == null)
-                            translators.Add(translator_2.NewTranslator());
-                        else
-                            translators.Add(translator_2.Data);
-                    }
+                case "Variables":
+                    values[2] = m.Variables   ? "1" : "0";
                     break;
-                case "Bitmap":
-                    if (value = t_mode.Bitmap)
-                    {
-                        if (translator_3.Data == null)
-                            translators.Add(translator_3.NewTranslator());
-                        else
-                            translators.Add(translator_3.Data);
-                    }
-                    break;
-                case "Iges":
-                    if (value = t_mode.Iges)
-                    {
-                        if (translator_6.Data == null)
-                            translators.Add(translator_6.NewTranslator());
-                        else
-                            translators.Add(translator_6.Data);
-                    }
-                    break;
-                case "Jt":
-                    if (value = t_mode.Jt)
-                    {
-                        if (translator_7.Data == null)
-                            translators.Add(translator_7.NewTranslator());
-                        else
-                            translators.Add(translator_7.Data);
-                    }
-                    break;
-                case "Pdf":
-                    if (value = t_mode.Pdf)
-                    {
-                        if (translator_9.Data == null)
-                            translators.Add(translator_9.NewTranslator());
-                        else
-                            translators.Add(translator_9.Data);
-                    }
-                    break;
-                case "Step":
-                    if (value = t_mode.Step)
-                    {
-                        if (translator_10.Data == null)
-                            translators.Add(translator_10.NewTranslator());
-                        else
-                            translators.Add(translator_10.Data);
-                    }
+                case "Files":
+                    values[3] = m.Files       ? "1" : "0";
                     break;
             }
 
-            if (!value)
-            {
-                Translators.Remove(e.PropertyName);
-
-                foreach (var i in translators.Elements())
-                {
-                    if (i.Attribute("id").Value == e.PropertyName)
-                    {
-                        i.Remove();
-                        break;
-                    }
-                }
-            }
-
-            //Debug.WriteLine(string.Format("TranslatorTypes_PropertyChanged [name: {0}, value: {1}]",
-            //    e.PropertyName, value));
+            data_1_5.Value = values.ToString(" ");
         }
         #endregion
 
@@ -172,11 +116,6 @@ namespace TFlex.PackageManager.Configuration
         /// XML data context.
         /// </summary>
         internal XDocument DataContext { get; private set; }
-
-        /// <summary>
-        /// Translator list.
-        /// </summary>
-        internal ObservableDictionary<string, object> Translators { get; }
 
         /// <summary>
         /// The configuration is changed.
@@ -203,6 +142,11 @@ namespace TFlex.PackageManager.Configuration
         /// Configurations directory.
         /// </summary>
         internal string UserDirectory { get; set; }
+
+        /// <summary>
+        /// Modules container for switch between translators.
+        /// </summary>
+        internal List<object> TModules { get; }
         #endregion
 
         #region public properties
@@ -289,145 +233,214 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// The translator types.
+        /// The translator modules for current selector.
         /// </summary>
         [PropertyOrder(5)]
         [CustomDisplayName(Resource.HEADER_UI, "dn1_5")]
         [CustomDescription(Resource.HEADER_UI, "dn1_5")]
         [ExpandableObject]
-        [Editor(typeof(TranslatorTypesEditor), typeof(UITypeEditor))]
-        public TranslatorTypes TranslatorTypes { get; }
+        [Editor(typeof(ModulesEditor), typeof(UITypeEditor))]
+        public object Modules
+        {
+            get => modules;
+            set
+            {
+                int index = TModules.IndexOf(value);
+                if (index != m_index)
+                {
+                    modules = value;
+                    m_index = index;
+
+                    InitTranslator();
+                    DataContext.Element("configuration").Element("translator")
+                        .ReplaceWith(tr_data);
+
+                    OnPropertyChanged("Modules");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reference on current translator.
+        /// </summary>
+        [Browsable(false)]
+        public object Translator
+        {
+            get => translator;
+            private set
+            {
+                if (translator != value)
+                {
+                    translator = value;
+                    OnPropertyChanged("Translator");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Current processing mode.
+        /// </summary>
+        [Browsable(false)]
+        public int Processing
+        {
+            get => processing;
+            set 
+            {
+                if (processing != value)
+                {
+                    processing = value;
+                    DataContext.Element("configuration").Element("translator")
+                        .Attribute("mode").Value = processing.ToString();
+                }
+            }
+        }
         #endregion
 
         #region private methods
         /// <summary>
         /// Initialize the translator.
         /// </summary>
-        /// <param name="name">The translator name.</param>
-        private void InitTranslator(string name)
+        private void InitTranslator()
         {
-            switch (name)
+            switch (m_index)
             {
-                case "Document":
+                case 0: // Document
                     if (translator_0 == null)
                     {
                         translator_0 = new Translator_0();
                         translator_0.ErrorsChanged += Translator_ErrorsChanged;
+                        translator_0.NewTranslator();
+                        translators.Add(m_index, translator_0);
+
+                        tr_data = translator_0.Data;
                     }
-                    if (Translators.ContainsKey(name) == false)
-                        Translators.Add(name, translator_0);
                     break;
-                case "Acad":
+                case 1: // Acad
                     if (translator_1 == null)
                     {
                         translator_1 = new Translator_1();
                         translator_1.ErrorsChanged += Translator_ErrorsChanged;
+                        translator_1.NewTranslator();
+                        translators.Add(m_index, translator_1);
+
+                        tr_data = translator_1.Data;
                     }
-                    if (Translators.ContainsKey(name) == false)
-                        Translators.Add(name, translator_1);
                     break;
-                case "Acis":
+                case 2: // ACIS
                     if (translator_2 == null)
                     {
                         translator_2 = new Translator_2();
                         translator_2.ErrorsChanged += Translator_ErrorsChanged;
+                        translator_2.NewTranslator();
+                        translators.Add(m_index, translator_2);
+
+                        tr_data = translator_2.Data;
                     }
-                    if (Translators.ContainsKey(name) == false)
-                        Translators.Add(name, translator_2);
                     break;
-                case "Bitmap":
+                case 3: // Bitmap
                     if (translator_3 == null)
                     {
                         translator_3 = new Translator_3();
                         translator_3.ErrorsChanged += Translator_ErrorsChanged;
+                        translator_3.NewTranslator();
+                        translators.Add(m_index, translator_3);
+
+                        tr_data = translator_3.Data;
                     }
-                    if (Translators.ContainsKey(name) == false)
-                        Translators.Add(name, translator_3);
                     break;
-                case "Iges":
+                case 4: // IGES
                     if (translator_6 == null)
                     {
                         translator_6 = new Translator_6();
                         translator_6.ErrorsChanged += Translator_ErrorsChanged;
+                        translator_6.NewTranslator();
+                        translators.Add(m_index, translator_6);
+
+                        tr_data = translator_6.Data;
                     }
-                    if (Translators.ContainsKey(name) == false)
-                        Translators.Add(name, translator_6);
                     break;
-                case "Jt":
+                case 5: // JT
                     if (translator_7 == null)
                     {
                         translator_7 = new Translator_7();
                         translator_7.ErrorsChanged += Translator_ErrorsChanged;
+                        translator_7.NewTranslator();
+                        translators.Add(m_index, translator_7);
+
+                        tr_data = translator_7.Data;
                     }
-                    if (Translators.ContainsKey(name) == false)
-                        Translators.Add(name, translator_7);
                     break;
-                case "Pdf":
+                case 6: // PDF
                     if (translator_9 == null)
                     {
                         translator_9 = new Translator_9();
                         translator_9.ErrorsChanged += Translator_ErrorsChanged;
+                        translator_9.NewTranslator();
+                        translators.Add(m_index, translator_9);
+
+                        tr_data = translator_9.Data;
                     }
-                    if (Translators.ContainsKey(name) == false)
-                        Translators.Add(name, translator_9);
                     break;
-                case "Step":
+                case 7: // STEP
                     if (translator_10 == null)
                     {
                         translator_10 = new Translator_10();
                         translator_10.ErrorsChanged += Translator_ErrorsChanged;
+                        translator_10.NewTranslator();
+                        translators.Add(m_index, translator_10);
+
+                        tr_data = translator_10.Data;
                     }
-                    if (Translators.ContainsKey(name) == false)
-                        Translators.Add(name, translator_10);
                     break;
             }
 
             if (TargetDirectory.Length > 0)
             {
-                string path = Path.Combine(TargetDirectory, name);
+                var name = (translators[m_index] as Translator).TMode.ToString();
+                var path = Path.Combine(TargetDirectory, name);
                 if (Directory.Exists(path) == false)
                     Directory.CreateDirectory(path);
             }
+
+            Translator = translators[m_index];
+
+            //Debug.WriteLine(string.Format("InitTranslator [index: {0}]", m_index));
         }
 
         /// <summary>
-        /// Load translators data.
+        /// Load translator data.
         /// </summary>
-        internal void LoadTranslators()
+        internal void LoadTranslator()
         {
-            foreach (XElement i in translators.Elements())
+            switch (m_index)
             {
-                string name = i.Attribute("id").Value;
-                InitTranslator(name);
-
-                switch (name)
-                {
-                    case "Document":
-                        translator_0.LoadTranslator(i);
-                        break;
-                    case "Acad":
-                        translator_1.LoadTranslator(i);
-                        break;
-                    case "Acis":
-                        translator_2.LoadTranslator(i);
-                        break;
-                    case "Bitmap":
-                        translator_3.LoadTranslator(i);
-                        break;
-                    case "Iges":
-                        translator_6.LoadTranslator(i);
-                        break;
-                    case "Jt":
-                        translator_7.LoadTranslator(i);
-                        break;
-                    case "Pdf":
-                        translator_9.LoadTranslator(i);
-                        break;
-                    case "Step":
-                        translator_10.LoadTranslator(i);
-                        break;
-                }
+                case 0: // Document
+                    translator_0.LoadTranslator(tr_data);
+                    break;
+                case 1: // Acad
+                    translator_1.LoadTranslator(tr_data);
+                    break;
+                case 2: // ACIS
+                    translator_2.LoadTranslator(tr_data);
+                    break;
+                case 3: // Bitmap
+                    translator_3.LoadTranslator(tr_data);
+                    break;
+                case 4: // IGES
+                    translator_6.LoadTranslator(tr_data);
+                    break;
+                case 5: // JT
+                    translator_7.LoadTranslator(tr_data);
+                    break;
+                case 6: // PDF
+                    translator_9.LoadTranslator(tr_data);
+                    break;
+                case 7: // STEP
+                    translator_10.LoadTranslator(tr_data);
+                    break;
             }
+
+            //Debug.WriteLine(string.Format("LoadTranslator [index: {0}]", m_index));
         }
 
         /// <summary>
@@ -436,13 +449,13 @@ namespace TFlex.PackageManager.Configuration
         /// <returns>The XML-data for new configuration.</returns>
         internal XDocument NewConfiguration()
         {
+            var m = (TModules[0] as Modules);
+
             data_1_1 = new XAttribute("value", ConfigurationName);
             data_1_2 = new XAttribute("value", InitialCatalog);
             data_1_3 = new XAttribute("value", TargetDirectory);
             data_1_4 = new XAttribute("value", InputExtension);
-            data_1_5 = new XAttribute("value", TranslatorTypes.ToString());
-
-            translators = new XElement("translators");
+            data_1_5 = new XAttribute("value", m.ToString());
 
             XDocument document = new XDocument(
                 new XDeclaration("1.0", "utf-8", null),
@@ -459,10 +472,11 @@ namespace TFlex.PackageManager.Configuration
                             data_1_3),
                         new XElement("parameter",
                             new XAttribute("name", "InputExtension"),
-                            data_1_4),
-                        new XElement("parameter",
-                            new XAttribute("name", "TranslatorTypes"),
-                            data_1_5)), translators));
+                            data_1_4), 
+                        new XElement("parameter", 
+                            new XAttribute("name", "Modules"), 
+                            data_1_5)), 
+                    tr_data));
 
             return document;
         }
@@ -471,7 +485,7 @@ namespace TFlex.PackageManager.Configuration
         /// The configuration task method.
         /// </summary>
         /// <param name="flag">
-        /// Flag definition: (0) - read, (1) - write, (2) - delete
+        /// Flags definition: (0) - read, (1) - write, (2) - delete
         /// </param>
         internal void ConfigurationTask(int flag)
         {
@@ -480,21 +494,27 @@ namespace TFlex.PackageManager.Configuration
             if (flag == 0 && File.Exists(path))
             {
                 DataContext = XDocument.Load(path);
-                translators = DataContext
-                    .Element("configuration")
-                    .Element("translators");
-
+                
                 var header = DataContext
                     .Element("configuration")
                     .Element("header");
+
+                tr_data = DataContext
+                    .Element("configuration")
+                    .Element("translator");
+
+                m_index    = int.Parse(tr_data.Attribute("type").Value);
+                processing = int.Parse(tr_data.Attribute("mode").Value);
 
                 foreach (var p in header.Elements())
                 {
                     LoadHeader(p);
                 }
 
-                LoadTranslators();
+                InitTranslator();
+                LoadTranslator();
                 DataContext.Changed += DataContext_Changed;
+                modules = TModules[m_index];
                 IsChanged = false;
             }
 
@@ -502,6 +522,10 @@ namespace TFlex.PackageManager.Configuration
             {
                 if (DataContext == null)
                 {
+                    m_index = 0;
+                    processing = 0;
+                    modules = TModules[0];
+                    InitTranslator();
                     DataContext = NewConfiguration();
                     DataContext.Changed += DataContext_Changed;
                     IsChanged = false;
@@ -516,9 +540,12 @@ namespace TFlex.PackageManager.Configuration
             else
             {
                 File.Delete(path);
+                m_index    = 0;
+                processing = 0;
             }
 
-            //Debug.WriteLine(string.Format("ConfigurationTask [flag: {0}, path: {1}]", flag, path));
+            //Debug.WriteLine(string.Format("ConfigurationTask [flag: {0}, path: {1}]",
+            //    flag, path));
         }
 
         /// <summary>
@@ -546,298 +573,11 @@ namespace TFlex.PackageManager.Configuration
                     inputExtension = a.Value;
                     data_1_4 = a;
                     break;
-                case "TranslatorTypes":
-                    TranslatorTypes.SetValue(a.Value);
+                case "Modules":
+                    (TModules[m_index] as Modules).SetValue(a.Value);
                     data_1_5 = a;
                     break;
             }
-        }
-        #endregion
-
-        #region INotifyPropertyChanged members
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// The OpPropertyChanged event handler.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        #endregion
-    }
-
-    /// <summary>
-    /// The TranslatorTypes class.
-    /// </summary>
-    public class TranslatorTypes : INotifyPropertyChanged
-    {
-        #region private fields
-        bool document;
-        bool acad;
-        bool acis;
-        bool bitmap;
-        bool bmf;
-        bool emf;
-        bool iges;
-        bool jt;
-        bool parasolid;
-        bool pdf;
-        bool step;
-        bool stl;
-        #endregion
-
-        #region public properties
-        [PropertyOrder(0)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_0")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_0")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Document
-        {
-            get => document;
-            set
-            {
-                if (document != value)
-                {
-                    document = value;
-                    OnPropertyChanged("Document");
-                }
-            }
-        }
-
-        [PropertyOrder(1)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_1")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_1")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Acad
-        {
-            get => acad;
-            set
-            {
-                if (acad != value)
-                {
-                    acad = value;
-                    OnPropertyChanged("Acad");
-                }
-            }
-        }
-
-        [PropertyOrder(2)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_2")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_2")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Acis
-        {
-            get => acis;
-            set
-            {
-                if (acis != value)
-                {
-                    acis = value;
-                    OnPropertyChanged("Acis");
-                }
-            }
-        }
-
-        [PropertyOrder(3)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_3")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_3")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Bitmap
-        {
-            get => bitmap;
-            set
-            {
-                if (bitmap != value)
-                {
-                    bitmap = value;
-                    OnPropertyChanged("Bitmap");
-                }
-            }
-        }
-
-        [Browsable(false)]
-        [PropertyOrder(4)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_4")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_4")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Bmf
-        {
-            get => bmf;
-            set
-            {
-                if (bmf != value)
-                {
-                    bmf = value;
-                    OnPropertyChanged("Bmf");
-                }
-            }
-        }
-
-        [Browsable(false)]
-        [PropertyOrder(5)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_5")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_5")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Emf
-        {
-            get => emf;
-            set
-            {
-                if (emf != value)
-                {
-                    emf = value;
-                    OnPropertyChanged("Emf");
-                }
-            }
-        }
-
-        [PropertyOrder(6)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_6")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_6")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Iges
-        {
-            get => iges;
-            set
-            {
-                if (iges != value)
-                {
-                    iges = value;
-                    OnPropertyChanged("Iges");
-                }
-            }
-        }
-
-        [PropertyOrder(7)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_7")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_7")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Jt
-        {
-            get => jt;
-            set
-            {
-                if (jt != value)
-                {
-                    jt = value;
-                    OnPropertyChanged("Jt");
-                }
-            }
-        }
-
-        [Browsable(false)]
-        [PropertyOrder(8)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_8")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_8")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Parasolid
-        {
-            get => parasolid;
-            set
-            {
-                if (parasolid != value)
-                {
-                    parasolid = value;
-                    OnPropertyChanged("Parasolid");
-                }
-            }
-        }
-
-        [PropertyOrder(9)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_9")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_9")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Pdf
-        {
-            get => pdf;
-            set
-            {
-                if (pdf != value)
-                {
-                    pdf = value;
-                    OnPropertyChanged("Pdf");
-                }
-            }
-        }
-
-        [PropertyOrder(10)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_10")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_10")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Step
-        {
-            get => step;
-            set
-            {
-                if (step != value)
-                {
-                    step = value;
-                    OnPropertyChanged("Step");
-                }
-            }
-        }
-
-        [Browsable(false)]
-        [PropertyOrder(11)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5_11")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5_11")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool Stl
-        {
-            get => stl;
-            set
-            {
-                if (stl != value)
-                {
-                    stl = value;
-                    OnPropertyChanged("Stl");
-                }
-            }
-        }
-        #endregion
-
-        #region methods
-        public void SetValue(string value)
-        {
-            string[] values = value.Split(' ');
-
-            document  = values[00] == "01";
-            acad      = values[01] == "01";
-            acis      = values[02] == "01";
-            bitmap    = values[03] == "01";
-            bmf       = values[04] == "01";
-            emf       = values[05] == "01";
-            iges      = values[06] == "01";
-            jt        = values[07] == "01";
-            parasolid = values[08] == "01";
-            pdf       = values[09] == "01";
-            step      = values[10] == "01";
-            stl       = values[11] == "01";
-        }
-
-        public override string ToString()
-        {
-            string[] values = new string[12];
-
-            values[00] = document  ? "01" : "00";
-            values[01] = acad      ? "01" : "00";
-            values[02] = acis      ? "01" : "00";
-            values[03] = bitmap    ? "01" : "00";
-            values[04] = bmf       ? "01" : "00";
-            values[05] = emf       ? "01" : "00";
-            values[06] = iges      ? "01" : "00";
-            values[07] = jt        ? "01" : "00";
-            values[08] = parasolid ? "01" : "00";
-            values[09] = pdf       ? "01" : "00";
-            values[10] = step      ? "01" : "00";
-            values[11] = stl       ? "01" : "00";
-
-            return values.ToString(" ");
         }
         #endregion
 

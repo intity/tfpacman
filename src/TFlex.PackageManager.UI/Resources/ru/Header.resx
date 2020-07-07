@@ -134,55 +134,7 @@
     <comment>Формат файла документа T-FLEX CAD.</comment>
   </data>
   <data name="dn1_5" xml:space="preserve">
-    <value>Тип транслятора</value>
-    <comment>Перечисление типов транслятора.</comment>
-  </data>
-  <data name="dn1_5_0" xml:space="preserve">
-    <value>Document</value>
-    <comment>Обработка документов T-FLEX CAD.</comment>
-  </data>
-  <data name="dn1_5_1" xml:space="preserve">
-    <value>Acad</value>
-    <comment>Экспорт в формат файлов AutoCAD [DWG, DXF, DXB]</comment>
-  </data>
-  <data name="dn1_5_10" xml:space="preserve">
-    <value>Step</value>
-    <comment>Экспорт в формат файлов STEP</comment>
-  </data>
-  <data name="dn1_5_11" xml:space="preserve">
-    <value>Stl</value>
-    <comment>Экспорт в формат файлов STL</comment>
-  </data>
-  <data name="dn1_5_2" xml:space="preserve">
-    <value>Acis</value>
-    <comment>Экспорт в формат файлов ACIS</comment>
-  </data>
-  <data name="dn1_5_3" xml:space="preserve">
-    <value>Bitmap</value>
-    <comment>Экспорт в формат растровых изображений [BMP, JPEG, GIF, TIFF, PNG]</comment>
-  </data>
-  <data name="dn1_5_4" xml:space="preserve">
-    <value>Bmf</value>
-    <comment>Экспорт в формат файлов BMF</comment>
-  </data>
-  <data name="dn1_5_5" xml:space="preserve">
-    <value>Emf</value>
-    <comment>Экспорт в формат файлов EMF</comment>
-  </data>
-  <data name="dn1_5_6" xml:space="preserve">
-    <value>Iges</value>
-    <comment>Экспорт в формат файлов IGES</comment>
-  </data>
-  <data name="dn1_5_7" xml:space="preserve">
-    <value>Jt</value>
-    <comment>Экспорт в формат файлов JT</comment>
-  </data>
-  <data name="dn1_5_8" xml:space="preserve">
-    <value>Parasolid</value>
-    <comment>Экспорт в формат файлов Parasolid</comment>
-  </data>
-  <data name="dn1_5_9" xml:space="preserve">
-    <value>Pdf</value>
-    <comment>Экспорт в формат файлов PDF</comment>
+    <value>Транслятор</value>
+    <comment>Тип транслятора.</comment>
   </data>
 </root>

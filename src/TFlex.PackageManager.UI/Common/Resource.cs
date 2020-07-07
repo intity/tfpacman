@@ -22,6 +22,7 @@ namespace TFlex.PackageManager.Common
         #region constants
         public const string ABOUT_US        = "AboutUs";
         public const string HEADER_UI       = "Header";
+        public const string MODULES_UI      = "Modules";
         public const string MAIN_WINDOW     = "PackageManager";
         public const string LIST_VALUES     = "ListValues";
         public const string OPTIONS_UI      = "Options";

@@ -35,7 +35,10 @@ namespace TFlex.PackageManager.Configuration
         /// Constructor.
         /// </summary>
         /// <param name="ext">Target extension the file.</param>
-        public Translator_3(string ext = "BMP") : base (ext) { }
+        public Translator_3(string ext = "BMP") : base (ext)
+        {
+            PMode = ProcessingMode.Export; // Export
+        }
 
         #region public properties
         /// <summary>
@@ -120,6 +123,11 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Bitmap;
+        internal override ProcessingMode PMode
+        {
+            get => base.PMode;
+            set => base.PMode = value;
+        }
         #endregion
 
         #region internal methods

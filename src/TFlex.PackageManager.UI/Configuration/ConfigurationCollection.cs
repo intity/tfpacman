@@ -14,7 +14,7 @@ namespace TFlex.PackageManager.Configuration
     {
         #region private fields
         private readonly List<string> changedCofigurations;
-        private string targetDirectory;
+        private string directory;
         #endregion
 
         public ConfigurationCollection()
@@ -26,16 +26,16 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         /// <summary>
-        /// The target directory a configurations.
+        /// User directory for the file configurations.
         /// </summary>
-        internal string TargetDirectory
+        internal string UserDirectory
         {
-            get { return targetDirectory; }
+            get => directory;
             set
             {
-                if (targetDirectory != value)
+                if (directory != value)
                 {
-                    targetDirectory = value;
+                    directory = value;
 
                     Configurations.Clear();
                     GetConfigurations();
@@ -63,15 +63,15 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         internal void GetConfigurations()
         {
-            if (Directory.Exists(targetDirectory) == false)
-                Directory.CreateDirectory(targetDirectory);
+            if (Directory.Exists(directory) == false)
+                Directory.CreateDirectory(directory);
 
-            foreach (var i in Directory.GetFiles(targetDirectory, "*.config"))
+            foreach (var i in Directory.GetFiles(directory, "*.config"))
             {
                 string name = Path.GetFileNameWithoutExtension(i);
                 Header header = new Header
                 {
-                    UserDirectory = targetDirectory,
+                    UserDirectory = directory,
                     ConfigurationName = name
                 };
 

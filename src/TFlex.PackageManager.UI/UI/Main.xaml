@@ -215,16 +215,12 @@
                 </Button>
                 <Separator/>
                 <Label Name="tb_label2" 
-                       Content="Translator:" 
+                       Content="Processing mode:" 
                        VerticalAlignment="Center" 
                        Padding="2,0,4,0"/>
                 <ComboBox Name="comboBox2" 
                           Width="120"
                           SelectionChanged="ComboBox2_SelectionChanged"/>
-                <ComboBox Name="comboBox3" 
-                          Width="120"
-                          SelectionChanged="ComboBox3_SelectionChanged"/>
-                <Separator/>
                 <Button Name="button3_1" 
                         Click="Event3_1_Click" 
                         ToolTip="Start processing">

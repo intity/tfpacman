@@ -219,6 +219,6 @@
     <value>Конфигурация:</value>
   </data>
   <data name="tb_label2" xml:space="preserve">
-    <value>Транслятор:</value>
+    <value>Режим обработки:</value>
   </data>
 </root>

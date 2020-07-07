@@ -38,7 +38,7 @@ namespace TFlex.PackageManager.UI
         readonly string[] controls;
         readonly string[] tooltips;
 
-        string key1, key2, key3;
+        string key1, key2;
         int importMode;
 
         System.Threading.Thread thread;
@@ -75,7 +75,7 @@ namespace TFlex.PackageManager.UI
             {
                 conf = new ConfigurationCollection
                 {
-                    TargetDirectory = options.UserDirectory
+                    UserDirectory = options.UserDirectory
                 };
                 UndoRedoManager.FlushHistory();
             }
@@ -201,7 +201,7 @@ namespace TFlex.PackageManager.UI
                     "ConfigurationName",
                     "TargetDirectory",
                     "InputExtension",
-                    "TranslatorTypes"
+                    "Modules"
                 },
                 IsBrowsable = false
             });
@@ -213,7 +213,7 @@ namespace TFlex.PackageManager.UI
                     "ConfigurationName",
                     "InitialCatalog",
                     "InputExtension",
-                    "TranslatorTypes"
+                    "Modules"
                 },
                 IsBrowsable = false
             });
@@ -267,8 +267,8 @@ namespace TFlex.PackageManager.UI
             {
                 for (int i = 0; i < conf.Configurations.Count; i++)
                 {
-                    conf.Configurations.ElementAt(i).Value.PropertyChanged += Header_PropertyChanged;
-                    conf.Configurations.ElementAt(i).Value.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
+                    conf.Configurations.ElementAt(i).Value
+                        .PropertyChanged += Header_PropertyChanged;
                     comboBox1.Items.Add(conf.Configurations.ElementAt(i).Key);
                 }
 
@@ -311,51 +311,27 @@ namespace TFlex.PackageManager.UI
         #region configuration event handlers
         private void Header_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (!(sender is Header header))
+                return;
+
+            var name = (header.Translator as Translator).TMode.ToString();
+            var path = header.TargetDirectory;
+
             switch (e.PropertyName)
             {
                 case "InitialCatalog":
-                    tvControl1.TargetDirectory = conf.Configurations[key1].InitialCatalog;
+                    tvControl1.TargetDirectory = header.InitialCatalog;
                     break;
                 case "TargetDirectory":
-                    tvControl2.TargetDirectory = key2 != null
-                        ? Path.Combine(conf.Configurations[key1].TargetDirectory, key2)
-                        : conf.Configurations[key1].TargetDirectory;
+                    tvControl2.TargetDirectory = Path.Combine(path, name);
+                    break;
+                case "Translator":
+                    propertyGrid.SelectedObject = header.Translator;
+                    SetProcessingMode(header);
                     break;
             }
 
             UpdateStateToControls();
-        }
-
-        private void TranslatorTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            int selected_index = comboBox2.SelectedIndex;
-            int contains_index = comboBox2.Items.IndexOf(e.PropertyName);
-            bool t_value       = false;
-
-            switch (e.PropertyName)
-            {
-                case "Document": t_value = (sender as TranslatorTypes).Document; break;
-                case "Acad"    : t_value = (sender as TranslatorTypes).Acad;     break;
-                case "Acis"    : t_value = (sender as TranslatorTypes).Acis;     break;
-                case "Bitmap"  : t_value = (sender as TranslatorTypes).Bitmap;   break;
-                case "Iges"    : t_value = (sender as TranslatorTypes).Iges;     break;
-                case "Jt"      : t_value = (sender as TranslatorTypes).Jt;       break;
-                case "Pdf"     : t_value = (sender as TranslatorTypes).Pdf;      break;
-                case "Step"    : t_value = (sender as TranslatorTypes).Step;     break;
-            }
-
-            if (t_value)
-            {
-                comboBox2.Items.Add(e.PropertyName);
-                comboBox2.SelectedIndex = comboBox2.Items.Count - 1;
-            }
-            else
-            {
-                comboBox2.Items.Remove(e.PropertyName);
-                comboBox2.SelectedIndex = selected_index != contains_index
-                    ? selected_index
-                    : selected_index - 1;
-            }
         }
 
         private void Translator_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
@@ -373,7 +349,7 @@ namespace TFlex.PackageManager.UI
             
             UpdateStateToControls();
 
-            //Debug.WriteLine(string.Format("PropertyGrid_ValueChanged: [name: {0}, value: {1}]", 
+            //Debug.WriteLine(string.Format("Translator_PropertyValueChanged: [name: {0}, value: {1}]", 
             //    item.PropertyName, item.Value));
         }
         #endregion
@@ -386,7 +362,7 @@ namespace TFlex.PackageManager.UI
             using (var sfd = new CommonSaveFileDialog())
             {
                 sfd.Title = controls[0];
-                sfd.InitialDirectory = conf.TargetDirectory;
+                sfd.InitialDirectory = conf.UserDirectory;
                 sfd.DefaultFileName = string.Format("configuration_{0}", conf.Configurations.Count);
                 sfd.DefaultExtension = "config";
                 sfd.Filters.Add(new CommonFileDialogFilter("Configuration Files", "*.config"));
@@ -402,11 +378,11 @@ namespace TFlex.PackageManager.UI
                 sfd.Dispose();
             }
 
-            if (directory != conf.TargetDirectory)
+            if (directory != conf.UserDirectory)
             {
                 if (QueryOnSaveChanges())
                 {
-                    conf.TargetDirectory = directory;
+                    conf.UserDirectory = directory;
                     comboBox1.Items.Clear();
                 }
                 else
@@ -420,7 +396,6 @@ namespace TFlex.PackageManager.UI
             };
 
             header.PropertyChanged += Header_PropertyChanged;
-            header.TranslatorTypes.PropertyChanged += TranslatorTypes_PropertyChanged;
 
             if (key1 != newKey)
             {
@@ -455,7 +430,7 @@ namespace TFlex.PackageManager.UI
                 ofd.Title = tooltips[2];
                 ofd.Multiselect = false;
                 ofd.IsFolderPicker = true;
-                ofd.InitialDirectory = conf.TargetDirectory;
+                ofd.InitialDirectory = conf.UserDirectory;
 
                 if (ofd.ShowDialog() == CommonFileDialogResult.Cancel)
                 {
@@ -467,11 +442,11 @@ namespace TFlex.PackageManager.UI
                 ofd.Dispose();
             }
 
-            if (directory != conf.TargetDirectory)
+            if (directory != conf.UserDirectory)
             {
                 if (QueryOnSaveChanges())
                 {
-                    conf.TargetDirectory = directory;
+                    conf.UserDirectory = directory;
                     comboBox1.Items.Clear();
                 }
                 else
@@ -615,24 +590,13 @@ namespace TFlex.PackageManager.UI
             if (comboBox1.SelectedIndex != -1)
             {
                 key1 = comboBox1.SelectedValue.ToString();
-                tvControl1.TargetDirectory = conf.Configurations[key1].InitialCatalog;
-                inputPath1.SelectedObject  = conf.Configurations[key1];
-                inputPath2.SelectedObject  = conf.Configurations[key1];
+                var header = conf.Configurations[key1];
 
-                string[] items1 = comboBox2.Items.OfType<string>().ToArray();
-                string[] items2 = conf.Configurations[key1].Translators.Keys.ToArray();
-
-                if (!Enumerable.SequenceEqual(items1, items2))
-                {
-                    comboBox2.Items.Clear();
-
-                    foreach (var i in conf.Configurations[key1].Translators)
-                    {
-                        comboBox2.Items.Add(i.Key);
-                    }
-
-                    comboBox2.SelectedIndex = 0;
-                }
+                tvControl1.TargetDirectory  = header.InitialCatalog;
+                inputPath1.SelectedObject   = header;
+                inputPath2.SelectedObject   = header;
+                propertyGrid.SelectedObject = header.Translator;
+                SetProcessingMode(header);
             }
             else
             {
@@ -640,7 +604,6 @@ namespace TFlex.PackageManager.UI
                 tvControl2.TargetDirectory = string.Empty;
                 inputPath1.SelectedObject  = null;
                 inputPath2.SelectedObject  = null;
-                comboBox2.Items.Clear();
             }
 
             UpdateStateToControls();
@@ -655,90 +618,41 @@ namespace TFlex.PackageManager.UI
             if (comboBox2.SelectedIndex != -1)
             {
                 key2 = comboBox2.SelectedValue.ToString();
-                object obj = conf.Configurations[key1].Translators[key2];
-                propertyGrid.SelectedObject = obj;
-                comboBox3.Items.Clear();
+                UpdatePropertyDefinitions();
+                var header = conf.Configurations[key1];
+                var obj = header.Translator as Translator;
 
                 switch (key2)
                 {
-                    case "Document":
-                        comboBox3.Items.Add("SaveAs");
-                        break;
-                    case "Acad":
-                    case "Bitmap":
-                    case "Pdf":
-                        comboBox3.Items.Add("Export");
-                        break;
-                    case "Acis":
-                    case "Iges":
-                    case "Jt":
-                    case "Step":
-                        importMode = (obj as Translator3D).ImportMode;
-                        comboBox3.Items.Add("Export");
-                        comboBox3.Items.Add("Import");
-                        break;
-                }
-
-                if (comboBox3.Items.Count > 0)
-                    comboBox3.SelectedIndex = 0;
-
-                var o_path = conf.Configurations[key1].TargetDirectory;
-                if (o_path.Length > 0)
-                {
-                    tvControl2.TargetDirectory = Path.Combine(o_path, key2);
-                }
-            }
-            else
-            {
-                propertyGrid.SelectedObject = null;
-                comboBox3.Items.Clear();
-            }
-
-            UpdateStateToControls();
-
-            //Debug.WriteLine(string.Format("ComboBox2_SelectionChanged: [{0}, {1}]",
-            //    comboBox2.SelectedIndex,
-            //    comboBox2.SelectedValue));
-        } // translator mode
-
-        private void ComboBox3_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (comboBox3.SelectedIndex != -1)
-            {
-                key3 = comboBox3.SelectedValue.ToString();
-                UpdatePropertyDefinitions();
-                var obj = conf.Configurations[key1].Translators[key2];
-
-                switch (key3)
-                {
                     case "SaveAs":
-                        (obj as Translator).PMode = ProcessingMode.SaveAs;
+                        obj.PMode = ProcessingMode.SaveAs;
                         tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Export":
-                        (obj as Translator).PMode = ProcessingMode.Export;
+                        obj.PMode = ProcessingMode.Export;
                         tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Import":
-                        (obj as Translator).PMode = ProcessingMode.Import;
-                        switch (key2)
+                        obj.PMode = ProcessingMode.Import;
+                        switch (obj.TMode)
                         {
-                            case "Acis":
+                            case TranslatorType.Acis:
                                 tvControl1.SearchPattern = "*.sat";
                                 break;
-                            case "Iges":
+                            case TranslatorType.Iges:
                                 tvControl1.SearchPattern = "*.igs";
                                 break;
-                            case "Jt":
+                            case TranslatorType.Jt:
                                 tvControl1.SearchPattern = "*.jt";
                                 break;
-                            case "Step":
+                            case TranslatorType.Step:
                                 tvControl1.SearchPattern = "*.stp";
                                 break;
                         }
                         break;
                 }
 
+                header.Processing = (int)obj.PMode;
                 tvControl1.InitLayout();
             }
         } // processing mode
@@ -770,9 +684,10 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         private void UpdatePropertyDefinitions()
         {
+            var obj = conf.Configurations[key1].Translator as Translator;
             propertyGrid.PropertyDefinitions.Clear();
 
-            if (key3 == "Import")
+            if (obj.PMode == ProcessingMode.Import)
             {
                 propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
                 {
@@ -805,7 +720,7 @@ namespace TFlex.PackageManager.UI
                 });
             }
 
-            if (key2 != "Document")
+            if (obj.TMode != TranslatorType.Document)
             {
                 propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
                 {
@@ -893,7 +808,7 @@ namespace TFlex.PackageManager.UI
             {
                 MessageBoxResult result = MessageBox.Show(
                     messages[1],
-                    "T-FLEX Package Manager",
+                    Resource.AppName,
                     MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Question);
 
@@ -994,9 +909,10 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         private void StartProcessing()
         {
-            string logFile = Path
-                .Combine(conf.Configurations[key1].TargetDirectory, key2, 
-                Resource.LOG_FILE);
+            var obj  = conf.Configurations[key1].Translator as Translator;
+            var path = conf.Configurations[key1].TargetDirectory;
+            var name = obj.TMode.ToString();
+            string logFile = Path.Combine(path, name, Resource.LOG_FILE);
 
             using (StreamWriter logger = new StreamWriter(logFile))
             {
@@ -1018,7 +934,7 @@ namespace TFlex.PackageManager.UI
         private void ProcessingTask(StreamWriter logger)
         {
             Header header = conf.Configurations[key1];
-            object translator = conf.Configurations[key1].Translators[key2];
+            object translator = conf.Configurations[key1].Translator;
             List<ProcItem> pItems = new List<ProcItem>();
             string[] items = tvControl1.SelectedItems.OrderBy(i => i).Cast<string>().ToArray();
             for (int i = 0; i < items.Length; i++)
@@ -1068,6 +984,36 @@ namespace TFlex.PackageManager.UI
                 IntPtr.Zero, IntPtr.Zero);
 
             logging.WriteLine(LogLevel.INFO, "Processing ending");
+        }
+
+        private void SetProcessingMode(Header header)
+        {
+            var obj = header.Translator;
+
+            comboBox2.Items.Clear();
+
+            switch ((obj as Translator).TMode)
+            {
+                case TranslatorType.Document:
+                    comboBox2.Items.Add("SaveAs");
+                    comboBox2.SelectedIndex = 0;
+                    break;
+                case TranslatorType.Acad:
+                case TranslatorType.Bitmap:
+                case TranslatorType.Pdf:
+                    comboBox2.Items.Add("Export");
+                    comboBox2.SelectedIndex = 0;
+                    break;
+                case TranslatorType.Acis:
+                case TranslatorType.Iges:
+                case TranslatorType.Jt:
+                case TranslatorType.Step:
+                    importMode = (obj as Translator3D).ImportMode;
+                    comboBox2.Items.Add("Export");
+                    comboBox2.Items.Add("Import");
+                    comboBox2.SelectedIndex = header.Processing > 1 ? 1 : 0;
+                    break;
+            }
         }
         #endregion
     }

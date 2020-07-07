@@ -55,6 +55,8 @@ namespace TFlex.PackageManager.Configuration
             projectionNames      = new string[] { };
             excludeProjection    = false;
             projectionScale      = 99999;
+
+            PMode = ProcessingMode.SaveAs; // SaveAs
         }
 
         private void PageTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -274,6 +276,11 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Document;
+        internal override ProcessingMode PMode
+        {
+            get => base.PMode;
+            set => base.PMode = value;
+        }
         #endregion
 
         #region internal methods

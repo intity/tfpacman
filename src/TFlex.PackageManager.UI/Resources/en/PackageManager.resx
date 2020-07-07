@@ -219,6 +219,6 @@
     <value>Configuration:</value>
   </data>
   <data name="tb_label2" xml:space="preserve">
-    <value>Translator:</value>
+    <value>Processing mode:</value>
   </data>
 </root>
