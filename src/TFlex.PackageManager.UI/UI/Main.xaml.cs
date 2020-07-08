@@ -598,28 +598,39 @@ namespace TFlex.PackageManager.UI
             if (result == MessageBoxResult.OK)
             {
                 int index = -1;
+                int count = conf.Configurations.Count;
                 string oldKey = key1;
 
-                foreach (var i in conf.Configurations)
+                for (int i = 0; i < count; i++)
                 {
-                    if (i.Key == oldKey)
+                    var cfg = conf.Configurations.ElementAt(i);
+                    if (cfg.Key == oldKey)
                     {
+                        if ((count -1) > i)
+                        {
+                            index = i;
+                            key1 = conf.Configurations.ElementAt(i + 1).Key;
+                        }
+                        else if ((count -1) > 0 && (count -1) == i)
+                        {
+                            index = (i - 1);
+                            key1 = conf.Configurations.ElementAt(i - 1).Key;
+                        }
+                        else
+                        {
+                            key1 = string.Empty;
+                        }
                         break;
-                    }
-                    else
-                    {
-                        key1 = i.Key;
-                        index++;
                     }
                 }
 
-                conf.Configurations[oldKey].ConfigurationTask(2);
                 conf.Configurations.Remove(oldKey);
                 comboBox1.Items.Remove(oldKey);
-                comboBox1.SelectedIndex = index;
-                propertyGrid.PropertyDefinitions.Clear();
 
-                if (index == -1) key1 = string.Empty;
+                if (index == -1)
+                    propertyGrid.PropertyDefinitions.Clear();
+                else
+                    comboBox1.SelectedIndex = index;
             }
         } // Delete configuration
 
@@ -722,8 +733,8 @@ namespace TFlex.PackageManager.UI
 
             UpdateStateToControls();
 
-            //Debug.WriteLine(string.Format("ComboBox1_SelectionChanged: [index: {0}, value: {1}]",
-            //    comboBox1.SelectedIndex,
+            //Debug.WriteLine(string.Format("selector_1: [index: {0}, value: {1}]",
+            //    comboBox1.SelectedIndex, 
             //    comboBox1.SelectedValue));
         } // configuration list
 

@@ -69,14 +69,12 @@ namespace TFlex.PackageManager.Configuration
             foreach (var i in Directory.GetFiles(directory, "*.config"))
             {
                 string name = Path.GetFileNameWithoutExtension(i);
-                Header header = new Header
+                Header cfg = new Header
                 {
                     UserDirectory = directory,
                     ConfigurationName = name
                 };
-
-                header.ConfigurationTask(0);
-                Configurations.Add(name, header);
+                Configurations.Add(name, cfg);
             }
 
             //Debug.WriteLine(string.Format("GetConfigurations [count: {0}]",
@@ -101,33 +99,35 @@ namespace TFlex.PackageManager.Configuration
         #region event handlers
         private void Configurations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Header header;
+            Header cfg;
 
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    header = ((KeyValuePair<string, Header>)e.NewItems[0]).Value as Header;
-                    header.PropertyChanged += Header_PropertyChanged;
+                    cfg = ((KeyValuePair<string, Header>)e.NewItems[0]).Value;
+                    cfg.ConfigurationTask(0);
+                    cfg.PropertyChanged += Header_PropertyChanged;
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    header = ((KeyValuePair<string, Header>)e.OldItems[0]).Value as Header;
-                    changedCofigurations.Remove(header.ConfigurationName);
+                    cfg = ((KeyValuePair<string, Header>)e.OldItems[0]).Value;
+                    cfg.ConfigurationTask(2);
+                    changedCofigurations.Remove(cfg.ConfigurationName);
                     break;
             }
         }
 
         private void Header_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is Header header)
+            if (sender is Header cfg)
             {
-                if (header.IsChanged && !header.IsInvalid)
+                if (cfg.IsChanged && !cfg.IsInvalid)
                 {
-                    if (changedCofigurations.Contains(header.ConfigurationName) == false)
-                        changedCofigurations.Add(header.ConfigurationName);
+                    if (changedCofigurations.Contains(cfg.ConfigurationName) == false)
+                        changedCofigurations.Add(cfg.ConfigurationName);
                 }
                 else
                 {
-                    changedCofigurations.Remove(header.ConfigurationName);
+                    changedCofigurations.Remove(cfg.ConfigurationName);
                 }
 
                 //Debug.WriteLine(string.Format("Header_PropertyChanged [name: {0}, value: {1}, total changes: {2}]", 
