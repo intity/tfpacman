@@ -714,6 +714,7 @@ namespace TFlex.PackageManager.UI
                 var header = conf.Configurations[key1];
 
                 tvControl1.TargetDirectory  = header.InitialCatalog;
+                tvControl2.TargetDirectory  = header.TargetDirectory;
                 inputPath1.SelectedObject   = header;
                 inputPath2.SelectedObject   = header;
                 propertyGrid.SelectedObject = header.Translator;

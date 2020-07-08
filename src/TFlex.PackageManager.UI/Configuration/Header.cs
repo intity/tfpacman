@@ -394,14 +394,6 @@ namespace TFlex.PackageManager.Configuration
                     break;
             }
 
-            if (TargetDirectory.Length > 0)
-            {
-                var name = (translators[m_index] as Translator).TMode.ToString();
-                var path = Path.Combine(TargetDirectory, name);
-                if (Directory.Exists(path) == false)
-                    Directory.CreateDirectory(path);
-            }
-
             Translator = translators[m_index];
 
             //Debug.WriteLine(string.Format("InitTranslator [index: {0}]", m_index));
