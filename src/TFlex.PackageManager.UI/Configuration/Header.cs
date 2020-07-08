@@ -102,8 +102,8 @@ namespace TFlex.PackageManager.Configuration
                 case "Variables":
                     values[2] = m.Variables   ? "1" : "0";
                     break;
-                case "Files":
-                    values[3] = m.Files       ? "1" : "0";
+                case "Links":
+                    values[3] = m.Links       ? "1" : "0";
                     break;
             }
 
@@ -250,11 +250,10 @@ namespace TFlex.PackageManager.Configuration
                 {
                     modules = value;
                     m_index = index;
-
+                    data_1_5.Value = (value as Modules).ToString();
                     InitTranslator();
                     DataContext.Element("configuration").Element("translator")
                         .ReplaceWith(tr_data);
-
                     OnPropertyChanged("Modules");
                 }
             }
@@ -291,6 +290,7 @@ namespace TFlex.PackageManager.Configuration
                     processing = value;
                     DataContext.Element("configuration").Element("translator")
                         .Attribute("mode").Value = processing.ToString();
+                    OnPropertyChanged("Processing");
                 }
             }
         }
@@ -581,7 +581,7 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region INotifyPropertyChanged members
+        #region INotifyPropertyChanged Members
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>

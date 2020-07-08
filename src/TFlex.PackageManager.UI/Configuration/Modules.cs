@@ -15,10 +15,13 @@ namespace TFlex.PackageManager.Configuration
         bool pages;
         bool projections;
         bool variables;
-        bool files;
+        bool links;
         #endregion
 
         #region public properies
+        /// <summary>
+        /// Module for processing document pages.
+        /// </summary>
         [PropertyOrder(0)]
         [CustomDisplayName(Resource.MODULES_UI, "dn1_5_0")]
         [CustomDescription(Resource.MODULES_UI, "dn1_5_0")]
@@ -35,6 +38,9 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
+        /// <summary>
+        /// Module for processing document projections.
+        /// </summary>
         [PropertyOrder(1)]
         [CustomDisplayName(Resource.MODULES_UI, "dn1_5_1")]
         [CustomDescription(Resource.MODULES_UI, "dn1_5_1")]
@@ -51,6 +57,9 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
+        /// <summary>
+        /// Module for processing document variables.
+        /// </summary>
         [PropertyOrder(2)]
         [CustomDisplayName(Resource.MODULES_UI, "dn1_5_2")]
         [CustomDescription(Resource.MODULES_UI, "dn1_5_2")]
@@ -67,18 +76,21 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
+        /// <summary>
+        /// Module for processing document links.
+        /// </summary>
         [PropertyOrder(3)]
         [CustomDisplayName(Resource.MODULES_UI, "dn1_5_3")]
         [CustomDescription(Resource.MODULES_UI, "dn1_5_3")]
-        public virtual bool Files
+        public virtual bool Links
         {
-            get => files;
+            get => links;
             set
             {
-                if (files != value)
+                if (links != value)
                 {
-                    files = value;
-                    OnPropertyChanged("Files");
+                    links = value;
+                    OnPropertyChanged("Links");
                 }
             }
         }
@@ -92,7 +104,7 @@ namespace TFlex.PackageManager.Configuration
             pages       = values[0] == "1";
             projections = values[1] == "1";
             variables   = values[2] == "1";
-            files       = values[3] == "1";
+            links       = values[3] == "1";
         }
 
         public override string ToString()
@@ -102,8 +114,8 @@ namespace TFlex.PackageManager.Configuration
             values[0] = pages       ? "1" : "0";
             values[1] = projections ? "1" : "0";
             values[2] = variables   ? "1" : "0";
-            values[3] = files       ? "1" : "0";
-            
+            values[3] = links       ? "1" : "0";
+
             // reserved
             values[4] = "0";
             values[5] = "0";
@@ -138,13 +150,14 @@ namespace TFlex.PackageManager.Configuration
     {
         public M0()
         {
-            Files = true;
+            Links = true;
         }
 
-        public override bool Files
+        [Browsable(false)]
+        public override bool Links
         {
-            get => base.Files;
-            set => base.Files = value;
+            get => base.Links;
+            set => base.Links = value;
         }
     }
 
@@ -155,14 +168,7 @@ namespace TFlex.PackageManager.Configuration
     {
         public M1()
         {
-            Pages = true;
-            Files = true;
-        }
-
-        public override bool Pages
-        {
-            get => base.Pages;
-            set => base.Pages = value;
+            Pages  = true;
         }
 
         [Browsable(false)]
@@ -172,10 +178,11 @@ namespace TFlex.PackageManager.Configuration
             set => base.Variables = value;
         }
 
-        public override bool Files
+        [Browsable(false)]
+        public override bool Links
         {
-            get => base.Files;
-            set => base.Files = value;
+            get => base.Links;
+            set => base.Links = value;
         }
     }
 
@@ -186,7 +193,7 @@ namespace TFlex.PackageManager.Configuration
     {
         public M2()
         {
-            Files = true;
+            // ...
         }
 
         [Browsable(false)]
@@ -210,10 +217,11 @@ namespace TFlex.PackageManager.Configuration
             set => base.Variables = value;
         }
 
-        public override bool Files
+        [Browsable(false)]
+        public override bool Links
         {
-            get => base.Files;
-            set => base.Files = value;
+            get => base.Links;
+            set => base.Links = value;
         }
     }
 }

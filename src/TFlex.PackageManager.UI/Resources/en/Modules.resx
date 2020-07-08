@@ -130,7 +130,7 @@
     <comment>Module for processing document variables.</comment>
   </data>
   <data name="dn1_5_3" xml:space="preserve">
-    <value>Files</value>
-    <comment>Module for determining the format of the output file name.</comment>
+    <value>Links</value>
+    <comment>Module for processing document links.</comment>
   </data>
 </root>

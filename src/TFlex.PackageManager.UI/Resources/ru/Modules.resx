@@ -130,7 +130,7 @@
     <comment>Модуль для обработки переменных документа.</comment>
   </data>
   <data name="dn1_5_3" xml:space="preserve">
-    <value>Файлы</value>
-    <comment>Модуль для определения формата имени файла вывода.</comment>
+    <value>Ссылки</value>
+    <comment>Модуль для обработки ссылок документа.</comment>
   </data>
 </root>

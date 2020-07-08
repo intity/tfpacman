@@ -14,26 +14,26 @@ namespace TFlex.PackageManager.Configuration
     internal class Package
     {
         #region private fields
-        private readonly Header header;
-        private readonly string mode;
-        private readonly string path;
-        private XDocument data;
-        private XElement docs;
+        readonly Header cfg;
+        readonly string mode;
+        readonly string path;
+        XDocument data;
+        XElement docs;
         #endregion
 
         /// <summary>
         /// The Package constructor.
         /// </summary>
-        /// <param name="header"></param>
-        /// <param name="t_mode"></param>
-        public Package(Header header, TranslatorType t_mode)
+        /// <param name="cfg"></param>
+        public Package(Header cfg)
         {
-            this.header = header;
+            this.cfg = cfg;
+            var type = (cfg.Translator as Translator).TMode;
 
-            mode = Enum.GetName(typeof(TranslatorType), t_mode);
-            path = Path.Combine(header.TargetDirectory, mode, "package.xml");
+            mode = type.ToString();
+            path = Path.Combine(cfg.TargetDirectory, mode, "package.xml");
 
-            switch (t_mode)
+            switch (type)
             {
                 case TranslatorType.Document: InitPackage_0(); break;
             }
@@ -147,7 +147,7 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         private void InitPackage_0()
         {
-            string[] paths = Directory.GetFiles(header.InitialCatalog, "*.grb",
+            string[] paths = Directory.GetFiles(cfg.InitialCatalog, "*.grb",
                 SearchOption.AllDirectories);
 
             if (File.Exists(path))
@@ -155,9 +155,9 @@ namespace TFlex.PackageManager.Configuration
                 data = XDocument.Load(path);
                 docs = data.Element("package").Element("documents");
                 var src = data.Element("package").Attribute("src");
-                if (src.Value != header.InitialCatalog)
+                if (src.Value != cfg.InitialCatalog)
                 {
-                    src.Value = header.InitialCatalog;
+                    src.Value = cfg.InitialCatalog;
                     docs.Elements().Remove();
 
                     foreach (var p in paths)
@@ -189,7 +189,7 @@ namespace TFlex.PackageManager.Configuration
                 data = new XDocument(new XDeclaration("1.0", "utf-8", null),
                     new XElement("package", 
                     new XAttribute("type", mode), 
-                    new XAttribute("src", header.InitialCatalog), docs));
+                    new XAttribute("src", cfg.InitialCatalog), docs));
             }
 
             foreach (var p in paths)

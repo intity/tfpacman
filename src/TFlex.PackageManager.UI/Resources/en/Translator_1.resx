@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="category4" xml:space="preserve">
-    <value>File</value>
+    <value>Files</value>
   </data>
   <data name="category5" xml:space="preserve">
     <value>Export options</value>

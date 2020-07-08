@@ -19,7 +19,7 @@ namespace TFlex.PackageManager.Common
     internal class Processing
     {
         #region private fields
-        readonly Header header;
+        readonly Header cfg;
         readonly Logging logging;
         readonly Package package;
         readonly Translator_1 tr_1;
@@ -29,47 +29,46 @@ namespace TFlex.PackageManager.Common
         readonly Translator_7 tr_7;
         readonly Translator_9 tr_9;
         readonly Translator_10 tr_10;
-        readonly object translator;
+        readonly Modules modules;
         #endregion
 
         /// <summary>
         /// The Processing constructor.
         /// </summary>
-        /// <param name="header"></param>
-        /// <param name="translator"></param>
+        /// <param name="cfg"></param>
         /// <param name="logging"></param>
-        public Processing(Header header, object translator, Logging logging)
+        public Processing(Header cfg, Logging logging)
         {
-            this.header     = header;
-            this.logging    = logging;
-            this.translator = translator;
+            this.cfg     = cfg;
+            this.logging = logging;
+            this.modules = cfg.Modules as Modules;
 
-            switch ((translator as Translator).TMode)
+            switch ((cfg.Translator as Translator).TMode)
             {
                 case TranslatorType.Acad:
-                    tr_1 = translator as Translator_1;
+                    tr_1 = cfg.Translator as Translator_1;
                     break;
                 case TranslatorType.Acis:
-                    tr_2 = translator as Translator_2;
+                    tr_2 = cfg.Translator as Translator_2;
                     break;
                 case TranslatorType.Bitmap:
-                    tr_3 = translator as Translator_3;
+                    tr_3 = cfg.Translator as Translator_3;
                     break;
                 case TranslatorType.Iges:
-                    tr_6 = translator as Translator_6;
+                    tr_6 = cfg.Translator as Translator_6;
                     break;
                 case TranslatorType.Jt:
-                    tr_7 = translator as Translator_7;
+                    tr_7 = cfg.Translator as Translator_7;
                     break;
                 case TranslatorType.Pdf:
-                    tr_9 = translator as Translator_9;
+                    tr_9 = cfg.Translator as Translator_9;
                     break;
                 case TranslatorType.Step:
-                    tr_10 = translator as Translator_10;
+                    tr_10 = cfg.Translator as Translator_10;
                     break;
             }
 
-            package = new Package(header, (translator as Translator).TMode);
+            package = new Package(cfg);
         }
 
         #region internal methods
@@ -79,13 +78,13 @@ namespace TFlex.PackageManager.Common
         /// <param name="item">The Processing Item Object.</param>
         internal void ProcessingFile(ProcItem item)
         {
-            var tr = translator as Translator;
+            var tr = cfg.Translator as Translator;
 
             Document document = null;
             FileInfo fileInfo = new FileInfo(item.IPath);
             string directory = fileInfo.Directory.FullName.Replace(
-                header.InitialCatalog,
-                header.TargetDirectory + "\\" + tr.TMode);
+                cfg.InitialCatalog,
+                cfg.TargetDirectory + "\\" + tr.TMode);
             string targetDirectory = Directory.Exists(directory)
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;
@@ -98,7 +97,7 @@ namespace TFlex.PackageManager.Common
                         logging.WriteLine(LogLevel.INFO, ">>> Document Opened");
                     break;
                 case ProcessingMode.Import:
-                    int iMode = (translator as Translator3D).ImportMode;
+                    int iMode = (cfg.Translator as Translator3D).ImportMode;
                     string prototype = null;
                     using (Files files = new Files())
                     {
@@ -277,7 +276,7 @@ namespace TFlex.PackageManager.Common
         /// <returns>Returns Output File name.</returns>
         private string GetOutputFileName(Document document, Page page)
         {
-            var tr = translator as Category_3;
+            var tr = cfg.Translator as Category_3;
             string fileName, expVal, pattern = @"\{(.*?)\}";
 
             if (tr.TemplateFileName.Length > 0)
@@ -344,7 +343,7 @@ namespace TFlex.PackageManager.Common
         /// <returns></returns>
         private bool PageTypeExists(Page page)
         {
-            var tr_0 = translator as Translator_0;
+            var tr_0 = cfg.Translator as Translator_0;
 
             Dictionary<PageType, bool> types = new Dictionary<PageType, bool>
             {
@@ -367,8 +366,8 @@ namespace TFlex.PackageManager.Common
         /// <param name="oPath"></param>
         private void ReplaceLink(Document document, FileLink link, string oPath)
         {
-            var tr = translator as Translator;
-            string path = header.TargetDirectory + "\\" + tr.TMode + "\\";
+            var tr = cfg.Translator as Translator;
+            string path = cfg.TargetDirectory + "\\" + tr.TMode + "\\";
             link.FilePath = oPath.Replace(path, "");
             logging.WriteLine(LogLevel.INFO,
                 string.Format("--> Link Replaced [id: 0x{0:X8}, path: {1}]",
@@ -383,7 +382,7 @@ namespace TFlex.PackageManager.Common
         /// <returns>Variables Count.</returns>
         private int VariablesCount()
         {
-            var tr_0 = translator as Translator_0;
+            var tr_0 = cfg.Translator as Translator_0;
             List<string> variables = new List<string>();
 
             foreach (var i in tr_0.AddVariables)
@@ -420,7 +419,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="item">The Processing Item Object.</param>
         private void ProcessingDocument(Document document, string targetDirectory, ProcItem item)
         {
-            var tr = translator as Translator;
+            var tr = cfg.Translator as Translator;
             string[] aPath = item.IPath.Split('\\');
 
             switch (tr.TMode)
@@ -546,6 +545,9 @@ namespace TFlex.PackageManager.Common
         /// <param name="item"></param>
         private void ProcessingLinks(Document document, ProcItem item)
         {
+            if (!modules.Links)
+                return;
+
             var len = document.FileLinks.Count();
             if (len > 0)
             {
@@ -610,6 +612,9 @@ namespace TFlex.PackageManager.Common
         /// <param name="targetDirectory"></param>
         private void ProcessingPages(Document document, string targetDirectory)
         {
+            if (!modules.Pages)
+                return;
+
             int count = 0;
             string path = null;
             Dictionary<Page, string> o_pages = new Dictionary<Page, string>();
@@ -623,7 +628,7 @@ namespace TFlex.PackageManager.Common
                 { PageType.Circuit,         0 }
             };
             List<Page> pages = new List<Page>();
-            var tr_0 = translator as Translator_0;
+            var tr_0 = cfg.Translator as Translator_0;
 
             foreach (var p in document.GetPages())
             {
@@ -735,7 +740,10 @@ namespace TFlex.PackageManager.Common
         /// <param name="page"></param>
         private void ProcessingProjections(Document document, Page page)
         {
-            var tr_0 = translator as Translator_0;
+            if (!modules.Projections)
+                return;
+
+            var tr_0 = cfg.Translator as Translator_0;
             var projections = document.GetProjections().Where(p => p.Page == page);
             if (projections.Count() > 0)
             {
@@ -790,7 +798,10 @@ namespace TFlex.PackageManager.Common
         /// <param name="document"></param>
         private void ProcessingVariables(Document document)
         {
-            var tr_0 = translator as Translator_0;
+            if (!modules.Variables)
+                return;
+
+            var tr_0 = cfg.Translator as Translator_0;
             int len = VariablesCount();
             if (len > 0)
             {

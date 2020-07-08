@@ -31,6 +31,7 @@ namespace TFlex.PackageManager.UI
         readonly CustomTreeView treeListView2;
 
         readonly Common.Options options;
+        readonly List<PropertyDefinition> modules;
 
         readonly string[] tblabels;
         readonly string[] sblabels;
@@ -218,6 +219,114 @@ namespace TFlex.PackageManager.UI
                 IsBrowsable = false
             });
 
+            modules = new List<PropertyDefinition>
+            {
+                new PropertyDefinition // (0) Pages
+                {
+                    TargetProperties = new[]
+                    {
+                        "PageNames",
+                        "ExcludePage",
+                        "PageScale",
+                        "PageTypes",
+                        "CheckDrawingTemplate"
+                    },
+                    IsBrowsable = false
+                },
+                new PropertyDefinition // (1) Projections
+                {
+                    TargetProperties = new[]
+                    {
+                        "ProjectionNames",
+                        "ExcludeProjection",
+                        "ProjectionScale"
+                    },
+                    IsBrowsable = false
+                },
+                new PropertyDefinition // (2) Variables
+                {
+                    TargetProperties = new[]
+                    {
+                        "AddVariables",
+                        "EditVariables",
+                        "RenameVariables",
+                        "RemoveVariables"
+                    },
+                    IsBrowsable = false
+                },
+                new PropertyDefinition // (3) Export
+                {
+                    TargetProperties = new[]
+                    {
+                        "ImportMode",
+                        "Heal",
+                        "CreateAccurateEdges",
+                        "ImportSolidBodies",
+                        "ImportSheetBodies",
+                        "ImportWireBodies",
+                        "ImportMeshBodies",
+                        "ImportHideBodies",
+                        "ImportAnotations",
+                        "ImportOnlyFromActiveFilter",
+                        "SewTolerance",
+                        "CheckImportGeomerty",
+                        "UpdateProductStructure",
+                        "AddBodyRecordsInProductStructure"
+                    },
+                    IsBrowsable = false
+                },
+                new PropertyDefinition // (4) Import
+                {
+                    TargetProperties = new[]
+                    {
+                        "FileNameSuffix",
+                        "TemplateFileName",
+                        "Version",
+                        "Protocol",
+                        "ExportMode",
+                        "ColorSource",
+                        "ExportSolidBodies",
+                        "ExportSheetBodies",
+                        "ExportWireBodies",
+                        "Export3DPictures",
+                        "ExportAnotation",
+                        "ExportWelds",
+                        "ExportCurves",
+                        "ExportContours",
+                        "SimplifyGeometry",
+                        "ConvertAnalyticGeometryToNurbs",
+                        "SaveSolidBodiesAsFaceSet",
+                        "ImportWireBodies",
+                        "ImportMeshBodies",
+                        "ImportAnotations"
+                    },
+                    IsBrowsable = false
+                },
+                new PropertyDefinition // (5) Import [mode != 0]
+                {
+                    TargetProperties = new[]
+                    {
+                        "FileNameSuffix",
+                        "TemplateFileName",
+                        "Version",
+                        "Protocol",
+                        "ExportMode",
+                        "ColorSource",
+                        "ExportSolidBodies",
+                        "ExportSheetBodies",
+                        "ExportWireBodies",
+                        "Export3DPictures",
+                        "ExportAnotation",
+                        "ExportWelds",
+                        "ExportCurves",
+                        "ExportContours",
+                        "SimplifyGeometry",
+                        "ConvertAnalyticGeometryToNurbs",
+                        "SaveSolidBodiesAsFaceSet"
+                    },
+                    IsBrowsable = false
+                }
+            };
             #endregion
         }
 
@@ -261,15 +370,16 @@ namespace TFlex.PackageManager.UI
                     Marshal.GetFunctionPointerForDelegate(newWndProc));
             }
 
-            propertyGrid.SelectedObjectChanged += PropertyGrid_SelectedObjectChanged;
-
             if (comboBox1.Items.Count == 0 && conf.Configurations.Count > 0)
             {
                 for (int i = 0; i < conf.Configurations.Count; i++)
                 {
-                    conf.Configurations.ElementAt(i).Value
-                        .PropertyChanged += Header_PropertyChanged;
-                    comboBox1.Items.Add(conf.Configurations.ElementAt(i).Key);
+                    var h = conf.Configurations.ElementAt(i);
+                    h.Value.PropertyChanged += Header_PropertyChanged;
+                    comboBox1.Items.Add(h.Key);
+
+                    var m = h.Value.Modules as Modules;
+                    m.PropertyChanged += Modules_PropertyChanged;
                 }
 
                 comboBox1.SelectedIndex = 0;
@@ -292,11 +402,6 @@ namespace TFlex.PackageManager.UI
             propertyGrid.PropertyValueChanged += Translator_PropertyValueChanged;
         }
 
-        private void PropertyGrid_SelectedObjectChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            // ..
-        }
-
         private void Window_Closed(object sender, EventArgs e)
         {
             // ..
@@ -314,37 +419,43 @@ namespace TFlex.PackageManager.UI
             if (!(sender is Header header))
                 return;
 
-            var name = (header.Translator as Translator).TMode.ToString();
-            var path = header.TargetDirectory;
-
             switch (e.PropertyName)
             {
                 case "InitialCatalog":
                     tvControl1.TargetDirectory = header.InitialCatalog;
                     break;
                 case "TargetDirectory":
+                    var name = (header.Translator as Translator).TMode.ToString();
+                    var path = header.TargetDirectory;
                     tvControl2.TargetDirectory = Path.Combine(path, name);
                     break;
                 case "Translator":
                     propertyGrid.SelectedObject = header.Translator;
                     SetProcessingMode(header);
+                    (header.Modules as Modules).PropertyChanged += Modules_PropertyChanged;
                     break;
             }
 
             UpdateStateToControls();
+
+            //Debug.WriteLine(string.Format("Header_PropertyChanged [name: {0}]", 
+            //    e.PropertyName));
+        }
+
+        private void Modules_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var m = sender as Modules;
+            UpdateModule(m, e.PropertyName);
         }
 
         private void Translator_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
         {
+            var obj = conf.Configurations[key1].Translator as Translator;
             var item = e.OriginalSource as PropertyItem;
             if (item.PropertyName == "ImportMode")
             {
-                propertyGrid.PropertyDefinitions.Clear();
-                propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
-                {
-                    TargetProperties = GetTargetProperties((int)e.NewValue),
-                    IsBrowsable = false
-                });
+                importMode = (int)e.NewValue;
+                UpdateModules((int)obj.TMode, 2);
             }
             
             UpdateStateToControls();
@@ -480,7 +591,7 @@ namespace TFlex.PackageManager.UI
         {
             MessageBoxResult result = MessageBox.Show(
                 string.Format(messages[0], key1),
-                "T-FLEX Package Manager",
+                Resource.AppName,
                 MessageBoxButton.OKCancel,
                 MessageBoxImage.Question);
 
@@ -600,10 +711,12 @@ namespace TFlex.PackageManager.UI
             }
             else
             {
-                tvControl1.TargetDirectory = string.Empty;
-                tvControl2.TargetDirectory = string.Empty;
-                inputPath1.SelectedObject  = null;
-                inputPath2.SelectedObject  = null;
+                tvControl1.TargetDirectory  = string.Empty;
+                tvControl2.TargetDirectory  = string.Empty;
+                inputPath1.SelectedObject   = null;
+                inputPath2.SelectedObject   = null;
+                propertyGrid.SelectedObject = null;
+                comboBox2.Items.Clear();
             }
 
             UpdateStateToControls();
@@ -618,22 +731,24 @@ namespace TFlex.PackageManager.UI
             if (comboBox2.SelectedIndex != -1)
             {
                 key2 = comboBox2.SelectedValue.ToString();
-                UpdatePropertyDefinitions();
-                var header = conf.Configurations[key1];
-                var obj = header.Translator as Translator;
+                var cfg = conf.Configurations[key1];
+                var obj = cfg.Translator as Translator;
 
                 switch (key2)
                 {
                     case "SaveAs":
                         obj.PMode = ProcessingMode.SaveAs;
+                        UpdateModules((int)obj.TMode, 0);
                         tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Export":
                         obj.PMode = ProcessingMode.Export;
+                        UpdateModules((int)obj.TMode, 1);
                         tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Import":
                         obj.PMode = ProcessingMode.Import;
+                        UpdateModules((int)obj.TMode, 2);
                         switch (obj.TMode)
                         {
                             case TranslatorType.Acis:
@@ -652,8 +767,12 @@ namespace TFlex.PackageManager.UI
                         break;
                 }
 
-                header.Processing = (int)obj.PMode;
+                cfg.Processing = (int)obj.PMode;
                 tvControl1.InitLayout();
+            }
+            else
+            {
+                propertyGrid.PropertyDefinitions.Clear();
             }
         } // processing mode
         #endregion
@@ -680,122 +799,73 @@ namespace TFlex.PackageManager.UI
 
         #region extension methods
         /// <summary>
-        /// Update property definitions.
+        /// Update state all modules.
         /// </summary>
-        private void UpdatePropertyDefinitions()
+        /// <param name="type"></param>
+        /// <param name="mode"></param>
+        private void UpdateModules(int type, int mode)
         {
-            var obj = conf.Configurations[key1].Translator as Translator;
+            var m = conf.Configurations[key1].Modules as Modules;
             propertyGrid.PropertyDefinitions.Clear();
 
-            if (obj.PMode == ProcessingMode.Import)
+            if (type == 0 || type == 1 || type == 3 || type == 6)
             {
-                propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
+                foreach (var p in m.GetType().GetProperties())
                 {
-                    TargetProperties = GetTargetProperties(importMode),
-                    IsBrowsable = false
-                });
+                    UpdateModule(m, p.Name);
+                }
+            }
+
+            if (mode == 2)
+            {
+                if (importMode != 0) // import mode on translator level
+                    propertyGrid.PropertyDefinitions.Add(modules[5]);
+                else
+                    propertyGrid.PropertyDefinitions.Add(modules[4]);
             }
             else
             {
-                propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
-                {
-                    TargetProperties = new[]
-                    {
-                        "ImportMode",
-                        "Heal",
-                        "CreateAccurateEdges",
-                        "ImportSolidBodies",
-                        "ImportSheetBodies",
-                        "ImportWireBodies",
-                        "ImportMeshBodies",
-                        "ImportHideBodies",
-                        "ImportAnotations",
-                        "ImportOnlyFromActiveFilter",
-                        "SewTolerance",
-                        "CheckImportGeomerty",
-                        "UpdateProductStructure",
-                        "AddBodyRecordsInProductStructure"
-                    },
-                    IsBrowsable = false
-                });
+                propertyGrid.PropertyDefinitions.Add(modules[3]);
             }
 
-            if (obj.TMode != TranslatorType.Document)
-            {
-                propertyGrid.PropertyDefinitions.Add(new PropertyDefinition
-                {
-                    TargetProperties = new string[]
-                    {
-                        "AddVariables",
-                        "EditVariables",
-                        "RenameVariables",
-                        "RemoveVariables"
-                    },
-                    IsBrowsable = false
-                });
-            }
+            //Debug.WriteLine(string.Format("InitModules [type: {0}, mode: {1}, len {2}]",
+            //    type, mode, propertyGrid.PropertyDefinitions.Count));
         }
 
         /// <summary>
-        /// Get target properties for browsable definition.
+        /// Update state of extension module.
         /// </summary>
-        /// <param name="mode">Import type.</param>
-        /// <returns>Target properties.</returns>
-        private string[] GetTargetProperties(int mode)
+        /// <param name="m"></param>
+        /// <param name="name"></param>
+        private void UpdateModule(Modules m, string name)
         {
-            string[] properties;
-
-            if (mode != 0)
+            switch (name)
             {
-                properties = new string[]
-                {
-                    "FileNameSuffix",
-                    "TemplateFileName",
-                    "Version",
-                    "Protocol",
-                    "ExportMode",
-                    "ColorSource",
-                    "ExportSolidBodies",
-                    "ExportSheetBodies",
-                    "ExportWireBodies",
-                    "Export3DPictures",
-                    "ExportAnotation",
-                    "ExportWelds",
-                    "ExportCurves",
-                    "ExportContours",
-                    "SimplifyGeometry",
-                    "ConvertAnalyticGeometryToNurbs",
-                    "SaveSolidBodiesAsFaceSet"
-                };
-            }
-            else
-            {
-                properties = new string[]
-                {
-                    "FileNameSuffix",
-                    "TemplateFileName",
-                    "Version",
-                    "Protocol",
-                    "ExportMode",
-                    "ColorSource",
-                    "ExportSolidBodies",
-                    "ExportSheetBodies",
-                    "ExportWireBodies",
-                    "Export3DPictures",
-                    "ExportAnotation",
-                    "ExportWelds",
-                    "ExportCurves",
-                    "ExportContours",
-                    "SimplifyGeometry",
-                    "ConvertAnalyticGeometryToNurbs",
-                    "SaveSolidBodiesAsFaceSet",
-                    "ImportWireBodies",
-                    "ImportMeshBodies",
-                    "ImportAnotations"
-                };
+                case "Pages":
+                    if (m.Pages)
+                        propertyGrid.PropertyDefinitions.Remove(modules[0]);
+                    else
+                        propertyGrid.PropertyDefinitions.Add(modules[0]);
+                    break;
+                case "Projections":
+                    if (m.Projections)
+                        propertyGrid.PropertyDefinitions.Remove(modules[1]);
+                    else
+                        propertyGrid.PropertyDefinitions.Add(modules[1]);
+                    break;
+                case "Variables":
+                    if (m.Variables)
+                        propertyGrid.PropertyDefinitions.Remove(modules[2]);
+                    else
+                        propertyGrid.PropertyDefinitions.Add(modules[2]);
+                    break;
+                case "Links":
+                    // ...
+                    break;
             }
 
-            return properties;
+            //Debug.WriteLine(string.Format("UpdateModules [name: {0}, len {1}]",
+            //    name, propertyGrid.PropertyDefinitions.Count));
         }
 
         /// <summary>
@@ -933,8 +1003,7 @@ namespace TFlex.PackageManager.UI
 
         private void ProcessingTask(StreamWriter logger)
         {
-            Header header = conf.Configurations[key1];
-            object translator = conf.Configurations[key1].Translator;
+            Header cfg = conf.Configurations[key1];
             List<ProcItem> pItems = new List<ProcItem>();
             string[] items = tvControl1.SelectedItems.OrderBy(i => i).Cast<string>().ToArray();
             for (int i = 0; i < items.Length; i++)
@@ -948,13 +1017,13 @@ namespace TFlex.PackageManager.UI
             TFlex.Application.FileLinksAutoRefresh = TFlex.Application.FileLinksRefreshMode.AutoRefresh;
 
             Logging logging = new Logging(logger);
-            Processing proc = new Processing(header, translator, logging);
+            Processing proc = new Processing(cfg, logging);
 
             logging.WriteLine(LogLevel.INFO, "Started processing");
             logging.WriteLine(LogLevel.INFO, 
                 string.Format("Translator [type: {0}, mode: {1}]", 
-                (translator as Translator).TMode, 
-                (translator as Translator).PMode));
+                (cfg.Translator as Translator).TMode, 
+                (cfg.Translator as Translator).PMode));
 
             foreach (var i in pItems)
             {
@@ -989,7 +1058,6 @@ namespace TFlex.PackageManager.UI
         private void SetProcessingMode(Header header)
         {
             var obj = header.Translator;
-
             comboBox2.Items.Clear();
 
             switch ((obj as Translator).TMode)

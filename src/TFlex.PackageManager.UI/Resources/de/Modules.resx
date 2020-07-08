@@ -130,7 +130,7 @@
     <comment>Modul zur verarbeitung von dokument variablen.</comment>
   </data>
   <data name="dn1_5_3" xml:space="preserve">
-    <value>Dateien</value>
-    <comment>Modul zur verarbeitung des formats des ausgabe dateinamens.</comment>
+    <value>Links</value>
+    <comment>Modul zur verarbeitung von dokument links.</comment>
   </data>
 </root>
