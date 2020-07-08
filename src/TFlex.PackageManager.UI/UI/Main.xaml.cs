@@ -617,6 +617,7 @@ namespace TFlex.PackageManager.UI
                 conf.Configurations.Remove(oldKey);
                 comboBox1.Items.Remove(oldKey);
                 comboBox1.SelectedIndex = index;
+                propertyGrid.PropertyDefinitions.Clear();
 
                 if (index == -1) key1 = string.Empty;
             }
@@ -769,10 +770,6 @@ namespace TFlex.PackageManager.UI
 
                 cfg.Processing = (int)obj.PMode;
                 tvControl1.InitLayout();
-            }
-            else
-            {
-                propertyGrid.PropertyDefinitions.Clear();
             }
         } // processing mode
         #endregion
