@@ -83,8 +83,8 @@ namespace TFlex.PackageManager.Common
             Document document = null;
             FileInfo fileInfo = new FileInfo(item.IPath);
             string directory = fileInfo.Directory.FullName.Replace(
-                cfg.InitialCatalog,
-                cfg.TargetDirectory + "\\" + tr.TMode);
+                cfg.InitialCatalog, 
+                cfg.TargetDirectory);
             string targetDirectory = Directory.Exists(directory)
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;

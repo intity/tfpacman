@@ -416,23 +416,21 @@ namespace TFlex.PackageManager.UI
         #region configuration event handlers
         private void Header_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!(sender is Header header))
+            if (!(sender is Header cgf))
                 return;
 
             switch (e.PropertyName)
             {
                 case "InitialCatalog":
-                    tvControl1.TargetDirectory = header.InitialCatalog;
+                    tvControl1.TargetDirectory = cgf.InitialCatalog;
                     break;
                 case "TargetDirectory":
-                    var name = (header.Translator as Translator).TMode.ToString();
-                    var path = header.TargetDirectory;
-                    tvControl2.TargetDirectory = Path.Combine(path, name);
+                    tvControl2.TargetDirectory = cgf.TargetDirectory;
                     break;
                 case "Translator":
-                    propertyGrid.SelectedObject = header.Translator;
-                    SetProcessingMode(header);
-                    (header.Modules as Modules).PropertyChanged += Modules_PropertyChanged;
+                    propertyGrid.SelectedObject = cgf.Translator;
+                    SetProcessingMode(cgf);
+                    (cgf.Modules as Modules).PropertyChanged += Modules_PropertyChanged;
                     break;
             }
 
@@ -987,10 +985,8 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         private void StartProcessing()
         {
-            var obj  = conf.Configurations[key1].Translator as Translator;
             var path = conf.Configurations[key1].TargetDirectory;
-            var name = obj.TMode.ToString();
-            string logFile = Path.Combine(path, name, Resource.LOG_FILE);
+            var logFile = Path.Combine(path, Resource.LOG_FILE);
 
             using (StreamWriter logger = new StreamWriter(logFile))
             {

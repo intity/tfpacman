@@ -31,7 +31,7 @@ namespace TFlex.PackageManager.Configuration
             var type = (cfg.Translator as Translator).TMode;
 
             mode = type.ToString();
-            path = Path.Combine(cfg.TargetDirectory, mode, "package.xml");
+            path = Path.Combine(cfg.TargetDirectory, "package.xml");
 
             switch (type)
             {
