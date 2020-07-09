@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,12 +17,10 @@ namespace TFlex.PackageManager.Controls
     public partial class TreeViewControl : UserControl
     {
         #region private fields
-        private readonly object dummyNode;
-        private string targetDirectory;
-        private string searchPattern;
-        private int countFiles;
-        private readonly List<ImageSource> imageSourceList;
-        private CustomTreeView treeView;
+        readonly object dummyNode;
+        string targetDirectory;
+        readonly List<ImageSource> imageSourceList;
+        CustomTreeView treeView;
         #endregion
 
         public TreeViewControl()
@@ -30,7 +29,6 @@ namespace TFlex.PackageManager.Controls
 
             dummyNode       = null;
             targetDirectory = null;
-            searchPattern   = null;
             SelectedItems   = new ObservableCollection<object>();
             imageSourceList = new List<ImageSource>()
             {
@@ -51,37 +49,32 @@ namespace TFlex.PackageManager.Controls
                 new BitmapImage(new Uri(Resource.BASE_URI + "pdf.ico")),
                 new BitmapImage(new Uri(Resource.BASE_URI + "stp.ico"))
             };
-            
-            Loaded  += TreeViewControl_Loaded;
         }
 
         #region public properties
+        /// <summary>
+        /// Total count files.
+        /// </summary>
+        public int CountFiles { get; private set; }
+
+        /// <summary>
+        /// Search pattern to in GetFile method use.
+        /// </summary>
+        public string SearchPattern { get; set; }
+
         /// <summary>
         /// Target directory.
         /// </summary>
         public string TargetDirectory
         {
-            get { return targetDirectory; }
+            get => targetDirectory;
             set
             {
                 if (targetDirectory != value)
                 {
                     targetDirectory = value;
-                    InitLayout();
+                    UpdateControl();
                 }
-            }
-        }
-
-        /// <summary>
-        /// Search pattern to in GetFile method use.
-        /// </summary>
-        public string SearchPattern
-        {
-            get { return searchPattern; }
-            set
-            {
-                if (searchPattern != value)
-                    searchPattern = value;
             }
         }
 
@@ -89,31 +82,17 @@ namespace TFlex.PackageManager.Controls
         /// Selected items.
         /// </summary>
         public ObservableCollection<object> SelectedItems { get; }
-
-        /// <summary>
-        /// Total count files.
-        /// </summary>
-        public int CountFiles
-        {
-            get
-            {
-                if (Directory.Exists(targetDirectory))
-                {
-                    countFiles = GetFiles(targetDirectory,
-                        SearchOption.AllDirectories).Count;
-                }
-
-                return (countFiles);
-            }
-        }
         #endregion
 
         #region public methods
         /// <summary>
-        /// Initialize layout control.
+        /// Update the layout control.
         /// </summary>
-        public void InitLayout()
+        public void UpdateControl()
         {
+            if (treeView == null)
+                treeView = Content as CustomTreeView;
+
             if (targetDirectory == null || treeView == null)
                 return;
 
@@ -127,11 +106,13 @@ namespace TFlex.PackageManager.Controls
             {
                 GetDirectories();
                 GetFiles();
+                CountFiles = GetFiles(targetDirectory, 
+                    SearchOption.AllDirectories).Count;
             }
             else
-                countFiles = 0;
+                CountFiles = 0;
 
-            //Debug.WriteLine("InitLayout");
+            //Debug.WriteLine("UpdateControl");
         }
 
         /// <summary>
@@ -147,7 +128,7 @@ namespace TFlex.PackageManager.Controls
             foreach (var i in di.GetFiles()) i.Delete();
             foreach (var i in di.GetDirectories()) i.Delete(true);
 
-            InitLayout();
+            UpdateControl();
         }
         #endregion
 
@@ -190,7 +171,7 @@ namespace TFlex.PackageManager.Controls
 
         private IList<string> GetFiles(string path, SearchOption option)
         {
-            string[] patterns = searchPattern.Split('|');
+            string[] patterns = SearchPattern.Split('|');
             List<string> files = new List<string>();
             foreach (var i in patterns)
                 files.AddRange(Directory.GetFiles(path, i, option));
@@ -199,13 +180,16 @@ namespace TFlex.PackageManager.Controls
 
         private void GetFiles(CustomTreeViewItem item = null)
         {
-            string directory = (item != null ? item.Tag.ToString() : targetDirectory);
+            var directory = item != null 
+                ? item.Tag.ToString() 
+                : targetDirectory;
             int imageIndex = 0;
 
             if (directory == null || treeView == null)
                 return;
 
-            foreach (var i in GetFiles(directory, SearchOption.TopDirectoryOnly))
+            SearchOption option = SearchOption.TopDirectoryOnly;
+            foreach (var i in GetFiles(directory, option))
             {
                 switch (Path.GetExtension(i))
                 {
@@ -295,15 +279,6 @@ namespace TFlex.PackageManager.Controls
         #endregion
 
         #region event handlers
-        private void TreeViewControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Content == null)
-                return;
-
-            treeView = Content as CustomTreeView;
-            InitLayout();
-        }
-
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if (sender is CheckBox cb && cb.TemplatedParent is CustomTreeViewItem item)
@@ -437,8 +412,8 @@ namespace TFlex.PackageManager.Controls
         /// </summary>
         public bool? IsChecked
         {
-            get { return (bool?)GetValue(IsCheckedProperty); }
-            set { SetValue(IsCheckedProperty, value); }
+            get => GetValue(IsCheckedProperty) as bool?;
+            set => SetValue(IsCheckedProperty, value);
         }
 
         /// <summary>
@@ -478,8 +453,8 @@ namespace TFlex.PackageManager.Controls
         /// </summary>
         public ImageSource ImageSource
         {
-            get { return (ImageSource)GetValue(ImageSourceProperty); }
-            set { SetValue(ImageSourceProperty, value); }
+            get => GetValue(ImageSourceProperty) as ImageSource;
+            set => SetValue(ImageSourceProperty, value);
         }
         #endregion
 
@@ -491,7 +466,9 @@ namespace TFlex.PackageManager.Controls
                 new PropertyMetadata(null));
 
         public static readonly DependencyProperty IsCheckedProperty =
-            DependencyProperty.RegisterAttached("IsChecked", typeof(bool?), typeof(CustomTreeViewItem),
+            DependencyProperty.RegisterAttached("IsChecked", 
+                typeof(bool?), 
+                typeof(CustomTreeViewItem),
                 new FrameworkPropertyMetadata((bool?)false));
         #endregion
 

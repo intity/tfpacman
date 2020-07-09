@@ -26,10 +26,6 @@ namespace TFlex.PackageManager.UI
     {
         #region private fields
         readonly ConfigurationCollection conf;
-
-        readonly CustomTreeView treeListView1;
-        readonly CustomTreeView treeListView2;
-
         readonly Common.Options options;
         readonly List<PropertyDefinition> modules;
 
@@ -59,15 +55,14 @@ namespace TFlex.PackageManager.UI
             Title = Resource.AppName;
 
             #region initialize controls
-            treeListView1 = new CustomTreeView { CheckboxesVisible = true };
-
-            tvControl1.Content = treeListView1;
+            tvControl1.Content = new CustomTreeView
+            {
+                CheckboxesVisible = true
+            };
             tvControl1.SearchPattern = "*.grb";
             tvControl1.SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
 
-            treeListView2 = new CustomTreeView();
-
-            tvControl2.Content = treeListView2;
+            tvControl2.Content = new CustomTreeView();
             tvControl2.SearchPattern = "*.grb|*.dwg|*.dxf|*.dxb|*.sat|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.igs|*.jt|*.pdf|*.stp";
 
             options = new Common.Options();
@@ -338,8 +333,8 @@ namespace TFlex.PackageManager.UI
                 case WM_STOPPED_PROCESSING:
                     button3_2.IsEnabled = false;
                     menuItem3_2.IsEnabled = false;
+                    tvControl2.UpdateControl();
                     sb_label2.Content = string.Format(sblabels[1], tvControl2.CountFiles);
-                    tvControl2.InitLayout();
                     UpdateStateToControls();
                     break;
                 case WM_INCREMENT_PROGRESS:
@@ -436,7 +431,7 @@ namespace TFlex.PackageManager.UI
 
             UpdateStateToControls();
 
-            //Debug.WriteLine(string.Format("Header_PropertyChanged [name: {0}]", 
+            //Debug.WriteLine(string.Format("Header_PropertyChanged [name: {0}]",
             //    e.PropertyName));
         }
 
@@ -729,7 +724,6 @@ namespace TFlex.PackageManager.UI
                 propertyGrid.SelectedObject = null;
                 comboBox2.Items.Clear();
             }
-
             UpdateStateToControls();
 
             //Debug.WriteLine(string.Format("selector_1: [index: {0}, value: {1}]",
@@ -779,7 +773,6 @@ namespace TFlex.PackageManager.UI
                 }
 
                 cfg.Processing = (int)obj.PMode;
-                tvControl1.InitLayout();
             }
         } // processing mode
         #endregion
