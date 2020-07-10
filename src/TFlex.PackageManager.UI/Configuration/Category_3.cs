@@ -25,13 +25,15 @@ namespace TFlex.PackageManager.Configuration
         string targetExtension;
         string fileNameSuffix;
         string templateFileName;
+        bool renameSubdirectory;
 
         readonly string[] error_messages;
         readonly Dictionary<string, List<string>> objErrors;
 
-        XAttribute data_3_1;
-        XAttribute data_3_2;
-        XAttribute data_3_3;
+        XAttribute data_4_1;
+        XAttribute data_4_2;
+        XAttribute data_4_3;
+        XAttribute data_4_4;
         #endregion
 
         /// <summary>
@@ -59,14 +61,13 @@ namespace TFlex.PackageManager.Configuration
         [Browsable(false)]
         public string TargetExtension
         {
-            get { return targetExtension; }
+            get => targetExtension;
             set
             {
                 if (targetExtension != value)
                 {
                     targetExtension = value;
-                    data_3_1.Value = value;
-
+                    data_4_1.Value = value;
                     OnPropertyChanged("TargetExtension");
                 }
             }
@@ -82,7 +83,7 @@ namespace TFlex.PackageManager.Configuration
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string FileNameSuffix
         {
-            get { return fileNameSuffix; }
+            get => fileNameSuffix;
             set
             {
                 if (fileNameSuffix != value)
@@ -90,7 +91,7 @@ namespace TFlex.PackageManager.Configuration
                     var name = "FileNameSuffix";
 
                     fileNameSuffix = value;
-                    data_3_2.Value = value;
+                    data_4_2.Value = value;
 
                     char[] pattern = Path.GetInvalidFileNameChars();
                     string error = string
@@ -104,7 +105,6 @@ namespace TFlex.PackageManager.Configuration
                     {
                         AddError(name, error);
                     }
-
                     OnPropertyChanged(name);
                 }
             }
@@ -120,7 +120,7 @@ namespace TFlex.PackageManager.Configuration
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string TemplateFileName
         {
-            get { return templateFileName; }
+            get => templateFileName;
             set
             {
                 if (templateFileName != value)
@@ -128,7 +128,7 @@ namespace TFlex.PackageManager.Configuration
                     var name = "TemplateFileName";
 
                     templateFileName = value;
-                    data_3_3.Value = value;
+                    data_4_3.Value = value;
 
                     string path = value;
                     char[] pattern = Path.GetInvalidFileNameChars();
@@ -148,8 +148,28 @@ namespace TFlex.PackageManager.Configuration
                     {
                         AddError(name, error);
                     }
-
                     OnPropertyChanged(name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rename subdirectory on parent file name.
+        /// </summary>
+        [PropertyOrder(15)]
+        [CustomCategory(Resource.CATEGIRY_4, "category4")]
+        [CustomDisplayName(Resource.CATEGIRY_4, "dn4_4")]
+        [CustomDescription(Resource.CATEGIRY_4, "dn4_4")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
+        public bool RenameSubdirectory
+        {
+            get => renameSubdirectory;
+            set
+            {
+                if (renameSubdirectory != value)
+                {
+                    renameSubdirectory = value;
+                    OnPropertyChanged("RenameSubdirectory");
                 }
             }
         }
@@ -160,19 +180,23 @@ namespace TFlex.PackageManager.Configuration
         {
             XElement data = base.NewTranslator();
 
-            data_3_1 = new XAttribute("value", TargetExtension);
-            data_3_2 = new XAttribute("value", FileNameSuffix);
-            data_3_3 = new XAttribute("value", TemplateFileName);
+            data_4_1 = new XAttribute("value", TargetExtension);
+            data_4_2 = new XAttribute("value", FileNameSuffix);
+            data_4_3 = new XAttribute("value", TemplateFileName);
+            data_4_4 = new XAttribute("value", RenameSubdirectory ? "1" : "0");
 
             data.Add(new XElement("parameter",
                 new XAttribute("name", "TargetExtension"),
-                data_3_1));
+                data_4_1));
             data.Add(new XElement("parameter",
                 new XAttribute("name", "FileNameSuffix"),
-                data_3_2));
+                data_4_2));
             data.Add(new XElement("parameter",
                 new XAttribute("name", "TemplateFileName"),
-                data_3_3));
+                data_4_3));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "RenameSubdirectory"),
+                data_4_4));
 
             return data;
         }
@@ -184,33 +208,21 @@ namespace TFlex.PackageManager.Configuration
             {
                 case "TargetExtension":
                     targetExtension = a.Value;
-                    data_3_1 = a;
+                    data_4_1 = a;
                     break;
                 case "FileNameSuffix":
                     fileNameSuffix = a.Value;
-                    data_3_2 = a;
+                    data_4_2 = a;
                     break;
                 case "TemplateFileName":
                     templateFileName = a.Value;
-                    data_3_3 = a;
+                    data_4_3 = a;
+                    break;
+                case "RenameSubdirectory":
+                    renameSubdirectory = a.Value == "1";
+                    data_4_4 = a;
                     break;
             }
-        }
-        #endregion
-
-        #region private methods
-        /// <summary>
-        /// Validating the path name.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="pattern"></param>
-        /// <returns></returns>
-        private static bool IsPathValid(string path, char[] pattern)
-        {
-            if (path.Length > 0 && path.IndexOfAny(pattern) >= 0)
-                return false;
-
-            return true;
         }
         #endregion
 

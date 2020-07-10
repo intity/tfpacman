@@ -128,6 +128,10 @@
     <value>Dateinamens vorlage</value>
     <comment>Definieren sie eine vorlage für den namen der ausgabedatei.</comment>
   </data>
+  <data name="dn4_4" xml:space="preserve">
+    <value>Unterverzeichnis umbenennen</value>
+    <comment>Benennen sie das unterverzeichnis im übergeordneten dateinamen um.</comment>
+  </data>
   <data name="message2" xml:space="preserve">
     <value>Das dateinamen suffix darf keine zeichen enthalten: {0}</value>
   </data>

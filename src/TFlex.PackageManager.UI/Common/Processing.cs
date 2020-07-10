@@ -269,12 +269,12 @@ namespace TFlex.PackageManager.Common
         }
 
         /// <summary>
-        /// Get Output File name.
+        /// Get output file name.
         /// </summary>
         /// <param name="document"></param>
         /// <param name="page"></param>
         /// <returns>Returns Output File name.</returns>
-        private string GetOutputFileName(Document document, Page page)
+        private string GetFileName(Document document, Page page)
         {
             var tr = cfg.Translator as Category_3;
             string fileName, expVal, pattern = @"\{(.*?)\}";
@@ -301,23 +301,27 @@ namespace TFlex.PackageManager.Common
         }
 
         /// <summary>
-        /// Get Output Directoty Path.
+        /// Get output directory path.
         /// </summary>
-        /// <param name="targetDirectory"></param>
         /// <param name="item"></param>
         /// <returns>Returns Output Directory Path.</returns>
-        private string GetOutputDirectory(string targetDirectory, ProcItem item)
+        private string GetDirectory(ProcItem item)
         {
-            var aPath = targetDirectory.Split('\\');
-            var pName = package.GetParentName(item);
-            var oPath = pName != null
-                ? targetDirectory.Replace(aPath[aPath.Length - 1], pName)
-                : targetDirectory;
+            var tr = cfg.Translator as Category_3;
+            if (tr.RenameSubdirectory)
+            {
+                var aPath = item.Directory.Split('\\');
+                var pName = package.GetParentName(item);
+                var oPath = pName != null
+                    ? item.Directory.Replace(aPath[aPath.Length - 1], pName)
+                    : item.Directory;
 
-            if (oPath != targetDirectory)
-                Directory.CreateDirectory(oPath);
+                if (Directory.Exists(oPath) == false)
+                    Directory.CreateDirectory(oPath);
 
-            return oPath;
+                return oPath;
+            }
+            return item.Directory;
         }
 
         /// <summary>
@@ -423,9 +427,9 @@ namespace TFlex.PackageManager.Common
             switch (tr.TMode)
             {
                 case TranslatorType.Document:
-                    var oDir   = GetOutputDirectory(item.Directory, item);
-                    item.FName = GetOutputFileName(document, null);
-                    item.OPath = Path.Combine(oDir, item.FName + ".grb");
+                    var dir    = GetDirectory(item);
+                    item.FName = GetFileName(document, null);
+                    item.OPath = Path.Combine(dir, item.FName + ".grb");
 
                     if (document.SaveAs(item.OPath))
                     {
@@ -452,7 +456,7 @@ namespace TFlex.PackageManager.Common
                     switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = GetOutputFileName(document, null);
+                            item.FName = GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + ".sat");
                             tr_2.Export(document, item.OPath, logging);
                             break;
@@ -474,7 +478,7 @@ namespace TFlex.PackageManager.Common
                     switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = GetOutputFileName(document, null);
+                            item.FName = GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + ".igs");
                             tr_6.Export(document, item.OPath, logging);
                             break;
@@ -496,7 +500,7 @@ namespace TFlex.PackageManager.Common
                     switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = GetOutputFileName(document, null);
+                            item.FName = GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + ".jt");
                             tr_7.Export(document, item.OPath, logging);
                             break;
@@ -518,7 +522,7 @@ namespace TFlex.PackageManager.Common
                     switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = GetOutputFileName(document, null);
+                            item.FName = GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + ".stp");
                             tr_10.Export(document, item.OPath, logging);
                             break;
@@ -692,7 +696,7 @@ namespace TFlex.PackageManager.Common
                 {
                     string suffix = string.Empty;
                     string extension = "." + tr_0.TargetExtension.ToLower();
-                    path = item.Directory + "\\" + GetOutputFileName(document, page);
+                    path = item.Directory + "\\" + GetFileName(document, page);
 
                     switch (page.PageType)
                     {
