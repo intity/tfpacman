@@ -85,7 +85,7 @@ namespace TFlex.PackageManager.Common
             string directory = fileInfo.Directory.FullName.Replace(
                 cfg.InitialCatalog, 
                 cfg.TargetDirectory);
-            string targetDirectory = Directory.Exists(directory)
+            item.Directory = Directory.Exists(directory)
                 ? directory
                 : Directory.CreateDirectory(directory).FullName;
 
@@ -120,7 +120,7 @@ namespace TFlex.PackageManager.Common
                 return;
             }
 
-            ProcessingDocument(document, targetDirectory, item);
+            ProcessingDocument(document, item);
 
             if (document.Changed)
             {
@@ -137,9 +137,9 @@ namespace TFlex.PackageManager.Common
             document.Close();
             logging.WriteLine(LogLevel.INFO, ">>> Document Closed");
 
-            if (Directory.GetFiles(targetDirectory).Length == 0 &&
-                Directory.GetDirectories(targetDirectory).Length == 0)
-                Directory.Delete(targetDirectory, false);
+            if (Directory.GetFiles(item.Directory).Length == 0 &&
+                Directory.GetDirectories(item.Directory).Length == 0)
+                Directory.Delete(item.Directory, false);
         }
         #endregion
 
@@ -414,9 +414,8 @@ namespace TFlex.PackageManager.Common
         /// Processing document.
         /// </summary>
         /// <param name="document"></param>
-        /// <param name="targetDirectory"></param>
         /// <param name="item">The Processing Item Object.</param>
-        private void ProcessingDocument(Document document, string targetDirectory, ProcItem item)
+        private void ProcessingDocument(Document document, ProcItem item)
         {
             var tr = cfg.Translator as Translator;
             string[] aPath = item.IPath.Split('\\');
@@ -424,7 +423,7 @@ namespace TFlex.PackageManager.Common
             switch (tr.TMode)
             {
                 case TranslatorType.Document:
-                    var oDir   = GetOutputDirectory(targetDirectory, item);
+                    var oDir   = GetOutputDirectory(item.Directory, item);
                     item.FName = GetOutputFileName(document, null);
                     item.OPath = Path.Combine(oDir, item.FName + ".grb");
 
@@ -437,31 +436,34 @@ namespace TFlex.PackageManager.Common
                         package.SetMetadata(item);
 
                         ProcessingLinks(document, item);
-                        ProcessingPages(document, null);
+                        ProcessingPages(document, item);
+                        ProcessingProjections(document, item);
                         ProcessingVariables(document);
                     }
                     break;
                 case TranslatorType.Acad:
                 case TranslatorType.Bitmap:
                 case TranslatorType.Pdf:
-                    ProcessingPages(document, targetDirectory);
+                    ProcessingPages(document, item);
+                    ProcessingProjections(document, item);
+                    ProcessingExport(document, item);
                     break;
                 case TranslatorType.Acis:
                     switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
                             item.FName = GetOutputFileName(document, null);
-                            item.OPath = Path.Combine(targetDirectory, item.FName + ".sat");
+                            item.OPath = Path.Combine(item.Directory, item.FName + ".sat");
                             tr_2.Export(document, item.OPath, logging);
                             break;
                         case ProcessingMode.Import:
                             if (tr_2.ImportMode > 0)
                             {
                                 item.FName = aPath[aPath.Length - 1].Replace(".sat", ".grb");
-                                item.OPath = Path.Combine(targetDirectory, item.FName);
+                                item.OPath = Path.Combine(item.Directory, item.FName);
                                 document.SaveAs(item.OPath);
                             }
-                            tr_2.Import(document, targetDirectory, item.IPath, logging);
+                            tr_2.Import(document, item.Directory, item.IPath, logging);
                             logging.WriteLine(LogLevel.INFO,
                                 string.Format(">>> Document Saved [path: {0}]",
                                 document.FileName));
@@ -473,17 +475,17 @@ namespace TFlex.PackageManager.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = GetOutputFileName(document, null);
-                            item.OPath = Path.Combine(targetDirectory, item.FName + ".igs");
+                            item.OPath = Path.Combine(item.Directory, item.FName + ".igs");
                             tr_6.Export(document, item.OPath, logging);
                             break;
                         case ProcessingMode.Import:
                             if (tr_6.ImportMode > 0)
                             {
                                 item.FName = aPath[aPath.Length - 1].Replace(".igs", ".grb");
-                                item.OPath = Path.Combine(targetDirectory, item.FName);
+                                item.OPath = Path.Combine(item.Directory, item.FName);
                                 document.SaveAs(item.OPath);
                             }
-                            tr_6.Import(document, targetDirectory, item.IPath, logging);
+                            tr_6.Import(document, item.Directory, item.IPath, logging);
                             logging.WriteLine(LogLevel.INFO,
                                 string.Format(">>> Document Saved [path: {0}]",
                                 document.FileName));
@@ -495,17 +497,17 @@ namespace TFlex.PackageManager.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = GetOutputFileName(document, null);
-                            item.OPath = Path.Combine(targetDirectory, item.FName + ".jt");
+                            item.OPath = Path.Combine(item.Directory, item.FName + ".jt");
                             tr_7.Export(document, item.OPath, logging);
                             break;
                         case ProcessingMode.Import:
                             if (tr_7.ImportMode > 0)
                             {
                                 item.FName = aPath[aPath.Length - 1].Replace(".jt", ".grb");
-                                item.OPath = Path.Combine(targetDirectory, item.FName);
+                                item.OPath = Path.Combine(item.Directory, item.FName);
                                 document.SaveAs(item.OPath);
                             }
-                            tr_7.Import(document, targetDirectory, item.IPath, logging);
+                            tr_7.Import(document, item.Directory, item.IPath, logging);
                             logging.WriteLine(LogLevel.INFO,
                                 string.Format(">>> Document Saved [path: {0}]",
                                 document.FileName));
@@ -517,17 +519,17 @@ namespace TFlex.PackageManager.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = GetOutputFileName(document, null);
-                            item.OPath = Path.Combine(targetDirectory, item.FName + ".stp");
+                            item.OPath = Path.Combine(item.Directory, item.FName + ".stp");
                             tr_10.Export(document, item.OPath, logging);
                             break;
                         case ProcessingMode.Import:
                             if (tr_10.ImportMode > 0)
                             {
                                 item.FName = aPath[aPath.Length - 1].Replace(".stp", ".grb");
-                                item.OPath = Path.Combine(targetDirectory, item.FName);
+                                item.OPath = Path.Combine(item.Directory, item.FName);
                                 document.SaveAs(item.OPath);
                             }
-                            tr_10.Import(document, targetDirectory, item.IPath, logging);
+                            tr_10.Import(document, item.Directory, item.IPath, logging);
                             logging.WriteLine(LogLevel.INFO, 
                                 string.Format(">>> Document Saved [path: {0}]", 
                                 document.FileName));
@@ -576,12 +578,13 @@ namespace TFlex.PackageManager.Common
             if (item.Parent == null || item.Parent.OPath == null)
                 return;
 
-            var parent = TFlex.Application.OpenDocument(item.Parent.OPath, false);
+            var parent = Application.OpenDocument(item.Parent.OPath, false);
             if (parent == null)
                 return;
 
             logging.WriteLine(LogLevel.INFO,
-                string.Format("--> Parent Document Opened [path: {0}]", item.Parent.OPath));
+                string.Format("--> Parent Document Opened [path: {0}]", 
+                item.Parent.OPath));
             parent.BeginChanges("Replace Link");
 
             foreach (var link in parent.FileLinks)
@@ -608,15 +611,15 @@ namespace TFlex.PackageManager.Common
         /// The extension method to processing pages.
         /// </summary>
         /// <param name="document"></param>
-        /// <param name="targetDirectory"></param>
-        private void ProcessingPages(Document document, string targetDirectory)
+        /// <param name="item"></param>
+        private void ProcessingPages(Document document, ProcItem item)
         {
             if (!modules.Pages)
                 return;
 
+            var tr_0 = cfg.Translator as Translator_0;
             int count = 0;
             string path = null;
-            Dictionary<Page, string> o_pages = new Dictionary<Page, string>();
             Dictionary<PageType, int> types = new Dictionary<PageType, int>
             {
                 { PageType.Normal,          0 },
@@ -626,8 +629,6 @@ namespace TFlex.PackageManager.Common
                 { PageType.BillOfMaterials, 0 },
                 { PageType.Circuit,         0 }
             };
-            List<Page> pages = new List<Page>();
-            var tr_0 = cfg.Translator as Translator_0;
 
             foreach (var p in document.GetPages())
             {
@@ -653,10 +654,10 @@ namespace TFlex.PackageManager.Common
                     continue;
 
                 types[p.PageType]++;
-                pages.Add(p);
+                item.Pages.Add(p, null);
             }
 
-            var len = pages.Count();
+            var len = item.Pages.Count;
             if (len > 0)
             {
                 document.BeginChanges("Processing Pages");
@@ -664,11 +665,12 @@ namespace TFlex.PackageManager.Common
                     string.Format(">>> Processing Pages: {0}", len));
             }
 
-            foreach (var i in pages)
+            for (int i = 0; i < len; i++)
             {
-                if (i.Scale.Value != (double)tr_0.PageScale && tr_0.PageScale != 99999)
+                var page = item.Pages.ElementAt(i).Key;
+                if (page.Scale.Value != (double)tr_0.PageScale && tr_0.PageScale != 99999)
                 {
-                    i.Scale = new Parameter((double)tr_0.PageScale);
+                    page.Scale = new Parameter((double)tr_0.PageScale);
 
                     if (tr_0.TMode == TranslatorType.Document)
                     {
@@ -679,22 +681,20 @@ namespace TFlex.PackageManager.Common
                 logging.WriteLine(LogLevel.INFO, 
                     string.Format(CultureInfo.InvariantCulture,
                     "--> Page [id: {0:X}, name: {1}, scale: {2}, type: {3}]", 
-                    i.ObjectId, i.Name, i.Scale.Value, i.PageType));
+                    page.ObjectId, 
+                    page.Name, 
+                    page.Scale.Value, 
+                    page.PageType));
 
                 //Debug.WriteLine(string.Format("Page name: {0}, flags: {1:X4}", i.Name, flags));
-
-                if (tr_0.PageScale != 99999)
-                {
-                    ProcessingProjections(document, i);
-                }
 
                 if (tr_0.TMode != TranslatorType.Document)
                 {
                     string suffix = string.Empty;
                     string extension = "." + tr_0.TargetExtension.ToLower();
-                    path = targetDirectory + "\\" + GetOutputFileName(document, i);
+                    path = item.Directory + "\\" + GetOutputFileName(document, page);
 
-                    switch (i.PageType)
+                    switch (page.PageType)
                     {
                         case PageType.Normal:          suffix = "_T0"; break;
                         case PageType.Workplane:       suffix = "_T1"; break;
@@ -704,31 +704,18 @@ namespace TFlex.PackageManager.Common
                         case PageType.Circuit:         suffix = "_T6"; break;
                     }
 
-                    if (types[i.PageType] > 1)
+                    if (types[page.PageType] > 1)
                     {
                         path += "_" + (count + 1).ToString() + extension;
                         count++;
                     }
-                    else if (o_pages.ContainsValue(path + extension))
+                    else if (item.Pages.ContainsValue(path + extension))
                         path += suffix + extension;
                     else
                         path += extension;
                 }
 
-                o_pages.Add(i, path);
-            }
-
-            switch (tr_0.TMode)
-            {
-                case TranslatorType.Acad:
-                    tr_1.Export(document, o_pages, logging);
-                    break;
-                case TranslatorType.Bitmap:
-                    tr_3.Export(document, o_pages, logging);
-                    break;
-                case TranslatorType.Pdf:
-                    tr_9.Export(document, o_pages, logging);
-                    break;
+                item.Pages[page] = path;
             }
         }
 
@@ -736,19 +723,37 @@ namespace TFlex.PackageManager.Common
         /// The extension method to processing projections.
         /// </summary>
         /// <param name="document"></param>
-        /// <param name="page"></param>
-        private void ProcessingProjections(Document document, Page page)
+        /// <param name="item"></param>
+        private void ProcessingProjections(Document document, ProcItem item)
         {
             if (!modules.Projections)
                 return;
 
             var tr_0 = cfg.Translator as Translator_0;
-            var projections = document.GetProjections().Where(p => p.Page == page);
-            if (projections.Count() > 0)
+            ICollection<Projection> projections = null;
+
+            if (item.Pages.Count == 0)
+            {
+                projections = document.GetProjections();
+            }
+            else if (tr_0.PageScale != 99999)
+            {
+                projections = new List<Projection>();
+                foreach (var i in document.GetProjections())
+                {
+                    if (item.Pages.ContainsKey(i.Page))
+                        projections.Add(i);
+                }
+            }
+
+            if (projections == null)
+                return;
+
+            var len = projections.Count();
+            if (len > 0)
             {
                 logging.WriteLine(LogLevel.INFO, 
-                    string.Format(">>> Processing Projections: {0}", 
-                    projections.Count()));
+                    string.Format(">>> Processing Projections: {0}", len));
             }
 
             foreach (var i in projections)
@@ -880,6 +885,29 @@ namespace TFlex.PackageManager.Common
                     logging.WriteLine(LogLevel.INFO, string.Format(
                         "--> Variable [action: remove, name: {0}]", e.Name));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Processing the export.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="item"></param>
+        private void ProcessingExport(Document document, ProcItem item)
+        {
+            var tr = cfg.Translator as Translator;
+
+            switch (tr.TMode)
+            {
+                case TranslatorType.Acad:
+                    tr_1.Export(document, item.Pages, logging);
+                    break;
+                case TranslatorType.Bitmap:
+                    tr_3.Export(document, item.Pages, logging);
+                    break;
+                case TranslatorType.Pdf:
+                    tr_9.Export(document, item.Pages, logging);
+                    break;
             }
         }
         #endregion

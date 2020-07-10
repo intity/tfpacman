@@ -1,4 +1,9 @@
-﻿namespace TFlex.PackageManager.Model
+﻿using System.Collections.Generic;
+using System.Windows.Documents;
+using TFlex.Model;
+using TFlex.PackageManager.Configuration;
+
+namespace TFlex.PackageManager.Model
 {
     /// <summary>
     /// The Processing Item class.
@@ -12,6 +17,7 @@
         public ProcItem(string path)
         {
             IPath = path;
+            Pages = new Dictionary<Page, string>();
         }
 
         /// <summary>
@@ -28,6 +34,16 @@
         /// Output Path the File.
         /// </summary>
         public string OPath { get; set; }
+
+        /// <summary>
+        /// Target directory to Item.
+        /// </summary>
+        public string Directory { get; set; }
+
+        /// <summary>
+        /// Processed Pages.
+        /// </summary>
+        public Dictionary<Page, string> Pages { get; }
 
         /// <summary>
         /// The Parent Processing Item.
