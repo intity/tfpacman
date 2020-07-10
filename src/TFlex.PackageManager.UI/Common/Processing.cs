@@ -366,8 +366,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="oPath"></param>
         private void ReplaceLink(Document document, FileLink link, string oPath)
         {
-            var tr = cfg.Translator as Translator;
-            string path = cfg.TargetDirectory + "\\" + tr.TMode + "\\";
+            string path = cfg.TargetDirectory + "\\";
             link.FilePath = oPath.Replace(path, "");
             logging.WriteLine(LogLevel.INFO,
                 string.Format("--> Link Replaced [id: 0x{0:X8}, path: {1}]",
