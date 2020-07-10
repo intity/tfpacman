@@ -308,13 +308,12 @@ namespace TFlex.PackageManager.Configuration
             get => translator;
             private set
             {
-                if (translator != value)
-                {
-                    translator = value;
-                    DataContext.Element("configuration")
-                        .Element("translator").ReplaceWith(tr_data);
-                    OnPropertyChanged("Translator");
-                }
+                if (translator == value)
+                    return;
+
+                translator = value;
+                SetTranslatorData();
+                OnPropertyChanged("Translator");
             }
         }
 
@@ -559,7 +558,6 @@ namespace TFlex.PackageManager.Configuration
                     processing = 0;
                     modules = TModules[0];
                     InitTranslator();
-                    DataContext = NewConfiguration();
                     DataContext.Changed += DataContext_Changed;
                     IsChanged = false;
                 }
@@ -579,7 +577,9 @@ namespace TFlex.PackageManager.Configuration
             //Debug.WriteLine(string.Format("ConfigurationTask [flag: {0}, path: {1}]",
             //    flag, path));
         }
+        #endregion
 
+        #region private methods
         /// <summary>
         /// Extension method for processing header parameters.
         /// </summary>
@@ -610,6 +610,15 @@ namespace TFlex.PackageManager.Configuration
                     data_1_5 = a;
                     break;
             }
+        }
+
+        private void SetTranslatorData()
+        {
+            if (DataContext == null)
+                DataContext = NewConfiguration();
+            else
+                DataContext.Element("configuration").Element("translator")
+                    .ReplaceWith(tr_data);
         }
         #endregion
 
