@@ -544,18 +544,17 @@ namespace TFlex.PackageManager.Configuration
                     .Element("configuration")
                     .Element("translator");
 
+                m_index.Value = int.Parse(tr_data.Attribute("type").Value);
+                processing    = int.Parse(tr_data.Attribute("mode").Value);
+
                 foreach (var p in header.Elements())
                 {
                     LoadHeader(p);
                 }
 
-                m_index.Value = int.Parse(tr_data.Attribute("type").Value);
-                processing = int.Parse(tr_data.Attribute("mode").Value);
-
                 InitTranslator();
                 LoadTranslator();
                 DataContext.Changed += DataContext_Changed;
-                modules = TModules[m_index.Value];
                 IsChanged = false;
             }
 
@@ -615,6 +614,7 @@ namespace TFlex.PackageManager.Configuration
                     break;
                 case "Modules":
                     (TModules[TIndex] as Modules).SetValue(a.Value);
+                    modules = TModules[m_index.Value];
                     data_1_5 = a;
                     break;
             }
