@@ -118,19 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="dn1_5_0" xml:space="preserve">
+    <value>Links</value>
+    <comment>Modul zur verarbeitung von dokument links.</comment>
+  </data>
+  <data name="dn1_5_1" xml:space="preserve">
     <value>Seiten</value>
     <comment>Modul zur verarbeitung von dokument seiten.</comment>
   </data>
-  <data name="dn1_5_1" xml:space="preserve">
+  <data name="dn1_5_2" xml:space="preserve">
     <value>Projektionen</value>
     <comment>Modul zur verarbeitung von dokument projektionen.</comment>
   </data>
-  <data name="dn1_5_2" xml:space="preserve">
+  <data name="dn1_5_3" xml:space="preserve">
     <value>Variablen</value>
     <comment>Modul zur verarbeitung von dokument variablen.</comment>
-  </data>
-  <data name="dn1_5_3" xml:space="preserve">
-    <value>Links</value>
-    <comment>Modul zur verarbeitung von dokument links.</comment>
   </data>
 </root>

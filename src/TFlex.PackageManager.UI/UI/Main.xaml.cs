@@ -859,6 +859,8 @@ namespace TFlex.PackageManager.UI
         {
             switch (name)
             {
+                case "Links":
+                    break;
                 case "Pages":
                     if (m.Pages)
                         propertyGrid.PropertyDefinitions.Remove(modules[0]);
@@ -876,9 +878,6 @@ namespace TFlex.PackageManager.UI
                         propertyGrid.PropertyDefinitions.Remove(modules[2]);
                     else
                         propertyGrid.PropertyDefinitions.Add(modules[2]);
-                    break;
-                case "Links":
-                    // ...
                     break;
             }
 

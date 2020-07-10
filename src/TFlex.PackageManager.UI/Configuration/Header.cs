@@ -115,17 +115,17 @@ namespace TFlex.PackageManager.Configuration
 
             switch (e.PropertyName)
             {
+                case "Links":
+                    values[0] = m.Links       ? "1" : "0";
+                    break;
                 case "Pages":
-                    values[0] = m.Pages       ? "1" : "0";
+                    values[1] = m.Pages       ? "1" : "0";
                     break;
                 case "Projections":
-                    values[1] = m.Projections ? "1" : "0";
+                    values[2] = m.Projections ? "1" : "0";
                     break;
                 case "Variables":
-                    values[2] = m.Variables   ? "1" : "0";
-                    break;
-                case "Links":
-                    values[3] = m.Links       ? "1" : "0";
+                    values[3] = m.Variables   ? "1" : "0";
                     break;
             }
 

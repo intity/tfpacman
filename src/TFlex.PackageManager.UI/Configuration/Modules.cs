@@ -31,11 +31,30 @@ namespace TFlex.PackageManager.Configuration
         public int Index { get; }
 
         /// <summary>
-        /// Module for processing document pages.
+        /// Module for processing document links.
         /// </summary>
         [PropertyOrder(0)]
         [CustomDisplayName(Resource.MODULES_UI, "dn1_5_0")]
         [CustomDescription(Resource.MODULES_UI, "dn1_5_0")]
+        public virtual bool Links
+        {
+            get => links;
+            set
+            {
+                if (links != value)
+                {
+                    links = value;
+                    OnPropertyChanged("Links");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Module for processing document pages.
+        /// </summary>
+        [PropertyOrder(1)]
+        [CustomDisplayName(Resource.MODULES_UI, "dn1_5_1")]
+        [CustomDescription(Resource.MODULES_UI, "dn1_5_1")]
         public virtual bool Pages
         {
             get => pages;
@@ -52,9 +71,9 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Module for processing document projections.
         /// </summary>
-        [PropertyOrder(1)]
-        [CustomDisplayName(Resource.MODULES_UI, "dn1_5_1")]
-        [CustomDescription(Resource.MODULES_UI, "dn1_5_1")]
+        [PropertyOrder(2)]
+        [CustomDisplayName(Resource.MODULES_UI, "dn1_5_2")]
+        [CustomDescription(Resource.MODULES_UI, "dn1_5_2")]
         public virtual bool Projections
         {
             get => projections;
@@ -71,9 +90,9 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Module for processing document variables.
         /// </summary>
-        [PropertyOrder(2)]
-        [CustomDisplayName(Resource.MODULES_UI, "dn1_5_2")]
-        [CustomDescription(Resource.MODULES_UI, "dn1_5_2")]
+        [PropertyOrder(3)]
+        [CustomDisplayName(Resource.MODULES_UI, "dn1_5_3")]
+        [CustomDescription(Resource.MODULES_UI, "dn1_5_3")]
         public virtual bool Variables
         {
             get => variables;
@@ -86,25 +105,6 @@ namespace TFlex.PackageManager.Configuration
                 }
             }
         }
-
-        /// <summary>
-        /// Module for processing document links.
-        /// </summary>
-        [PropertyOrder(3)]
-        [CustomDisplayName(Resource.MODULES_UI, "dn1_5_3")]
-        [CustomDescription(Resource.MODULES_UI, "dn1_5_3")]
-        public virtual bool Links
-        {
-            get => links;
-            set
-            {
-                if (links != value)
-                {
-                    links = value;
-                    OnPropertyChanged("Links");
-                }
-            }
-        }
         #endregion
 
         #region methods
@@ -112,20 +112,20 @@ namespace TFlex.PackageManager.Configuration
         {
             string[] values = value.Split(' ');
 
-            pages       = values[0] == "1";
-            projections = values[1] == "1";
-            variables   = values[2] == "1";
-            links       = values[3] == "1";
+            links       = values[0] == "1";
+            pages       = values[1] == "1";
+            projections = values[2] == "1";
+            variables   = values[3] == "1";
         }
 
         public override string ToString()
         {
             string[] values = new string[8];
 
-            values[0] = pages       ? "1" : "0";
-            values[1] = projections ? "1" : "0";
-            values[2] = variables   ? "1" : "0";
-            values[3] = links       ? "1" : "0";
+            values[0] = links       ? "1" : "0";
+            values[1] = pages       ? "1" : "0";
+            values[2] = projections ? "1" : "0";
+            values[3] = variables   ? "1" : "0";
 
             // reserved
             values[4] = "0";

@@ -118,19 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="dn1_5_0" xml:space="preserve">
+    <value>Ссылки</value>
+    <comment>Модуль для обработки ссылок документа.</comment>
+  </data>
+  <data name="dn1_5_1" xml:space="preserve">
     <value>Страницы</value>
     <comment>Модуль для обработки страниц документа.</comment>
   </data>
-  <data name="dn1_5_1" xml:space="preserve">
+  <data name="dn1_5_2" xml:space="preserve">
     <value>Проекции</value>
     <comment>Модуль для обработки проекций документа.</comment>
   </data>
-  <data name="dn1_5_2" xml:space="preserve">
+  <data name="dn1_5_3" xml:space="preserve">
     <value>Переменные</value>
     <comment>Модуль для обработки переменных документа.</comment>
-  </data>
-  <data name="dn1_5_3" xml:space="preserve">
-    <value>Ссылки</value>
-    <comment>Модуль для обработки ссылок документа.</comment>
   </data>
 </root>
