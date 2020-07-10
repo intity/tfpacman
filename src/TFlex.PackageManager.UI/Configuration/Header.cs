@@ -353,7 +353,8 @@ namespace TFlex.PackageManager.Configuration
                         translator_0.NewTranslator();
                         translators.Add(TIndex, translator_0);
 
-                        tr_data = translator_0.Data;
+                        if (tr_data == null || tr_data.Attribute("type").Value != "0")
+                            tr_data = translator_0.Data;
                     }
                     break;
                 case 1: // Acad
@@ -364,7 +365,8 @@ namespace TFlex.PackageManager.Configuration
                         translator_1.NewTranslator();
                         translators.Add(TIndex, translator_1);
 
-                        tr_data = translator_1.Data;
+                        if (tr_data == null || tr_data.Attribute("type").Value != "1")
+                            tr_data = translator_1.Data;
                     }
                     break;
                 case 2: // ACIS
@@ -375,7 +377,8 @@ namespace TFlex.PackageManager.Configuration
                         translator_2.NewTranslator();
                         translators.Add(TIndex, translator_2);
 
-                        tr_data = translator_2.Data;
+                        if (tr_data == null || tr_data.Attribute("type").Value != "2")
+                            tr_data = translator_2.Data;
                     }
                     break;
                 case 3: // Bitmap
@@ -386,7 +389,8 @@ namespace TFlex.PackageManager.Configuration
                         translator_3.NewTranslator();
                         translators.Add(TIndex, translator_3);
 
-                        tr_data = translator_3.Data;
+                        if (tr_data == null || tr_data.Attribute("type").Value != "3")
+                            tr_data = translator_3.Data;
                     }
                     break;
                 case 4: // IGES
@@ -397,7 +401,8 @@ namespace TFlex.PackageManager.Configuration
                         translator_6.NewTranslator();
                         translators.Add(TIndex, translator_6);
 
-                        tr_data = translator_6.Data;
+                        if (tr_data == null || tr_data.Attribute("type").Value != "4")
+                            tr_data = translator_6.Data;
                     }
                     break;
                 case 5: // JT
@@ -408,7 +413,8 @@ namespace TFlex.PackageManager.Configuration
                         translator_7.NewTranslator();
                         translators.Add(TIndex, translator_7);
 
-                        tr_data = translator_7.Data;
+                        if (tr_data == null || tr_data.Attribute("type").Value != "5")
+                            tr_data = translator_7.Data;
                     }
                     break;
                 case 6: // PDF
@@ -419,7 +425,8 @@ namespace TFlex.PackageManager.Configuration
                         translator_9.NewTranslator();
                         translators.Add(TIndex, translator_9);
 
-                        tr_data = translator_9.Data;
+                        if (tr_data == null || tr_data.Attribute("type").Value != "6")
+                            tr_data = translator_9.Data;
                     }
                     break;
                 case 7: // STEP
@@ -430,7 +437,8 @@ namespace TFlex.PackageManager.Configuration
                         translator_10.NewTranslator();
                         translators.Add(TIndex, translator_10);
 
-                        tr_data = translator_10.Data;
+                        if (tr_data == null || tr_data.Attribute("type").Value != "7")
+                            tr_data = translator_10.Data;
                     }
                     break;
             }
