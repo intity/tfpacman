@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -34,10 +35,13 @@ namespace TFlex.PackageManager.Editors
                 Source = propertyItem,
                 ValidatesOnExceptions = true,
                 ValidatesOnDataErrors = true,
-                Mode = BindingMode.Default
+                Mode = BindingMode.TwoWay
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
+            var m = Value as Modules;
+            comboBox.SelectedIndex = m.Index;
+            //Debug.WriteLine("ResolveEditor");
             return this;
         }
 
@@ -48,24 +52,22 @@ namespace TFlex.PackageManager.Editors
         }
 
         private static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(object), typeof(ModulesEditor),
-                new FrameworkPropertyMetadata(null,
+            DependencyProperty.Register("Value", typeof(object),
+                typeof(ModulesEditor), new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!(DataContext is PropertyItem item && item.Instance is Header header))
-                return;
-
-            comboBox.SelectedIndex = (int)(header.Translator as Translator).TMode;
-        }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!(DataContext is PropertyItem item && item.Instance is Header header))
+            if (!(DataContext is PropertyItem item && item.Instance is Header cfg))
                 return;
 
-            Value = header.TModules[comboBox.SelectedIndex];
+            if (cfg.TIndex != comboBox.SelectedIndex)
+            {
+                cfg.TIndex = comboBox.SelectedIndex;
+
+                //Debug.WriteLine(string.Format("modules [{0}]",
+                //    (Value as Modules).ToString()));
+            }
         }
     }
 }

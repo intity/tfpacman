@@ -3,14 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:l="clr-namespace:TFlex.PackageManager.Configuration"
              xmlns:local="clr-namespace:TFlex.PackageManager.Editors"
              mc:Ignorable="d" 
              d:DesignHeight="30" 
-             d:DesignWidth="300" 
-             Loaded="UserControl_Loaded">
+             d:DesignWidth="300">
+
     <Grid>
         <ComboBox Name="comboBox" 
                   Width="Auto" 
+                  SelectedIndex="{Binding Path=Value.(l:Modules.Index), Mode=OneWay}" 
                   SelectionChanged="ComboBox_SelectionChanged"/>
     </Grid>
 </UserControl>

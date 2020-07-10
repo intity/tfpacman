@@ -18,7 +18,18 @@ namespace TFlex.PackageManager.Configuration
         bool links;
         #endregion
 
+        public Modules(int index)
+        {
+            Index = index;
+        }
+
         #region public properies
+        /// <summary>
+        /// Modules Index.
+        /// </summary>
+        [Browsable(false)]
+        public int Index { get; }
+
         /// <summary>
         /// Module for processing document pages.
         /// </summary>
@@ -148,7 +159,7 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     public class M0 : Modules
     {
-        public M0()
+        public M0(int index) : base (index)
         {
             Links = true;
         }
@@ -166,7 +177,7 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     public class M1 : Modules
     {
-        public M1()
+        public M1(int index) : base (index)
         {
             Pages  = true;
         }
@@ -191,7 +202,7 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     public class M2 : Modules
     {
-        public M2()
+        public M2(int index) : base (index)
         {
             // ...
         }

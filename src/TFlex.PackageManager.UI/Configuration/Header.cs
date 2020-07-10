@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using UndoRedoFramework;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Configuration
@@ -40,9 +41,9 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_1_4;
         XAttribute data_1_5;
 
-        int m_index;
         int processing;
         bool isChanged;
+        readonly UndoRedo<int> m_index;
         readonly Dictionary<int, object> translators;
         #endregion
 
@@ -53,26 +54,47 @@ namespace TFlex.PackageManager.Configuration
             targetDirectory   = string.Empty;
             inputExtension    = "*.grb";
             translators       = new Dictionary<int, object>();
+            m_index           = new UndoRedo<int>();
 
             TModules = new List<object>
             {
-                new M0(),  // Document
-                new M1(),  // Acad
-                new M2(),  // Acis
-                new M1(),  // Bitmap
-                new M2(),  // Iges
-                new M2(),  // Jt
-                new M1(),  // Pdf
-                new M2()   // Step
+                new M0(0), // Document
+                new M1(1), // Acad
+                new M2(2), // Acis
+                new M1(3), // Bitmap
+                new M2(4), // Iges
+                new M2(5), // Jt
+                new M1(6), // Pdf
+                new M2(7), // Step
             };
 
             foreach (var m in TModules)
             {
                 (m as Modules).PropertyChanged += Modules_PropertyChanged;
             }
+
+            UndoRedoManager.CommandDone += UndoManager_CommandDone;
         }
 
         #region event handlers
+        private void UndoManager_CommandDone(object sender, CommandDoneEventArgs e)
+        {
+            if (e.Caption != string.Format("TIndex_{0}", GetHashCode()))
+                return;
+
+            switch (e.CommandDoneType)
+            {
+                case CommandDoneType.Undo:
+                    TIndex = m_index.Value;
+                    //Debug.WriteLine(string.Format("Undo [index: {0}]", TIndex));
+                    break;
+                case CommandDoneType.Redo:
+                    TIndex = m_index.Value;
+                    //Debug.WriteLine(string.Format("Redo [index: {0}]", TIndex));
+                    break;
+            }
+        }
+
         private void DataContext_Changed(object sender, XObjectChangeEventArgs e)
         {
             IsChanged = true;
@@ -150,6 +172,28 @@ namespace TFlex.PackageManager.Configuration
         #endregion
 
         #region public properties
+        /// <summary>
+        /// The translator modules index.
+        /// </summary>
+        [Browsable(false)]
+        public int TIndex
+        {
+            get => m_index.Value;
+            set
+            {
+                if (m_index.Value != value)
+                {
+                    var name = string.Format("TIndex_{0}", GetHashCode());
+                    using (UndoRedoManager.Start(name))
+                    {
+                        m_index.Value = value;
+                        UndoRedoManager.Commit();
+                    }
+                }
+                Modules = TModules[m_index.Value];
+            }
+        }
+
         /// <summary>
         /// The configuration name definition.
         /// </summary>
@@ -245,17 +289,13 @@ namespace TFlex.PackageManager.Configuration
             get => modules;
             set
             {
-                int index = TModules.IndexOf(value);
-                if (index != m_index)
-                {
-                    modules = value;
-                    m_index = index;
-                    data_1_5.Value = (value as Modules).ToString();
-                    InitTranslator();
-                    DataContext.Element("configuration").Element("translator")
-                        .ReplaceWith(tr_data);
-                    OnPropertyChanged("Modules");
-                }
+                if (modules == value)
+                    return;
+
+                modules = value;
+                data_1_5.Value = (value as Modules).ToString();
+                InitTranslator();
+                OnPropertyChanged("Modules");
             }
         }
 
@@ -271,6 +311,8 @@ namespace TFlex.PackageManager.Configuration
                 if (translator != value)
                 {
                     translator = value;
+                    DataContext.Element("configuration")
+                        .Element("translator").ReplaceWith(tr_data);
                     OnPropertyChanged("Translator");
                 }
             }
@@ -302,7 +344,7 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         private void InitTranslator()
         {
-            switch (m_index)
+            switch (TIndex)
             {
                 case 0: // Document
                     if (translator_0 == null)
@@ -310,7 +352,7 @@ namespace TFlex.PackageManager.Configuration
                         translator_0 = new Translator_0();
                         translator_0.ErrorsChanged += Translator_ErrorsChanged;
                         translator_0.NewTranslator();
-                        translators.Add(m_index, translator_0);
+                        translators.Add(TIndex, translator_0);
 
                         tr_data = translator_0.Data;
                     }
@@ -321,7 +363,7 @@ namespace TFlex.PackageManager.Configuration
                         translator_1 = new Translator_1();
                         translator_1.ErrorsChanged += Translator_ErrorsChanged;
                         translator_1.NewTranslator();
-                        translators.Add(m_index, translator_1);
+                        translators.Add(TIndex, translator_1);
 
                         tr_data = translator_1.Data;
                     }
@@ -332,7 +374,7 @@ namespace TFlex.PackageManager.Configuration
                         translator_2 = new Translator_2();
                         translator_2.ErrorsChanged += Translator_ErrorsChanged;
                         translator_2.NewTranslator();
-                        translators.Add(m_index, translator_2);
+                        translators.Add(TIndex, translator_2);
 
                         tr_data = translator_2.Data;
                     }
@@ -343,7 +385,7 @@ namespace TFlex.PackageManager.Configuration
                         translator_3 = new Translator_3();
                         translator_3.ErrorsChanged += Translator_ErrorsChanged;
                         translator_3.NewTranslator();
-                        translators.Add(m_index, translator_3);
+                        translators.Add(TIndex, translator_3);
 
                         tr_data = translator_3.Data;
                     }
@@ -354,7 +396,7 @@ namespace TFlex.PackageManager.Configuration
                         translator_6 = new Translator_6();
                         translator_6.ErrorsChanged += Translator_ErrorsChanged;
                         translator_6.NewTranslator();
-                        translators.Add(m_index, translator_6);
+                        translators.Add(TIndex, translator_6);
 
                         tr_data = translator_6.Data;
                     }
@@ -365,7 +407,7 @@ namespace TFlex.PackageManager.Configuration
                         translator_7 = new Translator_7();
                         translator_7.ErrorsChanged += Translator_ErrorsChanged;
                         translator_7.NewTranslator();
-                        translators.Add(m_index, translator_7);
+                        translators.Add(TIndex, translator_7);
 
                         tr_data = translator_7.Data;
                     }
@@ -376,7 +418,7 @@ namespace TFlex.PackageManager.Configuration
                         translator_9 = new Translator_9();
                         translator_9.ErrorsChanged += Translator_ErrorsChanged;
                         translator_9.NewTranslator();
-                        translators.Add(m_index, translator_9);
+                        translators.Add(TIndex, translator_9);
 
                         tr_data = translator_9.Data;
                     }
@@ -387,16 +429,16 @@ namespace TFlex.PackageManager.Configuration
                         translator_10 = new Translator_10();
                         translator_10.ErrorsChanged += Translator_ErrorsChanged;
                         translator_10.NewTranslator();
-                        translators.Add(m_index, translator_10);
+                        translators.Add(TIndex, translator_10);
 
                         tr_data = translator_10.Data;
                     }
                     break;
             }
 
-            Translator = translators[m_index];
+            Translator = translators[TIndex];
 
-            //Debug.WriteLine(string.Format("InitTranslator [index: {0}]", m_index));
+            //Debug.WriteLine(string.Format("InitTranslator [index: {0}]", TIndex));
         }
 
         /// <summary>
@@ -404,7 +446,7 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         internal void LoadTranslator()
         {
-            switch (m_index)
+            switch (TIndex)
             {
                 case 0: // Document
                     translator_0.LoadTranslator(tr_data);
@@ -441,7 +483,7 @@ namespace TFlex.PackageManager.Configuration
         /// <returns>The XML-data for new configuration.</returns>
         internal XDocument NewConfiguration()
         {
-            var m = (TModules[0] as Modules);
+            var m = TModules[0] as Modules;
 
             data_1_1 = new XAttribute("value", ConfigurationName);
             data_1_2 = new XAttribute("value", InitialCatalog);
@@ -495,18 +537,18 @@ namespace TFlex.PackageManager.Configuration
                     .Element("configuration")
                     .Element("translator");
 
-                m_index    = int.Parse(tr_data.Attribute("type").Value);
-                processing = int.Parse(tr_data.Attribute("mode").Value);
-
                 foreach (var p in header.Elements())
                 {
                     LoadHeader(p);
                 }
 
+                m_index.Value = int.Parse(tr_data.Attribute("type").Value);
+                processing = int.Parse(tr_data.Attribute("mode").Value);
+
                 InitTranslator();
                 LoadTranslator();
                 DataContext.Changed += DataContext_Changed;
-                modules = TModules[m_index];
+                modules = TModules[m_index.Value];
                 IsChanged = false;
             }
 
@@ -514,7 +556,7 @@ namespace TFlex.PackageManager.Configuration
             {
                 if (DataContext == null)
                 {
-                    m_index = 0;
+                    m_index.Value = 0;
                     processing = 0;
                     modules = TModules[0];
                     InitTranslator();
@@ -532,7 +574,7 @@ namespace TFlex.PackageManager.Configuration
             else
             {
                 File.Delete(path);
-                m_index    = 0;
+                m_index.Value = 0;
                 processing = 0;
             }
 
@@ -566,7 +608,7 @@ namespace TFlex.PackageManager.Configuration
                     data_1_4 = a;
                     break;
                 case "Modules":
-                    (TModules[m_index] as Modules).SetValue(a.Value);
+                    (TModules[TIndex] as Modules).SetValue(a.Value);
                     data_1_5 = a;
                     break;
             }
