@@ -411,21 +411,22 @@ namespace TFlex.PackageManager.UI
         #region configuration event handlers
         private void Header_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!(sender is Header cgf))
+            if (!(sender is Header cfg))
                 return;
 
             switch (e.PropertyName)
             {
                 case "InitialCatalog":
-                    tvControl1.TargetDirectory = cgf.InitialCatalog;
+                    tvControl1.TargetDirectory = cfg.InitialCatalog;
                     break;
                 case "TargetDirectory":
-                    tvControl2.TargetDirectory = cgf.TargetDirectory;
+                    tvControl2.TargetDirectory = cfg.TargetDirectory;
                     break;
                 case "Translator":
-                    propertyGrid.SelectedObject = cgf.Translator;
-                    SetProcessingMode(cgf);
-                    (cgf.Modules as Modules).PropertyChanged += Modules_PropertyChanged;
+                    propertyGrid.SelectedObject = cfg.Translator;
+                    SetProcessingMode(cfg);
+                    SetWindowTitle(cfg.Translator);
+                    (cfg.Modules as Modules).PropertyChanged += Modules_PropertyChanged;
                     break;
             }
 
@@ -706,14 +707,15 @@ namespace TFlex.PackageManager.UI
             if (comboBox1.SelectedIndex != -1)
             {
                 key1 = comboBox1.SelectedValue.ToString();
-                var header = conf.Configurations[key1];
+                var cfg = conf.Configurations[key1];
 
-                tvControl1.TargetDirectory  = header.InitialCatalog;
-                tvControl2.TargetDirectory  = header.TargetDirectory;
-                inputPath1.SelectedObject   = header;
-                inputPath2.SelectedObject   = header;
-                propertyGrid.SelectedObject = header.Translator;
-                SetProcessingMode(header);
+                tvControl1.TargetDirectory  = cfg.InitialCatalog;
+                tvControl2.TargetDirectory  = cfg.TargetDirectory;
+                inputPath1.SelectedObject   = cfg;
+                inputPath2.SelectedObject   = cfg;
+                propertyGrid.SelectedObject = cfg.Translator;
+                SetProcessingMode(cfg);
+                SetWindowTitle(cfg.Translator);
             }
             else
             {
@@ -722,6 +724,7 @@ namespace TFlex.PackageManager.UI
                 inputPath1.SelectedObject   = null;
                 inputPath2.SelectedObject   = null;
                 propertyGrid.SelectedObject = null;
+                SetWindowTitle(null);
                 comboBox2.Items.Clear();
             }
             UpdateStateToControls();
@@ -798,6 +801,21 @@ namespace TFlex.PackageManager.UI
         #endregion
 
         #region extension methods
+        /// <summary>
+        /// Set main window title.
+        /// </summary>
+        /// <param name="translator"></param>
+        private void SetWindowTitle(object translator)
+        {
+            if (translator != null)
+            {
+                var type = (translator as Translator).TMode.ToString();
+                Title = string.Format("{0} [{1}]", Resource.AppName, type);
+            }
+            else
+                Title = Resource.AppName;
+        }
+
         /// <summary>
         /// Update state all modules.
         /// </summary>
