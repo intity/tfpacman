@@ -556,7 +556,6 @@ namespace TFlex.PackageManager.Configuration
             {
                 if (DataContext == null)
                 {
-                    m_index.Value = 0;
                     processing = 0;
                     modules = TModules[0];
                     InitTranslator();
@@ -574,7 +573,6 @@ namespace TFlex.PackageManager.Configuration
             else
             {
                 File.Delete(path);
-                m_index.Value = 0;
                 processing = 0;
             }
 
