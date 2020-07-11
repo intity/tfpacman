@@ -15,7 +15,7 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     [CustomCategoryOrder(Resource.TRANSLATOR_3D, 5)]
     [CustomCategoryOrder(Resource.TRANSLATOR_3D, 6)]
-    public class Translator3D : Category_3
+    public class Translator3D : OutputFiles
     {
         #region private fields
         int exportMode;

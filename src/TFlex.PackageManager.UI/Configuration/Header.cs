@@ -105,7 +105,7 @@ namespace TFlex.PackageManager.Configuration
 
         private void Translator_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            IsInvalid = (sender as Category_3).HasErrors;
+            IsInvalid = (sender as OutputFiles).HasErrors;
         }
         
         private void Modules_PropertyChanged(object sender, PropertyChangedEventArgs e)

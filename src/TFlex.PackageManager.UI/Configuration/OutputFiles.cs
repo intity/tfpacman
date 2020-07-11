@@ -16,10 +16,10 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
-    /// The class for file output category definition.
+    /// The OutputFiles class definition.
     /// </summary>
     [CustomCategoryOrder(Resource.CATEGIRY_4, 4)]
-    public class Category_3 : Translator, INotifyDataErrorInfo
+    public class OutputFiles : Translator, INotifyDataErrorInfo
     {
         #region private fields
         string targetExtension;
@@ -40,7 +40,7 @@ namespace TFlex.PackageManager.Configuration
         /// Constructor.
         /// </summary>
         /// <param name="extension">Target extension the file.</param>
-        public Category_3(string extension)
+        public OutputFiles(string extension)
         {
             targetExtension  = extension;
             fileNameSuffix   = string.Empty;

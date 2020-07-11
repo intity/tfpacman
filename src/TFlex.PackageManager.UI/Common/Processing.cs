@@ -276,7 +276,7 @@ namespace TFlex.PackageManager.Common
         /// <returns>Returns Output File name.</returns>
         private string GetFileName(Document document, Page page)
         {
-            var tr = cfg.Translator as Category_3;
+            var tr = cfg.Translator as OutputFiles;
             string fileName, expVal, pattern = @"\{(.*?)\}";
 
             if (tr.TemplateFileName.Length > 0)
@@ -307,7 +307,7 @@ namespace TFlex.PackageManager.Common
         /// <returns>Returns Output Directory Path.</returns>
         private string GetDirectory(ProcItem item)
         {
-            var tr = cfg.Translator as Category_3;
+            var tr = cfg.Translator as OutputFiles;
             if (tr.RenameSubdirectory)
             {
                 var aPath = item.Directory.Split('\\');

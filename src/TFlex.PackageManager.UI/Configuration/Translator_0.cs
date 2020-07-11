@@ -19,7 +19,7 @@ namespace TFlex.PackageManager.Configuration
     [CustomCategoryOrder(Resource.TRANSLATOR_0, 1)]
     [CustomCategoryOrder(Resource.TRANSLATOR_0, 2)]
     [CustomCategoryOrder(Resource.TRANSLATOR_0, 3)]
-    public class Translator_0 : Category_3
+    public class Translator_0 : OutputFiles
     {
         #region private fields
         string [] pageNames;
