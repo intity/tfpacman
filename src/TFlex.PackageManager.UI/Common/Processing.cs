@@ -311,7 +311,7 @@ namespace TFlex.PackageManager.Common
             if (tr.RenameSubdirectory)
             {
                 var aPath = item.Directory.Split('\\');
-                var pName = package.GetParentName(item);
+                var pName = item.Parent.FName;
                 var oPath = pName != null
                     ? item.Directory.Replace(aPath[aPath.Length - 1], pName)
                     : item.Directory;
@@ -423,13 +423,15 @@ namespace TFlex.PackageManager.Common
         {
             var tr = cfg.Translator as Translator;
             string[] aPath = item.IPath.Split('\\');
+            string directory;
 
             switch (tr.TMode)
             {
                 case TranslatorType.Document:
-                    var dir    = GetDirectory(item);
-                    item.FName = GetFileName(document, null);
-                    item.OPath = Path.Combine(dir, item.FName + ".grb");
+                    item.Parent = package.GetParent(item);
+                    directory   = GetDirectory(item);
+                    item.FName  = GetFileName(document, null);
+                    item.OPath  = Path.Combine(directory, item.FName + ".grb");
 
                     if (document.SaveAs(item.OPath))
                     {
@@ -567,16 +569,11 @@ namespace TFlex.PackageManager.Common
                     string.Format("--> Link [id: 0x{0:X8}, path: {1}]",
                     link.InternalID.ToInt32(), link.FilePath));
 
-                foreach (var i in package.Items)
-                {
-                    var iPath = i.Attribute("path");
-                    var oPath = i.Element("output")?.Attribute("path");
-                    if (oPath != null && link.FullFilePath == iPath.Value)
-                    {
-                        ReplaceLink(document, link, oPath.Value);
-                        break;
-                    }
-                }
+                var oPath = package.GetOutputPath(link.FullFilePath);
+                if (oPath == null)
+                    continue;
+
+                ReplaceLink(document, link, oPath);
             }
 
             if (item.Parent == null || item.Parent.OPath == null)
@@ -593,11 +590,11 @@ namespace TFlex.PackageManager.Common
 
             foreach (var link in parent.FileLinks)
             {
-                if (link.FullFilePath == item.IPath)
-                {
-                    ReplaceLink(parent, link, item.OPath);
-                    break;
-                }
+                if (link.FullFilePath != item.IPath)
+                    continue;
+
+                ReplaceLink(parent, link, item.OPath);
+                break;
             }
 
             if (parent.Changed)

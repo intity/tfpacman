@@ -70,11 +70,11 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// Get parent name.
+        /// Get parent object.
         /// </summary>
         /// <param name="item">The Processing Item.</param>
-        /// <returns>Parent file name.</returns>
-        internal string GetParentName(ProcItem item)
+        /// <returns>Parent processing item.</returns>
+        internal ProcItem GetParent(ProcItem item)
         {
             foreach (var e in docs.Elements())
             {
@@ -86,26 +86,43 @@ namespace TFlex.PackageManager.Configuration
                     .Where(p => p.Attribute("path").Value == item.IPath)
                     .FirstOrDefault();
 
-                if (link != null)
+                if (link == null)
+                    continue;
+
+                var iPath = e.Attribute("path").Value;
+                var oPath = e.Element("output")?.Attribute("path").Value;
+                var aPath = oPath != null ? oPath.Split('\\') : iPath.Split('\\');
+                var pName = aPath[aPath.Length - 1].Replace(".grb", "");
+
+                return new ProcItem(iPath)
                 {
-                    var iPath = e.Attribute("path").Value;
-                    var oPath = e.Element("output")?.Attribute("path").Value;
-                    var aPath = oPath != null ? oPath.Split('\\') : iPath.Split('\\');
-                    var pName = aPath[aPath.Length - 1].Replace(".grb", "");
+                    OPath = oPath,
+                    FName = pName
+                };
+            }
+            return null;
+        }
 
-                    if (item.Parent == null)
-                    {
-                        item.Parent = new ProcItem(iPath)
-                        {
-                            OPath = oPath,
-                            FName = pName
-                        };
-                    }
-
-                    return pName;
+        /// <summary>
+        /// Get output file path from package data.
+        /// </summary>
+        /// <param name="path">
+        /// Input file path from internal link the document.
+        /// </param>
+        /// <returns>
+        /// Returns the output path to the document, or null otherwise.
+        /// </returns>
+        internal string GetOutputPath(string path)
+        {
+            foreach (var i in Items)
+            {
+                var iPath = i.Attribute("path");
+                var oPath = i.Element("output")?.Attribute("path");
+                if (oPath != null && path == iPath.Value)
+                {
+                    return oPath.Value;
                 }
             }
-
             return null;
         }
         #endregion
