@@ -169,6 +169,7 @@ namespace TFlex.PackageManager.Configuration
                 if (renameSubdirectory != value)
                 {
                     renameSubdirectory = value;
+                    data_4_4.Value = value ? "1" : "0";
                     OnPropertyChanged("RenameSubdirectory");
                 }
             }
