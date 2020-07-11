@@ -28,7 +28,7 @@ namespace TFlex.PackageManager.Common
         public const string OPTIONS_UI      = "Options";
         public const string VARIABLES_UI    = "VariablesUI";
         public const string VARIABLE_MODEL  = "VariableModel";
-        public const string CATEGIRY_4      = "Category_3";
+        public const string OUTPUT_FILES    = "OutputFiles";
         public const string TRANSLATOR_0    = "Translator_0";
         public const string TRANSLATOR_1    = "Translator_1";
         public const string TRANSLATOR_3    = "Translator_3";

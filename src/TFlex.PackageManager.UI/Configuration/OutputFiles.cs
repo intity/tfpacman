@@ -18,7 +18,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The OutputFiles class definition.
     /// </summary>
-    [CustomCategoryOrder(Resource.CATEGIRY_4, 4)]
+    [CustomCategoryOrder(Resource.OUTPUT_FILES, 4)]
     public class OutputFiles : Translator, INotifyDataErrorInfo
     {
         #region private fields
@@ -49,8 +49,8 @@ namespace TFlex.PackageManager.Configuration
             objErrors        = new Dictionary<string, List<string>>();
             error_messages   = new string[]
             {
-                Resource.GetString(Resource.CATEGIRY_4, "message2", 0),
-                Resource.GetString(Resource.CATEGIRY_4, "message3", 0)
+                Resource.GetString(Resource.OUTPUT_FILES, "message2", 0),
+                Resource.GetString(Resource.OUTPUT_FILES, "message3", 0)
             };
         }
 
@@ -77,9 +77,9 @@ namespace TFlex.PackageManager.Configuration
         /// The file name suffix.
         /// </summary>
         [PropertyOrder(13)]
-        [CustomCategory(Resource.CATEGIRY_4, "category4")]
-        [CustomDisplayName(Resource.CATEGIRY_4, "dn4_2")]
-        [CustomDescription(Resource.CATEGIRY_4, "dn4_2")]
+        [CustomCategory(Resource.OUTPUT_FILES, "category4")]
+        [CustomDisplayName(Resource.OUTPUT_FILES, "dn4_2")]
+        [CustomDescription(Resource.OUTPUT_FILES, "dn4_2")]
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string FileNameSuffix
         {
@@ -114,9 +114,9 @@ namespace TFlex.PackageManager.Configuration
         /// Template name of the file definition.
         /// </summary>
         [PropertyOrder(14)]
-        [CustomCategory(Resource.CATEGIRY_4, "category4")]
-        [CustomDisplayName(Resource.CATEGIRY_4, "dn4_3")]
-        [CustomDescription(Resource.CATEGIRY_4, "dn4_3")]
+        [CustomCategory(Resource.OUTPUT_FILES, "category4")]
+        [CustomDisplayName(Resource.OUTPUT_FILES, "dn4_3")]
+        [CustomDescription(Resource.OUTPUT_FILES, "dn4_3")]
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string TemplateFileName
         {
@@ -157,9 +157,9 @@ namespace TFlex.PackageManager.Configuration
         /// Rename subdirectory on parent file name.
         /// </summary>
         [PropertyOrder(15)]
-        [CustomCategory(Resource.CATEGIRY_4, "category4")]
-        [CustomDisplayName(Resource.CATEGIRY_4, "dn4_4")]
-        [CustomDescription(Resource.CATEGIRY_4, "dn4_4")]
+        [CustomCategory(Resource.OUTPUT_FILES, "category4")]
+        [CustomDisplayName(Resource.OUTPUT_FILES, "dn4_4")]
+        [CustomDescription(Resource.OUTPUT_FILES, "dn4_4")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool RenameSubdirectory
         {
