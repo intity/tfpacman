@@ -45,7 +45,7 @@
         <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
             <Separator/>
             <TextBlock>
-                        Copyright © 2019 intity<LineBreak/>
+                        Copyright © 2020 intity<LineBreak/>
             </TextBlock>
         </StackPanel>
 
