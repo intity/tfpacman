@@ -38,21 +38,40 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     public class Translator : INotifyPropertyChanged
     {
-        #region internal properties
-        /// <summary>
-        /// The XML-metadata to translator.
-        /// </summary>
-        internal XElement Data { get; private set; }
+        #region private fields
+        XElement data;
+        TranslatorType type;
+        ProcessingMode mode;
+        #endregion
 
+        #region internal properties
         /// <summary>
         /// Translator type.
         /// </summary>
-        internal virtual TranslatorType TMode { get; }
+        internal virtual TranslatorType TMode
+        {
+            get => type;
+            private set
+            {
+                type = value;
+            }
+        }
 
         /// <summary>
         /// Processing mode.
         /// </summary>
-        internal virtual ProcessingMode PMode { get; set; }
+        internal virtual ProcessingMode PMode
+        {
+            get => mode;
+            set
+            {
+                if (mode != value)
+                {
+                    mode = value;
+                    data.Attribute("mode").Value = ((int)value).ToString();
+                }
+            }
+        }
         #endregion
 
         #region internal methods
@@ -87,6 +106,11 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="data">The translator element.</param>
         internal void LoadTranslator(XElement data)
         {
+            this.data = data;
+
+            type = (TranslatorType)int.Parse(data.Attribute("type").Value);
+            mode = (ProcessingMode)int.Parse(data.Attribute("mode").Value);
+
             foreach (var i in data.Elements())
             {
                 LoadParameter(i);
@@ -99,9 +123,11 @@ namespace TFlex.PackageManager.Configuration
         /// <returns></returns>
         internal virtual XElement NewTranslator()
         {
-            return Data = new XElement("translator", 
-                new XAttribute("type", (int)TMode), 
-                new XAttribute("mode", (int)PMode));
+            data = new XElement("translator");
+            data.Add(new XAttribute("type", (int)TMode));
+            data.Add(new XAttribute("mode", (int)PMode));
+
+            return data;
         }
 
         /// <summary>

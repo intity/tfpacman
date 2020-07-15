@@ -29,7 +29,7 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="ext">Target extension the file.</param>
         public Translator_10(string ext = "STP") : base (ext)
         {
-            PMode = ProcessingMode.Export; // Export | Import
+
         }
 
         #region public properties
@@ -62,11 +62,6 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Step;
-        internal override ProcessingMode PMode
-        {
-            get => base.PMode;
-            set => base.PMode = value;
-        }
         #endregion
 
         #region internal methods

@@ -428,6 +428,9 @@ namespace TFlex.PackageManager.UI
                     SetWindowTitle(cfg.Translator);
                     (cfg.Modules as Modules).PropertyChanged += Modules_PropertyChanged;
                     break;
+                case "Processing": // mode
+                    SetProcessingMode(cfg);
+                    break;
             }
 
             UpdateStateToControls();
@@ -745,17 +748,17 @@ namespace TFlex.PackageManager.UI
                 switch (key2)
                 {
                     case "SaveAs":
-                        obj.PMode = ProcessingMode.SaveAs;
+                        cfg.PIndex = 0;
                         UpdateModules((int)obj.TMode, 0);
                         tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Export":
-                        obj.PMode = ProcessingMode.Export;
+                        cfg.PIndex = 1;
                         UpdateModules((int)obj.TMode, 1);
                         tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Import":
-                        obj.PMode = ProcessingMode.Import;
+                        cfg.PIndex = 2;
                         UpdateModules((int)obj.TMode, 2);
                         switch (obj.TMode)
                         {
@@ -774,8 +777,6 @@ namespace TFlex.PackageManager.UI
                         }
                         break;
                 }
-
-                cfg.Processing = (int)obj.PMode;
             }
         } // processing mode
         #endregion
@@ -1070,9 +1071,9 @@ namespace TFlex.PackageManager.UI
             logging.WriteLine(LogLevel.INFO, "Processing ending");
         }
 
-        private void SetProcessingMode(Header header)
+        private void SetProcessingMode(Header cfg)
         {
-            var obj = header.Translator;
+            var obj = cfg.Translator;
             comboBox2.Items.Clear();
 
             switch ((obj as Translator).TMode)
@@ -1094,7 +1095,7 @@ namespace TFlex.PackageManager.UI
                     importMode = (obj as Translator3D).ImportMode;
                     comboBox2.Items.Add("Export");
                     comboBox2.Items.Add("Import");
-                    comboBox2.SelectedIndex = header.Processing > 1 ? 1 : 0;
+                    comboBox2.SelectedIndex = cfg.PIndex > 1 ? 1 : 0;
                     break;
             }
         }

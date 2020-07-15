@@ -870,6 +870,7 @@ namespace TFlex.PackageManager.Configuration
                 new XAttribute("name", "AddBodyRecordsInProductStructure"),
                 data_5_F));
 
+            PMode = ProcessingMode.Export;
             return data;
         }
 

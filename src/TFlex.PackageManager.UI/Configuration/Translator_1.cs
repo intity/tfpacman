@@ -56,8 +56,6 @@ namespace TFlex.PackageManager.Configuration
             convertMultitext                     = 0;
             biarcInterpolationForSplines         = 0;
             biarcInterpolationAccuracyForSplines = 0.1m;
-
-            PMode = ProcessingMode.Export; // Export
         }
 
         #region public properties
@@ -300,11 +298,6 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Acad;
-        internal override ProcessingMode PMode
-        {
-            get => base.PMode;
-            set => base.PMode = value;
-        }
         #endregion
 
         #region internal methods
@@ -382,6 +375,7 @@ namespace TFlex.PackageManager.Configuration
                 new XAttribute("name", "BiarcInterpolationAccuracyForSplines"),
                 data_4_7));
 
+            PMode = ProcessingMode.Export;
             return data;
         }
 

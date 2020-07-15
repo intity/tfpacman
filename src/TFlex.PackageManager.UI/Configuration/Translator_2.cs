@@ -19,16 +19,10 @@ namespace TFlex.PackageManager.Configuration
         public Translator_2(string ext = "SAT") : base (ext)
         {
             //extension = SAT | SAB
-            PMode = ProcessingMode.Export; // Export | Import
         }
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Acis;
-        internal override ProcessingMode PMode
-        {
-            get => base.PMode;
-            set => base.PMode = value;
-        }
         #endregion
 
         #region internal methods

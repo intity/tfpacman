@@ -42,6 +42,7 @@ namespace TFlex.PackageManager.Configuration
         int processing;
         bool isChanged;
         readonly UndoRedo<int> m_index;
+        readonly UndoRedo<int> p_index;
         readonly Dictionary<int, object> translators;
         #endregion
 
@@ -52,6 +53,7 @@ namespace TFlex.PackageManager.Configuration
             targetDirectory   = string.Empty;
             translators       = new Dictionary<int, object>();
             m_index           = new UndoRedo<int>();
+            p_index           = new UndoRedo<int>();
 
             TModules = new List<object>
             {
@@ -76,18 +78,18 @@ namespace TFlex.PackageManager.Configuration
         #region event handlers
         private void UndoManager_CommandDone(object sender, CommandDoneEventArgs e)
         {
-            if (e.Caption != string.Format("TIndex_{0}", GetHashCode()))
-                return;
-
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    TIndex = m_index.Value;
-                    //Debug.WriteLine(string.Format("Undo [index: {0}]", TIndex));
-                    break;
                 case CommandDoneType.Redo:
-                    TIndex = m_index.Value;
-                    //Debug.WriteLine(string.Format("Redo [index: {0}]", TIndex));
+                    if (e.Caption == string.Format("TIndex_{0}", GetHashCode()))
+                    {
+                        TIndex = m_index.Value;
+                    }
+                    if (e.Caption == string.Format("PIndex_{0}", GetHashCode()))
+                    {
+                        PIndex = p_index.Value;
+                    }
                     break;
             }
         }
@@ -166,14 +168,11 @@ namespace TFlex.PackageManager.Configuration
         /// Modules container for switch between translators.
         /// </summary>
         internal List<object> TModules { get; }
-        #endregion
 
-        #region public properties
         /// <summary>
-        /// The translator modules index.
+        /// The Translator type Index.
         /// </summary>
-        [Browsable(false)]
-        public int TIndex
+        internal int TIndex
         {
             get => m_index.Value;
             set
@@ -191,6 +190,29 @@ namespace TFlex.PackageManager.Configuration
             }
         }
 
+        /// <summary>
+        /// The Processing mode Index.
+        /// </summary>
+        internal int PIndex
+        {
+            get => p_index.Value;
+            set
+            {
+                if (p_index.Value != value)
+                {
+                    var name = string.Format("PIndex_{0}", GetHashCode());
+                    using (UndoRedoManager.Start(name))
+                    {
+                        p_index.Value = value;
+                        UndoRedoManager.Commit();
+                    }
+                }
+                Processing = value;
+            }
+        }
+        #endregion
+
+        #region public properties
         /// <summary>
         /// The configuration name definition.
         /// </summary>
@@ -226,7 +248,6 @@ namespace TFlex.PackageManager.Configuration
                 {
                     initialCatalog = value;
                     data_1_2.Value = value;
-
                     OnPropertyChanged("InitialCatalog");
                 }
             }
@@ -248,7 +269,6 @@ namespace TFlex.PackageManager.Configuration
                 {
                     targetDirectory = value;
                     data_1_3.Value = value;
-
                     OnPropertyChanged("TargetDirectory");
                 }
             }
@@ -296,19 +316,18 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// Current processing mode.
+        /// Current Index of processing mode.
         /// </summary>
         [Browsable(false)]
         public int Processing
         {
             get => processing;
-            set 
+            set
             {
                 if (processing != value)
                 {
                     processing = value;
-                    DataContext.Element("configuration").Element("translator")
-                        .Attribute("mode").Value = processing.ToString();
+                    (translators[TIndex] as Translator).PMode = (ProcessingMode)p_index.Value;
                     OnPropertyChanged("Processing");
                 }
             }
@@ -328,11 +347,10 @@ namespace TFlex.PackageManager.Configuration
                     {
                         translator_0 = new Translator_0();
                         translator_0.ErrorsChanged += Translator_ErrorsChanged;
-                        translator_0.NewTranslator();
                         translators.Add(TIndex, translator_0);
 
                         if (tr_data == null || tr_data.Attribute("type").Value != "0")
-                            tr_data = translator_0.Data;
+                            tr_data = translator_0.NewTranslator();
                     }
                     break;
                 case 1: // Acad
@@ -340,11 +358,10 @@ namespace TFlex.PackageManager.Configuration
                     {
                         translator_1 = new Translator_1();
                         translator_1.ErrorsChanged += Translator_ErrorsChanged;
-                        translator_1.NewTranslator();
                         translators.Add(TIndex, translator_1);
 
                         if (tr_data == null || tr_data.Attribute("type").Value != "1")
-                            tr_data = translator_1.Data;
+                            tr_data = translator_1.NewTranslator();
                     }
                     break;
                 case 2: // ACIS
@@ -352,11 +369,10 @@ namespace TFlex.PackageManager.Configuration
                     {
                         translator_2 = new Translator_2();
                         translator_2.ErrorsChanged += Translator_ErrorsChanged;
-                        translator_2.NewTranslator();
                         translators.Add(TIndex, translator_2);
 
                         if (tr_data == null || tr_data.Attribute("type").Value != "2")
-                            tr_data = translator_2.Data;
+                            tr_data = translator_2.NewTranslator();
                     }
                     break;
                 case 3: // Bitmap
@@ -364,11 +380,10 @@ namespace TFlex.PackageManager.Configuration
                     {
                         translator_3 = new Translator_3();
                         translator_3.ErrorsChanged += Translator_ErrorsChanged;
-                        translator_3.NewTranslator();
                         translators.Add(TIndex, translator_3);
 
                         if (tr_data == null || tr_data.Attribute("type").Value != "3")
-                            tr_data = translator_3.Data;
+                            tr_data = translator_3.NewTranslator();
                     }
                     break;
                 case 4: // IGES
@@ -376,11 +391,10 @@ namespace TFlex.PackageManager.Configuration
                     {
                         translator_6 = new Translator_6();
                         translator_6.ErrorsChanged += Translator_ErrorsChanged;
-                        translator_6.NewTranslator();
                         translators.Add(TIndex, translator_6);
 
                         if (tr_data == null || tr_data.Attribute("type").Value != "4")
-                            tr_data = translator_6.Data;
+                            tr_data = translator_6.NewTranslator();
                     }
                     break;
                 case 5: // JT
@@ -388,11 +402,10 @@ namespace TFlex.PackageManager.Configuration
                     {
                         translator_7 = new Translator_7();
                         translator_7.ErrorsChanged += Translator_ErrorsChanged;
-                        translator_7.NewTranslator();
                         translators.Add(TIndex, translator_7);
 
                         if (tr_data == null || tr_data.Attribute("type").Value != "5")
-                            tr_data = translator_7.Data;
+                            tr_data = translator_7.NewTranslator();
                     }
                     break;
                 case 6: // PDF
@@ -400,11 +413,10 @@ namespace TFlex.PackageManager.Configuration
                     {
                         translator_9 = new Translator_9();
                         translator_9.ErrorsChanged += Translator_ErrorsChanged;
-                        translator_9.NewTranslator();
                         translators.Add(TIndex, translator_9);
 
                         if (tr_data == null || tr_data.Attribute("type").Value != "6")
-                            tr_data = translator_9.Data;
+                            tr_data = translator_9.NewTranslator();
                     }
                     break;
                 case 7: // STEP
@@ -412,11 +424,10 @@ namespace TFlex.PackageManager.Configuration
                     {
                         translator_10 = new Translator_10();
                         translator_10.ErrorsChanged += Translator_ErrorsChanged;
-                        translator_10.NewTranslator();
                         translators.Add(TIndex, translator_10);
 
                         if (tr_data == null || tr_data.Attribute("type").Value != "7")
-                            tr_data = translator_10.Data;
+                            tr_data = translator_10.NewTranslator();
                     }
                     break;
             }
@@ -519,7 +530,7 @@ namespace TFlex.PackageManager.Configuration
                     .Element("translator");
 
                 m_index.Value = int.Parse(tr_data.Attribute("type").Value);
-                processing    = int.Parse(tr_data.Attribute("mode").Value);
+                p_index.Value = int.Parse(tr_data.Attribute("mode").Value);
 
                 foreach (var p in header.Elements())
                 {
@@ -536,7 +547,6 @@ namespace TFlex.PackageManager.Configuration
             {
                 if (DataContext == null)
                 {
-                    processing = 0;
                     modules = TModules[0];
                     InitTranslator();
                     DataContext.Changed += DataContext_Changed;
@@ -552,7 +562,6 @@ namespace TFlex.PackageManager.Configuration
             else
             {
                 File.Delete(path);
-                processing = 0;
             }
 
             //Debug.WriteLine(string.Format("ConfigurationTask [flag: {0}, path: {1}]",

@@ -36,7 +36,7 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="ext">Target extension the file.</param>
         public Translator_9(string ext = "PDF") : base (ext)
         {
-            PMode = ProcessingMode.Export; // Export
+            
         }
 
         #region public properies
@@ -112,11 +112,6 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Pdf;
-        internal override ProcessingMode PMode
-        {
-            get => base.PMode;
-            set => base.PMode = value;
-        }
         #endregion
 
         #region internals methods
@@ -180,6 +175,7 @@ namespace TFlex.PackageManager.Configuration
                 new XAttribute("name", "CombinePages"),
                 data_4_3));
 
+            PMode = ProcessingMode.Export;
             return data;
         }
 
