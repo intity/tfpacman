@@ -428,9 +428,6 @@ namespace TFlex.PackageManager.UI
                     SetWindowTitle(cfg.Translator);
                     (cfg.Modules as Modules).PropertyChanged += Modules_PropertyChanged;
                     break;
-                case "Processing": // mode
-                    SetProcessingMode(cfg);
-                    break;
             }
 
             UpdateStateToControls();
@@ -454,7 +451,7 @@ namespace TFlex.PackageManager.UI
                 importMode = (int)e.NewValue;
                 UpdateModules((int)obj.TMode, 2);
             }
-            
+
             UpdateStateToControls();
 
             //Debug.WriteLine(string.Format("Translator_PropertyValueChanged: [name: {0}, value: {1}]", 
@@ -748,17 +745,17 @@ namespace TFlex.PackageManager.UI
                 switch (key2)
                 {
                     case "SaveAs":
-                        cfg.PIndex = 0;
+                        obj.PMode = ProcessingMode.SaveAs;
                         UpdateModules((int)obj.TMode, 0);
                         tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Export":
-                        cfg.PIndex = 1;
+                        obj.PMode = ProcessingMode.Export;
                         UpdateModules((int)obj.TMode, 1);
                         tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Import":
-                        cfg.PIndex = 2;
+                        obj.PMode = ProcessingMode.Import;
                         UpdateModules((int)obj.TMode, 2);
                         switch (obj.TMode)
                         {
@@ -1074,6 +1071,7 @@ namespace TFlex.PackageManager.UI
         private void SetProcessingMode(Header cfg)
         {
             var obj = cfg.Translator;
+            int ind = (int)(cfg.Translator as Translator).PMode;
             comboBox2.Items.Clear();
 
             switch ((obj as Translator).TMode)
@@ -1095,7 +1093,7 @@ namespace TFlex.PackageManager.UI
                     importMode = (obj as Translator3D).ImportMode;
                     comboBox2.Items.Add("Export");
                     comboBox2.Items.Add("Import");
-                    comboBox2.SelectedIndex = cfg.PIndex > 1 ? 1 : 0;
+                    comboBox2.SelectedIndex = ind > 1 ? 1 : 0;
                     break;
             }
         }

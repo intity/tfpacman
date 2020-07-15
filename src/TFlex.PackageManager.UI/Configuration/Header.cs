@@ -8,7 +8,6 @@ using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
-using UndoRedoFramework;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Configuration
@@ -39,10 +38,8 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_1_3;
         XAttribute data_1_4;
 
-        int processing;
+        int m_index;
         bool isChanged;
-        readonly UndoRedo<int> m_index;
-        readonly UndoRedo<int> p_index;
         readonly Dictionary<int, object> translators;
         #endregion
 
@@ -52,8 +49,6 @@ namespace TFlex.PackageManager.Configuration
             initialCatalog    = string.Empty;
             targetDirectory   = string.Empty;
             translators       = new Dictionary<int, object>();
-            m_index           = new UndoRedo<int>();
-            p_index           = new UndoRedo<int>();
 
             TModules = new List<object>
             {
@@ -71,29 +66,9 @@ namespace TFlex.PackageManager.Configuration
             {
                 (m as Modules).PropertyChanged += Modules_PropertyChanged;
             }
-
-            UndoRedoManager.CommandDone += UndoManager_CommandDone;
         }
 
         #region event handlers
-        private void UndoManager_CommandDone(object sender, CommandDoneEventArgs e)
-        {
-            switch (e.CommandDoneType)
-            {
-                case CommandDoneType.Undo:
-                case CommandDoneType.Redo:
-                    if (e.Caption == string.Format("TIndex_{0}", GetHashCode()))
-                    {
-                        TIndex = m_index.Value;
-                    }
-                    if (e.Caption == string.Format("PIndex_{0}", GetHashCode()))
-                    {
-                        PIndex = p_index.Value;
-                    }
-                    break;
-            }
-        }
-
         private void DataContext_Changed(object sender, XObjectChangeEventArgs e)
         {
             IsChanged = true;
@@ -174,40 +149,14 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         internal int TIndex
         {
-            get => m_index.Value;
+            get => m_index;
             set
             {
-                if (m_index.Value != value)
+                if (m_index != value)
                 {
-                    var name = string.Format("TIndex_{0}", GetHashCode());
-                    using (UndoRedoManager.Start(name))
-                    {
-                        m_index.Value = value;
-                        UndoRedoManager.Commit();
-                    }
+                    m_index = value;
+                    Modules = TModules[value];
                 }
-                Modules = TModules[m_index.Value];
-            }
-        }
-
-        /// <summary>
-        /// The Processing mode Index.
-        /// </summary>
-        internal int PIndex
-        {
-            get => p_index.Value;
-            set
-            {
-                if (p_index.Value != value)
-                {
-                    var name = string.Format("PIndex_{0}", GetHashCode());
-                    using (UndoRedoManager.Start(name))
-                    {
-                        p_index.Value = value;
-                        UndoRedoManager.Commit();
-                    }
-                }
-                Processing = value;
             }
         }
         #endregion
@@ -312,24 +261,6 @@ namespace TFlex.PackageManager.Configuration
                 translator = value;
                 SetTranslatorData();
                 OnPropertyChanged("Translator");
-            }
-        }
-
-        /// <summary>
-        /// Current Index of processing mode.
-        /// </summary>
-        [Browsable(false)]
-        public int Processing
-        {
-            get => processing;
-            set
-            {
-                if (processing != value)
-                {
-                    processing = value;
-                    (translators[TIndex] as Translator).PMode = (ProcessingMode)p_index.Value;
-                    OnPropertyChanged("Processing");
-                }
             }
         }
         #endregion
@@ -529,8 +460,7 @@ namespace TFlex.PackageManager.Configuration
                     .Element("configuration")
                     .Element("translator");
 
-                m_index.Value = int.Parse(tr_data.Attribute("type").Value);
-                p_index.Value = int.Parse(tr_data.Attribute("mode").Value);
+                m_index = int.Parse(tr_data.Attribute("type").Value);
 
                 foreach (var p in header.Elements())
                 {
@@ -593,7 +523,7 @@ namespace TFlex.PackageManager.Configuration
                     break;
                 case "Modules":
                     (TModules[TIndex] as Modules).SetValue(a.Value);
-                    modules = TModules[m_index.Value];
+                    modules = TModules[m_index];
                     data_1_4 = a;
                     break;
             }
