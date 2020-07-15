@@ -196,7 +196,6 @@ namespace TFlex.PackageManager.UI
                 {
                     "ConfigurationName",
                     "TargetDirectory",
-                    "InputExtension",
                     "Modules"
                 },
                 IsBrowsable = false
@@ -208,7 +207,6 @@ namespace TFlex.PackageManager.UI
                 {
                     "ConfigurationName",
                     "InitialCatalog",
-                    "InputExtension",
                     "Modules"
                 },
                 IsBrowsable = false

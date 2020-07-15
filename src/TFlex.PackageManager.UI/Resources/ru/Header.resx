@@ -130,10 +130,6 @@
     <comment>Определение каталога вывода.</comment>
   </data>
   <data name="dn1_4" xml:space="preserve">
-    <value>Формат файла</value>
-    <comment>Формат файла документа T-FLEX CAD.</comment>
-  </data>
-  <data name="dn1_5" xml:space="preserve">
     <value>Транслятор</value>
     <comment>Тип транслятора.</comment>
   </data>

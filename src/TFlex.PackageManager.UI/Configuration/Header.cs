@@ -31,7 +31,6 @@ namespace TFlex.PackageManager.Configuration
         string configurationName;
         string initialCatalog;
         string targetDirectory;
-        string inputExtension;
         object modules;
         object translator;
         XElement tr_data;
@@ -39,7 +38,6 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_1_2;
         XAttribute data_1_3;
         XAttribute data_1_4;
-        XAttribute data_1_5;
 
         int processing;
         bool isChanged;
@@ -52,7 +50,6 @@ namespace TFlex.PackageManager.Configuration
             configurationName = string.Empty;
             initialCatalog    = string.Empty;
             targetDirectory   = string.Empty;
-            inputExtension    = "*.grb";
             translators       = new Dictionary<int, object>();
             m_index           = new UndoRedo<int>();
 
@@ -111,7 +108,7 @@ namespace TFlex.PackageManager.Configuration
         private void Modules_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var m = sender as Modules;
-            string[] values = data_1_5.Value.Split(' ');
+            string[] values = data_1_4.Value.Split(' ');
 
             switch (e.PropertyName)
             {
@@ -129,7 +126,7 @@ namespace TFlex.PackageManager.Configuration
                     break;
             }
 
-            data_1_5.Value = values.ToString(" ");
+            data_1_4.Value = values.ToString(" ");
         }
         #endregion
 
@@ -258,30 +255,11 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
-        /// The input file extension.
-        /// </summary>
-        [PropertyOrder(4)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_4")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_4")]
-        [ItemsSource(typeof(InputExtensionItems))]
-        public string InputExtension
-        {
-            get { return inputExtension; }
-            set
-            {
-                if (inputExtension != value)
-                {
-                    inputExtension = value;
-                }
-            }
-        }
-
-        /// <summary>
         /// The translator modules for current selector.
         /// </summary>
         [PropertyOrder(5)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_5")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_5")]
+        [CustomDisplayName(Resource.HEADER_UI, "dn1_4")]
+        [CustomDescription(Resource.HEADER_UI, "dn1_4")]
         [ExpandableObject]
         [Editor(typeof(ModulesEditor), typeof(UITypeEditor))]
         public object Modules
@@ -293,7 +271,7 @@ namespace TFlex.PackageManager.Configuration
                     return;
 
                 modules = value;
-                data_1_5.Value = (value as Modules).ToString();
+                data_1_4.Value = (value as Modules).ToString();
                 InitTranslator();
                 OnPropertyChanged("Modules");
             }
@@ -495,8 +473,7 @@ namespace TFlex.PackageManager.Configuration
             data_1_1 = new XAttribute("value", ConfigurationName);
             data_1_2 = new XAttribute("value", InitialCatalog);
             data_1_3 = new XAttribute("value", TargetDirectory);
-            data_1_4 = new XAttribute("value", InputExtension);
-            data_1_5 = new XAttribute("value", m.ToString());
+            data_1_4 = new XAttribute("value", m.ToString());
 
             XDocument document = new XDocument(
                 new XDeclaration("1.0", "utf-8", null),
@@ -511,12 +488,9 @@ namespace TFlex.PackageManager.Configuration
                         new XElement("parameter",
                             new XAttribute("name", "TargetDirectory"),
                             data_1_3),
-                        new XElement("parameter",
-                            new XAttribute("name", "InputExtension"),
-                            data_1_4), 
                         new XElement("parameter", 
                             new XAttribute("name", "Modules"), 
-                            data_1_5)), 
+                            data_1_4)), 
                     tr_data));
 
             return document;
@@ -608,14 +582,10 @@ namespace TFlex.PackageManager.Configuration
                     targetDirectory = a.Value;
                     data_1_3 = a;
                     break;
-                case "InputExtension":
-                    inputExtension = a.Value;
-                    data_1_4 = a;
-                    break;
                 case "Modules":
                     (TModules[TIndex] as Modules).SetValue(a.Value);
                     modules = TModules[m_index.Value];
-                    data_1_5 = a;
+                    data_1_4 = a;
                     break;
             }
         }
@@ -645,17 +615,5 @@ namespace TFlex.PackageManager.Configuration
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
         #endregion
-    }
-
-#pragma warning disable CA1812
-    internal class InputExtensionItems : IItemsSource
-    {
-        public ItemCollection GetValues()
-        {
-            return new ItemCollection
-            {
-                { "*.grb", "GRB" }
-            };
-        }
     }
 }

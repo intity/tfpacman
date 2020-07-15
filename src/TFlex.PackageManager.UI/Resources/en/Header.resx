@@ -130,10 +130,6 @@
     <comment>Definition of target directory.</comment>
   </data>
   <data name="dn1_4" xml:space="preserve">
-    <value>File format</value>
-    <comment>T-FLEX CAD document file format.</comment>
-  </data>
-  <data name="dn1_5" xml:space="preserve">
     <value>Translator</value>
     <comment>Translator types.</comment>
   </data>

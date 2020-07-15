@@ -130,10 +130,6 @@
     <comment>Definition des zielverzeichnisses.</comment>
   </data>
   <data name="dn1_4" xml:space="preserve">
-    <value>Datei format</value>
-    <comment>TENADO CAD datei format.</comment>
-  </data>
-  <data name="dn1_5" xml:space="preserve">
     <value>Übersetzer</value>
     <comment>Übersetzer typen.</comment>
   </data>
