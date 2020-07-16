@@ -55,14 +55,5 @@ namespace TFlex.PackageManager.Model
         /// The Items.
         /// </summary>
         public List<ProcItem> Items { get; }
-
-        /// <summary>
-        /// Set directory path.
-        /// </summary>
-        /// <param name="path"></param>
-        public void SetDirectory(string path)
-        {
-            Directory = path;
-        }
     }
 }
