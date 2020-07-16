@@ -18,6 +18,7 @@ namespace TFlex.PackageManager.Controls
     {
         #region private fields
         readonly object dummyNode;
+        string searchPattern;
         string targetDirectory;
         readonly List<ImageSource> imageSourceList;
         CustomTreeView treeView;
@@ -60,7 +61,18 @@ namespace TFlex.PackageManager.Controls
         /// <summary>
         /// Search pattern to in GetFile method use.
         /// </summary>
-        public string SearchPattern { get; set; }
+        public string SearchPattern
+        {
+            get => searchPattern;
+            set
+            {
+                if (searchPattern != value)
+                {
+                    searchPattern = value;
+                    UpdateControl();
+                }
+            }
+        }
 
         /// <summary>
         /// Target directory.
