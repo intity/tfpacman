@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 using TFlex.PackageManager.Model;
 
 namespace TFlex.PackageManager.Configuration
@@ -15,206 +14,83 @@ namespace TFlex.PackageManager.Configuration
     {
         #region private fields
         readonly Header cfg;
-        readonly string mode;
-        readonly string path;
-        XDocument data;
-        XElement docs;
         #endregion
 
         /// <summary>
         /// The Package constructor.
         /// </summary>
         /// <param name="cfg"></param>
-        public Package(Header cfg)
+        /// <param name="items">Selected Items.</param>
+        public Package(Header cfg, string[] items)
         {
             this.cfg = cfg;
-            var type = (cfg.Translator as Translator).TMode;
+            var mode = (cfg.Translator as Translator).PMode;
+            Items    = new Dictionary<ProcItem, string[]>();
 
-            mode = type.ToString();
-            path = Path.Combine(cfg.TargetDirectory, "package.xml");
-
-            switch (type)
-            {
-                case TranslatorType.Document: InitPackage_0(); break;
-            }
+            if (mode != ProcessingMode.Import)
+                InitPackage_0(items);
+            else
+                InitPackage_I(items);
         }
 
         /// <summary>
-        /// The Package Items.
+        /// Package Items.
         /// </summary>
-        public IEnumerable<XElement> Items { get => docs.Elements(); }
-
-        #region internal methods
-        /// <summary>
-        /// Set metadata to XML.
-        /// </summary>
-        /// <param name="item">The Processing Item.</param>
-        internal void SetMetadata(ProcItem item)
-        {
-            var element = docs.Elements()
-                .Where(e => e.Attribute("path").Value == item.IPath)
-                .FirstOrDefault();
-
-            var aPath = element?.Element("output")?.Attribute("path");
-            if (aPath != null)
-            {
-                if (File.Exists(aPath.Value) && aPath.Value != item.OPath)
-                    File.Delete(aPath.Value);
-
-                aPath.Value = item.OPath;
-            }
-            else if (element?.Element("output") == null)
-                element.Add(new XElement("output", new XAttribute("path", item.OPath)));
-
-            data.Save(path);
-        }
-
-        /// <summary>
-        /// Get parent object.
-        /// </summary>
-        /// <param name="item">The Processing Item.</param>
-        /// <returns>Parent processing item.</returns>
-        internal ProcItem GetParent(ProcItem item)
-        {
-            foreach (var e in docs.Elements())
-            {
-                var links = e.Element("links");
-                if (links == null)
-                    continue;
-
-                var link = links.Elements()
-                    .Where(p => p.Attribute("path").Value == item.IPath)
-                    .FirstOrDefault();
-
-                if (link == null)
-                    continue;
-
-                var iPath = e.Attribute("path").Value;
-                var oPath = e.Element("output")?.Attribute("path").Value;
-                var aPath = oPath != null ? oPath.Split('\\') : iPath.Split('\\');
-                var pName = aPath[aPath.Length - 1].Replace(".grb", "");
-
-                return new ProcItem(iPath)
-                {
-                    OPath = oPath,
-                    FName = pName
-                };
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Get output file path from package data.
-        /// </summary>
-        /// <param name="path">
-        /// Input file path from internal link the document.
-        /// </param>
-        /// <returns>
-        /// Returns the output path to the document, or null otherwise.
-        /// </returns>
-        internal string GetOutputPath(string path)
-        {
-            foreach (var i in Items)
-            {
-                var iPath = i.Attribute("path");
-                var oPath = i.Element("output")?.Attribute("path");
-                if (oPath != null && path == iPath.Value)
-                {
-                    return oPath.Value;
-                }
-            }
-            return null;
-        }
-        #endregion
+        public Dictionary<ProcItem, string[]> Items { get; }
 
         #region private methods
         /// <summary>
-        /// Get the links element for XML data.
+        /// Initialize processing Items to parent.
         /// </summary>
-        /// <param name="path">Document file name path.</param>
-        /// <returns>The links element data.</returns>
-        private XElement GetLinksElement(string path)
+        /// <param name="items">Selected Items.</param>
+        /// <param name="item">Parent processing Item.</param>
+        /// <param name="links">External links.</param>
+        private void InitItems(string[] items, ProcItem item, string[] links)
         {
-            string[] a_links = TFlex.Application.GetDocumentExternalFileLinks(path, true, false, true);
-            XElement e_links = new XElement("links");
-
-            foreach (var i in a_links)
+            foreach (var i in items)
             {
-                e_links.Add(new XElement("link", new XAttribute("path", i)));
+                if (item.IPath != i && links.Contains(i))
+                {
+                    item.Items.Add(new ProcItem(cfg, i));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initialize package to processing documents.
+        /// </summary>
+        /// <param name="items">Selected Items.</param>
+        private void InitPackage_0(string[] items)
+        {
+            foreach (var i in items)
+            {
+                var links = Application.GetDocumentExternalFileLinks(i, true, false, true);
+                Items.Add(new ProcItem(cfg, i), links);
             }
 
-            return e_links.Elements().Count() > 0 ? e_links : null;
+            foreach (var i in Items)
+            {
+                InitItems(items, i.Key, i.Value);
+            }
         }
 
         /// <summary>
-        /// The CreateElement helper method.
+        /// Initialize package to processing import files.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private XElement CreateElement(string path)
+        /// <param name="items">Selected Items.</param>
+        private void InitPackage_I(string[] items)
         {
-            var element = new XElement("document", 
-                new XAttribute("path", path),
-                GetLinksElement(path));
-            return element;
-        }
-
-        /// <summary>
-        /// Initialize Package for the Document mode.
-        /// </summary>
-        private void InitPackage_0()
-        {
-            string[] paths = Directory.GetFiles(cfg.InitialCatalog, "*.grb",
+            var ext = "*." + (cfg.Translator as OutputFiles).TargetExtension.ToLower();
+            var files = Directory.GetFiles(cfg.InitialCatalog, ext, 
                 SearchOption.AllDirectories);
 
-            if (File.Exists(path))
+            foreach (var i in items)
             {
-                data = XDocument.Load(path);
-                docs = data.Element("package").Element("documents");
-                var src = data.Element("package").Attribute("src");
-                if (src.Value != cfg.InitialCatalog)
+                if (files.Contains(i))
                 {
-                    src.Value = cfg.InitialCatalog;
-                    docs.Elements().Remove();
-
-                    foreach (var p in paths)
-                    {
-                        docs.Add(CreateElement(p));
-                    }
-
-                    data.Save(path);
-                    return;
+                    Items.Add(new ProcItem(cfg, i), null);
                 }
-
-                foreach (var p in paths)
-                {
-                    var element = docs.Elements()
-                        .Where(e => e.Attribute("path").Value == p)
-                        .FirstOrDefault();
-                    if (element != null)
-                        continue;
-
-                    docs.Add(CreateElement(p));
-                }
-
-                data.Save(path);
-                return;
             }
-            else
-            {
-                docs = new XElement("documents");
-                data = new XDocument(new XDeclaration("1.0", "utf-8", null),
-                    new XElement("package", 
-                    new XAttribute("type", mode), 
-                    new XAttribute("src", cfg.InitialCatalog), docs));
-            }
-
-            foreach (var p in paths)
-            {
-                docs.Add(CreateElement(p));
-            }
-
-            data.Save(path);
         }
         #endregion
     }

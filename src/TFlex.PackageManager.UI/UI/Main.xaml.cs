@@ -13,7 +13,6 @@ using System.Windows.Interop;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Configuration;
 using TFlex.PackageManager.Controls;
-using TFlex.PackageManager.Model;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using UndoRedoFramework;
 
@@ -1017,28 +1016,27 @@ namespace TFlex.PackageManager.UI
         private void ProcessingTask(StreamWriter logger)
         {
             Header cfg = conf.Configurations[key1];
-            List<ProcItem> pItems = new List<ProcItem>();
             string[] items = tvControl1.SelectedItems.OrderBy(i => i).Cast<string>().ToArray();
-            for (int i = 0; i < items.Length; i++)
-                pItems.Add(new ProcItem(items[i]));
+            Package package = new Package(cfg, items);
 
             double[] counter = { 0.0 };
             double increment = 100.0 / items.Length;
             var size = Marshal.SizeOf(counter[0]) * counter.Length;
             IntPtr value = Marshal.AllocHGlobal(size);
 
-            TFlex.Application.FileLinksAutoRefresh = TFlex.Application.FileLinksRefreshMode.AutoRefresh;
+            Application.FileLinksAutoRefresh = Application.FileLinksRefreshMode.AutoRefresh;
 
             Logging logging = new Logging(logger);
             Processing proc = new Processing(cfg, logging);
 
+            logging.PrintHelper();
             logging.WriteLine(LogLevel.INFO, "Started processing");
             logging.WriteLine(LogLevel.INFO, 
                 string.Format("Translator [type: {0}, mode: {1}]", 
                 (cfg.Translator as Translator).TMode, 
                 (cfg.Translator as Translator).PMode));
 
-            foreach (var i in pItems)
+            foreach (var i in package.Items)
             {
                 if (stoped)
                 {
@@ -1049,8 +1047,8 @@ namespace TFlex.PackageManager.UI
                 }
 
                 logging.WriteLine(LogLevel.INFO, 
-                    string.Format("Processing [path: {0}]", i.IPath));
-                proc.ProcessingFile(i);
+                    string.Format("Processing [path: {0}]", i.Key.IPath));
+                proc.ProcessingFile(i.Key);
 
                 counter[0] += increment;
                 Marshal.Copy(counter, 0, value, counter.Length);
