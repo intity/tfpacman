@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using TFlex.PackageManager.Common;
 
 namespace TFlex.PackageManager.Controls
 {
@@ -20,7 +19,7 @@ namespace TFlex.PackageManager.Controls
         readonly object dummyNode;
         string searchPattern;
         string targetDirectory;
-        readonly List<ImageSource> imageSourceList;
+        ImageSource tempImage;
         CustomTreeView treeView;
         #endregion
 
@@ -31,25 +30,6 @@ namespace TFlex.PackageManager.Controls
             dummyNode       = null;
             targetDirectory = null;
             SelectedItems   = new ObservableCollection<object>();
-            imageSourceList = new List<ImageSource>()
-            {
-                new BitmapImage(new Uri(Resource.BASE_URI + "collapsed_folder.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "expanded_folder.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "grb.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "dwg.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "dxf.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "dxb.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "sat.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "bmp.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "jpg.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "gif.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "tif.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "png.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "igs.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "jt.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "pdf.ico")),
-                new BitmapImage(new Uri(Resource.BASE_URI + "stp.ico"))
-            };
         }
 
         #region public properties
@@ -105,7 +85,7 @@ namespace TFlex.PackageManager.Controls
             if (treeView == null)
                 treeView = Content as CustomTreeView;
 
-            if (targetDirectory == null || treeView == null)
+            if (treeView == null || targetDirectory == null)
                 return;
 
             if (treeView.Items.Count > 0)
@@ -118,12 +98,13 @@ namespace TFlex.PackageManager.Controls
             {
                 GetDirectories();
                 GetFiles();
-                CountFiles = GetFiles(targetDirectory, 
+                CountFiles = GetFiles(targetDirectory,
                     SearchOption.AllDirectories).Count;
             }
             else
                 CountFiles = 0;
 
+            treeView.UpdateLayout();
             //Debug.WriteLine("UpdateControl");
         }
 
@@ -165,14 +146,12 @@ namespace TFlex.PackageManager.Controls
                 CustomTreeViewItem subitem = new CustomTreeViewItem
                 {
                     Header = i.Substring(i.LastIndexOf("\\") + 1),
-                    ImageSource = imageSourceList[0],
                     NodeParent = item,
                     Tag = i
                 };
 
                 subitem.Items.Add(dummyNode);
                 subitem.Expanded += Folder_Expanded;
-                subitem.Collapsed += Folder_Collapsed;
 
                 if (item != null)
                     item.Items.Add(subitem);
@@ -195,7 +174,6 @@ namespace TFlex.PackageManager.Controls
             var directory = item != null 
                 ? item.Tag.ToString() 
                 : targetDirectory;
-            int imageIndex = 0;
 
             if (directory == null || treeView == null)
                 return;
@@ -203,28 +181,10 @@ namespace TFlex.PackageManager.Controls
             SearchOption option = SearchOption.TopDirectoryOnly;
             foreach (var i in GetFiles(directory, option))
             {
-                switch (Path.GetExtension(i))
-                {
-                    case ".grb" : imageIndex = 02; break;
-                    case ".dwg" : imageIndex = 03; break;
-                    case ".dxf" : imageIndex = 04; break;
-                    case ".dxb" : imageIndex = 05; break;
-                    case ".sat" : imageIndex = 06; break;
-                    case ".bmp" : imageIndex = 07; break;
-                    case ".jpeg": imageIndex = 08; break;
-                    case ".gif" : imageIndex = 09; break;
-                    case ".tiff": imageIndex = 10; break;
-                    case ".png" : imageIndex = 11; break;
-                    case ".igs" : imageIndex = 12; break;
-                    case ".jt"  : imageIndex = 13; break;
-                    case ".pdf" : imageIndex = 14; break;
-                    case ".stp" : imageIndex = 15; break;
-                }
-
                 CustomTreeViewItem subitem = new CustomTreeViewItem
                 {
                     Header = Path.GetFileName(i),
-                    ImageSource = imageSourceList[imageIndex],
+                    Extension = Path.GetExtension(i),
                     NodeParent = item,
                     Tag = i
                 };
@@ -311,6 +271,7 @@ namespace TFlex.PackageManager.Controls
         {
             if (sender is CustomTreeViewItem item)
             {
+                tempImage = item.ImageSource;
                 var image = item.ImageSource as BitmapImage;
                 int stride = (image.PixelWidth * image.Format.BitsPerPixel + 7) / 8;
                 int length = stride * image.PixelHeight;
@@ -338,27 +299,7 @@ namespace TFlex.PackageManager.Controls
         {
             if (sender is CustomTreeViewItem item)
             {
-                int imageIndex = 0;
-
-                switch (Path.GetExtension(item.Tag.ToString()))
-                {
-                    case ".grb" : imageIndex = 02; break;
-                    case ".dwg" : imageIndex = 03; break;
-                    case ".dxf" : imageIndex = 04; break;
-                    case ".dxb" : imageIndex = 05; break;
-                    case ".sat" : imageIndex = 06; break;
-                    case ".bmp" : imageIndex = 07; break;
-                    case ".jpeg": imageIndex = 08; break;
-                    case ".gif" : imageIndex = 09; break;
-                    case ".tiff": imageIndex = 10; break;
-                    case ".png" : imageIndex = 11; break;
-                    case ".igs" : imageIndex = 12; break;
-                    case ".jt"  : imageIndex = 13; break;
-                    case ".pdf" : imageIndex = 14; break;
-                    case ".stp" : imageIndex = 15; break;
-                }
-
-                item.ImageSource = imageSourceList[imageIndex];
+                item.ImageSource = tempImage;
             }
         }
 
@@ -366,21 +307,11 @@ namespace TFlex.PackageManager.Controls
         {
             if (sender is CustomTreeViewItem item && e.OriginalSource == sender)
             {
-                item.ImageSource = imageSourceList[1];
-
                 if (item.Items.Count == 1 && item.Items[0] == dummyNode)
                 {
                     GetDirectories(item);
                     GetFiles(item);
                 }
-            }
-        }
-
-        private void Folder_Collapsed(object sender, RoutedEventArgs e)
-        {
-            if (sender is CustomTreeViewItem item && e.OriginalSource == sender)
-            {
-                item.ImageSource = imageSourceList[0];
             }
         }
         #endregion
@@ -415,7 +346,7 @@ namespace TFlex.PackageManager.Controls
     internal class CustomTreeViewItem : TreeViewItem
     {
         #region private fields
-        private int level = -1;
+        int level = -1;
         #endregion
 
         #region properties
@@ -461,6 +392,15 @@ namespace TFlex.PackageManager.Controls
         }
 
         /// <summary>
+        /// File extension.
+        /// </summary>
+        public string Extension
+        {
+            get => GetValue(ExtensionProperty) as string;
+            set => SetValue(ExtensionProperty, value);
+        }
+
+        /// <summary>
         /// The ImageSource property.
         /// </summary>
         public ImageSource ImageSource
@@ -471,17 +411,23 @@ namespace TFlex.PackageManager.Controls
         #endregion
 
         #region public fields
-        public static readonly DependencyProperty ImageSourceProperty =
-            DependencyProperty.Register("ImageSource",
-                typeof(ImageSource),
-                typeof(CustomTreeViewItem),
-                new PropertyMetadata(null));
-
         public static readonly DependencyProperty IsCheckedProperty =
             DependencyProperty.RegisterAttached("IsChecked", 
                 typeof(bool?), 
                 typeof(CustomTreeViewItem),
                 new FrameworkPropertyMetadata((bool?)false));
+
+        public static readonly DependencyProperty ExtensionProperty =
+            DependencyProperty.Register("Extension",
+                typeof(string),
+                typeof(CustomTreeViewItem),
+                new PropertyMetadata(null));
+
+        public static readonly DependencyProperty ImageSourceProperty =
+            DependencyProperty.Register("ImageSource",
+                typeof(ImageSource),
+                typeof(CustomTreeViewItem),
+                new PropertyMetadata(null));
         #endregion
 
         protected override DependencyObject GetContainerForItemOverride()
