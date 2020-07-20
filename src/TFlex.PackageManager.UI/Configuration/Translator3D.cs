@@ -6,6 +6,7 @@ using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Configuration
@@ -13,8 +14,8 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// Base class for import/export to some universal 3D formats (STEP, ACIS, JT, PRC, 3MF, IGES).
     /// </summary>
-    [CustomCategoryOrder(Resource.TRANSLATOR_3D, 5)]
-    [CustomCategoryOrder(Resource.TRANSLATOR_3D, 6)]
+    [CustomCategoryOrder(Resources.TRANSLATOR_3D, 5)]
+    [CustomCategoryOrder(Resources.TRANSLATOR_3D, 6)]
     public class Translator3D : OutputFiles
     {
         #region private fields
@@ -102,9 +103,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - BodySet
         /// </summary>
         [PropertyOrder(20)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_1")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_1")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_1")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_1")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ExportMode
         {
@@ -127,9 +128,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - MaterialColor
         /// </summary>
         [PropertyOrder(21)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_2")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_2")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_2")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_2")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ColorSource
         {
@@ -150,9 +151,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export solid bodies.
         /// </summary>
         [PropertyOrder(22)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_3")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_3")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_3")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_3")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ExportSolidBodies
         {
@@ -173,9 +174,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export sheet bodies.
         /// </summary>
         [PropertyOrder(23)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_4")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_4")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_4")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_4")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ExportSheetBodies
         {
@@ -196,9 +197,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export wire bodies.
         /// </summary>
         [PropertyOrder(24)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_5")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_5")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_5")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_5")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ExportWireBodies
         {
@@ -219,9 +220,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export 3D images.
         /// </summary>
         [PropertyOrder(25)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_6")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_6")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_6")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_6")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Export3DPictures
         {
@@ -242,9 +243,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export annotations.
         /// </summary>
         [PropertyOrder(26)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_7")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_7")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_7")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_7")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ExportAnotation
         {
@@ -265,9 +266,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export welds.
         /// </summary>
         [PropertyOrder(27)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_8")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_8")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_8")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_8")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ExportWelds
         {
@@ -288,9 +289,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export curves.
         /// </summary>
         [PropertyOrder(28)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_9")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_9")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_9")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_9")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ExportCurves
         {
@@ -311,9 +312,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export profiles.
         /// </summary>
         [PropertyOrder(29)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_10")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_10")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_10")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_10")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ExportContours
         {
@@ -334,9 +335,9 @@ namespace TFlex.PackageManager.Configuration
         /// Simplify geometry.
         /// </summary>
         [PropertyOrder(30)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn5_11")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn5_11")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn5_11")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn5_11")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool SimplifyGeometry
         {
@@ -360,9 +361,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - Operation
         /// </summary>
         [PropertyOrder(31)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_1")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_1")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_1")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_1")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int ImportMode
         {
@@ -386,9 +387,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - No
         /// </summary>
         [PropertyOrder(32)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_2")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_2")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_2")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_2")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Heal
         {
@@ -412,9 +413,9 @@ namespace TFlex.PackageManager.Configuration
         /// (2) - No
         /// </summary>
         [PropertyOrder(33)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_3")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_3")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_3")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_3")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int CreateAccurateEdges
         {
@@ -435,9 +436,9 @@ namespace TFlex.PackageManager.Configuration
         /// Import solid bodies.
         /// </summary>
         [PropertyOrder(34)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_4")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_4")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_4")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_4")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ImportSolidBodies
         {
@@ -458,9 +459,9 @@ namespace TFlex.PackageManager.Configuration
         /// Import sheet bodies.
         /// </summary>
         [PropertyOrder(35)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_5")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_5")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_5")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_5")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ImportSheetBodies
         {
@@ -481,9 +482,9 @@ namespace TFlex.PackageManager.Configuration
         /// Import wire bodies.
         /// </summary>
         [PropertyOrder(36)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_6")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_6")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_6")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_6")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ImportWireBodies
         {
@@ -504,9 +505,9 @@ namespace TFlex.PackageManager.Configuration
         /// Import mesh bodies as 3D images.
         /// </summary>
         [PropertyOrder(37)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_7")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_7")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_7")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_7")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ImportMeshBodies
         {
@@ -527,9 +528,9 @@ namespace TFlex.PackageManager.Configuration
         /// Import hidden bodies.
         /// </summary>
         [PropertyOrder(38)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_8")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_8")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_8")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_8")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ImportHideBodies
         {
@@ -550,9 +551,9 @@ namespace TFlex.PackageManager.Configuration
         /// Import annotations.
         /// </summary>
         [PropertyOrder(39)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_9")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_9")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_9")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_9")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ImportAnotations
         {
@@ -573,9 +574,9 @@ namespace TFlex.PackageManager.Configuration
         /// Import bodies from active layer only.
         /// </summary>
         [PropertyOrder(40)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_10")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_10")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_10")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_10")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool ImportOnlyFromActiveFilter
         {
@@ -612,9 +613,9 @@ namespace TFlex.PackageManager.Configuration
         /// Accuracy sewing.
         /// </summary>
         [PropertyOrder(41)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_11")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_11")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_11")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_11")]
         [Editor(typeof(SewingEditor), typeof(UITypeEditor))]
         public double SewTolerance
         {
@@ -636,9 +637,9 @@ namespace TFlex.PackageManager.Configuration
         /// Check import geomerty.
         /// </summary>
         [PropertyOrder(42)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_12")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_12")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_12")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_12")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool CheckImportGeomerty
         {
@@ -659,9 +660,9 @@ namespace TFlex.PackageManager.Configuration
         /// Update product structure.
         /// </summary>
         [PropertyOrder(43)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_13")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_13")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_13")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_13")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool UpdateProductStructure
         {
@@ -682,9 +683,9 @@ namespace TFlex.PackageManager.Configuration
         /// Add body records in product structure.
         /// </summary>
         [PropertyOrder(44)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category6")]
-        [CustomDisplayName(Resource.TRANSLATOR_3D, "dn6_14")]
-        [CustomDescription(Resource.TRANSLATOR_3D, "dn6_14")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category6")]
+        [CustomDisplayName(Resources.TRANSLATOR_3D, "dn6_14")]
+        [CustomDescription(Resources.TRANSLATOR_3D, "dn6_14")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool AddBodyRecordsInProductStructure
         {

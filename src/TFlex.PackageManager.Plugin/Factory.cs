@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using TFlex.PackageManager.Properties;
 
 namespace TFlex.PackageManager.Plugin
 {
@@ -26,7 +27,7 @@ namespace TFlex.PackageManager.Plugin
         {
             get
             {
-                return Common.Resource.AppName;
+                return Resources.AppName;
             }
         }
 

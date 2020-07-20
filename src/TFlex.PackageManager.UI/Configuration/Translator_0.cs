@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -16,9 +17,9 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The document translator class.
     /// </summary>
-    [CustomCategoryOrder(Resource.TRANSLATOR_0, 1)]
-    [CustomCategoryOrder(Resource.TRANSLATOR_0, 2)]
-    [CustomCategoryOrder(Resource.TRANSLATOR_0, 3)]
+    [CustomCategoryOrder(Resources.TRANSLATOR_0, 1)]
+    [CustomCategoryOrder(Resources.TRANSLATOR_0, 2)]
+    [CustomCategoryOrder(Resources.TRANSLATOR_0, 3)]
     public class Translator_0 : OutputFiles
     {
         #region private fields
@@ -67,9 +68,9 @@ namespace TFlex.PackageManager.Configuration
         /// The page name list.
         /// </summary>
         [PropertyOrder(1)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_1")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_1")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_1")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_1")]
         [ExpandableObject]
         [Editor(typeof(StringArrayEditor), typeof(UITypeEditor))]
         public string[] PageNames
@@ -110,9 +111,9 @@ namespace TFlex.PackageManager.Configuration
         /// The page scale value.
         /// </summary>
         [PropertyOrder(3)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_3")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_3")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_3")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_3")]
         [Editor(typeof(ScaleEditor), typeof(UITypeEditor))]
         public decimal PageScale
         {
@@ -134,9 +135,9 @@ namespace TFlex.PackageManager.Configuration
         /// The page type list.
         /// </summary>
         [PropertyOrder(4)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_4")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_4")]
         [ExpandableObject]
         [Editor(typeof(PageTypesEditor), typeof(UITypeEditor))]
         public PageTypes PageTypes { get; }
@@ -145,9 +146,9 @@ namespace TFlex.PackageManager.Configuration
         /// Check the drawing template.
         /// </summary>
         [PropertyOrder(5)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category1")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_5")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_5")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category1")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_5")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_5")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool CheckDrawingTemplate
         {
@@ -168,9 +169,9 @@ namespace TFlex.PackageManager.Configuration
         /// The projection name list.
         /// </summary>
         [PropertyOrder(6)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_1")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn2_1")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category2")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn2_1")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn2_1")]
         [ExpandableObject]
         [Editor(typeof(StringArrayEditor), typeof(UITypeEditor))]
         public string[] ProjectionNames
@@ -211,9 +212,9 @@ namespace TFlex.PackageManager.Configuration
         /// The projection scale value.
         /// </summary>
         [PropertyOrder(8)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category2")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn2_3")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn2_3")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category2")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn2_3")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn2_3")]
         [Editor(typeof(ScaleEditor), typeof(UITypeEditor))]
         public decimal ProjectionScale
         {
@@ -235,9 +236,9 @@ namespace TFlex.PackageManager.Configuration
         /// Add variables.
         /// </summary>
         [PropertyOrder(9)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_1")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn3_1")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn3_1")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn3_1")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
         public Variables AddVariables { get; } = new Variables("AddVariables");
 
@@ -245,9 +246,9 @@ namespace TFlex.PackageManager.Configuration
         /// Edit variables.
         /// </summary>
         [PropertyOrder(10)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_2")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn3_2")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn3_2")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn3_2")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
         public Variables EditVariables { get; } = new Variables("EditVariables");
 
@@ -255,9 +256,9 @@ namespace TFlex.PackageManager.Configuration
         /// Rename variables.
         /// </summary>
         [PropertyOrder(11)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_3")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn3_3")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn3_3")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn3_3")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
         public Variables RenameVariables { get; } = new Variables("RenameVariables");
 
@@ -265,9 +266,9 @@ namespace TFlex.PackageManager.Configuration
         /// Remove variables.
         /// </summary>
         [PropertyOrder(12)]
-        [CustomCategory(Resource.TRANSLATOR_0, "category3")]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn3_4")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn3_4")]
+        [CustomCategory(Resources.TRANSLATOR_0, "category3")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn3_4")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn3_4")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
         public Variables RemoveVariables { get; } = new Variables("RemoveVariables");
         #endregion
@@ -411,8 +412,8 @@ namespace TFlex.PackageManager.Configuration
 
         #region public properties
         [PropertyOrder(1)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_1")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_1")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_4_1")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_4_1")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Normal
         {
@@ -428,8 +429,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(2)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_2")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_2")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_4_2")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_4_2")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Workplane
         {
@@ -445,8 +446,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(3)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_3")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_3")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_4_3")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_4_3")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Auxiliary
         {
@@ -462,8 +463,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(4)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_4")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_4")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_4_4")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_4_4")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Text
         {
@@ -479,8 +480,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(5)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_5")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_5")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_4_5")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_4_5")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool BillOfMaterials
         {
@@ -496,8 +497,8 @@ namespace TFlex.PackageManager.Configuration
         }
 
         [PropertyOrder(6)]
-        [CustomDisplayName(Resource.TRANSLATOR_0, "dn1_4_6")]
-        [CustomDescription(Resource.TRANSLATOR_0, "dn1_4_6")]
+        [CustomDisplayName(Resources.TRANSLATOR_0, "dn1_4_6")]
+        [CustomDescription(Resources.TRANSLATOR_0, "dn1_4_6")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Circuit
         {

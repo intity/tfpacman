@@ -117,19 +117,102 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="message_0" xml:space="preserve">
-    <value>Имя переменной не должно начинаться с цифры</value>
+  <data name="menuItem1" xml:space="preserve">
+    <value>Файл</value>
   </data>
-  <data name="message_1" xml:space="preserve">
-    <value>Неверный символ в имени переменной</value>
+  <data name="menuItem1_1" xml:space="preserve">
+    <value>Новая конфигурация</value>
+    <comment>Создать новую конфигурацию</comment>
   </data>
-  <data name="message_2" xml:space="preserve">
-    <value>Имя переменной не может быть пустым</value>
+  <data name="menuItem1_2" xml:space="preserve">
+    <value>Открыть файл</value>
+    <comment>Открыть файл конфигурации</comment>
   </data>
-  <data name="message_3" xml:space="preserve">
-    <value>Имя новой переменной должно отличаться от старого имени</value>
+  <data name="menuItem1_3" xml:space="preserve">
+    <value>Открыть каталог</value>
+    <comment>Открыть каталог конфигураций</comment>
   </data>
-  <data name="message_4" xml:space="preserve">
-    <value>Несоответствие типов переменных</value>
+  <data name="menuItem1_4" xml:space="preserve">
+    <value>Сохранить</value>
+    <comment>Сохранить текущую конфигурацию</comment>
+  </data>
+  <data name="menuItem1_5" xml:space="preserve">
+    <value>Сохранить все</value>
+    <comment>Сохранить все конфигурации</comment>
+  </data>
+  <data name="menuItem1_6" xml:space="preserve">
+    <value>Удалить</value>
+    <comment>Удалить текущую конфигурацию</comment>
+  </data>
+  <data name="menuItem1_7" xml:space="preserve">
+    <value>Свойства</value>
+    <comment>Свойства конфигурации</comment>
+  </data>
+  <data name="menuItem1_8" xml:space="preserve">
+    <value>Выход</value>
+    <comment>Выход из приложения</comment>
+  </data>
+  <data name="menuItem2" xml:space="preserve">
+    <value>Правка</value>
+  </data>
+  <data name="menuItem2_1" xml:space="preserve">
+    <value>Отменить</value>
+    <comment>Отменить</comment>
+  </data>
+  <data name="menuItem2_2" xml:space="preserve">
+    <value>Повторить</value>
+    <comment>Повторить</comment>
+  </data>
+  <data name="menuItem3" xml:space="preserve">
+    <value>Обработка</value>
+  </data>
+  <data name="menuItem3_1" xml:space="preserve">
+    <value>Старт</value>
+    <comment>Запустить процесс обработки</comment>
+  </data>
+  <data name="menuItem3_2" xml:space="preserve">
+    <value>Стоп</value>
+    <comment>Завершить процесс обработки</comment>
+  </data>
+  <data name="menuItem3_3" xml:space="preserve">
+    <value>Очистить каталог вывода</value>
+    <comment>Очистить каталог вывода</comment>
+  </data>
+  <data name="menuItem4" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="menuItem4_1" xml:space="preserve">
+    <value>Опции</value>
+    <comment>Настройки приложения</comment>
+  </data>
+  <data name="menuItem5_1" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="menuItem5_2" xml:space="preserve">
+    <value>Справка</value>
+  </data>
+  <data name="message1" xml:space="preserve">
+    <value>Удалить конфигурацию {0}?</value>
+  </data>
+  <data name="message2" xml:space="preserve">
+    <value>Имеются конфигурации, которые не сохранены. Вы хотите сохранить их?</value>
+  </data>
+  <data name="sb_label1" xml:space="preserve">
+    <value>Iq {0}</value>
+    <comment>Количество файлов ввода</comment>
+  </data>
+  <data name="sb_label2" xml:space="preserve">
+    <value>Oq {0}</value>
+    <comment>Количество файлов вывода</comment>
+  </data>
+  <data name="sb_label3" xml:space="preserve">
+    <value>Sq {0}</value>
+    <comment>Количество выбранных файлов</comment>
+  </data>
+  <data name="tb_label1" xml:space="preserve">
+    <value>Конфигурация:</value>
+  </data>
+  <data name="tb_label2" xml:space="preserve">
+    <value>Режим обработки:</value>
   </data>
 </root>

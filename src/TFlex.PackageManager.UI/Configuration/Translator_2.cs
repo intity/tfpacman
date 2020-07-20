@@ -1,6 +1,7 @@
 ﻿using TFlex.Configuration.Attributes;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Properties;
 
 #pragma warning disable CA1707
 
@@ -9,7 +10,6 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The ACIS-translator class.
     /// </summary>
-    [CustomCategoryOrder(Resource.TRANSLATOR_3D, 4)]
     public class Translator_2 : Translator3D
     {
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Properties;
 
 namespace TFlex.PackageManager.Attributes
 {
@@ -16,7 +16,7 @@ namespace TFlex.PackageManager.Attributes
 
         protected override string GetLocalizedString(string value)
         {
-            return Resource.GetString(baseName, value, 0);
+            return Resources.GetString(baseName, value)[0];
         }
     }
 }

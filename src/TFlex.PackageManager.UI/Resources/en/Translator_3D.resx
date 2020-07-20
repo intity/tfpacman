@@ -227,6 +227,15 @@
   <data name="dn6_3" xml:space="preserve">
     <value>Create accurate edges</value>
   </data>
+  <data name="dn6_3_0" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="dn6_3_1" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="dn6_3_2" xml:space="preserve">
+    <value>No</value>
+  </data>
   <data name="dn6_4" xml:space="preserve">
     <value>Solid bodies</value>
     <comment>Import solid bodies.</comment>

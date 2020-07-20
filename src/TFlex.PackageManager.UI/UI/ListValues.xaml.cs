@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using TFlex.PackageManager.Common;
 
 namespace TFlex.PackageManager.UI
 {
@@ -16,10 +15,12 @@ namespace TFlex.PackageManager.UI
         {
             InitializeComponent();
 
-            Title            = Resource.GetString(Resource.LIST_VALUES, "title", 0);
-            checkBox.Content = Resource.GetString(Resource.LIST_VALUES, "checkBox", 0);
-            button_1.Content = Resource.GetString(Resource.LIST_VALUES, "button1", 0);
-            button_2.Content = Resource.GetString(Resource.LIST_VALUES, "button2", 0);
+            #region initialize resources
+            Title            = Properties.Resources.Strings["ui_2:title"][0];
+            checkBox.Content = Properties.Resources.Strings["ui_2:cbx_1"][0];
+            button1.Content  = Properties.Resources.Strings["ui_2:btn_1"][0];
+            button2.Content  = Properties.Resources.Strings["ui_2:btn_2"][0];
+            #endregion
         }
 
         #region public properties
@@ -50,6 +51,7 @@ namespace TFlex.PackageManager.UI
         }
         #endregion
 
+        #region events
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (textBox.Text.Length == 0)
@@ -81,5 +83,6 @@ namespace TFlex.PackageManager.UI
         {
             Close();
         } // Cancel
+        #endregion
     }
 }

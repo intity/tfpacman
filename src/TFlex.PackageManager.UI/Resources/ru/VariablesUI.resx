@@ -117,30 +117,45 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="button_1" xml:space="preserve">
+  <data name="button1" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="button_2" xml:space="preserve">
+  <data name="button2" xml:space="preserve">
     <value>Отмена</value>
   </data>
-  <data name="column_1" xml:space="preserve">
+  <data name="column1" xml:space="preserve">
     <value>Имя</value>
     <comment>Имя переменной</comment>
   </data>
-  <data name="column_2" xml:space="preserve">
+  <data name="column2" xml:space="preserve">
     <value>Исходное имя</value>
     <comment>Исходное имя переменной</comment>
   </data>
-  <data name="column_3" xml:space="preserve">
+  <data name="column3" xml:space="preserve">
     <value>Группа</value>
     <comment>Имя группы</comment>
   </data>
-  <data name="column_4" xml:space="preserve">
+  <data name="column4" xml:space="preserve">
     <value>Выражение</value>
     <comment>Выражение</comment>
   </data>
-  <data name="column_5" xml:space="preserve">
+  <data name="column5" xml:space="preserve">
     <value>Внешняя</value>
     <comment>Внешняя переменная</comment>
+  </data>
+  <data name="message1" xml:space="preserve">
+    <value>Имя переменной не должно начинаться с цифры</value>
+  </data>
+  <data name="message2" xml:space="preserve">
+    <value>Неверный символ в имени переменной</value>
+  </data>
+  <data name="message3" xml:space="preserve">
+    <value>Имя переменной не может быть пустым</value>
+  </data>
+  <data name="message4" xml:space="preserve">
+    <value>Имя новой переменной должно отличаться от старого имени</value>
+  </data>
+  <data name="message5" xml:space="preserve">
+    <value>Несоответствие типов переменных</value>
   </data>
 </root>

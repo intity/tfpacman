@@ -117,30 +117,45 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="button_1" xml:space="preserve">
+  <data name="button1" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="button_2" xml:space="preserve">
+  <data name="button2" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="column_1" xml:space="preserve">
+  <data name="column1" xml:space="preserve">
     <value>Name</value>
     <comment>Variable name</comment>
   </data>
-  <data name="column_2" xml:space="preserve">
+  <data name="column2" xml:space="preserve">
     <value>Source name</value>
     <comment>Source variable name</comment>
   </data>
-  <data name="column_3" xml:space="preserve">
+  <data name="column3" xml:space="preserve">
     <value>Group</value>
     <comment>Group name</comment>
   </data>
-  <data name="column_4" xml:space="preserve">
+  <data name="column4" xml:space="preserve">
     <value>Expression</value>
     <comment>Expression</comment>
   </data>
-  <data name="column_5" xml:space="preserve">
+  <data name="column5" xml:space="preserve">
     <value>External</value>
     <comment>External variable</comment>
+  </data>
+  <data name="message1" xml:space="preserve">
+    <value>The variable name must not begin with a digit</value>
+  </data>
+  <data name="message2" xml:space="preserve">
+    <value>Invalid character in variable name</value>
+  </data>
+  <data name="message3" xml:space="preserve">
+    <value>The variable name cannot be empty</value>
+  </data>
+  <data name="message4" xml:space="preserve">
+    <value>The new variable name must be different from the old name</value>
+  </data>
+  <data name="message5" xml:space="preserve">
+    <value>The variable type mismatch</value>
   </data>
 </root>

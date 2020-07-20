@@ -1,5 +1,5 @@
 ﻿using System;
-using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Attributes
@@ -13,6 +13,6 @@ namespace TFlex.PackageManager.Attributes
         /// <param name="baseName">Resource name.</param>
         /// <param name="order"></param>
         public CustomCategoryOrderAttribute(string baseName, int order) 
-            : base(Resource.GetString(baseName, string.Format("category{0}", order), 0), order) { }
+            : base(Resources.GetString(baseName, string.Format("category{0}", order))[0], order) { }
     }
 }

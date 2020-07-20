@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using TFlex.PackageManager.Configuration;
-using TFlex.PackageManager.Common;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using UndoRedoFramework;
@@ -73,22 +72,9 @@ namespace TFlex.PackageManager.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            switch (propertyItem.PropertyName)
-            {
-                case "Extension":
-                    if (propertyItem.Instance is Translator_1)
-                    {
-                        SetExtensionItems(1);
-                    }
-                    if (propertyItem.Instance is Translator_3)
-                    {
-                        SetExtensionItems(3);
-                    }
-                    break;
-            }
-
             value = new UndoRedo<int>(Value);
-            SetItems(propertyItem.PropertyName);
+            var tr = propertyItem.Instance as Translator;
+            SetItems(propertyItem.PropertyName, tr);
             comboBox.SelectedIndex = Value;
             comboBox.SelectionChanged += ComboBox_SelectionChanged;
 
@@ -114,36 +100,31 @@ namespace TFlex.PackageManager.Editors
         }
 
         /// <summary>
-        /// Set extension items.
-        /// </summary>
-        /// <param name="index">The translator index.</param>
-        private void SetExtensionItems(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    comboBox.Items.Add("DWG");
-                    comboBox.Items.Add("DXF");
-                    comboBox.Items.Add("DXB");
-                    break;
-                case 3:
-                    comboBox.Items.Add("BMP");
-                    comboBox.Items.Add("JPEG");
-                    comboBox.Items.Add("GIF");
-                    comboBox.Items.Add("TIFF");
-                    comboBox.Items.Add("PNG");
-                    break;
-            }
-        }
-
-        /// <summary>
         /// Set items to combobox control.
         /// </summary>
         /// <param name="name">Property name.</param>
-        private void SetItems(string name)
+        /// <param name="translator"></param>
+        private void SetItems(string name, Translator translator)
         {
             switch (name)
             {
+                case "Extension":
+                    switch (translator.TMode)
+                    {
+                        case TranslatorType.Acad:
+                            comboBox.Items.Add("DWG");
+                            comboBox.Items.Add("DXF");
+                            comboBox.Items.Add("DXB");
+                            break;
+                        case TranslatorType.Bitmap:
+                            comboBox.Items.Add("BMP");
+                            comboBox.Items.Add("JPEG");
+                            comboBox.Items.Add("GIF");
+                            comboBox.Items.Add("TIFF");
+                            comboBox.Items.Add("PNG");
+                            break;
+                    }
+                    break;
                 #region Translator_1
                 case "AutocadExportFileVersion":
                     comboBox.Items.Add("12");
@@ -156,30 +137,30 @@ namespace TFlex.PackageManager.Editors
                     comboBox.Items.Add("2013");
                     break;
                 case "ConvertAreas":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_1_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_1_1", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_1_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_1_1"][0]);
                     break;
                 case "ConvertToLines":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_2_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_2_1", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_2_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_2_1"][0]);
                     break;
                 case "ConvertDimensions":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_3_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_3_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_3_2", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_3_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_3_1"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_3_2"][0]);
                     break;
                 case "ConvertLineText":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_4_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_4_1", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_4_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_4_1"][0]);
                     break;
                 case "ConvertMultitext":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_5_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_5_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_5_2", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_5_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_5_1"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_5_2"][0]);
                     break;
                 case "BiarcInterpolationForSplines":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_6_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_1, "dn5_6_1", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_6_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr_1:5_6_1"][0]);
                     break;
                 #endregion
                 #region Translator_7
@@ -197,27 +178,27 @@ namespace TFlex.PackageManager.Editors
                 #endregion
                 #region Translator_3D
                 case "ExportMode":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_1_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_1_1", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:5_1_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:5_1_1"][0]);
                     break;
                 case "ColorSource":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn5_2_1", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:5_2_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:5_2_1"][0]);
                     break;
                 case "ImportMode":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_1_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_1_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_1_2", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:6_1_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:6_1_1"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:6_1_2"][0]);
                     break;
                 case "Heal":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_2", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:6_2_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:6_2_1"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:6_2_2"][0]);
                     break;
                 case "CreateAccurateEdges":
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_0", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_1", 0));
-                    comboBox.Items.Add(Resource.GetString(Resource.TRANSLATOR_3D, "dn6_2_2", 0));
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:6_3_0"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:6_3_1"][0]);
+                    comboBox.Items.Add(Properties.Resources.Strings["tr3d:6_3_2"][0]);
                     break;
                     #endregion
             }

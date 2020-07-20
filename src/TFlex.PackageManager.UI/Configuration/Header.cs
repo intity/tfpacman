@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Configuration
@@ -166,8 +167,8 @@ namespace TFlex.PackageManager.Configuration
         /// The configuration name definition.
         /// </summary>
         [PropertyOrder(1)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_1")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_1")]
+        [CustomDisplayName(Resources.HEADER_UI, "dn1_1")]
+        [CustomDescription(Resources.HEADER_UI, "dn1_1")]
         [ReadOnly(true)]
         public string ConfigurationName
         {
@@ -185,8 +186,8 @@ namespace TFlex.PackageManager.Configuration
         /// The initial catalog definition.
         /// </summary>
         [PropertyOrder(2)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_2")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_2")]
+        [CustomDisplayName(Resources.HEADER_UI, "dn1_2")]
+        [CustomDescription(Resources.HEADER_UI, "dn1_2")]
         [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string InitialCatalog
         {
@@ -206,8 +207,8 @@ namespace TFlex.PackageManager.Configuration
         /// The target directory definition.
         /// </summary>
         [PropertyOrder(3)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_3")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_3")]
+        [CustomDisplayName(Resources.HEADER_UI, "dn1_3")]
+        [CustomDescription(Resources.HEADER_UI, "dn1_3")]
         [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string TargetDirectory
         {
@@ -227,8 +228,8 @@ namespace TFlex.PackageManager.Configuration
         /// The translator modules for current selector.
         /// </summary>
         [PropertyOrder(5)]
-        [CustomDisplayName(Resource.HEADER_UI, "dn1_4")]
-        [CustomDescription(Resource.HEADER_UI, "dn1_4")]
+        [CustomDisplayName(Resources.HEADER_UI, "dn1_4")]
+        [CustomDescription(Resources.HEADER_UI, "dn1_4")]
         [ExpandableObject]
         [Editor(typeof(ModulesEditor), typeof(UITypeEditor))]
         public object Modules

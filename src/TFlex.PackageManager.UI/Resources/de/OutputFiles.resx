@@ -132,10 +132,10 @@
     <value>Unterverzeichnis umbenennen</value>
     <comment>Benennen sie das unterverzeichnis im übergeordneten dateinamen um.</comment>
   </data>
-  <data name="message2" xml:space="preserve">
+  <data name="message1" xml:space="preserve">
     <value>Das dateinamen suffix darf keine zeichen enthalten: {0}</value>
   </data>
-  <data name="message3" xml:space="preserve">
+  <data name="message2" xml:space="preserve">
     <value>Text, der sich außerhalb der markierungen der vorlage befindet, darf keine zeichen enthalten: {0}</value>
   </data>
 </root>

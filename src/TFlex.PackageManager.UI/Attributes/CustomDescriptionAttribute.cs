@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
-using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Properties;
 
 namespace TFlex.PackageManager.Attributes
 {
     [AttributeUsage(AttributeTargets.All)]
     internal class CustomDescriptionAttribute : DescriptionAttribute
     {
-        private readonly string description;
+        readonly string description;
 
         /// <summary>
         /// The constructor.
@@ -16,12 +16,9 @@ namespace TFlex.PackageManager.Attributes
         /// <param name="name">Resource name.</param>
         public CustomDescriptionAttribute(string baseName, string name) : base(name)
         {
-            description = Resource.GetString(baseName, name, 1);
+            description = Resources.GetString(baseName, name)[1];
         }
 
-        public override string Description
-        {
-            get { return description; }
-        }
+        public override string Description => description;
     }
 }

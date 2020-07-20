@@ -227,6 +227,15 @@
   <data name="dn6_3" xml:space="preserve">
     <value>Строить точные ребра</value>
   </data>
+  <data name="dn6_3_0" xml:space="preserve">
+    <value>Авто</value>
+  </data>
+  <data name="dn6_3_1" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="dn6_3_2" xml:space="preserve">
+    <value>Нет</value>
+  </data>
   <data name="dn6_4" xml:space="preserve">
     <value>Твердые тела</value>
     <comment>Импортировать твердые тела.</comment>

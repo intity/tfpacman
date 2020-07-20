@@ -65,7 +65,7 @@
                 </ControlTemplate>
             </DataGrid.RowValidationErrorTemplate>
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="column_1" 
+                <DataGridTextColumn x:Name="column1" 
                                     Header="Name" 
                                     Width="*" 
                                     EditingElementStyle="{StaticResource errorStyle}">
@@ -79,7 +79,7 @@
                         </Binding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn x:Name="column_2" 
+                <DataGridTextColumn x:Name="column2" 
                                     Header="Old Name" 
                                     Width="*" 
                                     EditingElementStyle="{StaticResource errorStyle}">
@@ -93,14 +93,14 @@
                         </Binding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn x:Name="column_3" 
+                <DataGridTextColumn x:Name="column3" 
                                     Header="Group" 
                                     Width="*" 
                                     Binding="{Binding Group}"/>
-                <DataGridTextColumn x:Name="column_4" 
+                <DataGridTextColumn x:Name="column4" 
                                     Header="Expression" 
                                     Width="*" Binding="{Binding Expression}"/>
-                <DataGridCheckBoxColumn x:Name="column_5" 
+                <DataGridCheckBoxColumn x:Name="column5" 
                                         Header="[ - ]" 
                                         MaxWidth="29" 
                                         MinWidth="29"
@@ -144,14 +144,14 @@
         <StackPanel Grid.Row="1" 
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right">
-            <Button Name="button_1" 
+            <Button Name="button1" 
                     Content="OK"
                     Width="80" 
                     Padding="2" 
                     Margin="0,0,0,0" 
                     Click="Button1_Click">
             </Button>
-            <Button Name="button_2" 
+            <Button Name="button2" 
                     Content="Cancel"
                     Width="80" 
                     Padding="2" 

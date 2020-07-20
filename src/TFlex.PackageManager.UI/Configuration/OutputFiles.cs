@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -18,7 +19,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The OutputFiles class definition.
     /// </summary>
-    [CustomCategoryOrder(Resource.OUTPUT_FILES, 4)]
+    [CustomCategoryOrder(Resources.OUTPUT_FILES, 4)]
     public class OutputFiles : Translator, INotifyDataErrorInfo
     {
         #region private fields
@@ -49,8 +50,8 @@ namespace TFlex.PackageManager.Configuration
             objErrors        = new Dictionary<string, List<string>>();
             error_messages   = new string[]
             {
-                Resource.GetString(Resource.OUTPUT_FILES, "message2", 0),
-                Resource.GetString(Resource.OUTPUT_FILES, "message3", 0)
+                Resources.Strings["file:msg_1"][0],
+                Resources.Strings["file:msg_2"][0]
             };
         }
 
@@ -77,9 +78,9 @@ namespace TFlex.PackageManager.Configuration
         /// The file name suffix.
         /// </summary>
         [PropertyOrder(13)]
-        [CustomCategory(Resource.OUTPUT_FILES, "category4")]
-        [CustomDisplayName(Resource.OUTPUT_FILES, "dn4_2")]
-        [CustomDescription(Resource.OUTPUT_FILES, "dn4_2")]
+        [CustomCategory(Resources.OUTPUT_FILES, "category4")]
+        [CustomDisplayName(Resources.OUTPUT_FILES, "dn4_2")]
+        [CustomDescription(Resources.OUTPUT_FILES, "dn4_2")]
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string FileNameSuffix
         {
@@ -88,11 +89,10 @@ namespace TFlex.PackageManager.Configuration
             {
                 if (fileNameSuffix != value)
                 {
-                    var name = "FileNameSuffix";
-
                     fileNameSuffix = value;
                     data_4_2.Value = value;
 
+                    var name = "FileNameSuffix";
                     char[] pattern = Path.GetInvalidFileNameChars();
                     string error = string
                         .Format(error_messages[0], pattern.ToString(""));
@@ -114,9 +114,9 @@ namespace TFlex.PackageManager.Configuration
         /// Template name of the file definition.
         /// </summary>
         [PropertyOrder(14)]
-        [CustomCategory(Resource.OUTPUT_FILES, "category4")]
-        [CustomDisplayName(Resource.OUTPUT_FILES, "dn4_3")]
-        [CustomDescription(Resource.OUTPUT_FILES, "dn4_3")]
+        [CustomCategory(Resources.OUTPUT_FILES, "category4")]
+        [CustomDisplayName(Resources.OUTPUT_FILES, "dn4_3")]
+        [CustomDescription(Resources.OUTPUT_FILES, "dn4_3")]
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string TemplateFileName
         {
@@ -157,9 +157,9 @@ namespace TFlex.PackageManager.Configuration
         /// Rename subdirectory on parent file name.
         /// </summary>
         [PropertyOrder(15)]
-        [CustomCategory(Resource.OUTPUT_FILES, "category4")]
-        [CustomDisplayName(Resource.OUTPUT_FILES, "dn4_4")]
-        [CustomDescription(Resource.OUTPUT_FILES, "dn4_4")]
+        [CustomCategory(Resources.OUTPUT_FILES, "category4")]
+        [CustomDisplayName(Resources.OUTPUT_FILES, "dn4_4")]
+        [CustomDescription(Resources.OUTPUT_FILES, "dn4_4")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool RenameSubdirectory
         {
@@ -227,7 +227,7 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region INotifyDataErrorInfo members
+        #region INotifyDataErrorInfo Members
         /// <summary>
         /// Occurs when the validation errors have changed for a property or for the entire entity.
         /// </summary>

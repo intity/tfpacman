@@ -227,6 +227,15 @@
   <data name="dn6_3" xml:space="preserve">
     <value>Erstellen sie genaue kanten</value>
   </data>
+  <data name="dn6_3_0" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="dn6_3_1" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="dn6_3_2" xml:space="preserve">
+    <value>Nein</value>
+  </data>
   <data name="dn6_4" xml:space="preserve">
     <value>Feste körper</value>
     <comment>Festkörper importieren.</comment>

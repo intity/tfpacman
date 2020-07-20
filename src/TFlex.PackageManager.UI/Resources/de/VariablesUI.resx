@@ -117,30 +117,45 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="button_1" xml:space="preserve">
+  <data name="button1" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="button_2" xml:space="preserve">
+  <data name="button2" xml:space="preserve">
     <value>Stornieren</value>
   </data>
-  <data name="column_1" xml:space="preserve">
+  <data name="column1" xml:space="preserve">
     <value>Name</value>
     <comment>Variablen namen</comment>
   </data>
-  <data name="column_2" xml:space="preserve">
+  <data name="column2" xml:space="preserve">
     <value>Quellen name</value>
     <comment>Name der Quell variablen</comment>
   </data>
-  <data name="column_3" xml:space="preserve">
+  <data name="column3" xml:space="preserve">
     <value>Gruppe</value>
     <comment>Gruppen name</comment>
   </data>
-  <data name="column_4" xml:space="preserve">
+  <data name="column4" xml:space="preserve">
     <value>Ausdruck</value>
     <comment>Ausdruck</comment>
   </data>
-  <data name="column_5" xml:space="preserve">
+  <data name="column5" xml:space="preserve">
     <value>Externe</value>
     <comment>Externe variable</comment>
+  </data>
+  <data name="message1" xml:space="preserve">
+    <value>Der variablen name darf nicht mit einer ziffer beginnen</value>
+  </data>
+  <data name="message2" xml:space="preserve">
+    <value>Ungültiges zeichen im variablen namen</value>
+  </data>
+  <data name="message3" xml:space="preserve">
+    <value>Der variablen name darf nicht leer sein</value>
+  </data>
+  <data name="message4" xml:space="preserve">
+    <value>Der neue variablen name muss sich vom alten namen unterscheiden</value>
+  </data>
+  <data name="message5" xml:space="preserve">
+    <value>Der variablen typ stimmt nicht überein</value>
   </data>
 </root>

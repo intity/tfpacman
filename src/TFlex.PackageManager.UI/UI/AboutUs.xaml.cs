@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
-using TFlex.PackageManager.Common;
 
 namespace TFlex.PackageManager.UI
 {
@@ -14,10 +14,12 @@ namespace TFlex.PackageManager.UI
         {
             InitializeComponent();
 
-            Title          = Resource.GetString(Resource.ABOUT_US, "title", 0);
+            #region initialize resources
+            Title          = Properties.Resources.Strings["ui_1:title"][0];
             label1.Content = string.Format(
-                             Resource.GetString(Resource.ABOUT_US, "label1", 0), TFlex.Application.Version);
-            label2.Content = Resource.GetString(Resource.ABOUT_US, "label2", 0);
+                             Properties.Resources.Strings["ui_1:lab_1"][0], Application.Version);
+            label2.Content = Properties.Resources.Strings["ui_1:lab_2"][0];
+            #endregion
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -26,7 +28,7 @@ namespace TFlex.PackageManager.UI
             e.Handled = true;
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             e.Cancel = true;
             Visibility = Visibility.Hidden;

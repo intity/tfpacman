@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using TFlex.PackageManager.Common;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using UndoRedoFramework;
@@ -26,9 +25,10 @@ namespace TFlex.PackageManager.Editors
         {
             InitializeComponent();
 
+            #region initialize resources
             scale = new Dictionary<string, decimal>
             {
-                { Resource.GetString(Resource.TRANSLATOR_0, "dn1_3_1", 0), 99999 },
+                { Properties.Resources.Strings["tr_0:1_3_1"][0], 99999 },
                 { "1:1",    1 },
                 { "1:2",    0.5m },
                 { "1:4",    0.25m },
@@ -54,14 +54,14 @@ namespace TFlex.PackageManager.Editors
                 { "50:1",   50 },
                 { "100:1",  100 }
             };
+            other = Properties.Resources.Strings["tr_0:1_3_2"][0];
+            #endregion
 
             foreach (var i in scale) comboBox.Items.Add(i.Key);
-            other = Resource.GetString(Resource.TRANSLATOR_0, "dn1_3_2", 0);
-
-            UndoRedoManager.CommandDone += UndoRedoManager_CommandDone;
+            UndoRedoManager.CommandDone += UndoManager_CommandDone;
         }
 
-        private void UndoRedoManager_CommandDone(object sender, CommandDoneEventArgs e)
+        private void UndoManager_CommandDone(object sender, CommandDoneEventArgs e)
         {
             if (!(DataContext is PropertyItem p))
                 return;

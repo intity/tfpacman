@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using TFlex.Model;
-using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Properties;
 using TFlex.PackageManager.UI;
 
 namespace TFlex.PackageManager.Plugin
@@ -18,8 +18,8 @@ namespace TFlex.PackageManager.Plugin
     /// </summary>
     public partial class PluginInstance : TFlex.Plugin
     {
-        private readonly string command1, toolbar1;
-        private const string PLUGIN = "Plugin";
+        readonly string command1, toolbar1;
+        const string PLUGIN = "Plugin.resx";
 
         /// <summary>
         /// The Constructor.
@@ -27,8 +27,8 @@ namespace TFlex.PackageManager.Plugin
         /// <param name="factory"></param>
         public PluginInstance(Factory factory) : base(factory)
         {
-            command1 = Resource.GetString(PLUGIN, "command1", 0);
-            toolbar1 = Resource.GetString(PLUGIN, "toolbar1", 0);
+            command1 = Resources.GetString(PLUGIN, "command1")[0];
+            toolbar1 = Resources.GetString(PLUGIN, "toolbar1")[0];
         }
 
         /// <summary>

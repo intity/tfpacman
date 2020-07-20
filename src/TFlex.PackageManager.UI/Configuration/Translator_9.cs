@@ -8,6 +8,7 @@ using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -17,7 +18,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The PDF translator class.
     /// </summary>
-    [CustomCategoryOrder(Resource.TRANSLATOR_9, 5)]
+    [CustomCategoryOrder(Resources.TRANSLATOR_9, 5)]
     public class Translator_9 : Translator_0
     {
         #region private field
@@ -44,9 +45,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export 3D model.
         /// </summary>
         [PropertyOrder(16)]
-        [CustomCategory(Resource.TRANSLATOR_9, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_9, "dn5_1")]
-        [CustomDescription(Resource.TRANSLATOR_9, "dn5_1")]
+        [CustomCategory(Resources.TRANSLATOR_9, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_9, "dn5_1")]
+        [CustomDescription(Resources.TRANSLATOR_9, "dn5_1")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Export3dModel
         {
@@ -67,9 +68,9 @@ namespace TFlex.PackageManager.Configuration
         /// Export layers.
         /// </summary>
         [PropertyOrder(17)]
-        [CustomCategory(Resource.TRANSLATOR_9, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_9, "dn5_2")]
-        [CustomDescription(Resource.TRANSLATOR_9, "dn5_2")]
+        [CustomCategory(Resources.TRANSLATOR_9, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_9, "dn5_2")]
+        [CustomDescription(Resources.TRANSLATOR_9, "dn5_2")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool Layers
         {
@@ -90,9 +91,9 @@ namespace TFlex.PackageManager.Configuration
         /// Combine pages to one PDF file.
         /// </summary>
         [PropertyOrder(18)]
-        [CustomCategory(Resource.TRANSLATOR_9, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_9, "dn5_3")]
-        [CustomDescription(Resource.TRANSLATOR_9, "dn5_3")]
+        [CustomCategory(Resources.TRANSLATOR_9, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_9, "dn5_3")]
+        [CustomDescription(Resources.TRANSLATOR_9, "dn5_3")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool CombinePages
         {

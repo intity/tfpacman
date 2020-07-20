@@ -5,6 +5,7 @@ using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
@@ -14,7 +15,6 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The JT-translator class.
     /// </summary>
-    [CustomCategoryOrder(Resource.TRANSLATOR_3D, 5)]
     public class Translator_7 : Translator3D
     {
         #region private fields
@@ -39,9 +39,9 @@ namespace TFlex.PackageManager.Configuration
         /// (1) - JT 9.5
         /// </summary>
         [PropertyOrder(16)]
-        [CustomCategory(Resource.TRANSLATOR_3D, "category5")]
-        [CustomDisplayName(Resource.TRANSLATOR_7, "dn5_0")]
-        [CustomDescription(Resource.TRANSLATOR_7, "dn5_0")]
+        [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
+        [CustomDisplayName(Resources.TRANSLATOR_7, "dn5_0")]
+        [CustomDescription(Resources.TRANSLATOR_7, "dn5_0")]
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Version
         {

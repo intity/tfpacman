@@ -28,12 +28,6 @@ namespace TFlex.PackageManager.UI
         readonly Common.Options options;
         readonly List<PropertyDefinition> modules;
 
-        readonly string[] tblabels;
-        readonly string[] sblabels;
-        readonly string[] messages;
-        readonly string[] controls;
-        readonly string[] tooltips;
-
         string key1, key2;
         int importMode;
 
@@ -51,7 +45,7 @@ namespace TFlex.PackageManager.UI
         public Main()
         {
             InitializeComponent();
-            Title = Resource.AppName;
+            Title = Properties.Resources.AppName;
 
             #region initialize controls
             tvControl1.Content = new CustomTreeView
@@ -86,109 +80,55 @@ namespace TFlex.PackageManager.UI
             #endregion
 
             #region initialize resources
-            messages = new string[]
-            {
-                Resource.GetString(Resource.MAIN_WINDOW, "message1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "message2", 0)
-            };
+            tb_label1.Content = Properties.Resources.Strings["ui_0:tbl_1"][0];
+            tb_label2.Content = Properties.Resources.Strings["ui_0:tbl_2"][0];
 
-            tblabels = new string[]
-            {
-                Resource.GetString(Resource.MAIN_WINDOW, "tb_label1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "tb_label2", 0)
-            };
+            sb_label1.Content = string.Format(Properties.Resources.Strings["ui_0:sbl_1"][0], 0);
+            sb_label2.Content = string.Format(Properties.Resources.Strings["ui_0:sbl_2"][0], 0);
+            sb_label3.Content = string.Format(Properties.Resources.Strings["ui_0:sbl_3"][0], 0);
 
-            tb_label1.Content = tblabels[0];
-            tb_label2.Content = tblabels[1];
+            sb_label1.ToolTip = Properties.Resources.Strings["ui_0:sbl_1"][1];
+            sb_label2.ToolTip = Properties.Resources.Strings["ui_0:sbl_2"][1];
+            sb_label3.ToolTip = Properties.Resources.Strings["ui_0:sbl_3"][1];
 
-            sblabels = new string[]
-            {
-                Resource.GetString(Resource.MAIN_WINDOW, "sb_label1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "sb_label2", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "sb_label3", 0)
-            };
+            menuItem1.Header = Properties.Resources.Strings["ui_0:ctl_1"][0]; // File
+            menuItem2.Header = Properties.Resources.Strings["ui_0:ctl_2"][0]; // Edit
+            menuItem3.Header = Properties.Resources.Strings["ui_0:ctl_3"][0]; // Processing
+            menuItem4.Header = Properties.Resources.Strings["ui_0:ctl_4"][0]; // Settings
 
-            sb_label1.Content = string.Format(sblabels[0], 0);
-            sb_label2.Content = string.Format(sblabels[1], 0);
-            sb_label3.Content = string.Format(sblabels[2], 0);
+            menuItem1_1.Header = Properties.Resources.Strings["ui_0:c_1_1"][0];
+            menuItem1_2.Header = Properties.Resources.Strings["ui_0:c_1_2"][0];
+            menuItem1_3.Header = Properties.Resources.Strings["ui_0:c_1_3"][0];
+            menuItem1_4.Header = Properties.Resources.Strings["ui_0:c_1_4"][0];
+            menuItem1_5.Header = Properties.Resources.Strings["ui_0:c_1_5"][0];
+            menuItem1_6.Header = Properties.Resources.Strings["ui_0:c_1_6"][0];
+            menuItem1_7.Header = Properties.Resources.Strings["ui_0:c_1_7"][0];
+            menuItem1_8.Header = Properties.Resources.Strings["ui_0:c_1_8"][0];
+            menuItem2_1.Header = Properties.Resources.Strings["ui_0:c_2_1"][0];
+            menuItem2_2.Header = Properties.Resources.Strings["ui_0:c_2_2"][0];
+            menuItem3_1.Header = Properties.Resources.Strings["ui_0:c_3_1"][0];
+            menuItem3_2.Header = Properties.Resources.Strings["ui_0:c_3_2"][0];
+            menuItem3_3.Header = Properties.Resources.Strings["ui_0:c_3_3"][0];
+            menuItem4_1.Header = Properties.Resources.Strings["ui_0:c_4_1"][0];
+            menuItem5_1.Header = Properties.Resources.Strings["ui_0:c_5_1"][0];
+            menuItem5_2.Header = Properties.Resources.Strings["ui_0:c_5_2"][0];
 
-            controls = new string[]
-            {
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_8", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_2", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_3", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem5_1", 0),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem5_2", 0)
-            };
+            button1_1.ToolTip = Properties.Resources.Strings["ui_0:c_1_1"][1];
+            button1_2.ToolTip = Properties.Resources.Strings["ui_0:c_1_2"][1];
+            button1_3.ToolTip = Properties.Resources.Strings["ui_0:c_1_3"][1];
+            button1_4.ToolTip = Properties.Resources.Strings["ui_0:c_1_4"][1];
+            button1_5.ToolTip = Properties.Resources.Strings["ui_0:c_1_5"][1];
+            button1_6.ToolTip = Properties.Resources.Strings["ui_0:c_1_6"][1];
+            button1_7.ToolTip = Properties.Resources.Strings["ui_0:c_1_7"][1];
+            button2_1.ToolTip = Properties.Resources.Strings["ui_0:c_2_1"][1];
+            button2_2.ToolTip = Properties.Resources.Strings["ui_0:c_2_2"][1];
+            button3_1.ToolTip = Properties.Resources.Strings["ui_0:c_3_1"][1];
+            button3_2.ToolTip = Properties.Resources.Strings["ui_0:c_3_2"][1];
+            button3_3.ToolTip = Properties.Resources.Strings["ui_0:c_3_3"][1];
+            button4_1.ToolTip = Properties.Resources.Strings["ui_0:c_4_1"][1];
+            #endregion
 
-            tooltips = new string[]
-            {
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_1", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_2", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_3", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_4", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_5", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_6", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem1_7", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_1", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem2_2", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_1", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_2", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem3_3", 1),
-                Resource.GetString(Resource.MAIN_WINDOW, "menuItem4_1", 1)
-            };
-
-            menuItem1.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem1", 0);
-            menuItem2.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem2", 0);
-            menuItem3.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem3", 0);
-            menuItem4.Header = Resource.GetString(Resource.MAIN_WINDOW, "menuItem4", 0);
-
-            menuItem1_1.Header = controls[0];
-            menuItem1_2.Header = controls[1];
-            menuItem1_3.Header = controls[2];
-            menuItem1_4.Header = controls[3];
-            menuItem1_5.Header = controls[4];
-            menuItem1_6.Header = controls[5];
-            menuItem1_7.Header = controls[6];
-            menuItem1_8.Header = controls[7];
-            menuItem2_1.Header = controls[8];
-            menuItem2_2.Header = controls[9];
-            menuItem3_1.Header = controls[10];
-            menuItem3_2.Header = controls[11];
-            menuItem3_3.Header = controls[12];
-            menuItem4_1.Header = controls[13];
-            menuItem5_1.Header = controls[14];
-            menuItem5_2.Header = controls[15];
-
-            button1_1.ToolTip = tooltips[0];
-            button1_2.ToolTip = tooltips[1];
-            button1_3.ToolTip = tooltips[2];
-            button1_4.ToolTip = tooltips[3];
-            button1_5.ToolTip = tooltips[4];
-            button1_6.ToolTip = tooltips[5];
-            button1_7.ToolTip = tooltips[6];
-            button2_1.ToolTip = tooltips[7];
-            button2_2.ToolTip = tooltips[8];
-            button3_1.ToolTip = tooltips[9];
-            button3_2.ToolTip = tooltips[10];
-            button3_3.ToolTip = tooltips[11];
-            button4_1.ToolTip = tooltips[12];
-
-            sb_label1.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label1", 1);
-            sb_label2.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label2", 1);
-            sb_label3.ToolTip = Resource.GetString(Resource.MAIN_WINDOW, "sb_label3", 1);
-
+            #region initialize property definitions
             inputPath1.PropertyDefinitions.Add(new PropertyDefinition
             {
                 TargetProperties = new[]
@@ -333,7 +273,8 @@ namespace TFlex.PackageManager.UI
                     button3_2.IsEnabled = false;
                     menuItem3_2.IsEnabled = false;
                     tvControl2.UpdateControl();
-                    sb_label2.Content = string.Format(sblabels[1], tvControl2.CountFiles);
+                    sb_label2.Content = string.Format(Properties.Resources.Strings["ui_0:sbl_2"][0], 
+                        tvControl2.CountFiles);
                     UpdateStateToControls();
                     break;
                 case WM_INCREMENT_PROGRESS:
@@ -465,7 +406,7 @@ namespace TFlex.PackageManager.UI
             string newKey = null, directory = null;
             using (var sfd = new CommonSaveFileDialog())
             {
-                sfd.Title = controls[0];
+                sfd.Title = Properties.Resources.Strings["ui_0:c_1_1"][0];
                 sfd.InitialDirectory = conf.UserDirectory;
                 sfd.DefaultFileName = string.Format("configuration_{0}", conf.Configurations.Count);
                 sfd.DefaultExtension = "config";
@@ -531,7 +472,7 @@ namespace TFlex.PackageManager.UI
             string directory = null;
             using (var ofd = new CommonOpenFileDialog())
             {
-                ofd.Title = tooltips[2];
+                ofd.Title = Properties.Resources.Strings["ui_0:c_1_2"][1];
                 ofd.Multiselect = false;
                 ofd.IsFolderPicker = true;
                 ofd.InitialDirectory = conf.UserDirectory;
@@ -583,8 +524,8 @@ namespace TFlex.PackageManager.UI
         private void Event1_6_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show(
-                string.Format(messages[0], key1),
-                Resource.AppName,
+                string.Format(Properties.Resources.Strings["ui_0:msg_1"][0], key1),
+                Properties.Resources.AppName,
                 MessageBoxButton.OKCancel,
                 MessageBoxImage.Question);
 
@@ -631,7 +572,7 @@ namespace TFlex.PackageManager.UI
         {
             PropertiesUI headerUI = new PropertiesUI(conf.Configurations[key1])
             {
-                Title = tooltips[6],
+                Title = Properties.Resources.Strings["ui_0:c_1_7"][1],
                 Owner = this
             };
             headerUI.ShowDialog();
@@ -680,7 +621,7 @@ namespace TFlex.PackageManager.UI
         {
             PropertiesUI optionsUI = new PropertiesUI(options)
             {
-                Title = controls[13],
+                Title = Properties.Resources.Strings["ui_0:c_4_1"][0],
                 Owner = this
             };
             optionsUI.ShowDialog();
@@ -698,7 +639,7 @@ namespace TFlex.PackageManager.UI
         private void Event5_2_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.Help.ShowHelp(null,
-                Path.Combine(Resource.AppDirectory, "TFPackageManager.chm"));
+                Path.Combine(Properties.Resources.AppDirectory, "TFPackageManager.chm"));
         } // Help
 
         private void ComboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -792,8 +733,8 @@ namespace TFlex.PackageManager.UI
                 menuItem3_1.IsEnabled = false;
                 button3_1.IsEnabled = false;
             }
-
-            sb_label3.Content = string.Format(sblabels[2], tvControl1.SelectedItems.Count);
+            var str = Properties.Resources.Strings["ui_0:sbl_3"][0];
+            sb_label3.Content = string.Format(str, tvControl1.SelectedItems.Count);
         }
         #endregion
 
@@ -807,44 +748,45 @@ namespace TFlex.PackageManager.UI
             if (translator != null)
             {
                 var type = (translator as Translator).TMode.ToString();
-                Title = string.Format("{0} [{1}]", Resource.AppName, type);
+                Title = string.Format("{0} [{1}]", Properties.Resources.AppName, type);
             }
             else
-                Title = Resource.AppName;
+                Title = Properties.Resources.AppName;
         }
 
         /// <summary>
-        /// Update state all modules.
+        /// Set current processing mode.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="mode"></param>
-        private void UpdateModules(int type, int mode)
+        /// <param name="cfg"></param>
+        private void SetProcessingMode(Header cfg)
         {
-            var m = conf.Configurations[key1].Modules as Modules;
-            propertyGrid.PropertyDefinitions.Clear();
+            var obj = cfg.Translator;
+            int ind = (int)(cfg.Translator as Translator).PMode;
 
-            if (type == 0 || type == 1 || type == 3 || type == 6)
-            {
-                foreach (var p in m.GetType().GetProperties())
-                {
-                    UpdateModule(m, p.Name);
-                }
-            }
+            comboBox2.Items.Clear();
 
-            if (mode == 2)
+            switch ((obj as Translator).TMode)
             {
-                if (importMode != 0) // import mode on translator level
-                    propertyGrid.PropertyDefinitions.Add(modules[5]);
-                else
-                    propertyGrid.PropertyDefinitions.Add(modules[4]);
+                case TranslatorType.Document:
+                    comboBox2.Items.Add("SaveAs");
+                    comboBox2.SelectedIndex = 0;
+                    break;
+                case TranslatorType.Acad:
+                case TranslatorType.Bitmap:
+                case TranslatorType.Pdf:
+                    comboBox2.Items.Add("Export");
+                    comboBox2.SelectedIndex = 0;
+                    break;
+                case TranslatorType.Acis:
+                case TranslatorType.Iges:
+                case TranslatorType.Jt:
+                case TranslatorType.Step:
+                    importMode = (obj as Translator3D).ImportMode;
+                    comboBox2.Items.Add("Export");
+                    comboBox2.Items.Add("Import");
+                    comboBox2.SelectedIndex = ind > 1 ? 1 : 0;
+                    break;
             }
-            else
-            {
-                propertyGrid.PropertyDefinitions.Add(modules[3]);
-            }
-
-            //Debug.WriteLine(string.Format("InitModules [type: {0}, mode: {1}, len {2}]",
-            //    type, mode, propertyGrid.PropertyDefinitions.Count));
         }
 
         /// <summary>
@@ -883,6 +825,40 @@ namespace TFlex.PackageManager.UI
         }
 
         /// <summary>
+        /// Update state all modules.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="mode"></param>
+        private void UpdateModules(int type, int mode)
+        {
+            var m = conf.Configurations[key1].Modules as Modules;
+            propertyGrid.PropertyDefinitions.Clear();
+
+            if (type == 0 || type == 1 || type == 3 || type == 6)
+            {
+                foreach (var p in m.GetType().GetProperties())
+                {
+                    UpdateModule(m, p.Name);
+                }
+            }
+
+            if (mode == 2)
+            {
+                if (importMode != 0) // import mode on translator level
+                    propertyGrid.PropertyDefinitions.Add(modules[5]);
+                else
+                    propertyGrid.PropertyDefinitions.Add(modules[4]);
+            }
+            else
+            {
+                propertyGrid.PropertyDefinitions.Add(modules[3]);
+            }
+
+            //Debug.WriteLine(string.Format("InitModules [type: {0}, mode: {1}, len {2}]",
+            //    type, mode, propertyGrid.PropertyDefinitions.Count));
+        }
+
+        /// <summary>
         /// Extension method to query on save changes.
         /// </summary>
         /// <returns></returns>
@@ -891,8 +867,8 @@ namespace TFlex.PackageManager.UI
             if (conf.HasChanged)
             {
                 MessageBoxResult result = MessageBox.Show(
-                    messages[1],
-                    Resource.AppName,
+                    Properties.Resources.Strings["ui_0:msg_2"][0],
+                    Properties.Resources.AppName,
                     MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Question);
 
@@ -984,8 +960,11 @@ namespace TFlex.PackageManager.UI
                 button1_5.IsEnabled = false;
             }
 
-            sb_label1.Content = string.Format(sblabels[0], tvControl1.CountFiles);
-            sb_label2.Content = string.Format(sblabels[1], tvControl2.CountFiles);
+            var str1 = Properties.Resources.Strings["ui_0:sbl_1"][0];
+            var str2 = Properties.Resources.Strings["ui_0:sbl_2"][0];
+
+            sb_label1.Content = string.Format(str1, tvControl1.CountFiles);
+            sb_label2.Content = string.Format(str2, tvControl2.CountFiles);
         }
 
         /// <summary>
@@ -994,7 +973,7 @@ namespace TFlex.PackageManager.UI
         private void StartProcessing()
         {
             var path = conf.Configurations[key1].TargetDirectory;
-            var logFile = Path.Combine(path, Resource.LOG_FILE);
+            var logFile = Path.Combine(path, Properties.Resources.LOG_FILE);
 
             using (StreamWriter logger = new StreamWriter(logFile))
             {
@@ -1064,36 +1043,6 @@ namespace TFlex.PackageManager.UI
                 IntPtr.Zero, IntPtr.Zero);
 
             logging.WriteLine(LogLevel.INFO, "Processing ending");
-        }
-
-        private void SetProcessingMode(Header cfg)
-        {
-            var obj = cfg.Translator;
-            int ind = (int)(cfg.Translator as Translator).PMode;
-            comboBox2.Items.Clear();
-
-            switch ((obj as Translator).TMode)
-            {
-                case TranslatorType.Document:
-                    comboBox2.Items.Add("SaveAs");
-                    comboBox2.SelectedIndex = 0;
-                    break;
-                case TranslatorType.Acad:
-                case TranslatorType.Bitmap:
-                case TranslatorType.Pdf:
-                    comboBox2.Items.Add("Export");
-                    comboBox2.SelectedIndex = 0;
-                    break;
-                case TranslatorType.Acis:
-                case TranslatorType.Iges:
-                case TranslatorType.Jt:
-                case TranslatorType.Step:
-                    importMode = (obj as Translator3D).ImportMode;
-                    comboBox2.Items.Add("Export");
-                    comboBox2.Items.Add("Import");
-                    comboBox2.SelectedIndex = ind > 1 ? 1 : 0;
-                    break;
-            }
         }
         #endregion
     }

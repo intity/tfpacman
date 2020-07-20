@@ -3,9 +3,11 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
+using System.IO;
 using System.Windows;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TFlex.PackageManager.Common
@@ -23,7 +25,8 @@ namespace TFlex.PackageManager.Common
         public Options()
         {
             OptionsTask(0);
-            userDirectory = Resource.UserDirectory;
+            if (userDirectory == null)
+                userDirectory = Resources.UserDirectory;
         }
 
         #region properties
@@ -31,12 +34,12 @@ namespace TFlex.PackageManager.Common
         /// Target directory a configurations.
         /// </summary>
         [PropertyOrder(1)]
-        [CustomDisplayName(Resource.OPTIONS_UI, "dn1_1")]
-        [CustomDescription(Resource.OPTIONS_UI, "dn1_1")]
+        [CustomDisplayName(Resources.OPTIONS_UI, "dn1_1")]
+        [CustomDescription(Resources.OPTIONS_UI, "dn1_1")]
         [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string UserDirectory
         {
-            get { return userDirectory; }
+            get => userDirectory;
             set
             {
                 if (userDirectory != value)
@@ -51,11 +54,11 @@ namespace TFlex.PackageManager.Common
         /// Open the log file when processing is complete.
         /// </summary>
         [PropertyOrder(2)]
-        [CustomDisplayName(Resource.OPTIONS_UI, "dn1_2")]
-        [CustomDescription(Resource.OPTIONS_UI, "dn1_2")]
+        [CustomDisplayName(Resources.OPTIONS_UI, "dn1_2")]
+        [CustomDescription(Resources.OPTIONS_UI, "dn1_2")]
         public bool OpenLogFile
         {
-            get { return openLogFile; }
+            get => openLogFile;
             set
             {
                 if (openLogFile != value)
@@ -74,7 +77,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="flag">(0) - read, (1) - write, (2) - delete</param>
         internal void OptionsTask(int flag)
         {
-            string path = Resource.RootKey + "\\Options";
+            string path = Path.Combine(Resources.RootKey, "Options");
             RegistryKey subKey;
             try
             {

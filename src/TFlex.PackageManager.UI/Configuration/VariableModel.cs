@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Xml.Linq;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Properties;
 
 namespace TFlex.PackageManager.Configuration
 {
@@ -288,17 +289,10 @@ namespace TFlex.PackageManager.Configuration
 
     public class CellValidation : ValidationRule
     {
-        readonly string[] error_messages;
         readonly char[] pattern;
 
         public CellValidation()
         {
-            error_messages = new string[]
-            {
-                Resource.GetString(Resource.VARIABLE_MODEL, "message_0", 0),
-                Resource.GetString(Resource.VARIABLE_MODEL, "message_1", 0)
-            };
-
             pattern = new char[] {
                 '`', '~', '!', '@', '#', '%', '^',
                 '&', '*', '(', ')', '-', '+', '=',
@@ -313,11 +307,11 @@ namespace TFlex.PackageManager.Configuration
             var str = value as string;
             if (str.IsDigit(0))
             {
-                return new ValidationResult(false, error_messages[0]);
+                return new ValidationResult(false, Resources.Strings["ui_3:msg_1"][0]);
             }
             else if (!str.IsValid(pattern))
             {
-                return new ValidationResult(false, error_messages[1]);
+                return new ValidationResult(false, Resources.Strings["ui_3:msg_2"][0]);
             }
             return ValidationResult.ValidResult;
         }
@@ -325,18 +319,6 @@ namespace TFlex.PackageManager.Configuration
 
     public class RowValidationRule : ValidationRule
     {
-        readonly string[] error_messages;
-
-        public RowValidationRule()
-        {
-            error_messages = new string[]
-            {
-                Resource.GetString(Resource.VARIABLE_MODEL, "message_2", 0),
-                Resource.GetString(Resource.VARIABLE_MODEL, "message_3", 0),
-                Resource.GetString(Resource.VARIABLE_MODEL, "message_4", 0)
-            };
-        }
-
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var variable = (value as BindingGroup).Items[0] as VariableModel;
@@ -344,18 +326,18 @@ namespace TFlex.PackageManager.Configuration
             {
                 if (variable.Name == string.Empty)
                 {
-                    return new ValidationResult(false, error_messages[0]);
+                    return new ValidationResult(false, Resources.Strings["ui_3:msg_3"][0]);
                 }
             }
             else
             {
                 if (variable.Name == string.Empty | variable.OldName == string.Empty)
                 {
-                    return new ValidationResult(false, error_messages[0]);
+                    return new ValidationResult(false, Resources.Strings["ui_3:msg_3"][0]);
                 }
                 else if (variable.Name == variable.OldName)
                 {
-                    return new ValidationResult(false, error_messages[1]);
+                    return new ValidationResult(false, Resources.Strings["ui_3:msg_4"][0]);
                 }
                 else
                 {
@@ -365,7 +347,8 @@ namespace TFlex.PackageManager.Configuration
                     var type2 = name2 == "$" ? "text" : "real";
                     if (type1 != type2)
                     {
-                        return new ValidationResult(false, error_messages[2]);
+                        return new ValidationResult(false, 
+                            Resources.Strings["ui_3:msg_5"][0]);
                     }
                 }
             }
