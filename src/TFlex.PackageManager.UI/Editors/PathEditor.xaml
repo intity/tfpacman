@@ -7,7 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="20" 
              d:DesignWidth="300">
-
+    <UserControl.Resources>
+        <BitmapImage x:Key="icon_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/open_configurations.ico"/>
+        <BitmapImage x:Key="icon_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/open_initial_catalog.ico"/>
+        <BitmapImage x:Key="icon_3" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/open_target_directory.ico"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -18,7 +22,6 @@
                  Padding="2" 
                  Text="{Binding Value, RelativeSource={RelativeSource AncestorType=local:PathEditor}}" 
                  IsReadOnly="True">
-            
         </TextBox>
         <Button Name="buton1" Grid.Column="1" Width="Auto" Click="Button1_Click">
             <Image Width="16" Height="16"/>
