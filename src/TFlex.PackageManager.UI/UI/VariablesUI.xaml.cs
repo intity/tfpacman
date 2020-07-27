@@ -16,7 +16,7 @@ namespace TFlex.PackageManager.UI
     public partial class VariablesUI : Window
     {
         #region private fields
-        Variables variables;
+        VariableCollection variables;
         readonly VariableAction action;
         #endregion
 
@@ -68,7 +68,7 @@ namespace TFlex.PackageManager.UI
         /// <summary>
         /// Data source.
         /// </summary>
-        internal Variables DataSource { get; set; }
+        internal VariableCollection DataSource { get; set; }
         #endregion
 
         #region private properties
@@ -115,7 +115,7 @@ namespace TFlex.PackageManager.UI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            variables = DataSource.Clone() as Variables;
+            variables = DataSource.Clone() as VariableCollection;
             foreach (var i in variables)
             {
                 i.PropertyChanged += Variable_PropertyChanged;

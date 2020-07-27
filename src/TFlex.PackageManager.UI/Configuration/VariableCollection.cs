@@ -9,11 +9,11 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The Variable collection.
     /// </summary>
-    public class Variables : ObservableCollection<VariableModel>, ICloneable
+    public class VariableCollection : ObservableCollection<VariableModel>, ICloneable
     {
         readonly string name;
 
-        public Variables(string name)
+        public VariableCollection(string name)
         {
             this.name = name;
             Data = new XElement("parameter", new XAttribute("name", name));
@@ -40,7 +40,7 @@ namespace TFlex.PackageManager.Configuration
         /// <returns></returns>
         public object Clone()
         {
-            var variables = new Variables(name);
+            var variables = new VariableCollection(name);
             variables.LoadData(new XElement(Data));
             return variables;
         }

@@ -17,7 +17,7 @@ namespace TFlex.PackageManager.Editors
     /// </summary>
     public partial class VariablesEditor : UserControl, ITypeEditor
     {
-        UndoRedo<Variables> variables;
+        UndoRedo<VariableCollection> variables;
 
         public VariablesEditor()
         {
@@ -57,10 +57,10 @@ namespace TFlex.PackageManager.Editors
             textbox.Text = string.Format("[{0}]", Value.Count());
         }
 
-        public Variables Value => (Variables)GetValue(ValueProperty);
+        public VariableCollection Value => (VariableCollection)GetValue(ValueProperty);
 
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(Variables), typeof(VariablesEditor),
+            DependencyProperty.Register("Value", typeof(VariableCollection), typeof(VariablesEditor),
                 new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
@@ -75,7 +75,7 @@ namespace TFlex.PackageManager.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
             
-            variables = new UndoRedo<Variables>(Value.Clone() as Variables);
+            variables = new UndoRedo<VariableCollection>(Value.Clone() as VariableCollection);
             textbox.Text = string.Format("[{0}]", Value.Count());
 
             return this;
@@ -112,7 +112,7 @@ namespace TFlex.PackageManager.Editors
 
                 using (UndoRedoManager.Start(pi.PropertyName))
                 {
-                    variables.Value = Value.Clone() as Variables;
+                    variables.Value = Value.Clone() as VariableCollection;
                     UndoRedoManager.Commit();
                 }
 

@@ -36,7 +36,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resources.TRANSLATOR_0, "dn3_1")]
         [CustomDescription(Resources.TRANSLATOR_0, "dn3_1")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
-        public Variables AddVariables { get; } = new Variables("AddVariables");
+        public VariableCollection AddVariables { get; } = new VariableCollection("AddVariables");
 
         /// <summary>
         /// Edit variables.
@@ -46,7 +46,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resources.TRANSLATOR_0, "dn3_2")]
         [CustomDescription(Resources.TRANSLATOR_0, "dn3_2")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
-        public Variables EditVariables { get; } = new Variables("EditVariables");
+        public VariableCollection EditVariables { get; } = new VariableCollection("EditVariables");
 
         /// <summary>
         /// Rename variables.
@@ -56,7 +56,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resources.TRANSLATOR_0, "dn3_3")]
         [CustomDescription(Resources.TRANSLATOR_0, "dn3_3")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
-        public Variables RenameVariables { get; } = new Variables("RenameVariables");
+        public VariableCollection RenameVariables { get; } = new VariableCollection("RenameVariables");
 
         /// <summary>
         /// Remove variables.
@@ -66,7 +66,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDisplayName(Resources.TRANSLATOR_0, "dn3_4")]
         [CustomDescription(Resources.TRANSLATOR_0, "dn3_4")]
         [Editor(typeof(VariablesEditor), typeof(UITypeEditor))]
-        public Variables RemoveVariables { get; } = new Variables("RemoveVariables");
+        public VariableCollection RemoveVariables { get; } = new VariableCollection("RemoveVariables");
         #endregion
 
         #region internal properties
