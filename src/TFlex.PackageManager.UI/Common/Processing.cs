@@ -27,7 +27,7 @@ namespace TFlex.PackageManager.Common
         readonly Translator_7 tr_7;
         readonly Translator_9 tr_9;
         readonly Translator_10 tr_10;
-        readonly Configuration.Modules modules;
+        readonly Modules modules;
         #endregion
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace TFlex.PackageManager.Common
         {
             this.cfg     = cfg;
             this.logging = logging;
-            this.modules = cfg.Modules as Configuration.Modules;
+            this.modules = cfg.Modules as Modules;
 
             switch ((cfg.Translator as Translator).TMode)
             {
@@ -308,22 +308,6 @@ namespace TFlex.PackageManager.Common
                 Directory.CreateDirectory(directory);
 
             return directory;
-        }
-
-        /// <summary>
-        /// The Drawing Template exists.
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="page"></param>
-        /// <returns></returns>
-        private static bool DrawingTemplateExists(Document document, Page page)
-        {
-            if (document.GetFragments().Where(
-                f => f.GroupType == ObjectType.Fragment && f.Page == page &&
-                f.DisplayName.Contains("<Форматки>")).FirstOrDefault() != null)
-                return true;
-
-            return false;
         }
 
         /// <summary>
@@ -644,8 +628,7 @@ namespace TFlex.PackageManager.Common
                 if (flags == (flags & 0x1) && flags != (flags & 0x2))
                     continue;
 
-                if (tr_0.CheckDrawingTemplate && 
-                    !DrawingTemplateExists(document, p))
+                if (tr_0.CheckDrawingTemplate && !tr_0.DrawingTemplateExists(document, p))
                     continue;
 
                 types[p.PageType]++;

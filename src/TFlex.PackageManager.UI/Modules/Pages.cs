@@ -2,7 +2,9 @@
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Globalization;
+using System.Linq;
 using System.Xml.Linq;
+using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
@@ -15,7 +17,7 @@ namespace TFlex.PackageManager.Configuration
     /// Pages extension modules.
     /// </summary>
     [CustomCategoryOrder(Resources.PAGES, 1)]
-    public class Pages : Files
+    public class Pages : Projections
     {
         #region private fields
         string[] pageNames;
@@ -31,10 +33,10 @@ namespace TFlex.PackageManager.Configuration
 
         public Pages(string ext) : base(ext)
         {
-            pageNames = new string[] { };
+            pageNames   = new string[] { };
             excludePage = false;
-            pageScale = 99999;
-            PageTypes = new PageTypes();
+            pageScale   = 99999;
+            PageTypes   = new PageTypes();
             PageTypes.PropertyChanged += PageTypes_PropertyChanged;
         }
 
@@ -195,6 +197,19 @@ namespace TFlex.PackageManager.Configuration
                     data_1_5 = a;
                     break;
             }
+        }
+
+        /// <summary>
+        /// The Drawing Template exists.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        internal bool DrawingTemplateExists(Document document, Page page)
+        {
+            return document.GetFragments()
+                .Where(f => f.GroupType == ObjectType.Fragment && f.Page == page && 
+                f.DisplayName.Contains("<Форматки>")).FirstOrDefault() != null;
         }
         #endregion
 
