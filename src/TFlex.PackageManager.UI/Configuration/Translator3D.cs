@@ -6,6 +6,7 @@ using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Modules;
 using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -16,7 +17,7 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     [CustomCategoryOrder(Resources.TRANSLATOR_3D, 5)]
     [CustomCategoryOrder(Resources.TRANSLATOR_3D, 6)]
-    public class Translator3D : OutputFiles
+    public class Translator3D : Files
     {
         #region private fields
         int exportMode;

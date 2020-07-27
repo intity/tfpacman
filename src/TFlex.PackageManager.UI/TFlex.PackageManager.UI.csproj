@@ -113,7 +113,7 @@
     <Compile Include="Configuration\Modules.cs" />
     <Compile Include="Configuration\Package.cs" />
     <Compile Include="Configuration\Translator.cs" />
-    <Compile Include="Configuration\OutputFiles.cs" />
+    <Compile Include="Modules\Files.cs" />
     <Compile Include="Configuration\Translator3D.cs" />
     <Compile Include="Configuration\Header.cs" />
     <Compile Include="Configuration\ConfigurationCollection.cs" />
@@ -348,13 +348,13 @@
     <None Include="Resources\en\Translator_3D.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\de\OutputFiles.resx">
+    <None Include="Resources\de\Files.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\en\OutputFiles.resx">
+    <None Include="Resources\en\Files.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\ru\OutputFiles.resx">
+    <None Include="Resources\ru\Files.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\ru\Translator_3D.resx">

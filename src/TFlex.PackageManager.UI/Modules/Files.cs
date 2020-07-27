@@ -8,29 +8,26 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
+using TFlex.PackageManager.Configuration;
 using TFlex.PackageManager.Editors;
 using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
 
-namespace TFlex.PackageManager.Configuration
+namespace TFlex.PackageManager.Modules
 {
     /// <summary>
     /// The OutputFiles class definition.
     /// </summary>
-    [CustomCategoryOrder(Resources.OUTPUT_FILES, 4)]
-    public class OutputFiles : Translator, INotifyDataErrorInfo
+    [CustomCategoryOrder(Resources.FILES, 4)]
+    public class Files : Translator, INotifyDataErrorInfo
     {
         #region private fields
         string targetExtension;
         string fileNameSuffix;
         string templateFileName;
         bool renameSubdirectory;
-
-        readonly string[] error_messages;
-        readonly Dictionary<string, List<string>> objErrors;
-
         XAttribute data_4_1;
         XAttribute data_4_2;
         XAttribute data_4_3;
@@ -41,18 +38,13 @@ namespace TFlex.PackageManager.Configuration
         /// Constructor.
         /// </summary>
         /// <param name="extension">Target extension the file.</param>
-        public OutputFiles(string extension)
+        public Files(string extension)
         {
             targetExtension  = extension;
             fileNameSuffix   = string.Empty;
             templateFileName = string.Empty;
 
-            objErrors        = new Dictionary<string, List<string>>();
-            error_messages   = new string[]
-            {
-                Resources.Strings["file:msg_1"][0],
-                Resources.Strings["file:msg_2"][0]
-            };
+            Errors = new Dictionary<string, List<string>>();
         }
 
         #region public properties
@@ -78,35 +70,35 @@ namespace TFlex.PackageManager.Configuration
         /// The file name suffix.
         /// </summary>
         [PropertyOrder(13)]
-        [CustomCategory(Resources.OUTPUT_FILES, "category4")]
-        [CustomDisplayName(Resources.OUTPUT_FILES, "dn4_2")]
-        [CustomDescription(Resources.OUTPUT_FILES, "dn4_2")]
+        [CustomCategory(Resources.FILES, "category4")]
+        [CustomDisplayName(Resources.FILES, "dn4_2")]
+        [CustomDescription(Resources.FILES, "dn4_2")]
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string FileNameSuffix
         {
             get => fileNameSuffix;
             set
             {
-                if (fileNameSuffix != value)
+                if (fileNameSuffix == value)
+                    return;
+
+                fileNameSuffix = value;
+                data_4_2.Value = value;
+
+                string name = "FileNameSuffix";
+                char[] pattern = Path.GetInvalidFileNameChars();
+                string error = string.Format(Resources.Strings["file:msg_1"][0], 
+                    pattern.ToString(""));
+
+                if (value.IsValid(pattern))
                 {
-                    fileNameSuffix = value;
-                    data_4_2.Value = value;
-
-                    var name = "FileNameSuffix";
-                    char[] pattern = Path.GetInvalidFileNameChars();
-                    string error = string
-                        .Format(error_messages[0], pattern.ToString(""));
-
-                    if (value.IsValid(pattern))
-                    {
-                        RemoveError(name, error);
-                    }
-                    else
-                    {
-                        AddError(name, error);
-                    }
-                    OnPropertyChanged(name);
+                    RemoveError(name, error);
                 }
+                else
+                {
+                    AddError(name, error);
+                }
+                OnPropertyChanged(name);
             }
         }
 
@@ -114,42 +106,40 @@ namespace TFlex.PackageManager.Configuration
         /// Template name of the file definition.
         /// </summary>
         [PropertyOrder(14)]
-        [CustomCategory(Resources.OUTPUT_FILES, "category4")]
-        [CustomDisplayName(Resources.OUTPUT_FILES, "dn4_3")]
-        [CustomDescription(Resources.OUTPUT_FILES, "dn4_3")]
+        [CustomCategory(Resources.FILES, "category4")]
+        [CustomDisplayName(Resources.FILES, "dn4_3")]
+        [CustomDescription(Resources.FILES, "dn4_3")]
         [Editor(typeof(CustomTextBoxEditor), typeof(UITypeEditor))]
         public string TemplateFileName
         {
             get => templateFileName;
             set
             {
-                if (templateFileName != value)
+                if (templateFileName == value)
+                    return;
+
+                templateFileName = value;
+                data_4_3.Value = value;
+
+                string name = "TemplateFileName";
+                string path = value;
+                char[] pattern = Path.GetInvalidFileNameChars();
+                string error = string.Format(Resources.Strings["file:msg_2"][0], 
+                    pattern.ToString(""));
+
+                foreach (Match i in Regex.Matches(value, @"\{(.*?)\}"))
                 {
-                    var name = "TemplateFileName";
-
-                    templateFileName = value;
-                    data_4_3.Value = value;
-
-                    string path = value;
-                    char[] pattern = Path.GetInvalidFileNameChars();
-                    string error = string
-                        .Format(error_messages[1], pattern.ToString(""));
-
-                    foreach (Match i in Regex.Matches(value, @"\{(.*?)\}"))
-                    {
-                        path = path.Replace(i.Value, "");
-                    }
-
-                    if (value.IsValid(pattern))
-                    {
-                        RemoveError(name, error);
-                    }
-                    else
-                    {
-                        AddError(name, error);
-                    }
-                    OnPropertyChanged(name);
+                    path = path.Replace(i.Value, "");
                 }
+                if (path.IsValid(pattern))
+                {
+                    RemoveError(name, error);
+                }
+                else
+                {
+                    AddError(name, error);
+                }
+                OnPropertyChanged(name);
             }
         }
 
@@ -157,9 +147,9 @@ namespace TFlex.PackageManager.Configuration
         /// Rename subdirectory on parent file name.
         /// </summary>
         [PropertyOrder(15)]
-        [CustomCategory(Resources.OUTPUT_FILES, "category4")]
-        [CustomDisplayName(Resources.OUTPUT_FILES, "dn4_4")]
-        [CustomDescription(Resources.OUTPUT_FILES, "dn4_4")]
+        [CustomCategory(Resources.FILES, "category4")]
+        [CustomDisplayName(Resources.FILES, "dn4_4")]
+        [CustomDescription(Resources.FILES, "dn4_4")]
         [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
         public bool RenameSubdirectory
         {
@@ -243,13 +233,15 @@ namespace TFlex.PackageManager.Configuration
         }
 
         /// <summary>
+        /// Error messages container.
+        /// </summary>
+        protected Dictionary<string, List<string>> Errors { get; }
+
+        /// <summary>
         /// Gets a value that indicates whether the entity has validation errors.
         /// </summary>
         [Browsable(false)]
-        public bool HasErrors
-        {
-            get { return (objErrors.Count > 0); }
-        }
+        public bool HasErrors => Errors.Count > 0;
 
         /// <summary>
         /// Gets the validation errors for a specified property or for the entire entity.
@@ -259,9 +251,9 @@ namespace TFlex.PackageManager.Configuration
         public IEnumerable GetErrors(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return objErrors.Values;
+                return Errors.Values;
 
-            objErrors.TryGetValue(name, out List<string> errors);
+            Errors.TryGetValue(name, out List<string> errors);
             return errors;
         }
 
@@ -272,10 +264,10 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="error">Error message.</param>
         internal void AddError(string name, string error)
         {
-            if (objErrors.TryGetValue(name, out List<string> errors) == false)
+            if (Errors.TryGetValue(name, out List<string> errors) == false)
             {
                 errors = new List<string>();
-                objErrors.Add(name, errors);
+                Errors.Add(name, errors);
             }
 
             if (errors.Contains(error) == false)
@@ -293,7 +285,7 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="error">Error message.</param>
         internal void RemoveError(string name, string error)
         {
-            if (objErrors.TryGetValue(name, out List<string> errors))
+            if (Errors.TryGetValue(name, out List<string> errors))
             {
                 errors.Remove(error);
             }
@@ -303,7 +295,7 @@ namespace TFlex.PackageManager.Configuration
 
             if (errors.Count == 0)
             {
-                objErrors.Remove(name);
+                Errors.Remove(name);
                 OnRaiseErrorChanged(name);
             }
         }

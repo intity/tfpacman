@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Modules;
 using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -80,7 +81,7 @@ namespace TFlex.PackageManager.Configuration
 
         private void Translator_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            IsInvalid = (sender as OutputFiles).HasErrors;
+            IsInvalid = (sender as Files).HasErrors;
         }
         
         private void Modules_PropertyChanged(object sender, PropertyChangedEventArgs e)

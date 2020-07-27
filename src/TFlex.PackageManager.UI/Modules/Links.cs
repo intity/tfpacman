@@ -17,7 +17,7 @@ namespace TFlex.PackageManager.Modules
     /// Links extension module.
     /// </summary>
     [CustomCategoryOrder(Resources.LINKS, 0)]
-    public class Links : OutputFiles
+    public class Links : Files
     {
         #region private fields
         string linkTemplate;

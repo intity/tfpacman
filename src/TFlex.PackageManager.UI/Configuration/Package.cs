@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using TFlex.PackageManager.Model;
+using TFlex.PackageManager.Modules;
 
 namespace TFlex.PackageManager.Configuration
 {
@@ -80,7 +81,7 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="items">Selected Items.</param>
         private void InitPackage_I(string[] items)
         {
-            var ext = "*." + (cfg.Translator as OutputFiles).TargetExtension.ToLower();
+            var ext = "*." + (cfg.Translator as Files).TargetExtension.ToLower();
             var files = Directory.GetFiles(cfg.InitialCatalog, ext, 
                 SearchOption.AllDirectories);
 

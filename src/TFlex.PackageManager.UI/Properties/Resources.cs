@@ -18,11 +18,11 @@ namespace TFlex.PackageManager.Properties
         public const string HEADER_UI     = "Header.resx";
         public const string MODULES_UI    = "Modules.resx";
         public const string LINKS         = "Links.resx";
+        public const string FILES         = "Files.resx";
         public const string MAIN_WINDOW   = "Main.resx";
         public const string LIST_VALUES   = "ListValues.resx";
         public const string OPTIONS_UI    = "Options.resx";
         public const string VARIABLES_UI  = "VariablesUI.resx";
-        public const string OUTPUT_FILES  = "OutputFiles.resx";
         public const string TRANSLATOR_0  = "Translator_0.resx";
         public const string TRANSLATOR_1  = "Translator_1.resx";
         public const string TRANSLATOR_3  = "Translator_3.resx";
@@ -156,8 +156,8 @@ namespace TFlex.PackageManager.Properties
             // Links
             { "link:msg_1", GetString(LINKS, "message1") },
             // OutputFiles
-            { "file:msg_1", GetString(OUTPUT_FILES, "message1") },
-            { "file:msg_2", GetString(OUTPUT_FILES, "message2") },
+            { "file:msg_1", GetString(FILES, "message1") },
+            { "file:msg_2", GetString(FILES, "message2") },
             // Translator_0
             { "tr_0:1_3_1", GetString(TRANSLATOR_0, "dn1_3_1") },
             { "tr_0:1_3_2", GetString(TRANSLATOR_0, "dn1_3_2") },
