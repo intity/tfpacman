@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TFlex.Configuration;
 using TFlex.Model;
 using TFlex.Model.Model3D;
 using TFlex.PackageManager.Configuration;
@@ -88,7 +87,7 @@ namespace TFlex.PackageManager.Common
                 case ProcessingMode.Import:
                     int iMode = (cfg.Translator as Translator3D).ImportMode;
                     string prototype = null;
-                    using (Files files = new Files())
+                    using (TFlex.Configuration.Files files = new TFlex.Configuration.Files())
                     {
                         prototype = iMode == 2
                             ? files.Prototype3DName
@@ -267,7 +266,7 @@ namespace TFlex.PackageManager.Common
         /// <returns>Returns Output File name.</returns>
         private string GetFileName(Document document, Page page)
         {
-            var tr = cfg.Translator as Modules.Files;
+            var tr = cfg.Translator as Files;
             string fileName, expVal, pattern = @"\{(.*?)\}";
 
             if (tr.TemplateFileName.Length > 0)
@@ -299,7 +298,7 @@ namespace TFlex.PackageManager.Common
         private string GetDirectory(ProcItem item)
         {
             var directory = item.Directory;
-            var tr = cfg.Translator as Modules.Files;
+            var tr = cfg.Translator as Files;
             if (tr.RenameSubdirectory)
             {
                 var aPath = item.Directory.Split('\\');

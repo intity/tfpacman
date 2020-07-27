@@ -6,12 +6,11 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Configuration;
 using TFlex.PackageManager.Editors;
 using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace TFlex.PackageManager.Modules
+namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
     /// Links extension module.

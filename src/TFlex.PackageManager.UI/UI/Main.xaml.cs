@@ -321,7 +321,7 @@ namespace TFlex.PackageManager.UI
                     h.Value.PropertyChanged += Header_PropertyChanged;
                     comboBox1.Items.Add(h.Key);
 
-                    var m = h.Value.Modules as Configuration.Modules;
+                    var m = h.Value.Modules as Modules;
                     m.PropertyChanged += Modules_PropertyChanged;
                 }
 
@@ -374,7 +374,7 @@ namespace TFlex.PackageManager.UI
                     propertyGrid.SelectedObject = cfg.Translator;
                     SetProcessingMode(cfg);
                     SetWindowTitle(cfg.Translator);
-                    (cfg.Modules as Configuration.Modules).PropertyChanged += Modules_PropertyChanged;
+                    (cfg.Modules as Modules).PropertyChanged += Modules_PropertyChanged;
                     break;
             }
 
@@ -386,7 +386,7 @@ namespace TFlex.PackageManager.UI
 
         private void Modules_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var m = sender as Configuration.Modules;
+            var m = sender as Modules;
             UpdateModule(m, e.PropertyName);
         }
 
@@ -802,7 +802,7 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         /// <param name="m"></param>
         /// <param name="name"></param>
-        private void UpdateModule(Configuration.Modules m, string name)
+        private void UpdateModule(Modules m, string name)
         {
             switch (name)
             {
@@ -843,7 +843,7 @@ namespace TFlex.PackageManager.UI
         /// <param name="mode"></param>
         private void UpdateModules(int type, int mode)
         {
-            var m = conf.Configurations[key1].Modules as Configuration.Modules;
+            var m = conf.Configurations[key1].Modules as Modules;
             propertyGrid.PropertyDefinitions.Clear();
 
             if (type == 0 || type == 1 || type == 3 || type == 6)

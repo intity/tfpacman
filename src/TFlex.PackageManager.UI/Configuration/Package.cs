@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using TFlex.PackageManager.Model;
-using TFlex.PackageManager.Modules;
 
 namespace TFlex.PackageManager.Configuration
 {
