@@ -325,41 +325,6 @@ namespace TFlex.PackageManager.Common
         }
 
         /// <summary>
-        /// The VariablesCount helper method.
-        /// </summary>
-        /// <returns>Variables Count.</returns>
-        private int VariablesCount()
-        {
-            var tr_0 = cfg.Translator as Translator_0;
-            List<string> variables = new List<string>();
-
-            foreach (var i in tr_0.AddVariables)
-            {
-                variables.Add(i.Name);
-            }
-
-            foreach (var i in tr_0.EditVariables)
-            {
-                if (variables.Contains(i.Name) == false)
-                    variables.Add(i.Name);
-            }
-
-            foreach (var i in tr_0.RenameVariables)
-            {
-                if (variables.Contains(i.Name) == false)
-                    variables.Add(i.Name);
-            }
-
-            foreach (var i in tr_0.RemoveVariables)
-            {
-                if (variables.Contains(i.Name) == false)
-                    variables.Add(i.Name);
-            }
-
-            return variables.Count;
-        }
-
-        /// <summary>
         /// Save source document as copy.
         /// </summary>
         /// <param name="document">Source document.</param>
@@ -761,7 +726,7 @@ namespace TFlex.PackageManager.Common
                 return;
 
             var tr_0 = cfg.Translator as Translator_0;
-            int len = VariablesCount();
+            int len = tr_0.VariablesCount();
             if (len > 0)
             {
                 document.BeginChanges("Processing Variables");

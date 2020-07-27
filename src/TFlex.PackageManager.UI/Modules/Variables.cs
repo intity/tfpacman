@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Xml.Linq;
@@ -94,6 +95,40 @@ namespace TFlex.PackageManager.Configuration
                     RemoveVariables.LoadData(element);
                     break;
             }
+        }
+
+        /// <summary>
+        /// The VariablesCount helper method.
+        /// </summary>
+        /// <returns>Total Variables Count.</returns>
+        internal int VariablesCount()
+        {
+            List<string> variables = new List<string>();
+
+            foreach (var i in AddVariables)
+            {
+                variables.Add(i.Name);
+            }
+
+            foreach (var i in EditVariables)
+            {
+                if (variables.Contains(i.Name) == false)
+                    variables.Add(i.Name);
+            }
+
+            foreach (var i in RenameVariables)
+            {
+                if (variables.Contains(i.Name) == false)
+                    variables.Add(i.Name);
+            }
+
+            foreach (var i in RemoveVariables)
+            {
+                if (variables.Contains(i.Name) == false)
+                    variables.Add(i.Name);
+            }
+
+            return variables.Count;
         }
         #endregion
     }
