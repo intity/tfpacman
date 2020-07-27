@@ -17,6 +17,7 @@ namespace TFlex.PackageManager.Properties
         public const string ABOUT_US      = "AboutUs.resx";
         public const string HEADER_UI     = "Header.resx";
         public const string MODULES_UI    = "Modules.resx";
+        public const string LINKS         = "Links.resx";
         public const string MAIN_WINDOW   = "Main.resx";
         public const string LIST_VALUES   = "ListValues.resx";
         public const string OPTIONS_UI    = "Options.resx";
@@ -152,6 +153,8 @@ namespace TFlex.PackageManager.Properties
             { "ui_3:msg_3", GetString(VARIABLES_UI, "message3") },
             { "ui_3:msg_4", GetString(VARIABLES_UI, "message4") },
             { "ui_3:msg_5", GetString(VARIABLES_UI, "message5") },
+            // Links
+            { "link:msg_1", GetString(LINKS, "message1") },
             // OutputFiles
             { "file:msg_1", GetString(OUTPUT_FILES, "message1") },
             { "file:msg_2", GetString(OUTPUT_FILES, "message2") },

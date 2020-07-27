@@ -28,7 +28,7 @@ namespace TFlex.PackageManager.Common
         readonly Translator_7 tr_7;
         readonly Translator_9 tr_9;
         readonly Translator_10 tr_10;
-        readonly Modules modules;
+        readonly Configuration.Modules modules;
         #endregion
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace TFlex.PackageManager.Common
         {
             this.cfg     = cfg;
             this.logging = logging;
-            this.modules = cfg.Modules as Modules;
+            this.modules = cfg.Modules as Configuration.Modules;
 
             switch ((cfg.Translator as Translator).TMode)
             {

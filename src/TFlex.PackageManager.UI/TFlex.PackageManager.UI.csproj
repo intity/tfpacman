@@ -153,6 +153,7 @@
     </Compile>
     <Compile Include="Editors\PageTypesEditor.cs" />
     <Compile Include="Common\CustomFolderBrowserDialog.cs" />
+    <Compile Include="Modules\Links.cs" />
     <Compile Include="Properties\Resources.cs" />
     <Page Include="Editors\BiarcInterpolationEditor.xaml">
       <SubType>Designer</SubType>
@@ -438,6 +439,24 @@
       <Project>{641578c7-4522-4158-867a-30aecbb3ee73}</Project>
       <Name>UndoRedoFramework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ru\Links.resx">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\en\Links.resx">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\de\Links.resx">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

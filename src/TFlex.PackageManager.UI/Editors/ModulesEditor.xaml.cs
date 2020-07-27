@@ -39,7 +39,7 @@ namespace TFlex.PackageManager.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            var m = Value as Modules;
+            var m = Value as Configuration.Modules;
             comboBox.SelectedIndex = m.Index;
             //Debug.WriteLine("ResolveEditor");
             return this;

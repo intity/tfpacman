@@ -153,7 +153,15 @@ namespace TFlex.PackageManager.UI
 
             modules = new List<PropertyDefinition>
             {
-                new PropertyDefinition // (0) Pages
+                new PropertyDefinition // (0) Links
+                {
+                    TargetProperties = new[]
+                    {
+                        "LinkTemplate"
+                    },
+                    IsBrowsable = false
+                },
+                new PropertyDefinition // (1) Pages
                 {
                     TargetProperties = new[]
                     {
@@ -165,7 +173,7 @@ namespace TFlex.PackageManager.UI
                     },
                     IsBrowsable = false
                 },
-                new PropertyDefinition // (1) Projections
+                new PropertyDefinition // (2) Projections
                 {
                     TargetProperties = new[]
                     {
@@ -175,7 +183,7 @@ namespace TFlex.PackageManager.UI
                     },
                     IsBrowsable = false
                 },
-                new PropertyDefinition // (2) Variables
+                new PropertyDefinition // (3) Variables
                 {
                     TargetProperties = new[]
                     {
@@ -186,7 +194,7 @@ namespace TFlex.PackageManager.UI
                     },
                     IsBrowsable = false
                 },
-                new PropertyDefinition // (3) Export
+                new PropertyDefinition // (4) Export
                 {
                     TargetProperties = new[]
                     {
@@ -207,7 +215,7 @@ namespace TFlex.PackageManager.UI
                     },
                     IsBrowsable = false
                 },
-                new PropertyDefinition // (4) Import
+                new PropertyDefinition // (5) Import
                 {
                     TargetProperties = new[]
                     {
@@ -235,7 +243,7 @@ namespace TFlex.PackageManager.UI
                     },
                     IsBrowsable = false
                 },
-                new PropertyDefinition // (5) Import [mode != 0]
+                new PropertyDefinition // (6) Import [mode != 0]
                 {
                     TargetProperties = new[]
                     {
@@ -313,7 +321,7 @@ namespace TFlex.PackageManager.UI
                     h.Value.PropertyChanged += Header_PropertyChanged;
                     comboBox1.Items.Add(h.Key);
 
-                    var m = h.Value.Modules as Modules;
+                    var m = h.Value.Modules as Configuration.Modules;
                     m.PropertyChanged += Modules_PropertyChanged;
                 }
 
@@ -366,7 +374,7 @@ namespace TFlex.PackageManager.UI
                     propertyGrid.SelectedObject = cfg.Translator;
                     SetProcessingMode(cfg);
                     SetWindowTitle(cfg.Translator);
-                    (cfg.Modules as Modules).PropertyChanged += Modules_PropertyChanged;
+                    (cfg.Modules as Configuration.Modules).PropertyChanged += Modules_PropertyChanged;
                     break;
             }
 
@@ -378,7 +386,7 @@ namespace TFlex.PackageManager.UI
 
         private void Modules_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var m = sender as Modules;
+            var m = sender as Configuration.Modules;
             UpdateModule(m, e.PropertyName);
         }
 
@@ -794,29 +802,33 @@ namespace TFlex.PackageManager.UI
         /// </summary>
         /// <param name="m"></param>
         /// <param name="name"></param>
-        private void UpdateModule(Modules m, string name)
+        private void UpdateModule(Configuration.Modules m, string name)
         {
             switch (name)
             {
                 case "Links":
-                    break;
-                case "Pages":
-                    if (m.Pages)
+                    if (m.Links)
                         propertyGrid.PropertyDefinitions.Remove(modules[0]);
                     else
                         propertyGrid.PropertyDefinitions.Add(modules[0]);
                     break;
-                case "Projections":
-                    if (m.Projections)
+                case "Pages":
+                    if (m.Pages)
                         propertyGrid.PropertyDefinitions.Remove(modules[1]);
                     else
                         propertyGrid.PropertyDefinitions.Add(modules[1]);
                     break;
-                case "Variables":
-                    if (m.Variables)
+                case "Projections":
+                    if (m.Projections)
                         propertyGrid.PropertyDefinitions.Remove(modules[2]);
                     else
                         propertyGrid.PropertyDefinitions.Add(modules[2]);
+                    break;
+                case "Variables":
+                    if (m.Variables)
+                        propertyGrid.PropertyDefinitions.Remove(modules[3]);
+                    else
+                        propertyGrid.PropertyDefinitions.Add(modules[3]);
                     break;
             }
 
@@ -831,7 +843,7 @@ namespace TFlex.PackageManager.UI
         /// <param name="mode"></param>
         private void UpdateModules(int type, int mode)
         {
-            var m = conf.Configurations[key1].Modules as Modules;
+            var m = conf.Configurations[key1].Modules as Configuration.Modules;
             propertyGrid.PropertyDefinitions.Clear();
 
             if (type == 0 || type == 1 || type == 3 || type == 6)
@@ -845,13 +857,13 @@ namespace TFlex.PackageManager.UI
             if (mode == 2)
             {
                 if (importMode != 0) // import mode on translator level
-                    propertyGrid.PropertyDefinitions.Add(modules[5]);
+                    propertyGrid.PropertyDefinitions.Add(modules[6]);
                 else
-                    propertyGrid.PropertyDefinitions.Add(modules[4]);
+                    propertyGrid.PropertyDefinitions.Add(modules[5]);
             }
             else
             {
-                propertyGrid.PropertyDefinitions.Add(modules[3]);
+                propertyGrid.PropertyDefinitions.Add(modules[4]);
             }
 
             //Debug.WriteLine(string.Format("InitModules [type: {0}, mode: {1}, len {2}]",
