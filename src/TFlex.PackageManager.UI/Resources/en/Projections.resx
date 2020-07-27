@@ -117,23 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category3" xml:space="preserve">
-    <value>Переменные</value>
+  <data name="category2" xml:space="preserve">
+    <value>Projections</value>
   </data>
-  <data name="dn3_1" xml:space="preserve">
-    <value>Добавить переменные</value>
-    <comment>Добавление новых переменных.</comment>
+  <data name="dn2_1" xml:space="preserve">
+    <value>Projection names</value>
+    <comment>The projection name list.</comment>
   </data>
-  <data name="dn3_2" xml:space="preserve">
-    <value>Редактировать переменные</value>
-    <comment>Изменение атрибутов переменных.</comment>
+  <data name="dn2_2" xml:space="preserve">
+    <value>Exclude projection</value>
+    <comment>Exclude the projection name from search.</comment>
   </data>
-  <data name="dn3_3" xml:space="preserve">
-    <value>Переименовать переменные</value>
-    <comment>Переименование переменных документа.</comment>
-  </data>
-  <data name="dn3_4" xml:space="preserve">
-    <value>Удалить переменные</value>
-    <comment>Удаление переменных документа.</comment>
+  <data name="dn2_3" xml:space="preserve">
+    <value>Projection scale</value>
+    <comment>The projection scale value.</comment>
   </data>
 </root>

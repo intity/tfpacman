@@ -155,6 +155,7 @@
     <Compile Include="Common\CustomFolderBrowserDialog.cs" />
     <Compile Include="Modules\Links.cs" />
     <Compile Include="Modules\Pages.cs" />
+    <Compile Include="Modules\Projections.cs" />
     <Compile Include="Properties\Resources.cs" />
     <Page Include="Editors\BiarcInterpolationEditor.xaml">
       <SubType>Designer</SubType>
@@ -472,6 +473,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\de\Pages.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ru\Projections.resx">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\en\Projections.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\de\Projections.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

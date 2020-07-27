@@ -117,76 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category1" xml:space="preserve">
-    <value>Seiten</value>
-  </data>
-  <data name="category2" xml:space="preserve">
-    <value>Projektionen</value>
-  </data>
   <data name="category3" xml:space="preserve">
     <value>Variablen</value>
-  </data>
-  <data name="dn1_1" xml:space="preserve">
-    <value>Seitenname</value>
-    <comment>Sammlung von seitennamen.</comment>
-  </data>
-  <data name="dn1_2" xml:space="preserve">
-    <value>Seite von der suche ausschließen</value>
-    <comment>Schließt die sammlung von seiten aus der suche aus.</comment>
-  </data>
-  <data name="dn1_3" xml:space="preserve">
-    <value>Seiten maßstab</value>
-    <comment>Bestimmen sie den maßstab der seite.</comment>
-  </data>
-  <data name="dn1_3_1" xml:space="preserve">
-    <value>Aus dokument</value>
-  </data>
-  <data name="dn1_3_2" xml:space="preserve">
-    <value>Andere</value>
-  </data>
-  <data name="dn1_4" xml:space="preserve">
-    <value>Seitentyp</value>
-    <comment>Ermitteln sie die arten der zu verarbeitenden seiten.</comment>
-  </data>
-  <data name="dn1_4_1" xml:space="preserve">
-    <value>Üblich</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
-  </data>
-  <data name="dn1_4_2" xml:space="preserve">
-    <value>Arbeitsebene</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
-  </data>
-  <data name="dn1_4_3" xml:space="preserve">
-    <value>Hilfsgerät</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
-  </data>
-  <data name="dn1_4_4" xml:space="preserve">
-    <value>Text</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
-  </data>
-  <data name="dn1_4_5" xml:space="preserve">
-    <value>Spezifikation</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
-  </data>
-  <data name="dn1_4_6" xml:space="preserve">
-    <value>Elektrischer Kreislauf</value>
-    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
-  </data>
-  <data name="dn1_6" xml:space="preserve">
-    <value>Überprüfen sie die zeichnungsvorlage</value>
-    <comment>Aktiviert die überprüfung, ob eine formatierte seite auf der seite vorhanden ist.</comment>
-  </data>
-  <data name="dn2_1" xml:space="preserve">
-    <value>Projektions name</value>
-    <comment>Sammlung von namen von projektionen.</comment>
-  </data>
-  <data name="dn2_2" xml:space="preserve">
-    <value>Schließen sie die projektion von der suche aus</value>
-    <comment>Schließt die projektion von der suche aus.</comment>
-  </data>
-  <data name="dn2_3" xml:space="preserve">
-    <value>Projektions maßstab</value>
-    <comment>Bestimmen sie den maßstab der projektion.</comment>
   </data>
   <data name="dn3_1" xml:space="preserve">
     <value>Variablen hinzufügen</value>

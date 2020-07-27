@@ -19,6 +19,7 @@ namespace TFlex.PackageManager.Properties
         public const string MODULES_UI    = "Modules.resx";
         public const string LINKS         = "Links.resx";
         public const string PAGES         = "Pages.resx";
+        public const string PROJECTIONS   = "Projections.resx";
         public const string FILES         = "Files.resx";
         public const string MAIN_WINDOW   = "Main.resx";
         public const string LIST_VALUES   = "ListValues.resx";

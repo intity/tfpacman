@@ -117,76 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category1" xml:space="preserve">
-    <value>Pages</value>
-  </data>
-  <data name="category2" xml:space="preserve">
-    <value>Projections</value>
-  </data>
   <data name="category3" xml:space="preserve">
     <value>Variables</value>
-  </data>
-  <data name="dn1_1" xml:space="preserve">
-    <value>Page names</value>
-    <comment>The page name list.</comment>
-  </data>
-  <data name="dn1_2" xml:space="preserve">
-    <value>Exclude page</value>
-    <comment>Exclude the page name from search.</comment>
-  </data>
-  <data name="dn1_3" xml:space="preserve">
-    <value>Page scale</value>
-    <comment>The page scale value.</comment>
-  </data>
-  <data name="dn1_3_1" xml:space="preserve">
-    <value>From document</value>
-  </data>
-  <data name="dn1_3_2" xml:space="preserve">
-    <value>Other</value>
-  </data>
-  <data name="dn1_4" xml:space="preserve">
-    <value>Page types</value>
-    <comment>The page type list.</comment>
-  </data>
-  <data name="dn1_4_1" xml:space="preserve">
-    <value>Normal</value>
-    <comment>Includes this page type in the processing pool.</comment>
-  </data>
-  <data name="dn1_4_2" xml:space="preserve">
-    <value>Workplane</value>
-    <comment>Includes this page type in the processing pool.</comment>
-  </data>
-  <data name="dn1_4_3" xml:space="preserve">
-    <value>Auxiliary</value>
-    <comment>Includes this page type in the processing pool.</comment>
-  </data>
-  <data name="dn1_4_4" xml:space="preserve">
-    <value>Text</value>
-    <comment>Includes this page type in the processing pool.</comment>
-  </data>
-  <data name="dn1_4_5" xml:space="preserve">
-    <value>Bill of materials</value>
-    <comment>Includes this page type in the processing pool.</comment>
-  </data>
-  <data name="dn1_4_6" xml:space="preserve">
-    <value>Electric circuit</value>
-    <comment>Includes this page type in the processing pool.</comment>
-  </data>
-  <data name="dn1_5" xml:space="preserve">
-    <value>Check drawing template</value>
-    <comment>Check the drawing template.</comment>
-  </data>
-  <data name="dn2_1" xml:space="preserve">
-    <value>Projection names</value>
-    <comment>The projection name list.</comment>
-  </data>
-  <data name="dn2_2" xml:space="preserve">
-    <value>Exclude projection</value>
-    <comment>Exclude the projection name from search.</comment>
-  </data>
-  <data name="dn2_3" xml:space="preserve">
-    <value>Projection scale</value>
-    <comment>The projection scale value.</comment>
   </data>
   <data name="dn3_1" xml:space="preserve">
     <value>Add variables</value>
