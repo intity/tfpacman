@@ -16,7 +16,7 @@ namespace TFlex.PackageManager.Configuration
     /// Links extension module.
     /// </summary>
     [CustomCategoryOrder(Resources.LINKS, 0)]
-    public class Links : Files
+    public class Links : Pages
     {
         #region private fields
         string linkTemplate;
@@ -60,7 +60,7 @@ namespace TFlex.PackageManager.Configuration
 
                 string name = "LinkTemplate";
                 string path = value;
-                string error = string.Format(Resources.Strings["link:msg_1"][0], 
+                string error = string.Format(Resources.Strings["md_0:msg_1"][0], 
                     pattern.ToString(""));
 
                 foreach (Match m in Regex.Matches(value, @"\{(.*?)\}"))

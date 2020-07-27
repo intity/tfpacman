@@ -17,7 +17,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
-    /// The OutputFiles class definition.
+    /// Files extension modules.
     /// </summary>
     [CustomCategoryOrder(Resources.FILES, 4)]
     public class Files : Translator, INotifyDataErrorInfo
@@ -86,7 +86,7 @@ namespace TFlex.PackageManager.Configuration
 
                 string name = "FileNameSuffix";
                 char[] pattern = Path.GetInvalidFileNameChars();
-                string error = string.Format(Resources.Strings["file:msg_1"][0], 
+                string error = string.Format(Resources.Strings["md_4:msg_1"][0], 
                     pattern.ToString(""));
 
                 if (value.IsValid(pattern))
@@ -123,7 +123,7 @@ namespace TFlex.PackageManager.Configuration
                 string name = "TemplateFileName";
                 string path = value;
                 char[] pattern = Path.GetInvalidFileNameChars();
-                string error = string.Format(Resources.Strings["file:msg_2"][0], 
+                string error = string.Format(Resources.Strings["md_4:msg_2"][0], 
                     pattern.ToString(""));
 
                 foreach (Match i in Regex.Matches(value, @"\{(.*?)\}"))

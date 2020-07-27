@@ -28,7 +28,7 @@ namespace TFlex.PackageManager.Editors
             #region initialize resources
             scale = new Dictionary<string, decimal>
             {
-                { Properties.Resources.Strings["tr_0:1_3_1"][0], 99999 },
+                { Properties.Resources.Strings["md_1:1_3_1"][0], 99999 },
                 { "1:1",    1 },
                 { "1:2",    0.5m },
                 { "1:4",    0.25m },
@@ -54,7 +54,7 @@ namespace TFlex.PackageManager.Editors
                 { "50:1",   50 },
                 { "100:1",  100 }
             };
-            other = Properties.Resources.Strings["tr_0:1_3_2"][0];
+            other = Properties.Resources.Strings["md_1:1_3_2"][0];
             #endregion
 
             foreach (var i in scale) comboBox.Items.Add(i.Key);

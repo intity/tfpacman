@@ -117,38 +117,57 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="category2" xml:space="preserve">
-    <value>Проекции</value>
+  <data name="category1" xml:space="preserve">
+    <value>Seiten</value>
   </data>
-  <data name="category3" xml:space="preserve">
-    <value>Переменные</value>
+  <data name="dn1_1" xml:space="preserve">
+    <value>Seitenname</value>
+    <comment>Sammlung von seitennamen.</comment>
   </data>
-  <data name="dn2_1" xml:space="preserve">
-    <value>Имя проекции</value>
-    <comment>Коллекция имен проекций.</comment>
+  <data name="dn1_2" xml:space="preserve">
+    <value>Seite von der suche ausschließen</value>
+    <comment>Schließt die sammlung von seiten aus der suche aus.</comment>
   </data>
-  <data name="dn2_2" xml:space="preserve">
-    <value>Исключить проекцию из поиска</value>
-    <comment>Исключает проекцию из поиска.</comment>
+  <data name="dn1_3" xml:space="preserve">
+    <value>Seiten maßstab</value>
+    <comment>Bestimmen sie den maßstab der seite.</comment>
   </data>
-  <data name="dn2_3" xml:space="preserve">
-    <value>Масштаб проекции</value>
-    <comment>Определение масштаба проекции.</comment>
+  <data name="dn1_3_1" xml:space="preserve">
+    <value>Aus dokument</value>
   </data>
-  <data name="dn3_1" xml:space="preserve">
-    <value>Добавить переменные</value>
-    <comment>Добавление новых переменных.</comment>
+  <data name="dn1_3_2" xml:space="preserve">
+    <value>Andere</value>
   </data>
-  <data name="dn3_2" xml:space="preserve">
-    <value>Редактировать переменные</value>
-    <comment>Изменение атрибутов переменных.</comment>
+  <data name="dn1_4" xml:space="preserve">
+    <value>Seitentyp</value>
+    <comment>Ermitteln sie die arten der zu verarbeitenden seiten.</comment>
   </data>
-  <data name="dn3_3" xml:space="preserve">
-    <value>Переименовать переменные</value>
-    <comment>Переименование переменных документа.</comment>
+  <data name="dn1_4_1" xml:space="preserve">
+    <value>Üblich</value>
+    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
   </data>
-  <data name="dn3_4" xml:space="preserve">
-    <value>Удалить переменные</value>
-    <comment>Удаление переменных документа.</comment>
+  <data name="dn1_4_2" xml:space="preserve">
+    <value>Arbeitsebene</value>
+    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  </data>
+  <data name="dn1_4_3" xml:space="preserve">
+    <value>Hilfsgerät</value>
+    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  </data>
+  <data name="dn1_4_4" xml:space="preserve">
+    <value>Text</value>
+    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  </data>
+  <data name="dn1_4_5" xml:space="preserve">
+    <value>Spezifikation</value>
+    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  </data>
+  <data name="dn1_4_6" xml:space="preserve">
+    <value>Elektrischer Kreislauf</value>
+    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  </data>
+  <data name="dn1_5" xml:space="preserve">
+    <value>Überprüfen sie die zeichnungsvorlage</value>
+    <comment>Aktiviert die überprüfung, ob eine formatierte seite auf der seite vorhanden ist.</comment>
   </data>
 </root>
