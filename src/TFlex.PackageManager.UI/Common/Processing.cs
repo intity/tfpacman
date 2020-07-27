@@ -311,28 +311,6 @@ namespace TFlex.PackageManager.Common
         }
 
         /// <summary>
-        /// The Page type exists.
-        /// </summary>
-        /// <param name="page"></param>
-        /// <returns></returns>
-        private bool PageTypeExists(Page page)
-        {
-            var tr_0 = cfg.Translator as Translator_0;
-
-            Dictionary<PageType, bool> types = new Dictionary<PageType, bool>
-            {
-                { PageType.Normal,          tr_0.PageTypes.Normal },
-                { PageType.Workplane,       tr_0.PageTypes.Workplane },
-                { PageType.Auxiliary,       tr_0.PageTypes.Auxiliary },
-                { PageType.Text,            tr_0.PageTypes.Text },
-                { PageType.BillOfMaterials, tr_0.PageTypes.BillOfMaterials },
-                { PageType.Circuit,         tr_0.PageTypes.Circuit }
-            };
-
-            return page.PageType != PageType.Dialog && types[page.PageType];
-        }
-
-        /// <summary>
         /// The ReplaceLink helper method.
         /// </summary>
         /// <param name="link"></param>
@@ -613,7 +591,7 @@ namespace TFlex.PackageManager.Common
             {
                 uint flags = 0x0;
 
-                if (!PageTypeExists(p))
+                if (!tr_0.PageTypeExists(p))
                     continue;
 
                 if (tr_0.PageNames.Length > 0)

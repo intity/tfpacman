@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Globalization;
@@ -197,6 +198,25 @@ namespace TFlex.PackageManager.Configuration
                     data_1_5 = a;
                     break;
             }
+        }
+
+        /// <summary>
+        /// The Page type exists.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        internal bool PageTypeExists(Page page)
+        {
+            Dictionary<PageType, bool> types = new Dictionary<PageType, bool>
+            {
+                { PageType.Normal,          PageTypes.Normal },
+                { PageType.Workplane,       PageTypes.Workplane },
+                { PageType.Auxiliary,       PageTypes.Auxiliary },
+                { PageType.Text,            PageTypes.Text },
+                { PageType.BillOfMaterials, PageTypes.BillOfMaterials },
+                { PageType.Circuit,         PageTypes.Circuit }
+            };
+            return page.PageType != PageType.Dialog && types[page.PageType];
         }
 
         /// <summary>
