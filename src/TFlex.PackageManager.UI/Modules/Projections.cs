@@ -15,7 +15,7 @@ namespace TFlex.PackageManager.Configuration
     /// Projections extension module.
     /// </summary>
     [CustomCategoryOrder(Resources.PROJECTIONS, 2)]
-    public class Projections : Files
+    public class Projections : Variables
     {
         #region private fields
         string[] projectionNames;

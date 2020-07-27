@@ -20,12 +20,12 @@ namespace TFlex.PackageManager.Properties
         public const string LINKS         = "Links.resx";
         public const string PAGES         = "Pages.resx";
         public const string PROJECTIONS   = "Projections.resx";
+        public const string VARIABLES     = "Variables.resx";
         public const string FILES         = "Files.resx";
         public const string MAIN_WINDOW   = "Main.resx";
         public const string LIST_VALUES   = "ListValues.resx";
         public const string OPTIONS_UI    = "Options.resx";
         public const string VARIABLES_UI  = "VariablesUI.resx";
-        public const string TRANSLATOR_0  = "Translator_0.resx";
         public const string TRANSLATOR_1  = "Translator_1.resx";
         public const string TRANSLATOR_3  = "Translator_3.resx";
         public const string TRANSLATOR_6  = "Translator_6.resx";
