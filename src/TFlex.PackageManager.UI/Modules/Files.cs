@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
@@ -213,6 +215,163 @@ namespace TFlex.PackageManager.Configuration
                     data_4_4 = a;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Get output file name.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="page"></param>
+        /// <returns>Returns Output File name.</returns>
+        internal string GetFileName(Document document, Page page)
+        {
+            string fileName, expVal, pattern = @"\{(.*?)\}";
+
+            if (TemplateFileName.Length > 0)
+                fileName = TemplateFileName.Replace(Environment.NewLine, "");
+            else
+            {
+                fileName = Path.GetFileNameWithoutExtension(document.FileName);
+                if (FileNameSuffix.Length > 0)
+                    fileName += ParseExpression(document, page, FileNameSuffix);
+                return fileName;
+            }
+
+            foreach (Match i in Regex.Matches(fileName, pattern))
+            {
+                if ((expVal = ParseExpression(document, page, i.Groups[1].Value)) == null)
+                    continue;
+
+                fileName = fileName.Replace(i.Groups[0].Value, expVal);
+            }
+
+            return fileName;
+        }
+        #endregion
+
+        #region private methods
+        /// <summary>
+        /// Extension method to split expression on tokens.
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns>Returns expression tokens.</returns>
+        private static string[] Groups(string expression)
+        {
+            string pattern = @"\((.*?)\)";
+            string[] groups = expression.Split(new string[] { ".type", ".format" },
+                StringSplitOptions.None);
+
+            if (groups.Length > 1)
+            {
+                groups[1] = Regex.Match(expression, pattern).Groups[1].Value;
+            }
+
+            return groups;
+        }
+
+        /// <summary>
+        /// Extension method to parse expression tokens.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="page"></param>
+        /// <param name="expression"></param>
+        /// <returns>Returns variable value from document.</returns>
+        private static string GetValue(Document document, Page page, string expression)
+        {
+            string result = null;
+            string[] groups = Groups(expression);
+            string[] argv;
+            Variable variable;
+
+            if (groups.Length > 1)
+            {
+                if (expression.Contains("page.type") && page != null)
+                {
+                    if ((argv = groups[1].Split(',')).Length < 2)
+                        return result;
+
+                    switch (argv[0])
+                    {
+                        case "0":
+                            if (page.PageType == PageType.Normal)
+                                result = argv[1];
+                            break;
+                        case "1":
+                            if (page.PageType == PageType.Workplane)
+                                result = argv[1];
+                            break;
+                        case "3":
+                            if (page.PageType == PageType.Auxiliary)
+                                result = argv[1];
+                            break;
+                        case "4":
+                            if (page.PageType == PageType.Text)
+                                result = argv[1];
+                            break;
+                        case "5":
+                            if (page.PageType == PageType.BillOfMaterials)
+                                result = argv[1];
+                            break;
+                    }
+                }
+                else if ((variable = document.FindVariable(groups[0])) != null)
+                {
+                    result = variable.IsText
+                        ? variable.TextValue
+                        : variable.RealValue.ToString(groups[1]);
+                }
+            }
+            else
+            {
+                if ((variable = document.FindVariable(expression)) != null)
+                {
+                    result = variable.IsText
+                        ? variable.TextValue
+                        : variable.RealValue.ToString();
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Parse expression.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="page"></param>
+        /// <param name="expression"></param>
+        /// <returns>Returns variable value from document.</returns>
+        private static string ParseExpression(Document document, Page page, string expression)
+        {
+            string result = null;
+            string pattern = @"(?:\?\?)";
+            string[] tokens = new string[] { "??" };
+            string[] group = expression.Split(tokens, StringSplitOptions.None).ToArray();
+            MatchCollection matches = Regex.Matches(expression, pattern);
+
+            if (group.Length > 1)
+            {
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    switch (matches[i].Value)
+                    {
+                        case "??":
+
+                            if ((result = GetValue(document, page, group[i])) != null ||
+                                (result = GetValue(document, page, group[i + 1])) != null)
+                            {
+                                return result;
+                            }
+                            else
+                                result = group[i + 1];
+                            break;
+                    }
+                }
+            }
+            else
+                result = GetValue(document, page, expression);
+
+            return result ?? string.Empty;
         }
         #endregion
 

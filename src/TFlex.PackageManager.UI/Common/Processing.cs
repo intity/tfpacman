@@ -135,162 +135,6 @@ namespace TFlex.PackageManager.Common
 
         #region private methods
         /// <summary>
-        /// Extension method to split expression on tokens.
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <returns>Returns expression tokens.</returns>
-        private static string[] Groups(string expression)
-        {
-            string pattern = @"\((.*?)\)";
-            string[] groups = expression.Split(new string[] { ".type", ".format" }, 
-                StringSplitOptions.None);
-
-            if (groups.Length > 1)
-            {
-                groups[1] = Regex.Match(expression, pattern).Groups[1].Value;
-            }
-
-            return groups;
-        }
-
-        /// <summary>
-        /// Extension method to parse expression tokens.
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="page"></param>
-        /// <param name="expression"></param>
-        /// <returns>Returns variable value from document.</returns>
-        private static string GetValue(Document document, Page page, string expression)
-        {
-            string result = null;
-            string[] groups = Groups(expression);
-            string[] argv;
-            Variable variable;
-
-            if (groups.Length > 1)
-            {
-                if (expression.Contains("page.type") && page != null)
-                {
-                    if ((argv = groups[1].Split(',')).Length < 2)
-                        return result;
-
-                    switch (argv[0])
-                    {
-                        case "0":
-                            if (page.PageType == PageType.Normal)
-                                result = argv[1];
-                            break;
-                        case "1":
-                            if (page.PageType == PageType.Workplane)
-                                result = argv[1];
-                            break;
-                        case "3":
-                            if (page.PageType == PageType.Auxiliary)
-                                result = argv[1];
-                            break;
-                        case "4":
-                            if (page.PageType == PageType.Text)
-                                result = argv[1];
-                            break;
-                        case "5":
-                            if (page.PageType == PageType.BillOfMaterials)
-                                result = argv[1];
-                            break;
-                    }
-                }
-                else if ((variable = document.FindVariable(groups[0])) != null)
-                {
-                    result = variable.IsText
-                        ? variable.TextValue
-                        : variable.RealValue.ToString(groups[1]);
-                }
-            }
-            else
-            {
-                if ((variable = document.FindVariable(expression)) != null)
-                {
-                    result = variable.IsText
-                        ? variable.TextValue
-                        : variable.RealValue.ToString();
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Parse expression.
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="page"></param>
-        /// <param name="expression"></param>
-        /// <returns>Returns variable value from document.</returns>
-        private static string ParseExpression(Document document, Page page, string expression)
-        {
-            string result = null;
-            string pattern = @"(?:\?\?)";
-            string[] tokens = new string[] { "??" };
-            string[] group = expression.Split(tokens, StringSplitOptions.None).ToArray();
-            MatchCollection matches = Regex.Matches(expression, pattern);
-
-            if (group.Length > 1)
-            {
-                for (int i = 0; i < matches.Count; i++)
-                {
-                    switch (matches[i].Value)
-                    {
-                        case "??":
-
-                            if ((result = GetValue(document, page, group[i])) != null ||
-                                (result = GetValue(document, page, group[i + 1])) != null)
-                            {
-                                return result;
-                            }
-                            else
-                                result = group[i + 1];
-                            break;
-                    }
-                }
-            }
-            else
-                result = GetValue(document, page, expression);
-
-            return result ?? string.Empty;
-        }
-
-        /// <summary>
-        /// Get output file name.
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="page"></param>
-        /// <returns>Returns Output File name.</returns>
-        private string GetFileName(Document document, Page page)
-        {
-            var tr = cfg.Translator as Files;
-            string fileName, expVal, pattern = @"\{(.*?)\}";
-
-            if (tr.TemplateFileName.Length > 0)
-                fileName = tr.TemplateFileName.Replace(Environment.NewLine, "");
-            else
-            {
-                fileName = Path.GetFileNameWithoutExtension(document.FileName);
-                if (tr.FileNameSuffix.Length > 0)
-                    fileName += ParseExpression(document, page, tr.FileNameSuffix);
-                return fileName;
-            }
-
-            foreach (Match i in Regex.Matches(fileName, pattern))
-            {
-                if ((expVal = ParseExpression(document, page, i.Groups[1].Value)) == null)
-                    continue;
-
-                fileName = fileName.Replace(i.Groups[0].Value, expVal);
-            }
-
-            return fileName;
-        }
-
-        /// <summary>
         /// Get output directory path.
         /// </summary>
         /// <param name="item">Parent processing Item.</param>
@@ -331,8 +175,10 @@ namespace TFlex.PackageManager.Common
         /// <param name="item"></param>
         private void DocumentSaveAs(Document document, ProcItem item)
         {
+            var md_4 = cfg.Translator as Files;
+
             if (item.FName == null)
-                item.FName = GetFileName(document, null);
+                item.FName = md_4.GetFileName(document, null);
             if (item.OPath == null)
                 item.OPath = Path.Combine(GetDirectory(item), item.FName + ".grb");
 
@@ -351,10 +197,10 @@ namespace TFlex.PackageManager.Common
         /// <param name="item">The Processing Item Object.</param>
         private void ProcessingDocument(Document document, ProcItem item)
         {
-            var tr = cfg.Translator as Translator;
+            var md_4 = cfg.Translator as Files;
             string[] aPath = item.IPath.Split('\\');
 
-            switch (tr.TMode)
+            switch (md_4.TMode)
             {
                 case TranslatorType.Document:
                     DocumentSaveAs(document, item);
@@ -371,10 +217,10 @@ namespace TFlex.PackageManager.Common
                     ProcessingExport(document, item);
                     break;
                 case TranslatorType.Acis:
-                    switch (tr.PMode)
+                    switch (md_4.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = GetFileName(document, null);
+                            item.FName = md_4.GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + ".sat");
                             tr_2.Export(document, item.OPath, logging);
                             break;
@@ -393,10 +239,10 @@ namespace TFlex.PackageManager.Common
                     }
                     break;
                 case TranslatorType.Iges:
-                    switch (tr.PMode)
+                    switch (md_4.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = GetFileName(document, null);
+                            item.FName = md_4.GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + ".igs");
                             tr_6.Export(document, item.OPath, logging);
                             break;
@@ -415,10 +261,10 @@ namespace TFlex.PackageManager.Common
                     }
                     break;
                 case TranslatorType.Jt:
-                    switch (tr.PMode)
+                    switch (md_4.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = GetFileName(document, null);
+                            item.FName = md_4.GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + ".jt");
                             tr_7.Export(document, item.OPath, logging);
                             break;
@@ -437,10 +283,10 @@ namespace TFlex.PackageManager.Common
                     }
                     break;
                 case TranslatorType.Step:
-                    switch (tr.PMode)
+                    switch (md_4.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = GetFileName(document, null);
+                            item.FName = md_4.GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + ".stp");
                             tr_10.Export(document, item.OPath, logging);
                             break;
@@ -612,7 +458,7 @@ namespace TFlex.PackageManager.Common
                 {
                     string suffix = string.Empty;
                     string extension = "." + tr_0.TargetExtension.ToLower();
-                    path = item.Directory + "\\" + GetFileName(document, page);
+                    path = item.Directory + "\\" + tr_0.GetFileName(document, page);
 
                     switch (page.PageType)
                     {
