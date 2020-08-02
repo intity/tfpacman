@@ -79,7 +79,9 @@ namespace TFlex.PackageManager.Common
                 case ProcessingMode.SaveAs:
                 case ProcessingMode.Export:
                     if ((document = Application.OpenDocument(item.IPath, false)) != null)
-                        logging.WriteLine(LogLevel.INFO, ">>> Document [action: 0]");
+                        logging.WriteLine(LogLevel.INFO, 
+                            string.Format(">>> Document [action: 0, path: {0}]",
+                            item.IPath));
                     break;
                 case ProcessingMode.Import:
                     int iMode = (cfg.Translator as Translator3D).ImportMode;
@@ -104,25 +106,8 @@ namespace TFlex.PackageManager.Common
                 return;
             }
 
-            ProcessingDocument(document, item);
-
-            if (document.Changed)
-            {
-                if (tr.PMode == ProcessingMode.Export)
-                {
-                    document.CancelChanges();
-                    logging.WriteLine(LogLevel.INFO, ">>> Document [action: 5]");
-                }
-                else
-                {
-                    document.EndChanges();
-                    document.Save();
-                    logging.WriteLine(LogLevel.INFO, ">>> Document [action: 3]");
-                }
-            }
-
-            document.Close();
-            logging.WriteLine(LogLevel.INFO, ">>> Document [action: 6]");
+            ProcessingStart(document, item);
+            ProcessingEnd(document, item);
 
             if (Directory.GetFiles(item.Directory).Length == 0 &&
                 Directory.GetDirectories(item.Directory).Length == 0)
@@ -145,7 +130,7 @@ namespace TFlex.PackageManager.Common
                 if (link != null)
                 {
                     item.Directory = Path.Combine(cfg.TargetDirectory, 
-                        link.Replace("\\" + item.FName, ""));
+                        link.Replace(item.FName, ""));
                 }
             }
             if (Directory.Exists(item.Directory) == false)
@@ -185,17 +170,17 @@ namespace TFlex.PackageManager.Common
             if (!File.Exists(item.OPath) && document.SaveAs(item.OPath))
             {
                 logging.WriteLine(LogLevel.INFO, 
-                    string.Format("--> Document [action: 4, path: {0}]",
+                    string.Format(">>> Document [action: 4, path: {0}]",
                     item.OPath));
             }
         }
 
         /// <summary>
-        /// Processing document.
+        /// The processing start method.
         /// </summary>
         /// <param name="document"></param>
-        /// <param name="item">The Processing Item Object.</param>
-        private void ProcessingDocument(Document document, ProcItem item)
+        /// <param name="item">The Processing Item.</param>
+        private void ProcessingStart(Document document, ProcItem item)
         {
             var md_4 = cfg.Translator as Files;
             string[] aPath = item.IPath.Split('\\');
@@ -204,17 +189,12 @@ namespace TFlex.PackageManager.Common
             {
                 case TranslatorType.Document:
                     DocumentSaveAs(document, item);
-                    ProcessingLinks(document, item);
-                    ProcessingPages(document, item);
-                    ProcessingProjections(document, item);
-                    ProcessingVariables(document);
+                    ProcessingItems(document, item);
                     break;
                 case TranslatorType.Acad:
                 case TranslatorType.Bitmap:
                 case TranslatorType.Pdf:
-                    ProcessingPages(document, item);
-                    ProcessingProjections(document, item);
-                    ProcessingExport(document, item);
+                    ProcessingItems(document, item);
                     break;
                 case TranslatorType.Acis:
                     switch (md_4.PMode)
@@ -308,38 +288,54 @@ namespace TFlex.PackageManager.Common
         }
 
         /// <summary>
-        /// The extension method to processing links.
+        /// The processing end method.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="item">The Processing Item.</param>
+        private void ProcessingEnd(Document document, ProcItem item)
+        {
+            var tr = cfg.Translator as Translator;
+            if (document.Changed)
+            {
+                if (tr.PMode == ProcessingMode.Export)
+                {
+                    document.CancelChanges();
+                    logging.WriteLine(LogLevel.INFO,
+                        string.Format(">>> Document [action: 5, path: {0}]",
+                        item.IPath));
+                }
+                else
+                {
+                    document.Save();
+                    logging.WriteLine(LogLevel.INFO,
+                        string.Format(">>> Document [action: 3, path: {0}]",
+                        item.IPath));
+                }
+            }
+            document.Close();
+            logging.WriteLine(LogLevel.INFO, 
+                string.Format(">>> Document [action: 6, path: {0}]", 
+                item.IPath));
+        }
+
+        /// <summary>
+        /// The extension method to processing Items.
         /// </summary>
         /// <param name="document"></param>
         /// <param name="item"></param>
-        private void ProcessingLinks(Document document, ProcItem item)
+        private void ProcessingItems(Document document, ProcItem item)
         {
-            if (!(cfg.Modules as Modules).Links)
-                return;
+            var tr = cfg.Translator as Translator;
 
-            if (item.Items.Count == 0)
-                return;
+            ProcessingLinks(document);
+            ProcessingPages(document, item);
+            ProcessingProjections(document, item);
+            ProcessingVariables(document);
+            ProcessingExport(document, item);
 
-            var len = document.FileLinks.Count();
-            if (len > 0)
+            for (int i = 0; i < item.Items.Count(); i++)
             {
-                document.BeginChanges("Processing Links");
-                logging.WriteLine(LogLevel.INFO, 
-                    string.Format(">>> Processing Links [quantity: {0}]", len));
-            }
-
-            bool hasLinks = false;
-
-            foreach (var link in document.FileLinks)
-            {
-                logging.WriteLine(LogLevel.INFO,
-                    string.Format("--> Link [action: 0, id: 0x{0:X8}, path: {1}]",
-                    link.InternalID.ToInt32(), link.FilePath));
-
-                var path = link.FullFilePath;
-                var ch_i = item.Items.Where(p => p.Key.IPath == path).FirstOrDefault();
-                if (ch_i.Key == null)
-                    continue;
+                var ch_i = item.Items.ElementAt(i);
                 if ((ch_i.Value & 0x1) != 0x1)
                     continue;
                 if ((ch_i.Value & 0x2) == 0x2)
@@ -349,24 +345,21 @@ namespace TFlex.PackageManager.Common
                     continue;
 
                 logging.WriteLine(LogLevel.INFO,
-                    string.Format("--> Document [action: 0, path: {0}]",
+                    string.Format(">>> Document [action: 0, path: {0}]",
                     ch_i.Key.IPath));
 
-                DocumentSaveAs(ch_d, ch_i.Key);
+                if (tr.TMode == TranslatorType.Document)
+                {
+                    ProcessingLinks(document, ch_d, ch_i.Key);
+                }
 
-                ch_d.Close();
+                ProcessingItems(ch_d, ch_i.Key); // recursive call
+                ProcessingEnd(ch_d, ch_i.Key);
+
                 item.Items[ch_i.Key] |= 0x2;
-                logging.WriteLine(LogLevel.INFO,
-                    string.Format("--> Document [action: 6, path: {0}]",
-                    ch_i.Key.IPath));
-
-                document.BeginChanges("Replace Link");
-                ReplaceLink(link, ch_i.Key.OPath);
-                document.EndChanges();
-                hasLinks = true;
             }
 
-            if (hasLinks)
+            if (item.Links.Count > 0)
             {
                 document.BeginChanges("Regenerate Links");
                 document.Regenerate(new RegenerateOptions
@@ -375,7 +368,56 @@ namespace TFlex.PackageManager.Common
                 });
                 document.EndChanges();
                 logging.WriteLine(LogLevel.INFO, 
-                    ">>> Document [action: 2, mode: UpdateAllLinks]");
+                    string.Format(">>> Document [action: 2, path: {0}, mode: UpdateAllLinks]", 
+                    item.OPath));
+            }
+        }
+
+        /// <summary>
+        /// The extension method for logging links.
+        /// </summary>
+        /// <param name="document"></param>
+        private void ProcessingLinks(Document document)
+        {
+            if (!(cfg.Modules as Modules).Links)
+                return;
+
+            var len = document.FileLinks.Count();
+            if (len > 0)
+            {
+                logging.WriteLine(LogLevel.INFO,
+                    string.Format(">>> Processing Links [quantity: {0}]", len));
+            }
+            foreach (var link in document.FileLinks)
+            {
+                logging.WriteLine(LogLevel.INFO,
+                    string.Format("--> Link [action: 0, id: 0x{0:X8}, path: {1}]",
+                    link.InternalID.ToInt32(), link.FilePath));
+            }
+        }
+
+        /// <summary>
+        /// The extension method to processing links.
+        /// </summary>
+        /// <param name="parent">Parent document.</param>
+        /// <param name="child">Child document.</param>
+        /// <param name="item">The processing subitem.</param>
+        private void ProcessingLinks(Document parent, Document child, ProcItem item)
+        {
+            if (!(cfg.Modules as Modules).Links)
+                return;
+
+            foreach (var link in parent.FileLinks)
+            {
+                if (link.FullFilePath == item.IPath)
+                {
+                    DocumentSaveAs(child, item);
+                    parent.BeginChanges("Replace Link");
+                    ReplaceLink(link, item.OPath);
+                    parent.EndChanges();
+                    item.Parent.Links.Add(link);
+                    break;
+                }
             }
         }
 
@@ -431,7 +473,6 @@ namespace TFlex.PackageManager.Common
             var len = item.Pages.Count;
             if (len > 0)
             {
-                document.BeginChanges("Processing Pages");
                 logging.WriteLine(LogLevel.INFO, 
                     string.Format(">>> Processing Pages [quantity: {0}]", len));
             }
@@ -443,6 +484,8 @@ namespace TFlex.PackageManager.Common
                 if (page.Scale.Value != (double)tr_0.PageScale && tr_0.PageScale != 99999)
                 {
                     action = 1;
+
+                    document.BeginChanges("Changing the page scale");
                     page.Scale = new Parameter((double)tr_0.PageScale);
 
                     if (tr_0.TMode == TranslatorType.Document)
@@ -451,6 +494,7 @@ namespace TFlex.PackageManager.Common
                         logging.WriteLine(LogLevel.INFO, 
                             "--> Document [action: 2, mode: Full]");
                     }
+                    document.EndChanges();
                 }
 
                 logging.WriteLine(LogLevel.INFO, 
@@ -462,9 +506,8 @@ namespace TFlex.PackageManager.Common
                 {
                     string suffix = string.Empty;
                     string extension = "." + tr_0.TargetExtension.ToLower();
-                    string file_name = tr_0.GetFileName(document, page);
-                    string directory = GetDirectory(item);
-                    path = Path.Combine(directory, file_name);
+                    item.FName = tr_0.GetFileName(document, page);
+                    path = Path.Combine(GetDirectory(item), item.FName);
 
                     switch (page.PageType)
                     {
@@ -486,7 +529,6 @@ namespace TFlex.PackageManager.Common
                     else
                         path += extension;
                 }
-
                 item.Pages[page] = path;
             }
         }
@@ -552,6 +594,7 @@ namespace TFlex.PackageManager.Common
                     ? Parameter.Default().Value 
                     : (double)tr_0.ProjectionScale;
 
+                document.BeginChanges("Changing the projection scale");
                 i.Scale = new Parameter(scale);
 
                 if (tr_0.TMode == TranslatorType.Document)
@@ -560,6 +603,7 @@ namespace TFlex.PackageManager.Common
                     logging.WriteLine(LogLevel.INFO, 
                         "--> Document [action: 2, mode: Projections]");
                 }
+                document.EndChanges();
 
                 logging.WriteLine(LogLevel.INFO, 
                     string.Format(CultureInfo.InvariantCulture, 
@@ -581,7 +625,6 @@ namespace TFlex.PackageManager.Common
             int len = tr_0.VariablesCount();
             if (len > 0)
             {
-                document.BeginChanges("Processing Variables");
                 logging.WriteLine(LogLevel.INFO, 
                     string.Format(">>> Processing Variables [quantity: {0}]", len));
             }
@@ -590,7 +633,10 @@ namespace TFlex.PackageManager.Common
             {
                 var variable = document.FindVariable(e.Name);
                 if (variable == null)
+                {
+                    document.BeginChanges("Create new Variable");
                     variable = new Variable(document);
+                }
                 else
                     continue;
 
@@ -599,6 +645,7 @@ namespace TFlex.PackageManager.Common
                 variable.Expression = e.Expression;
                 if (variable.IsConstant)
                     variable.External = e.External;
+                document.EndChanges();
 
                 logging.WriteLine(LogLevel.INFO, string.Format(
                         "--> Variable [action: 1, name: {0}, group: {1}, expression: {2}, external: {3}]",
@@ -614,10 +661,12 @@ namespace TFlex.PackageManager.Common
                 if (variable == null)
                     continue;
 
+                document.BeginChanges("Edit Variable");
                 variable.GroupName = e.Group;
                 variable.Expression = e.Expression;
                 if (variable.IsConstant)
                     variable.External = e.External;
+                document.EndChanges();
 
                 logging.WriteLine(LogLevel.INFO, string.Format(
                         "--> Variable [action: 2, name: {0}, group: {1}, expression: {2}, external: {3}]",
@@ -633,18 +682,27 @@ namespace TFlex.PackageManager.Common
                 var variable = document.FindVariable(e.OldName);
                 if (variable == null)
                     continue;
+                if (variable.Name == e.Name)
+                    continue;
 
+                document.BeginChanges("Rename Variable");
                 variable.SetName(e.Name, true);
+                document.EndChanges();
+
                 logging.WriteLine(LogLevel.INFO, string.Format(
                         "--> Variable [action: 3, new name: {0}, old name: {1}]",
                         e.Name,
                         e.OldName));
 
-                hasRenaming = variable.Name == e.Name;
+                hasRenaming = true;
             }
 
             if (hasRenaming)
+            {
+                document.BeginChanges("Regeterate Full");
                 document.Regenerate(new RegenerateOptions { Full = true });
+                document.EndChanges();
+            }
 
             foreach (var e in tr_0.RemoveVariables)
             {
@@ -652,11 +710,13 @@ namespace TFlex.PackageManager.Common
                 if (variable == null)
                     continue;
 
+                document.BeginChanges("Remove Variable");
                 if (document.DeleteObjects(new ObjectArray(variable), new DeleteOptions(true)))
                 {
                     logging.WriteLine(LogLevel.INFO, string.Format(
                         "--> Variable [action: 4, name: {0}]", e.Name));
                 }
+                document.EndChanges();
             }
         }
 

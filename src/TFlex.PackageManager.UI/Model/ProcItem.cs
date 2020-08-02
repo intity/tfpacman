@@ -16,6 +16,7 @@ namespace TFlex.PackageManager.Model
         public ProcItem(string path)
         {
             IPath = path;
+            Links = new List<FileLink>();
             Pages = new Dictionary<Page, string>();
             Items = new Dictionary<ProcItem, int>();
         }
@@ -57,6 +58,11 @@ namespace TFlex.PackageManager.Model
         /// Target directory to Item.
         /// </summary>
         public string Directory { get; set; }
+
+        /// <summary>
+        /// Processed Links.
+        /// </summary>
+        public List<FileLink> Links { get; }
 
         /// <summary>
         /// Processed Pages.

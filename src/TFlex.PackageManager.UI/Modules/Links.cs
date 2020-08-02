@@ -175,10 +175,10 @@ namespace TFlex.PackageManager.Configuration
                 
                 if (matches[i].Value.Contains("part"))
                 {
-                    if (link.Length > 0)
-                        link += "\\" + item.FName;
-                    else
+                    if (link == null)
                         link = item.FName;
+                    else
+                        link += "\\" + item.FName;
                     break;
                 }
             }
