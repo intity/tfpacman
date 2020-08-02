@@ -128,10 +128,6 @@
     <value>Template file name</value>
     <comment>Template of the file name definition.</comment>
   </data>
-  <data name="dn4_4" xml:space="preserve">
-    <value>Rename subdirectory</value>
-    <comment>Rename subdirectory on parent file name.</comment>
-  </data>
   <data name="message1" xml:space="preserve">
     <value>The file name suffix must not contain characters: {0}</value>
   </data>

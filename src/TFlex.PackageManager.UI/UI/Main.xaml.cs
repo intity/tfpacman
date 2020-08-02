@@ -221,7 +221,6 @@ namespace TFlex.PackageManager.UI
                     {
                         "FileNameSuffix",
                         "TemplateFileName",
-                        "RenameSubdirectory",
                         "Version",
                         "Protocol",
                         "ExportMode",
@@ -249,7 +248,6 @@ namespace TFlex.PackageManager.UI
                     {
                         "FileNameSuffix",
                         "TemplateFileName",
-                        "RenameSubdirectory",
                         "Version",
                         "Protocol",
                         "ExportMode",

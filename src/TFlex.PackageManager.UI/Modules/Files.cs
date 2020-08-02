@@ -28,11 +28,9 @@ namespace TFlex.PackageManager.Configuration
         string targetExtension;
         string fileNameSuffix;
         string templateFileName;
-        bool renameSubdirectory;
         XAttribute data_4_1;
         XAttribute data_4_2;
         XAttribute data_4_3;
-        XAttribute data_4_4;
         #endregion
 
         /// <summary>
@@ -143,28 +141,6 @@ namespace TFlex.PackageManager.Configuration
                 OnPropertyChanged(name);
             }
         }
-
-        /// <summary>
-        /// Rename subdirectory on parent file name.
-        /// </summary>
-        [PropertyOrder(15)]
-        [CustomCategory(Resources.FILES, "category4")]
-        [CustomDisplayName(Resources.FILES, "dn4_4")]
-        [CustomDescription(Resources.FILES, "dn4_4")]
-        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
-        public bool RenameSubdirectory
-        {
-            get => renameSubdirectory;
-            set
-            {
-                if (renameSubdirectory != value)
-                {
-                    renameSubdirectory = value;
-                    data_4_4.Value = value ? "1" : "0";
-                    OnPropertyChanged("RenameSubdirectory");
-                }
-            }
-        }
         #endregion
 
         #region internal methods
@@ -175,7 +151,6 @@ namespace TFlex.PackageManager.Configuration
             data_4_1 = new XAttribute("value", TargetExtension);
             data_4_2 = new XAttribute("value", FileNameSuffix);
             data_4_3 = new XAttribute("value", TemplateFileName);
-            data_4_4 = new XAttribute("value", RenameSubdirectory ? "1" : "0");
 
             data.Add(new XElement("parameter",
                 new XAttribute("name", "TargetExtension"),
@@ -186,9 +161,6 @@ namespace TFlex.PackageManager.Configuration
             data.Add(new XElement("parameter",
                 new XAttribute("name", "TemplateFileName"),
                 data_4_3));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "RenameSubdirectory"),
-                data_4_4));
 
             return data;
         }
@@ -209,10 +181,6 @@ namespace TFlex.PackageManager.Configuration
                 case "TemplateFileName":
                     templateFileName = a.Value;
                     data_4_3 = a;
-                    break;
-                case "RenameSubdirectory":
-                    renameSubdirectory = a.Value == "1";
-                    data_4_4 = a;
                     break;
             }
         }
