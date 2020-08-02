@@ -173,6 +173,7 @@ namespace TFlex.PackageManager.Configuration
     {
         public M1(int index) : base (index)
         {
+            Links = true;
             Pages = true;
         }
 
@@ -181,13 +182,6 @@ namespace TFlex.PackageManager.Configuration
         {
             get => base.Variables;
             set => base.Variables = value;
-        }
-
-        [Browsable(false)]
-        public override bool Links
-        {
-            get => base.Links;
-            set => base.Links = value;
         }
     }
 
