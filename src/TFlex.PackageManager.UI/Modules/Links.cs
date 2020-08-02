@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
+using TFlex.PackageManager.Model;
 using TFlex.PackageManager.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -102,6 +103,86 @@ namespace TFlex.PackageManager.Configuration
                     data_0_1 = a;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Get external link by the link template.
+        /// Keywords
+        ///   asm  : item.Parent
+        ///   cat  : subdirectory
+        ///   part : item
+        /// Examples
+        ///   template 1: {asm}\{part}
+        ///   template 2: {asm}\{cat:asm.name}\{part}
+        ///   template 3: {asm[0]}\{part}
+        /// </summary>
+        /// <param name="item">The processing Item.</param>
+        /// <returns>
+        /// Returns external link, if a parent exists. Returns null otherwise.
+        /// </returns>
+        internal string GetLink(ProcItem item)
+        {
+            string link = null;
+            var matches = Regex.Matches(LinkTemplate, @"\{(.*?)\}");
+
+            if (matches.Count == 0 || matches.Count < 2)
+                return null;
+
+            for (int i = 0; i < matches.Count; i++)
+            {
+                if (i == 0)
+                {
+                    if (item.Parent == null)
+                        return null;
+                    if (!matches[i].Value.Contains("asm"))
+                        return null;
+
+                    int level = item.Parent.Level;
+                    var regex = new Regex(@"\[(.*?)\]");
+                    var match = regex.Match(matches[i].Value);
+                    if (match.Length == 3)
+                    {
+                        var value = match.Value.Substring(1, 1);
+                        if (value.IsDigit(0))
+                        {
+                            level = int.Parse(value);
+                        }
+                    }
+
+                    if (level != item.Parent.Level)
+                        return null;
+                }
+                
+                if (i == 1 && matches[i].Value.Contains("cat"))
+                {
+                    var group = matches[i].Value.Split(':');
+                    if (group.Length < 2)
+                        return null;
+                    if (group[1].Substring(0, 3) != "asm")
+                        return null;
+
+                    var g = group[1].Substring(0, group[1].Length - 1).Split('.');
+                    if (g.Length > 1)
+                    {
+                        switch (g[1])
+                        {
+                            case "name":
+                                link = item.Parent.FName;
+                                break;
+                        }
+                    }
+                }
+                
+                if (matches[i].Value.Contains("part"))
+                {
+                    if (link.Length > 0)
+                        link += "\\" + item.FName;
+                    else
+                        link = item.FName;
+                    break;
+                }
+            }
+            return link;
         }
         #endregion
     }
