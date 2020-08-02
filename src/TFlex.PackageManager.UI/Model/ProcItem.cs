@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using TFlex.Model;
-using TFlex.PackageManager.Configuration;
 
 namespace TFlex.PackageManager.Model
 {
@@ -13,17 +12,30 @@ namespace TFlex.PackageManager.Model
         /// <summary>
         /// The Processing Item Constructor.
         /// </summary>
-        /// <param name="cfg">Input path.</param>
         /// <param name="path">Input path.</param>
-        public ProcItem(Header cfg, string path)
+        public ProcItem(string path)
         {
             IPath = path;
             Pages = new Dictionary<Page, string>();
-            Items = new List<ProcItem>();
+            Items = new Dictionary<ProcItem, int>();
+        }
 
-            var FInfo = new FileInfo(IPath);
-            Directory = FInfo.Directory.FullName
-                .Replace(cfg.InitialCatalog, cfg.TargetDirectory);
+        /// <summary>
+        /// Item level in the hierarchy.
+        /// </summary>
+        public int Level
+        {
+            get
+            {
+                int level = 0;
+                var parent = Parent;
+                while(parent != null)
+                {
+                    parent = parent.Parent;
+                    level++;
+                }
+                return level;
+            }
         }
 
         /// <summary>
@@ -44,7 +56,7 @@ namespace TFlex.PackageManager.Model
         /// <summary>
         /// Target directory to Item.
         /// </summary>
-        public string Directory { get; private set; }
+        public string Directory { get; set; }
 
         /// <summary>
         /// Processed Pages.
@@ -52,8 +64,17 @@ namespace TFlex.PackageManager.Model
         public Dictionary<Page, string> Pages { get; }
 
         /// <summary>
-        /// The Items.
+        /// Items to processing.
+        /// Flags
+        ///   0x0 None
+        ///   0x1 Is selected Item
+        ///   0x2 Is processed Item
         /// </summary>
-        public List<ProcItem> Items { get; }
+        public Dictionary<ProcItem, int> Items { get; }
+
+        /// <summary>
+        /// Parent processing Item.
+        /// </summary>
+        public ProcItem Parent { get; set; }
     }
 }

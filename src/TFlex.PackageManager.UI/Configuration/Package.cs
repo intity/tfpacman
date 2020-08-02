@@ -12,10 +12,6 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     internal class Package
     {
-        #region private fields
-        readonly Header cfg;
-        #endregion
-
         /// <summary>
         /// The Package constructor.
         /// </summary>
@@ -23,74 +19,109 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="items">Selected Items.</param>
         public Package(Header cfg, string[] items)
         {
-            this.cfg = cfg;
-            var mode = (cfg.Translator as Translator).PMode;
-            Items    = new Dictionary<ProcItem, string[]>();
-
-            if (mode != ProcessingMode.Import)
-                InitPackage_0(items);
-            else
-                InitPackage_I(items);
+            Items = new Dictionary<ProcItem, int>();
+            InitPackage(cfg, items);
         }
 
         /// <summary>
         /// Package Items.
         /// </summary>
-        public Dictionary<ProcItem, string[]> Items { get; }
+        public Dictionary<ProcItem, int> Items { get; }
 
         #region private methods
         /// <summary>
-        /// Initialize processing Items to parent.
+        /// Initialize the package Items.
         /// </summary>
+        /// <param name="cfg"></param>
         /// <param name="items">Selected Items.</param>
-        /// <param name="item">Parent processing Item.</param>
-        /// <param name="links">External links.</param>
-        private void InitItems(string[] items, ProcItem item, string[] links)
+        private void InitPackage(Header cfg, string[] items)
         {
-            foreach (var i in items)
+            var ext = "*.grb";
+            var opt = SearchOption.AllDirectories;
+            var mode = (cfg.Translator as Translator).PMode;
+            if (mode == ProcessingMode.Import)
             {
-                if (item.IPath != i && links.Contains(i))
+                ext = "*." + (cfg.Translator as Files).TargetExtension.ToLower();
+            }
+            var files = Directory.GetFiles(cfg.InitialCatalog, ext, opt);
+            foreach (var p in files)
+            {
+                if (Contains(p))
+                    continue;
+                int flags = 0x0;
+                if (items.Contains(p))
+                    flags |= 0x1;
+                var item = new ProcItem(p)
                 {
-                    item.Items.Add(new ProcItem(cfg, i));
+                    Directory = GetDirectory(cfg, p)
+                };
+                if (ext == "*.grb")
+                {
+                    InitItems(cfg, item, items);
                 }
+                Items.Add(item, flags);
             }
         }
 
         /// <summary>
-        /// Initialize package to processing documents.
+        /// Initialize the tree Items to parent.
         /// </summary>
+        /// <param name="cfg"></param>
+        /// <param name="item">Parent Item.</param>
         /// <param name="items">Selected Items.</param>
-        private void InitPackage_0(string[] items)
+        private void InitItems(Header cfg, ProcItem item, string[] items)
         {
-            foreach (var i in items)
-            {
-                var links = Application.GetDocumentExternalFileLinks(i, true, false, true);
-                Items.Add(new ProcItem(cfg, i), links);
-            }
+            string[] links = Application
+                .GetDocumentExternalFileLinks(item.IPath, true, false, false);
 
+            foreach (var link in links)
+            {
+                int flags = 0x0;
+                if (items.Contains(link))
+                    flags |= 0x1;
+                var subItem = new ProcItem(link)
+                {
+                    Directory = GetDirectory(cfg, link),
+                    Parent = item
+                };
+                item.Items.Add(subItem, flags);
+                InitItems(cfg, subItem, items);
+            }
+        }
+
+        /// <summary>
+        /// Get target directory from path.
+        /// </summary>
+        /// <param name="cfg"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private string GetDirectory(Header cfg, string path)
+        {
+            return Path.GetDirectoryName(path)
+                .Replace(cfg.InitialCatalog, cfg.TargetDirectory);
+        }
+
+        private bool Contains(string path)
+        {
             foreach (var i in Items)
             {
-                InitItems(items, i.Key, i.Value);
+                if (i.Key.IPath == path)
+                    return true;
+                if (Contains(i.Key, path))
+                    return true;
             }
+            return false;
         }
 
-        /// <summary>
-        /// Initialize package to processing import files.
-        /// </summary>
-        /// <param name="items">Selected Items.</param>
-        private void InitPackage_I(string[] items)
+        private bool Contains(ProcItem item, string path)
         {
-            var ext = "*." + (cfg.Translator as Files).TargetExtension.ToLower();
-            var files = Directory.GetFiles(cfg.InitialCatalog, ext, 
-                SearchOption.AllDirectories);
-
-            foreach (var i in items)
+            foreach (var i in item.Items)
             {
-                if (files.Contains(i))
-                {
-                    Items.Add(new ProcItem(cfg, i), null);
-                }
+                if (i.Key.IPath == path)
+                    return true;
+                Contains(i.Key, path);
             }
+            return false;
         }
         #endregion
     }

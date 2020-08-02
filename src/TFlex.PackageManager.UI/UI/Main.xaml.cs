@@ -1029,6 +1029,9 @@ namespace TFlex.PackageManager.UI
 
             foreach (var i in package.Items)
             {
+                if ((i.Value & 0x1) != 0x1)
+                    continue;
+
                 if (stoped)
                 {
                     NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, 

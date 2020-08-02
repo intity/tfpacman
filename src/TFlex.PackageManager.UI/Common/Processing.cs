@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using TFlex.Model;
 using TFlex.Model.Model3D;
 using TFlex.PackageManager.Configuration;
@@ -27,7 +26,6 @@ namespace TFlex.PackageManager.Common
         readonly Translator_7 tr_7;
         readonly Translator_9 tr_9;
         readonly Translator_10 tr_10;
-        readonly Modules modules;
         #endregion
 
         /// <summary>
@@ -39,7 +37,6 @@ namespace TFlex.PackageManager.Common
         {
             this.cfg     = cfg;
             this.logging = logging;
-            this.modules = cfg.Modules as Modules;
 
             switch ((cfg.Translator as Translator).TMode)
             {
@@ -141,17 +138,20 @@ namespace TFlex.PackageManager.Common
         /// <returns>Returns Output Directory Path.</returns>
         private string GetDirectory(ProcItem item)
         {
-            var directory = item.Directory;
-            var tr = cfg.Translator as Files;
-            if (tr.RenameSubdirectory)
+            var md_0 = cfg.Translator as Links;
+            if (md_0.LinkTemplate.Length > 0)
             {
-                var aPath = item.Directory.Split('\\');
-                directory = item.Directory.Replace(aPath[aPath.Length - 1], item.FName);
+                var link = md_0.GetLink(item);
+                if (link != null)
+                {
+                    item.Directory = Path.Combine(cfg.TargetDirectory, 
+                        link.Replace("\\" + item.FName, ""));
+                }
             }
-            if (Directory.Exists(directory) == false)
-                Directory.CreateDirectory(directory);
+            if (Directory.Exists(item.Directory) == false)
+                Directory.CreateDirectory(item.Directory);
 
-            return directory;
+            return item.Directory;
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="item"></param>
         private void ProcessingLinks(Document document, ProcItem item)
         {
-            if (!modules.Links)
+            if (!(cfg.Modules as Modules).Links)
                 return;
 
             if (item.Items.Count == 0)
@@ -337,27 +337,31 @@ namespace TFlex.PackageManager.Common
                     link.InternalID.ToInt32(), link.FilePath));
 
                 var path = link.FullFilePath;
-                var ch_i = item.Items.Where(p => p.IPath == path).FirstOrDefault();
-                if (ch_i == null)
+                var ch_i = item.Items.Where(p => p.Key.IPath == path).FirstOrDefault();
+                if (ch_i.Key == null)
                     continue;
-
-                var ch_d = Application.OpenDocument(ch_i.IPath, false);
+                if ((ch_i.Value & 0x1) != 0x1)
+                    continue;
+                if ((ch_i.Value & 0x2) == 0x2)
+                    continue;
+                var ch_d = Application.OpenDocument(ch_i.Key.IPath, false);
                 if (ch_d == null)
                     continue;
 
                 logging.WriteLine(LogLevel.INFO,
                     string.Format("--> Document [action: 0, path: {0}]",
-                    ch_i.IPath));
+                    ch_i.Key.IPath));
 
-                DocumentSaveAs(ch_d, ch_i);
+                DocumentSaveAs(ch_d, ch_i.Key);
 
                 ch_d.Close();
+                item.Items[ch_i.Key] |= 0x2;
                 logging.WriteLine(LogLevel.INFO,
                     string.Format("--> Document [action: 6, path: {0}]",
-                    ch_i.IPath));
+                    ch_i.Key.IPath));
 
                 document.BeginChanges("Replace Link");
-                ReplaceLink(link, ch_i.OPath);
+                ReplaceLink(link, ch_i.Key.OPath);
                 document.EndChanges();
                 hasLinks = true;
             }
@@ -382,7 +386,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="item"></param>
         private void ProcessingPages(Document document, ProcItem item)
         {
-            if (!modules.Pages)
+            if (!(cfg.Modules as Modules).Pages)
                 return;
 
             var tr_0 = cfg.Translator as Translator_0;
@@ -408,13 +412,13 @@ namespace TFlex.PackageManager.Common
                 if (tr_0.PageNames.Length > 0)
                     flags |= 0x1;
 
-                if (flags == (flags & 0x1) && tr_0.PageNames.Contains(p.Name))
+                if ((flags & 0x1) == 0x1 && tr_0.PageNames.Contains(p.Name))
                     flags |= 0x2;
 
-                if (tr_0.ExcludePage && flags == (flags & 0x2))
+                if (tr_0.ExcludePage && (flags & 0x2) == 0x2)
                     continue;
 
-                if (flags == (flags & 0x1) && flags != (flags & 0x2))
+                if ((flags & 0x1) == 0x1 && (flags & 0x2) != 0x2)
                     continue;
 
                 if (tr_0.CheckDrawingTemplate && !tr_0.DrawingTemplateExists(document, p))
@@ -458,7 +462,9 @@ namespace TFlex.PackageManager.Common
                 {
                     string suffix = string.Empty;
                     string extension = "." + tr_0.TargetExtension.ToLower();
-                    path = item.Directory + "\\" + tr_0.GetFileName(document, page);
+                    string file_name = tr_0.GetFileName(document, page);
+                    string directory = GetDirectory(item);
+                    path = Path.Combine(directory, file_name);
 
                     switch (page.PageType)
                     {
@@ -492,7 +498,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="item"></param>
         private void ProcessingProjections(Document document, ProcItem item)
         {
-            if (!modules.Projections)
+            if (!(cfg.Modules as Modules).Projections)
                 return;
 
             var tr_0 = cfg.Translator as Translator_0;
@@ -529,10 +535,10 @@ namespace TFlex.PackageManager.Common
                 if (tr_0.ProjectionNames.Length > 0)
                     flags |= 0x1;
 
-                if (flags == (flags & 0x1) && tr_0.ProjectionNames.Contains(i.Name))
+                if ((flags & 0x1) == 0x1 && tr_0.ProjectionNames.Contains(i.Name))
                     flags |= 0x2;
 
-                if (tr_0.ExcludeProjection && flags == (flags & 0x2))
+                if (tr_0.ExcludeProjection && (flags & 0x2) == 0x2)
                     continue;
 
                 if (i.Scale.Value == Parameter.Default().Value && 
@@ -568,7 +574,7 @@ namespace TFlex.PackageManager.Common
         /// <param name="document"></param>
         private void ProcessingVariables(Document document)
         {
-            if (!modules.Variables)
+            if (!(cfg.Modules as Modules).Variables)
                 return;
 
             var tr_0 = cfg.Translator as Translator_0;
