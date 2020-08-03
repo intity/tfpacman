@@ -61,6 +61,14 @@ namespace TFlex.PackageManager.Configuration
                 }
                 Items.Add(item, flags);
             }
+            for (int i = 0; i < Items.Count; i++)
+            {
+                var item = Items.ElementAt(i);
+                if ((item.Value & 0x1) == 0x1)
+                    continue;
+
+                InitItems(item.Key);
+            }
         }
 
         /// <summary>
@@ -74,18 +82,38 @@ namespace TFlex.PackageManager.Configuration
             string[] links = Application
                 .GetDocumentExternalFileLinks(item.IPath, true, false, false);
 
-            foreach (var link in links)
+            foreach (var p in links)
             {
                 int flags = 0x0;
-                if (items.Contains(link))
+                if (items.Contains(p))
                     flags |= 0x1;
-                var subItem = new ProcItem(link)
+                var subItem = new ProcItem(p)
                 {
-                    Directory = GetDirectory(cfg, link),
+                    Directory = GetDirectory(cfg, p),
                     Parent = item
                 };
                 item.Items.Add(subItem, flags);
                 InitItems(cfg, subItem, items);
+            }
+        }
+
+        /// <summary>
+        /// Initialize parent if subitem is selected.
+        /// </summary>
+        /// <param name="item"></param>
+        private void InitItems(ProcItem item)
+        {
+            for (int i = 0; i < item.Items.Count; i++)
+            {
+                var subItem = item.Items.ElementAt(i);
+                if ((subItem.Value & 0x1) == 0x1)
+                {
+                    if (item.Parent != null)
+                        item.Parent.Items[item] |= 0x1;
+                    else
+                        Items[item] |= 0x1;
+                }
+                InitItems(subItem.Key);
             }
         }
 
