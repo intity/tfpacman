@@ -358,30 +358,29 @@ namespace TFlex.PackageManager.Common
             ProcessingVariables(document);
             ProcessingExport(document, item);
 
-            for (int i = 0; i < item.Items.Count(); i++)
+            foreach (var i in item.Items)
             {
-                var ch_i = item.Items.ElementAt(i);
-                if ((ch_i.Value & 0x1) != 0x1)
+                if ((i.Flags & 0x1) != 0x1)
                     continue;
-                if ((ch_i.Value & 0x2) == 0x2)
+                if ((i.Flags & 0x2) == 0x2)
                     continue;
-                var ch_d = Application.OpenDocument(ch_i.Key.IPath, false);
+                var ch_d = Application.OpenDocument(i.IPath, false);
                 if (ch_d == null)
                     continue;
 
                 logging.WriteLine(LogLevel.INFO,
                     string.Format(">>> Document [action: 0, path: {0}]",
-                    ch_i.Key.IPath));
+                    i.IPath));
 
                 if (tr.TMode == TranslatorType.Document)
                 {
-                    ProcessingLinks(document, ch_d, ch_i.Key);
+                    ProcessingLinks(document, ch_d, i);
                 }
 
-                ProcessingItems(ch_d, ch_i.Key); // recursive call
-                ProcessingEnd(ch_d, ch_i.Key);
+                ProcessingItems(ch_d, i); // recursive call
+                ProcessingEnd(ch_d, i);
 
-                item.Items[ch_i.Key] |= 0x2;
+                i.Flags |= 0x2;
             }
 
             if (item.Links.Count > 0)

@@ -1025,9 +1025,9 @@ namespace TFlex.PackageManager.UI
                 (cfg.Translator as Translator).TMode, 
                 (cfg.Translator as Translator).PMode));
 
-            foreach (var i in package.Items)
+            foreach (var item in package.Items)
             {
-                if ((i.Value & 0x1) != 0x1)
+                if ((item.Flags & 0x1) != 0x1)
                     continue;
 
                 if (stoped)
@@ -1039,8 +1039,8 @@ namespace TFlex.PackageManager.UI
                 }
 
                 logging.WriteLine(LogLevel.INFO, 
-                    string.Format("Processing [path: {0}]", i.Key.IPath));
-                proc.ProcessingFile(i.Key);
+                    string.Format("Processing [path: {0}]", item.IPath));
+                proc.ProcessingFile(item);
 
                 counter[0] += increment;
                 Marshal.Copy(counter, 0, value, counter.Length);

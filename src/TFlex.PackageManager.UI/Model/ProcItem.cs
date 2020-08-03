@@ -16,9 +16,9 @@ namespace TFlex.PackageManager.Model
         public ProcItem(string path)
         {
             IPath = path;
+            Items = new List<ProcItem>();
             Links = new List<FileLink>();
             Pages = new Dictionary<Page, string>();
-            Items = new Dictionary<ProcItem, int>();
         }
 
         /// <summary>
@@ -38,6 +38,14 @@ namespace TFlex.PackageManager.Model
                 return level;
             }
         }
+
+        /// <summary>
+        /// Flags definition:
+        ///   0x0 None
+        ///   0x1 Is selected Item
+        ///   0x2 Is processed Item
+        /// </summary>
+        public int Flags { get; set; }
 
         /// <summary>
         /// The File Name.
@@ -60,6 +68,11 @@ namespace TFlex.PackageManager.Model
         public string Directory { get; set; }
 
         /// <summary>
+        /// Items to processing.
+        /// </summary>
+        public List<ProcItem> Items { get; }
+
+        /// <summary>
         /// Processed Links.
         /// </summary>
         public List<FileLink> Links { get; }
@@ -68,15 +81,6 @@ namespace TFlex.PackageManager.Model
         /// Processed Pages.
         /// </summary>
         public Dictionary<Page, string> Pages { get; }
-
-        /// <summary>
-        /// Items to processing.
-        /// Flags
-        ///   0x0 None
-        ///   0x1 Is selected Item
-        ///   0x2 Is processed Item
-        /// </summary>
-        public Dictionary<ProcItem, int> Items { get; }
 
         /// <summary>
         /// Parent processing Item.

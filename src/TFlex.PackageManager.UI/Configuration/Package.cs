@@ -19,14 +19,13 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="items">Selected Items.</param>
         public Package(Header cfg, string[] items)
         {
-            Items = new Dictionary<ProcItem, int>();
             InitPackage(cfg, items);
         }
 
         /// <summary>
         /// Package Items.
         /// </summary>
-        public Dictionary<ProcItem, int> Items { get; }
+        public List<ProcItem> Items { get; } = new List<ProcItem>();
 
         #region private methods
         /// <summary>
@@ -53,21 +52,21 @@ namespace TFlex.PackageManager.Configuration
                     flags |= 0x1;
                 var item = new ProcItem(p)
                 {
+                    Flags     = flags,
                     Directory = GetDirectory(cfg, p)
                 };
                 if (ext == "*.grb")
                 {
                     InitItems(cfg, item, items);
                 }
-                Items.Add(item, flags);
+                Items.Add(item);
             }
-            for (int i = 0; i < Items.Count; i++)
+            foreach (var i in Items)
             {
-                var item = Items.ElementAt(i);
-                if ((item.Value & 0x1) == 0x1)
+                if ((i.Flags & 0x1) == 0x1)
                     continue;
 
-                InitItems(item.Key);
+                InitItems(i);
             }
         }
 
@@ -89,10 +88,11 @@ namespace TFlex.PackageManager.Configuration
                     flags |= 0x1;
                 var subItem = new ProcItem(p)
                 {
+                    Flags     = flags,
                     Directory = GetDirectory(cfg, p),
-                    Parent = item
+                    Parent    = item
                 };
-                item.Items.Add(subItem, flags);
+                item.Items.Add(subItem);
                 InitItems(cfg, subItem, items);
             }
         }
@@ -103,17 +103,16 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="item"></param>
         private void InitItems(ProcItem item)
         {
-            for (int i = 0; i < item.Items.Count; i++)
+            foreach (var i in item.Items)
             {
-                var subItem = item.Items.ElementAt(i);
-                if ((subItem.Value & 0x1) == 0x1)
+                if ((i.Flags & 0x1) == 0x1)
                 {
-                    if (item.Parent != null)
-                        item.Parent.Items[item] |= 0x1;
+                    if (i.Parent != null)
+                        i.Parent.Flags |= 0x1;
                     else
-                        Items[item] |= 0x1;
+                        item.Flags |= 0x1;
                 }
-                InitItems(subItem.Key);
+                InitItems(i);
             }
         }
 
@@ -133,9 +132,9 @@ namespace TFlex.PackageManager.Configuration
         {
             foreach (var i in Items)
             {
-                if (i.Key.IPath == path)
+                if (i.IPath == path)
                     return true;
-                if (Contains(i.Key, path))
+                if (Contains(i, path))
                     return true;
             }
             return false;
@@ -145,9 +144,9 @@ namespace TFlex.PackageManager.Configuration
         {
             foreach (var i in item.Items)
             {
-                if (i.Key.IPath == path)
+                if (i.IPath == path)
                     return true;
-                Contains(i.Key, path);
+                Contains(i, path);
             }
             return false;
         }
