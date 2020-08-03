@@ -78,10 +78,7 @@ namespace TFlex.PackageManager.Common
             {
                 case ProcessingMode.SaveAs:
                 case ProcessingMode.Export:
-                    if ((document = Application.OpenDocument(item.IPath, false)) != null)
-                        logging.WriteLine(LogLevel.INFO, 
-                            string.Format(">>> Document [action: 0, path: {0}]",
-                            item.IPath));
+                    document = OpenDocument(item);
                     break;
                 case ProcessingMode.Import:
                     int iMode = (cfg.Translator as Translator3D).ImportMode;
@@ -92,7 +89,6 @@ namespace TFlex.PackageManager.Common
                             ? files.Prototype3DName
                             : files.Prototype3DAssemblyName;
                     }
-
                     if ((document = Application.NewDocument(prototype)) != null)
                         logging.WriteLine(LogLevel.INFO,
                             string.Format(">>> Document [action: 1, path: {0}]",
@@ -154,20 +150,49 @@ namespace TFlex.PackageManager.Common
         }
 
         /// <summary>
+        /// Open document.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private Document OpenDocument(ProcItem item)
+        {
+            var document = Application.OpenDocument(item.IPath, false);
+            if (document == null)
+                return null;
+            var md_4 = cfg.Translator as Files;
+            if (md_4.PMode == ProcessingMode.SaveAs)
+            {
+                item.FName = md_4.GetFileName(document, null);
+                item.OPath = Path.Combine(GetDirectory(item), item.FName + ".grb");
+            }
+            if (item.OPath != null && File.Exists(item.OPath))
+            {
+                document.Close();
+                document = Application.OpenDocument(item.OPath, false);
+            }
+            if (document != null)
+            {
+                logging.WriteLine(LogLevel.INFO,
+                    string.Format(">>> Document [action: 0, path: {0}]",
+                    item.IPath));
+            }
+            return document;
+        }
+
+        /// <summary>
         /// Save source document as copy.
         /// </summary>
         /// <param name="document">Source document.</param>
         /// <param name="item"></param>
         private void DocumentSaveAs(Document document, ProcItem item)
         {
+            if (item.OPath != null && File.Exists(item.OPath))
+                return;
+
             var md_4 = cfg.Translator as Files;
-
-            if (item.FName == null)
-                item.FName = md_4.GetFileName(document, null);
-            if (item.OPath == null)
-                item.OPath = Path.Combine(GetDirectory(item), item.FName + ".grb");
-
-            if (!File.Exists(item.OPath) && document.SaveAs(item.OPath))
+            item.FName = md_4.GetFileName(document, null);
+            item.OPath = Path.Combine(GetDirectory(item), item.FName + ".grb");
+            if (document.SaveAs(item.OPath))
             {
                 logging.WriteLine(LogLevel.INFO, 
                     string.Format(">>> Document [action: 4, path: {0}]",
