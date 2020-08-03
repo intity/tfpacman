@@ -44,6 +44,7 @@ namespace TFlex.PackageManager.Model
         ///   0x0 None
         ///   0x1 Is selected Item
         ///   0x2 Is processed Item
+        ///   0x4 Processing the subitem only, if no parent item is selected
         /// </summary>
         public int Flags { get; set; }
 

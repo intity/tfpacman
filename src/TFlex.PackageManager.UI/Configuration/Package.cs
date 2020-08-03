@@ -107,10 +107,10 @@ namespace TFlex.PackageManager.Configuration
             {
                 if ((i.Flags & 0x1) == 0x1)
                 {
-                    if (i.Parent != null)
-                        i.Parent.Flags |= 0x1;
+                    if (i.Parent != null && i.Parent.Flags == 0)
+                        i.Parent.Flags |= 0x1 | 0x4;
                     else
-                        item.Flags |= 0x1;
+                        item.Flags |= 0x1 | 0x4;
                 }
                 InitItems(i);
             }

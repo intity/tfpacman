@@ -186,6 +186,8 @@ namespace TFlex.PackageManager.Common
         /// <param name="item"></param>
         private void DocumentSaveAs(Document document, ProcItem item)
         {
+            if ((item.Flags & 0x4) == 0x4)
+                return;
             if (item.OPath != null && File.Exists(item.OPath))
                 return;
 
@@ -429,6 +431,8 @@ namespace TFlex.PackageManager.Common
         private void ProcessingLinks(Document parent, Document child, ProcItem item)
         {
             if (!(cfg.Modules as Modules).Links)
+                return;
+            if ((item.Flags & 0x4) == 0x4)
                 return;
 
             foreach (var link in parent.FileLinks)
