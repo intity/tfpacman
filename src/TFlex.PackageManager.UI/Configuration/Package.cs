@@ -66,7 +66,7 @@ namespace TFlex.PackageManager.Configuration
                 if ((i.Flags & 0x1) == 0x1)
                     continue;
 
-                InitItems(i);
+                InitFlags(i);
             }
         }
 
@@ -101,7 +101,7 @@ namespace TFlex.PackageManager.Configuration
         /// Initialize parent if subitem is selected.
         /// </summary>
         /// <param name="item"></param>
-        private void InitItems(ProcItem item)
+        private void InitFlags(ProcItem item)
         {
             foreach (var i in item.Items)
             {
@@ -110,7 +110,7 @@ namespace TFlex.PackageManager.Configuration
                     if (item.Flags == 0)
                         item.Flags |= 0x1 | 0x4;
                 }
-                InitItems(i);
+                InitFlags(i);
             }
         }
 
@@ -128,25 +128,25 @@ namespace TFlex.PackageManager.Configuration
 
         private bool Contains(string path)
         {
+            bool result = false;
             foreach (var i in Items)
             {
-                if (i.IPath == path)
-                    return true;
-                if (Contains(i, path))
-                    return true;
+                Contains(i, path, ref result);
+                if (result)
+                    break;
             }
-            return false;
+            return result;
         }
 
-        private bool Contains(ProcItem item, string path)
+        private void Contains(ProcItem item, string path, ref bool result)
         {
-            foreach (var i in item.Items)
+            if (item.IPath == path)
             {
-                if (i.IPath == path)
-                    return true;
-                Contains(i, path);
+                result = true;
+                return;
             }
-            return false;
+            foreach (var i in item.Items)
+                Contains(i, path, ref result);
         }
         #endregion
     }
