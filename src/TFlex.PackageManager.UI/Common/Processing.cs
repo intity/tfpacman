@@ -352,12 +352,14 @@ namespace TFlex.PackageManager.Common
         private void ProcessingItems(Document document, ProcItem item)
         {
             var tr = cfg.Translator as Translator;
-
-            ProcessingLinks(document);
-            ProcessingPages(document, item);
-            ProcessingProjections(document, item);
-            ProcessingVariables(document);
-            ProcessingExport(document, item);
+            if ((item.Flags & 0x4) != 0x4)
+            {
+                ProcessingLinks(document);
+                ProcessingPages(document, item);
+                ProcessingProjections(document, item);
+                ProcessingVariables(document);
+                ProcessingExport(document, item);
+            }
 
             foreach (var i in item.Items)
             {
@@ -460,7 +462,6 @@ namespace TFlex.PackageManager.Common
 
             var tr_0 = cfg.Translator as Translator_0;
             int count = 0;
-            string path = null;
             Dictionary<PageType, int> types = new Dictionary<PageType, int>
             {
                 { PageType.Normal,          0 },
@@ -529,33 +530,34 @@ namespace TFlex.PackageManager.Common
                     "--> Page [action: {0}, id: {1:X}, name: {2}, scale: {3}, type: {4}]", 
                     action, page.ObjectId, page.Name, page.Scale.Value, page.PageType));
 
-                if (tr_0.TMode != TranslatorType.Document)
+                if (tr_0.TMode == TranslatorType.Document)
+                    continue;
+
+                string suffix = string.Empty;
+                string extension = "." + tr_0.TargetExtension.ToLower();
+                item.FName = tr_0.GetFileName(document, page);
+                string path = Path.Combine(GetDirectory(item), item.FName);
+
+                switch (page.PageType)
                 {
-                    string suffix = string.Empty;
-                    string extension = "." + tr_0.TargetExtension.ToLower();
-                    item.FName = tr_0.GetFileName(document, page);
-                    path = Path.Combine(GetDirectory(item), item.FName);
-
-                    switch (page.PageType)
-                    {
-                        case PageType.Normal:          suffix = "_T0"; break;
-                        case PageType.Workplane:       suffix = "_T1"; break;
-                        case PageType.Auxiliary:       suffix = "_T3"; break;
-                        case PageType.Text:            suffix = "_T4"; break;
-                        case PageType.BillOfMaterials: suffix = "_T5"; break;
-                        case PageType.Circuit:         suffix = "_T6"; break;
-                    }
-
-                    if (types[page.PageType] > 1)
-                    {
-                        path += "_" + (count + 1).ToString() + extension;
-                        count++;
-                    }
-                    else if (item.Pages.ContainsValue(path + extension))
-                        path += suffix + extension;
-                    else
-                        path += extension;
+                    case PageType.Normal:          suffix = "_T0"; break;
+                    case PageType.Workplane:       suffix = "_T1"; break;
+                    case PageType.Auxiliary:       suffix = "_T3"; break;
+                    case PageType.Text:            suffix = "_T4"; break;
+                    case PageType.BillOfMaterials: suffix = "_T5"; break;
+                    case PageType.Circuit:         suffix = "_T6"; break;
                 }
+
+                if (types[page.PageType] > 1)
+                {
+                    path += "_" + (count + 1).ToString() + extension;
+                    count++;
+                }
+                else if (item.Pages.ContainsValue(path + extension))
+                    path += suffix + extension;
+                else
+                    path += extension;
+
                 item.Pages[page] = path;
             }
         }
