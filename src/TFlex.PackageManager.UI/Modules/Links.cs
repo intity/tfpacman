@@ -114,7 +114,7 @@ namespace TFlex.PackageManager.Configuration
         /// Examples
         ///   template 1: {asm}\{part}
         ///   template 2: {asm}\{cat:asm.name}\{part}
-        ///   template 3: {asm[0]}\{part}
+        ///   template 3: {asm:1}\{part}
         /// </summary>
         /// <param name="item">The processing Item.</param>
         /// <returns>
@@ -130,6 +130,7 @@ namespace TFlex.PackageManager.Configuration
 
             for (int i = 0; i < matches.Count; i++)
             {
+                var group = matches[i].Value.Split(':');
                 if (i == 0)
                 {
                     if (item.Parent == null)
@@ -138,15 +139,11 @@ namespace TFlex.PackageManager.Configuration
                         return null;
 
                     int level = item.Parent.Level;
-                    var regex = new Regex(@"\[(.*?)\]");
-                    var match = regex.Match(matches[i].Value);
-                    if (match.Length == 3)
+                    if (group.Length > 1)
                     {
-                        var value = match.Value.Substring(1, 1);
+                        var value = group[1].Substring(0, 1);
                         if (value.IsDigit(0))
-                        {
                             level = int.Parse(value);
-                        }
                     }
 
                     if (level != item.Parent.Level)
@@ -155,7 +152,6 @@ namespace TFlex.PackageManager.Configuration
                 
                 if (i == 1 && matches[i].Value.Contains("cat"))
                 {
-                    var group = matches[i].Value.Split(':');
                     if (group.Length < 2)
                         return null;
                     if (group[1].Substring(0, 3) != "asm")
