@@ -321,10 +321,9 @@ namespace TFlex.PackageManager.Common
         /// <param name="item">The Processing Item.</param>
         private void ProcessingEnd(Document document, ProcItem item)
         {
-            var tr = cfg.Translator as Translator;
             if (document.Changed)
             {
-                if (tr.PMode == ProcessingMode.Export)
+                if (document.FileName.Contains(cfg.InitialCatalog))
                 {
                     document.CancelChanges();
                     logging.WriteLine(LogLevel.INFO,
