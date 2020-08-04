@@ -385,7 +385,7 @@ namespace TFlex.PackageManager.Common
                 i.Flags |= 0x2;
             }
 
-            if (item.Links.Count > 0)
+            if (item.Links.Count > 0 && (item.Flags & 0x4) != 0x4)
             {
                 document.BeginChanges("Regenerate Links");
                 document.Regenerate(new RegenerateOptions
