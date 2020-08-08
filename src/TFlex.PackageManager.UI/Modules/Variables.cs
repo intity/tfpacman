@@ -16,7 +16,7 @@ namespace TFlex.PackageManager.Configuration
     [CustomCategoryOrder(Resources.VARIABLES, 3)]
     public class Variables : Files
     {
-        public Variables(string ext) : base(ext)
+        public Variables()
         {
             AddVariables    = new VariableCollection("AddVariables");
             EditVariables   = new VariableCollection("EditVariables");

@@ -34,11 +34,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ext">Target extension the file.</param>
-        public Translator_9(string ext = "PDF") : base (ext)
-        {
-            
-        }
+        public Translator_9() { }
 
         #region public properies
         /// <summary>
@@ -177,6 +173,7 @@ namespace TFlex.PackageManager.Configuration
                 data_4_3));
 
             PMode = ProcessingMode.Export;
+            OExtension = ".pdf";
             return data;
         }
 

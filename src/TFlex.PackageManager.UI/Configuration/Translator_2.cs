@@ -1,4 +1,5 @@
-﻿using TFlex.Configuration.Attributes;
+﻿using System.Xml.Linq;
+using TFlex.Configuration.Attributes;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Properties;
@@ -15,14 +16,32 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ext">Target extension the file.</param>
-        public Translator_2(string ext = "SAT") : base (ext)
+        public Translator_2()
         {
             //extension = SAT | SAB
         }
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Acis;
+        internal override ProcessingMode PMode
+        {
+            get => base.PMode;
+            set
+            {
+                base.PMode = value;
+                switch (base.PMode)
+                {
+                    case ProcessingMode.Export:
+                        IExtension = ".grb";
+                        OExtension = ".sat";
+                        break;
+                    case ProcessingMode.Import:
+                        IExtension = ".sat";
+                        OExtension = ".grb";
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region internal methods
@@ -56,6 +75,12 @@ namespace TFlex.PackageManager.Configuration
             {
                 logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", path));
             }
+        }
+
+        internal override XElement NewTranslator()
+        {
+            OExtension = ".sat";
+            return base.NewTranslator();
         }
         #endregion
     }

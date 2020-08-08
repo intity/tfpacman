@@ -47,7 +47,7 @@ namespace TFlex.PackageManager.Configuration
         /// Constructor.
         /// </summary>
         /// <param name="ext">Target extension the file.</param>
-        public Translator_1(string ext = "DWG") : base (ext)
+        public Translator_1()
         {
             autocadExportFileVersion             = 3;
             convertAreas                         = 0;
@@ -79,11 +79,11 @@ namespace TFlex.PackageManager.Configuration
                 if (extension != value)
                 {
                     extension = value;
-                    switch (extension)
+                    switch (value)
                     {
-                        case 0: TargetExtension = "DWG"; break;
-                        case 1: TargetExtension = "DXF"; break;
-                        case 2: TargetExtension = "DXB"; break;
+                        case 0: OExtension = ".dwg"; break;
+                        case 1: OExtension = ".dxf"; break;
+                        case 2: OExtension = ".dxb"; break;
                     }
                 }
             }
@@ -377,6 +377,7 @@ namespace TFlex.PackageManager.Configuration
                 data_4_7));
 
             PMode = ProcessingMode.Export;
+            OExtension = ".dwg";
             return data;
         }
 
@@ -390,9 +391,9 @@ namespace TFlex.PackageManager.Configuration
                 case "TargetExtension":
                     switch (a.Value)
                     {
-                        case "DWG": extension = 0; break;
-                        case "DXF": extension = 1; break;
-                        case "DXB": extension = 2; break;
+                        case ".dwg": extension = 0; break;
+                        case ".dxf": extension = 1; break;
+                        case ".dxb": extension = 2; break;
                     }
                     break;
                 case "AutocadExportFileVersion":

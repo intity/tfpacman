@@ -26,11 +26,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ext">Target extension the file.</param>
-        public Translator_7(string ext = "JT") : base (ext)
-        {
-            
-        }
+        public Translator_7() { }
 
         #region public properties
         /// <summary>
@@ -61,6 +57,25 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Jt;
+        internal override ProcessingMode PMode
+        {
+            get => base.PMode;
+            set
+            {
+                base.PMode = value;
+                switch (base.PMode)
+                {
+                    case ProcessingMode.Export:
+                        IExtension = ".grb";
+                        OExtension = ".jt";
+                        break;
+                    case ProcessingMode.Import:
+                        IExtension = ".jt";
+                        OExtension = ".grb";
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region internal methods
@@ -107,12 +122,11 @@ namespace TFlex.PackageManager.Configuration
         internal override XElement NewTranslator()
         {
             XElement data = base.NewTranslator();
-
             data_4_0 = new XAttribute("value", Version.ToString());
             data.Add(new XElement("parameter",
                 new XAttribute("name", "Version"),
                 data_4_0));
-
+            OExtension = ".jt";
             return data;
         }
 

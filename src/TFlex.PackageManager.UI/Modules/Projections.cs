@@ -26,7 +26,7 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_2_3;
         #endregion
 
-        public Projections(string ext) : base(ext)
+        public Projections()
         {
             projectionNames   = new string[] { };
             excludeProjection = false;

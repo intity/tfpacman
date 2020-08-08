@@ -26,7 +26,7 @@ namespace TFlex.PackageManager.Configuration
         readonly char[] pattern;
         #endregion
 
-        public Links(string ext): base (ext)
+        public Links()
         {
             linkTemplate = string.Empty;
 

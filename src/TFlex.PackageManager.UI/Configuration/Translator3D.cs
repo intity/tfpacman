@@ -78,7 +78,7 @@ namespace TFlex.PackageManager.Configuration
         /// Constructor.
         /// </summary>
         /// <param name="ext">Target extension the file.</param>
-        public Translator3D(string ext) : base (ext)
+        public Translator3D()
         {
             colorSource                = 1;
             exportSheetBodies          = true;

@@ -35,13 +35,8 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="items">Selected Items.</param>
         private void InitPackage(Header cfg, string[] items)
         {
-            var ext = "*.grb";
+            var ext = "*" + (cfg.Translator as Files).IExtension;
             var opt = SearchOption.AllDirectories;
-            var mode = (cfg.Translator as Translator).PMode;
-            if (mode == ProcessingMode.Import)
-            {
-                ext = "*." + (cfg.Translator as Files).TargetExtension.ToLower();
-            }
             var files = Directory.GetFiles(cfg.InitialCatalog, ext, opt);
             foreach (var p in files)
             {

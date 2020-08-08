@@ -28,11 +28,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ext">Target extension the file.</param>
-        public Translator_6(string ext = "IGS") : base (ext)
-        {
-            
-        }
+        public Translator_6() { }
 
         #region public properties
         /// <summary>
@@ -84,6 +80,25 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Iges;
+        internal override ProcessingMode PMode
+        {
+            get => base.PMode;
+            set
+            {
+                base.PMode = value;
+                switch (base.PMode)
+                {
+                    case ProcessingMode.Export:
+                        IExtension = ".grb";
+                        OExtension = ".igs";
+                        break;
+                    case ProcessingMode.Import:
+                        IExtension = ".igs";
+                        OExtension = ".grb";
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region internal methods
@@ -124,17 +139,15 @@ namespace TFlex.PackageManager.Configuration
         internal override XElement NewTranslator()
         {
             XElement data = base.NewTranslator();
-
             data_4_0 = new XAttribute("value", ConvertAnalyticGeometryToNurbs ? "1" : "0");
             data_4_1 = new XAttribute("value", SaveSolidBodiesAsFaceSet ? "1" : "0");
-
             data.Add(new XElement("parameter",
                 new XAttribute("name", "ConvertAnalyticGeometryToNurbs"),
                 data_4_0));
             data.Add(new XElement("parameter",
                 new XAttribute("name", "SaveSolidBodiesAsFaceSet"),
                 data_4_1));
-
+            OExtension = ".igs";
             return data;
         }
 

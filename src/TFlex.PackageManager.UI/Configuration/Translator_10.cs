@@ -26,11 +26,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ext">Target extension the file.</param>
-        public Translator_10(string ext = "STP") : base (ext)
-        {
-
-        }
+        public Translator_10() { }
 
         #region public properties
         /// <summary>
@@ -62,6 +58,25 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Step;
+        internal override ProcessingMode PMode
+        {
+            get => base.PMode;
+            set
+            {
+                base.PMode = value;
+                switch (base.PMode)
+                {
+                    case ProcessingMode.Export:
+                        IExtension = ".grb";
+                        OExtension = ".stp";
+                        break;
+                    case ProcessingMode.Import:
+                        IExtension = ".stp";
+                        OExtension = ".grb";
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region internal methods
@@ -109,12 +124,11 @@ namespace TFlex.PackageManager.Configuration
         internal override XElement NewTranslator()
         {
             XElement data = base.NewTranslator();
-
             data_4_0 = new XAttribute("value", Protocol.ToString());
             data.Add(new XElement("parameter",
                 new XAttribute("name", "Protocol"),
                 data_4_0));
-
+            OExtension = ".stp";
             return data;
         }
 

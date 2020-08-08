@@ -25,9 +25,11 @@ namespace TFlex.PackageManager.Configuration
     public class Files : Translator, INotifyDataErrorInfo
     {
         #region private fields
-        string targetExtension;
+        string iExtension;
+        string oExtension;
         string fileNameSuffix;
         string templateFileName;
+        XAttribute data_4_0;
         XAttribute data_4_1;
         XAttribute data_4_2;
         XAttribute data_4_3;
@@ -36,35 +38,53 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="extension">Target extension the file.</param>
-        public Files(string extension)
+        public Files()
         {
-            targetExtension  = extension;
+            iExtension       = ".grb";
+            oExtension       = ".grb";
             fileNameSuffix   = string.Empty;
             templateFileName = string.Empty;
 
             Errors = new Dictionary<string, List<string>>();
         }
 
-        #region public properties
+        #region internal properties
         /// <summary>
-        /// The target extension.
+        /// The input file extension.
         /// </summary>
-        [Browsable(false)]
-        public string TargetExtension
+        internal virtual string IExtension
         {
-            get => targetExtension;
+            get => iExtension;
             set
             {
-                if (targetExtension != value)
+                if (iExtension != value)
                 {
-                    targetExtension = value;
-                    data_4_1.Value = value;
-                    OnPropertyChanged("TargetExtension");
+                    iExtension = value;
+                    data_4_0.Value = value;
+                    OnPropertyChanged("IExtension");
                 }
             }
         }
 
+        /// <summary>
+        /// The output file extension.
+        /// </summary>
+        internal virtual string OExtension
+        {
+            get => oExtension;
+            set
+            {
+                if (oExtension != value)
+                {
+                    oExtension = value;
+                    data_4_1.Value = value;
+                    OnPropertyChanged("OExtension");
+                }
+            }
+        }
+        #endregion
+
+        #region public properties
         /// <summary>
         /// The file name suffix.
         /// </summary>
@@ -147,13 +167,15 @@ namespace TFlex.PackageManager.Configuration
         internal override XElement NewTranslator()
         {
             XElement data = base.NewTranslator();
-
-            data_4_1 = new XAttribute("value", TargetExtension);
+            data_4_0 = new XAttribute("value", IExtension);
+            data_4_1 = new XAttribute("value", OExtension);
             data_4_2 = new XAttribute("value", FileNameSuffix);
             data_4_3 = new XAttribute("value", TemplateFileName);
-
             data.Add(new XElement("parameter",
-                new XAttribute("name", "TargetExtension"),
+                new XAttribute("name", "IExtension"),
+                data_4_0));
+            data.Add(new XElement("parameter",
+                new XAttribute("name", "OExtension"),
                 data_4_1));
             data.Add(new XElement("parameter",
                 new XAttribute("name", "FileNameSuffix"),
@@ -161,7 +183,6 @@ namespace TFlex.PackageManager.Configuration
             data.Add(new XElement("parameter",
                 new XAttribute("name", "TemplateFileName"),
                 data_4_3));
-
             return data;
         }
 
@@ -170,8 +191,12 @@ namespace TFlex.PackageManager.Configuration
             var a = element.Attribute("value");
             switch (element.Attribute("name").Value)
             {
-                case "TargetExtension":
-                    targetExtension = a.Value;
+                case "IExtension":
+                    iExtension = a.Value;
+                    data_4_0 = a;
+                    break;
+                case "OExtension":
+                    oExtension = a.Value;
                     data_4_1 = a;
                     break;
                 case "FileNameSuffix":

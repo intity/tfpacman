@@ -35,11 +35,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ext">Target extension the file.</param>
-        public Translator_3(string ext = "BMP") : base (ext)
-        {
-            
-        }
+        public Translator_3() { }
 
         #region public properties
         /// <summary>
@@ -65,11 +61,11 @@ namespace TFlex.PackageManager.Configuration
                     extension = value;
                     switch (extension)
                     {
-                        case 0: TargetExtension = "BMP";  break;
-                        case 1: TargetExtension = "JPEG"; break;
-                        case 2: TargetExtension = "GIF";  break;
-                        case 3: TargetExtension = "TIFF"; break;
-                        case 4: TargetExtension = "PNG";  break;
+                        case 0: OExtension = ".bmp" ; break;
+                        case 1: OExtension = ".jpeg"; break;
+                        case 2: OExtension = ".gif" ; break;
+                        case 3: OExtension = ".tiff"; break;
+                        case 4: OExtension = ".png" ; break;
                     }
                 }
             }
@@ -182,6 +178,7 @@ namespace TFlex.PackageManager.Configuration
                 data_4_2));
 
             PMode = ProcessingMode.Export;
+            OExtension = ".bmp";
             return data;
         }
 
@@ -195,11 +192,11 @@ namespace TFlex.PackageManager.Configuration
                 case "TargetExtension":
                     switch (a.Value)
                     {
-                        case "BMP" : extension = 0; break;
-                        case "JPEG": extension = 1; break;
-                        case "GIF" : extension = 2; break;
-                        case "TIFF": extension = 3; break;
-                        case "PNG" : extension = 4; break;
+                        case ".bmp" : extension = 0; break;
+                        case ".jpeg": extension = 1; break;
+                        case ".gif" : extension = 2; break;
+                        case ".tiff": extension = 3; break;
+                        case ".png" : extension = 4; break;
                     }
                     break;
                 case "ScreenLayers":

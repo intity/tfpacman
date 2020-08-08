@@ -228,7 +228,7 @@ namespace TFlex.PackageManager.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = md_4.GetFileName(document, null);
-                            item.OPath = Path.Combine(item.Directory, item.FName + ".sat");
+                            item.OPath = Path.Combine(item.Directory, item.FName + tr_2.OExtension);
                             tr_2.Export(document, item.OPath, logging);
                             break;
                         case ProcessingMode.Import:
@@ -250,7 +250,7 @@ namespace TFlex.PackageManager.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = md_4.GetFileName(document, null);
-                            item.OPath = Path.Combine(item.Directory, item.FName + ".igs");
+                            item.OPath = Path.Combine(item.Directory, item.FName + tr_6.OExtension);
                             tr_6.Export(document, item.OPath, logging);
                             break;
                         case ProcessingMode.Import:
@@ -272,7 +272,7 @@ namespace TFlex.PackageManager.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = md_4.GetFileName(document, null);
-                            item.OPath = Path.Combine(item.Directory, item.FName + ".jt");
+                            item.OPath = Path.Combine(item.Directory, item.FName + tr_7.OExtension);
                             tr_7.Export(document, item.OPath, logging);
                             break;
                         case ProcessingMode.Import:
@@ -294,7 +294,7 @@ namespace TFlex.PackageManager.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = md_4.GetFileName(document, null);
-                            item.OPath = Path.Combine(item.Directory, item.FName + ".stp");
+                            item.OPath = Path.Combine(item.Directory, item.FName + tr_10.OExtension);
                             tr_10.Export(document, item.OPath, logging);
                             break;
                         case ProcessingMode.Import:
@@ -534,9 +534,9 @@ namespace TFlex.PackageManager.Common
                     continue;
 
                 string suffix = string.Empty;
-                string extension = "." + tr_0.TargetExtension.ToLower();
+                string ext = tr_0.OExtension;
                 item.FName = tr_0.GetFileName(document, page);
-                string path = Path.Combine(GetDirectory(item), item.FName);
+                item.OPath = Path.Combine(GetDirectory(item), item.FName);
 
                 switch (page.PageType)
                 {
@@ -550,15 +550,15 @@ namespace TFlex.PackageManager.Common
 
                 if (types[page.PageType] > 1)
                 {
-                    path += "_" + (count + 1).ToString() + extension;
+                    item.OPath += "_" + (count + 1).ToString() + ext;
                     count++;
                 }
-                else if (item.Pages.ContainsValue(path + extension))
-                    path += suffix + extension;
+                else if (item.Pages.ContainsValue(item.OPath + ext))
+                    item.OPath += suffix + ext;
                 else
-                    path += extension;
+                    item.OPath += ext;
 
-                item.Pages[page] = path;
+                item.Pages[page] = item.OPath;
             }
         }
 

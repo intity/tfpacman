@@ -10,8 +10,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ext">Target extension the file.</param>
-        public Translator_0(string ext = "GRB") : base (ext) { }
+        public Translator_0() { }
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Document;

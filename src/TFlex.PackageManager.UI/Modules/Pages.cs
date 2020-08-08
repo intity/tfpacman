@@ -32,7 +32,7 @@ namespace TFlex.PackageManager.Configuration
         XAttribute data_1_5;
         #endregion
 
-        public Pages(string ext) : base(ext)
+        public Pages()
         {
             pageNames   = new string[] { };
             excludePage = false;
