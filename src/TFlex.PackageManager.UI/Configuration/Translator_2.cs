@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Diagnostics;
+using System.Xml.Linq;
 using TFlex.Configuration.Attributes;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
@@ -79,8 +80,9 @@ namespace TFlex.PackageManager.Configuration
 
         internal override XElement NewTranslator()
         {
+            XElement data = base.NewTranslator();
             OExtension = ".sat";
-            return base.NewTranslator();
+            return data;
         }
         #endregion
     }
