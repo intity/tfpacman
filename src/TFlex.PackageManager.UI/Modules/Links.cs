@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
+using System.Xml;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
@@ -16,13 +16,11 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// Links extension module.
     /// </summary>
-    [CustomCategoryOrder(Resources.LINKS, 0)]
-    public class Links : Pages
+    [CustomCategoryOrder(Resources.LINKS, 0), Serializable]
+    public class Links : Files
     {
         #region private fields
         string linkTemplate;
-        XAttribute data_0_1;
-
         readonly char[] pattern;
         #endregion
 
@@ -57,7 +55,6 @@ namespace TFlex.PackageManager.Configuration
                     return;
 
                 linkTemplate = value;
-                data_0_1.Value = value;
 
                 string name = "LinkTemplate";
                 string path = value;
@@ -81,30 +78,33 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region internal methods
-        internal override XElement NewTranslator()
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
         {
-            XElement data = base.NewTranslator();
-            data_0_1 = new XAttribute("value", LinkTemplate);
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "LinkTemplate"),
-                data_0_1));
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            base.LoadParameter(element);
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
+            base.ReadXml(reader);
+            for (int i = 0; i < 1 && reader.Read(); i++)
             {
-                case "LinkTemplate":
-                    linkTemplate = a.Value;
-                    data_0_1 = a;
-                    break;
+                switch (reader.GetAttribute(0))
+                {
+                    case "LinkTemplate":
+                        linkTemplate = reader.GetAttribute(1);
+                        break;
+                }
             }
         }
 
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "LinkTemplate");
+            writer.WriteAttributeString("value", LinkTemplate);
+            writer.WriteEndElement();
+        }
+        #endregion
+
+        #region internal methods
         /// <summary>
         /// Get external link by the link template.
         /// Keywords

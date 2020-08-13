@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using System.Xml.Linq;
-using TFlex.Configuration.Attributes;
+﻿using System;
+using System.Diagnostics;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Properties;
 
 #pragma warning disable CA1707
 
@@ -12,6 +10,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The ACIS-translator class.
     /// </summary>
+    [Serializable]
     public class Translator_2 : Translator3D
     {
         /// <summary>
@@ -19,7 +18,7 @@ namespace TFlex.PackageManager.Configuration
         /// </summary>
         public Translator_2()
         {
-            //extension = SAT | SAB
+            PMode = ProcessingMode.Export;
         }
 
         #region internal properties
@@ -76,13 +75,6 @@ namespace TFlex.PackageManager.Configuration
             {
                 logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", path));
             }
-        }
-
-        internal override XElement NewTranslator()
-        {
-            XElement data = base.NewTranslator();
-            OExtension = ".sat";
-            return data;
         }
         #endregion
     }

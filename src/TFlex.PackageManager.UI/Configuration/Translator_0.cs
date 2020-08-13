@@ -1,27 +1,25 @@
-﻿using System.Xml.Linq;
+﻿using System;
 
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
-    /// The document translator class.
+    /// The Document translator class.
     /// </summary>
-    public class Translator_0 : Links
+    [Serializable]
+    public class Translator_0 : Variables
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public Translator_0() { }
+        public Translator_0()
+        {
+            IExtension = ".grb";
+            OExtension = ".grb";
+        }
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Document;
-        #endregion
-
-        #region internal methods
-        internal override XElement NewTranslator()
-        {
-            PMode = ProcessingMode.SaveAs;
-            return base.NewTranslator();
-        }
+        internal override ProcessingMode PMode => ProcessingMode.SaveAs;
         #endregion
     }
 }

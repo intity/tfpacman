@@ -38,10 +38,7 @@ namespace TFlex.PackageManager.Editors
                 Mode = BindingMode.TwoWay
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
-
-            var m = Value as Modules;
-            comboBox.SelectedIndex = m.Index;
-            //Debug.WriteLine("ResolveEditor");
+            comboBox.SelectedIndex = (Value as Modules).Index;
             return this;
         }
 

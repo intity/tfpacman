@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing.Design;
-using System.Xml.Linq;
+using System.Xml;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -15,20 +16,21 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The IGES-translator class.
     /// </summary>
+    [Serializable]
     public class Translator_6 : Translator3D
     {
         #region private fields
         bool convertAnalyticGeometryToNurbs;
         bool saveSolidBodiesAsFaceSet;
-
-        XAttribute data_4_0;
-        XAttribute data_4_1;
         #endregion
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public Translator_6() { }
+        public Translator_6()
+        {
+            PMode = ProcessingMode.Export;
+        }
 
         #region public properties
         /// <summary>
@@ -47,8 +49,6 @@ namespace TFlex.PackageManager.Configuration
                 if (convertAnalyticGeometryToNurbs != value)
                 {
                     convertAnalyticGeometryToNurbs = value;
-                    data_4_0.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ConvertAnalyticGeometryToNurbs");
                 }
             }
@@ -70,8 +70,6 @@ namespace TFlex.PackageManager.Configuration
                 if (saveSolidBodiesAsFaceSet != value)
                 {
                     saveSolidBodiesAsFaceSet = value;
-                    data_4_1.Value = value ? "1" : "0";
-
                     OnPropertyChanged("SaveSolidBodiesAsFaceSet");
                 }
             }
@@ -98,6 +96,40 @@ namespace TFlex.PackageManager.Configuration
                         break;
                 }
             }
+        }
+        #endregion
+
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
+        {
+            base.ReadXml(reader);
+            for (int i = 0; i < 2 && reader.Read(); i++)
+            {
+                switch (reader.GetAttribute(0))
+                {
+                    case "ConvertAnalyticGeometryToNurbs":
+                        convertAnalyticGeometryToNurbs = reader.GetAttribute(1) == "1";
+                        break;
+                    case "SaveSolidBodiesAsFaceSet":
+                        saveSolidBodiesAsFaceSet = reader.GetAttribute(1) == "1";
+                        break;
+                }
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ConvertAnalyticGeometryToNurbs");
+            writer.WriteAttributeString("value", ConvertAnalyticGeometryToNurbs ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "SaveSolidBodiesAsFaceSet");
+            writer.WriteAttributeString("value", SaveSolidBodiesAsFaceSet ? "1" : "0");
+            writer.WriteEndElement();
         }
         #endregion
 
@@ -133,39 +165,6 @@ namespace TFlex.PackageManager.Configuration
             if (export.Export(path))
             {
                 logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", path));
-            }
-        }
-
-        internal override XElement NewTranslator()
-        {
-            XElement data = base.NewTranslator();
-            data_4_0 = new XAttribute("value", ConvertAnalyticGeometryToNurbs ? "1" : "0");
-            data_4_1 = new XAttribute("value", SaveSolidBodiesAsFaceSet ? "1" : "0");
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ConvertAnalyticGeometryToNurbs"),
-                data_4_0));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "SaveSolidBodiesAsFaceSet"),
-                data_4_1));
-            OExtension = ".igs";
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            base.LoadParameter(element);
-
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
-            {
-                case "ConvertAnalyticGeometryToNurbs":
-                    convertAnalyticGeometryToNurbs = a.Value == "1";
-                    data_4_0 = a;
-                    break;
-                case "SaveSolidBodiesAsFaceSet":
-                    saveSolidBodiesAsFaceSet = a.Value == "1";
-                    data_4_1 = a;
-                    break;
             }
         }
         #endregion

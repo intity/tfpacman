@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Globalization;
-using System.Xml.Linq;
+using System.Xml;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Editors;
@@ -14,16 +14,13 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// Projections extension module.
     /// </summary>
-    [CustomCategoryOrder(Resources.PROJECTIONS, 2)]
-    public class Projections : Variables
+    [CustomCategoryOrder(Resources.PROJECTIONS, 2), Serializable]
+    public class Projections : Pages
     {
         #region private fields
         string[] projectionNames;
         bool excludeProjection;
         decimal projectionScale;
-        XAttribute data_2_1;
-        XAttribute data_2_2;
-        XAttribute data_2_3;
         #endregion
 
         public Projections()
@@ -51,7 +48,6 @@ namespace TFlex.PackageManager.Configuration
                 if (projectionNames != value)
                 {
                     projectionNames = value;
-                    data_2_1.Value = value.ToString("\r\n");
                     OnPropertyChanged("ProjectionNames");
                 }
             }
@@ -69,7 +65,6 @@ namespace TFlex.PackageManager.Configuration
                 if (excludeProjection != value)
                 {
                     excludeProjection = value;
-                    data_2_2.Value = value ? "1" : "0";
                     OnPropertyChanged("ExcludeProjection");
                 }
             }
@@ -91,56 +86,56 @@ namespace TFlex.PackageManager.Configuration
                 if (projectionScale != value)
                 {
                     projectionScale = value;
-                    data_2_3.Value = value
-                        .ToString(CultureInfo.InvariantCulture);
                     OnPropertyChanged("ProjectionScale");
                 }
             }
         }
         #endregion
 
-        #region internal methods
-        internal override XElement NewTranslator()
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
         {
-            XElement data = base.NewTranslator();
-            data_2_1 = new XAttribute("value", ProjectionNames.ToString("\r\n"));
-            data_2_2 = new XAttribute("value", ExcludeProjection ? "1" : "0");
-            data_2_3 = new XAttribute("value", ProjectionScale.ToString(CultureInfo.InvariantCulture));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ProjectionNames"),
-                data_2_1));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExcludeProjection"),
-                data_2_2));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ProjectionScale"),
-                data_2_3));
-            return data;
+            base.ReadXml(reader);
+            for (int i = 0; i < 3 && reader.Read(); i++)
+            {
+                switch (reader.GetAttribute(0))
+                {
+                    case "ProjectionNames":
+                        var value = reader.GetAttribute(1);
+                        projectionNames = value.Length > 0 
+                            ? value.Replace("\r", "").Split('\n') 
+                            : new string[] { };
+                        break;
+                    case "ExcludeProjection":
+                        excludeProjection = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ProjectionScale":
+                        projectionScale = decimal.Parse(reader.GetAttribute(1), 
+                            CultureInfo.InvariantCulture);
+                        break;
+                }
+            }
         }
 
-        internal override void LoadParameter(XElement element)
+        public override void WriteXml(XmlWriter writer)
         {
-            base.LoadParameter(element);
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
-            {
-                case "ProjectionNames":
-                    projectionNames = a.Value.Length > 0
-                        ? a.Value.Replace("\r", "").Split('\n')
-                        : new string[] { };
-                    data_2_1 = a;
-                    break;
-                case "ExcludeProjection":
-                    excludeProjection = a.Value == "1";
-                    data_2_2 = a;
-                    break;
-                case "ProjectionScale":
-                    projectionScale = decimal.Parse(a.Value,
-                        NumberStyles.Float,
-                        CultureInfo.InvariantCulture);
-                    data_2_3 = a;
-                    break;
-            }
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ProjectionNames");
+            writer.WriteAttributeString("value", ProjectionNames.ToString("\r\n"));
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExcludeProjection");
+            writer.WriteAttributeString("value", ExcludeProjection ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ProjectionScale");
+            writer.WriteAttributeString("value", ProjectionScale
+                .ToString(CultureInfo.InvariantCulture));
+            writer.WriteEndElement();
         }
         #endregion
     }

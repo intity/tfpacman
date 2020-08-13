@@ -1,7 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing.Design;
 using System.Globalization;
-using System.Xml.Linq;
+using System.Xml;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -16,6 +17,7 @@ namespace TFlex.PackageManager.Configuration
     /// </summary>
     [CustomCategoryOrder(Resources.TRANSLATOR_3D, 5)]
     [CustomCategoryOrder(Resources.TRANSLATOR_3D, 6)]
+    [Serializable]
     public class Translator3D : Files
     {
         #region private fields
@@ -45,33 +47,6 @@ namespace TFlex.PackageManager.Configuration
         bool checkImportGeomerty;
         bool updateProductStructure;
         bool addBodyRecordsInProductStructure;
-
-        XAttribute data_4_1;
-        XAttribute data_4_2;
-        XAttribute data_4_3;
-        XAttribute data_4_4;
-        XAttribute data_4_5;
-        XAttribute data_4_6;
-        XAttribute data_4_7;
-        XAttribute data_4_8;
-        XAttribute data_4_9;
-        XAttribute data_4_A;
-        XAttribute data_4_B;
-        XAttribute data_5_1;
-        XAttribute data_5_2;
-        XAttribute data_5_3;
-        XAttribute data_5_4;
-        XAttribute data_5_5;
-        XAttribute data_5_6;
-        XAttribute data_5_7;
-        XAttribute data_5_8;
-        XAttribute data_5_9;
-        XAttribute data_5_A;
-        XAttribute data_5_B;
-        XAttribute data_5_C;
-        XAttribute data_5_D;
-        XAttribute data_5_E;
-        XAttribute data_5_F;
         #endregion
 
         /// <summary>
@@ -115,8 +90,6 @@ namespace TFlex.PackageManager.Configuration
                 if (exportMode != value)
                 {
                     exportMode = value;
-                    data_4_1.Value = value.ToString();
-
                     OnPropertyChanged("ExportMode");
                 }
             }
@@ -140,8 +113,6 @@ namespace TFlex.PackageManager.Configuration
                 if (colorSource != value)
                 {
                     colorSource = value;
-                    data_4_2.Value = value.ToString();
-
                     OnPropertyChanged("ColorSource");
                 }
             }
@@ -163,8 +134,6 @@ namespace TFlex.PackageManager.Configuration
                 if (exportSolidBodies != value)
                 {
                     exportSolidBodies = value;
-                    data_4_3.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ExportSolidBodies");
                 }
             }
@@ -186,8 +155,6 @@ namespace TFlex.PackageManager.Configuration
                 if (exportSheetBodies != value)
                 {
                     exportSheetBodies = value;
-                    data_4_4.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ExportSheetBodies");
                 }
             }
@@ -209,8 +176,6 @@ namespace TFlex.PackageManager.Configuration
                 if (exportWireBodies != value)
                 {
                     exportWireBodies = value;
-                    data_4_5.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ExportWireBodies");
                 }
             }
@@ -232,8 +197,6 @@ namespace TFlex.PackageManager.Configuration
                 if (export3DPictures != value)
                 {
                     export3DPictures = value;
-                    data_4_6.Value = value ? "1" : "0";
-
                     OnPropertyChanged("Export3DPictures");
                 }
             }
@@ -255,8 +218,6 @@ namespace TFlex.PackageManager.Configuration
                 if (exportAnotation != value)
                 {
                     exportAnotation = value;
-                    data_4_7.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ExportAnotation");
                 }
             }
@@ -278,8 +239,6 @@ namespace TFlex.PackageManager.Configuration
                 if (exportWelds != value)
                 {
                     exportWelds = value;
-                    data_4_8.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ExportWelds");
                 }
             }
@@ -301,8 +260,6 @@ namespace TFlex.PackageManager.Configuration
                 if (exportCurves != value)
                 {
                     exportCurves = value;
-                    data_4_9.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ExportCurves");
                 }
             }
@@ -324,8 +281,6 @@ namespace TFlex.PackageManager.Configuration
                 if (exportContours != value)
                 {
                     exportContours = value;
-                    data_4_A.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ExportContours");
                 }
             }
@@ -347,8 +302,6 @@ namespace TFlex.PackageManager.Configuration
                 if (simplifyGeometry != value)
                 {
                     simplifyGeometry = value;
-                    data_4_B.Value = value ? "1" : "0";
-
                     OnPropertyChanged("SimplifyGeometry");
                 }
             }
@@ -373,8 +326,6 @@ namespace TFlex.PackageManager.Configuration
                 if (importMode != value)
                 {
                     importMode = value;
-                    data_5_1.Value = value.ToString();
-
                     OnPropertyChanged("ImportMode");
                 }
             }
@@ -399,8 +350,6 @@ namespace TFlex.PackageManager.Configuration
                 if (heal != value)
                 {
                     heal = value;
-                    data_5_2.Value = value.ToString();
-
                     OnPropertyChanged("Heal");
                 }
             }
@@ -425,8 +374,6 @@ namespace TFlex.PackageManager.Configuration
                 if (createAccurateEdges != value)
                 {
                     createAccurateEdges = value;
-                    data_5_3.Value = value.ToString();
-
                     OnPropertyChanged("CreateAccurateEdges");
                 }
             }
@@ -448,8 +395,6 @@ namespace TFlex.PackageManager.Configuration
                 if (importSolidBodies != value)
                 {
                     importSolidBodies = value;
-                    data_5_4.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ImportSolidBodies");
                 }
             }
@@ -471,8 +416,6 @@ namespace TFlex.PackageManager.Configuration
                 if (importSheetBodies != value)
                 {
                     importSheetBodies = value;
-                    data_5_5.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ImportSheetBodies");
                 }
             }
@@ -494,8 +437,6 @@ namespace TFlex.PackageManager.Configuration
                 if (importWireBodies != value)
                 {
                     importWireBodies = value;
-                    data_5_6.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ImportWireBodies");
                 }
             }
@@ -517,8 +458,6 @@ namespace TFlex.PackageManager.Configuration
                 if (importMeshBodies != value)
                 {
                     importMeshBodies = value;
-                    data_5_7.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ImportMeshBodies");
                 }
             }
@@ -540,8 +479,6 @@ namespace TFlex.PackageManager.Configuration
                 if (importHideBodies != value)
                 {
                     importHideBodies = value;
-                    data_5_8.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ImportHideBodies");
                 }
             }
@@ -563,8 +500,6 @@ namespace TFlex.PackageManager.Configuration
                 if (importAnotations != value)
                 {
                     importAnotations = value;
-                    data_5_9.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ImportAnotations");
                 }
             }
@@ -586,8 +521,6 @@ namespace TFlex.PackageManager.Configuration
                 if (importOnlyFromActiveFilter != value)
                 {
                     importOnlyFromActiveFilter = value;
-                    data_5_A.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ImportOnlyFromActiveFilter");
                 }
             }
@@ -602,8 +535,6 @@ namespace TFlex.PackageManager.Configuration
                 if (sewing != value)
                 {
                     sewing = value;
-                    data_5_B.Value = value ? "1" : "0";
-
                     OnPropertyChanged("Sewing");
                 }
             }
@@ -625,9 +556,6 @@ namespace TFlex.PackageManager.Configuration
                 if (sewTolerance != value)
                 {
                     sewTolerance = value;
-                    data_5_C.Value = value
-                        .ToString(CultureInfo.InvariantCulture);
-
                     OnPropertyChanged("SewTolerance");
                 }
             }
@@ -649,8 +577,6 @@ namespace TFlex.PackageManager.Configuration
                 if (checkImportGeomerty != value)
                 {
                     checkImportGeomerty = value;
-                    data_5_D.Value = value ? "1" : "0";
-
                     OnPropertyChanged("CheckImportGeomerty");
                 }
             }
@@ -672,8 +598,6 @@ namespace TFlex.PackageManager.Configuration
                 if (updateProductStructure != value)
                 {
                     updateProductStructure = value;
-                    data_5_E.Value = value ? "1" : "0";
-
                     OnPropertyChanged("UpdateProductStructure");
                 }
             }
@@ -695,11 +619,236 @@ namespace TFlex.PackageManager.Configuration
                 if (addBodyRecordsInProductStructure != value)
                 {
                     addBodyRecordsInProductStructure = value;
-                    data_5_F.Value = value ? "1" : "0";
-
                     OnPropertyChanged("AddBodyRecordsInProductStructure");
                 }
             }
+        }
+        #endregion
+
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
+        {
+            base.ReadXml(reader);
+            for (int i = 0; i < 26 && reader.Read(); i++)
+            {
+                switch (reader.GetAttribute(0))
+                {
+                    case "ExportMode":
+                        exportMode = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "ColorSource":
+                        colorSource = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "ExportSolidBodies":
+                        exportSolidBodies = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ExportSheetBodies":
+                        exportSheetBodies = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ExportWireBodies":
+                        exportWireBodies = reader.GetAttribute(1) == "1";
+                        break;
+                    case "Export3DPictures":
+                        export3DPictures = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ExportAnotation":
+                        exportAnotation = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ExportWelds":
+                        exportWelds = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ExportCurves":
+                        exportCurves = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ExportContours":
+                        exportContours = reader.GetAttribute(1) == "1";
+                        break;
+                    case "SimplifyGeometry":
+                        simplifyGeometry = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ImportMode":
+                        importMode = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "Heal":
+                        heal = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "CreateAccurateEdges":
+                        createAccurateEdges = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "ImportSolidBodies":
+                        importSolidBodies = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ImportSheetBodies":
+                        importSheetBodies = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ImportWireBodies":
+                        importWireBodies = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ImportMeshBodies":
+                        importMeshBodies = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ImportHideBodies":
+                        importHideBodies = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ImportAnotations":
+                        importAnotations = reader.GetAttribute(1) == "1";
+                        break;
+                    case "ImportOnlyFromActiveFilter":
+                        importOnlyFromActiveFilter = reader.GetAttribute(1) == "1";
+                        break;
+                    case "Sewing":
+                        sewing = reader.GetAttribute(1) == "1";
+                        break;
+                    case "SewTolerance":
+                        sewTolerance = double.Parse(reader.GetAttribute(1), 
+                            CultureInfo.InvariantCulture);
+                        break;
+                    case "CheckImportGeomerty":
+                        checkImportGeomerty = reader.GetAttribute(1) == "1";
+                        break;
+                    case "UpdateProductStructure":
+                        updateProductStructure = reader.GetAttribute(1) == "1";
+                        break;
+                    case "AddBodyRecordsInProductStructure":
+                        addBodyRecordsInProductStructure = reader.GetAttribute(1) == "1";
+                        break;
+                }
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExportMode");
+            writer.WriteAttributeString("value", ExportMode.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ColorSource");
+            writer.WriteAttributeString("value", ColorSource.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExportSolidBodies");
+            writer.WriteAttributeString("value", ExportSolidBodies ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExportSheetBodies");
+            writer.WriteAttributeString("value", ExportSheetBodies ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExportWireBodies");
+            writer.WriteAttributeString("value", ExportWireBodies ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "Export3DPictures");
+            writer.WriteAttributeString("value", Export3DPictures ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExportAnotation");
+            writer.WriteAttributeString("value", ExportAnotation ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExportWelds");
+            writer.WriteAttributeString("value", ExportWelds ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExportCurves");
+            writer.WriteAttributeString("value", ExportCurves ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExportContours");
+            writer.WriteAttributeString("value", ExportContours ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "SimplifyGeometry");
+            writer.WriteAttributeString("value", SimplifyGeometry ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ImportMode");
+            writer.WriteAttributeString("value", ImportMode.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "Heal");
+            writer.WriteAttributeString("value", Heal.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "CreateAccurateEdges");
+            writer.WriteAttributeString("value", CreateAccurateEdges.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ImportSolidBodies");
+            writer.WriteAttributeString("value", ImportSolidBodies ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ImportSheetBodies");
+            writer.WriteAttributeString("value", ImportSheetBodies ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ImportWireBodies");
+            writer.WriteAttributeString("value", ImportWireBodies ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ImportMeshBodies");
+            writer.WriteAttributeString("value", ImportMeshBodies ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ImportHideBodies");
+            writer.WriteAttributeString("value", ImportHideBodies ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ImportAnotations");
+            writer.WriteAttributeString("value", ImportAnotations ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ImportOnlyFromActiveFilter");
+            writer.WriteAttributeString("value", ImportOnlyFromActiveFilter ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "Sewing");
+            writer.WriteAttributeString("value", Sewing ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "SewTolerance");
+            writer.WriteAttributeString("value", SewTolerance.ToString(CultureInfo.InvariantCulture));
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "CheckImportGeomerty");
+            writer.WriteAttributeString("value", CheckImportGeomerty ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "UpdateProductStructure");
+            writer.WriteAttributeString("value", UpdateProductStructure ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "AddBodyRecordsInProductStructure");
+            writer.WriteAttributeString("value", AddBodyRecordsInProductStructure ? "1" : "0");
+            writer.WriteEndElement();
         }
         #endregion
 
@@ -758,236 +907,6 @@ namespace TFlex.PackageManager.Configuration
             if (import.Import(path))
             {
                 logging.WriteLine(LogLevel.INFO, string.Format(">>> Import from [path: {0}]", path));
-            }
-        }
-
-        internal override XElement NewTranslator()
-        {
-            XElement data = base.NewTranslator();
-
-            data_4_1 = new XAttribute("value", ExportMode.ToString());
-            data_4_2 = new XAttribute("value", ColorSource.ToString());
-            data_4_3 = new XAttribute("value", ExportSolidBodies      ? "1" : "0");
-            data_4_4 = new XAttribute("value", ExportSheetBodies      ? "1" : "0");
-            data_4_5 = new XAttribute("value", ExportWireBodies       ? "1" : "0");
-            data_4_6 = new XAttribute("value", Export3DPictures       ? "1" : "0");
-            data_4_7 = new XAttribute("value", ExportAnotation        ? "1" : "0");
-            data_4_8 = new XAttribute("value", ExportWelds            ? "1" : "0");
-            data_4_9 = new XAttribute("value", ExportCurves           ? "1" : "0");
-            data_4_A = new XAttribute("value", ExportContours         ? "1" : "0");
-            data_4_B = new XAttribute("value", SimplifyGeometry       ? "1" : "0");
-            data_5_1 = new XAttribute("value", ImportMode.ToString());
-            data_5_2 = new XAttribute("value", Heal.ToString());
-            data_5_3 = new XAttribute("value", CreateAccurateEdges.ToString());
-            data_5_4 = new XAttribute("value", ImportSolidBodies      ? "1" : "0");
-            data_5_5 = new XAttribute("value", ImportSheetBodies      ? "1" : "0");
-            data_5_6 = new XAttribute("value", ImportWireBodies       ? "1" : "0");
-            data_5_7 = new XAttribute("value", ImportMeshBodies       ? "1" : "0");
-            data_5_8 = new XAttribute("value", ImportHideBodies       ? "1" : "0");
-            data_5_9 = new XAttribute("value", ImportAnotations       ? "1" : "0");
-            data_5_A = new XAttribute("value", ImportOnlyFromActiveFilter ? "1" : "0");
-            data_5_B = new XAttribute("value", Sewing                 ? "1" : "0");
-            data_5_C = new XAttribute("value", SewTolerance.ToString(CultureInfo.InvariantCulture));
-            data_5_D = new XAttribute("value", CheckImportGeomerty    ? "1" : "0");
-            data_5_E = new XAttribute("value", UpdateProductStructure ? "1" : "0");
-            data_5_F = new XAttribute("value", AddBodyRecordsInProductStructure ? "1" : "0");
-
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExportMode"),
-                data_4_1));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ColorSource"),
-                data_4_2));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExportSolidBodies"),
-                data_4_3));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExportSheetBodies"),
-                data_4_4));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExportWireBodies"),
-                data_4_5));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "Export3DPictures"),
-                data_4_6));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExportAnotation"),
-                data_4_7));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExportWelds"),
-                data_4_8));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExportCurves"),
-                data_4_9));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExportContours"),
-                data_4_A));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "SimplifyGeometry"),
-                data_4_B));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ImportMode"),
-                data_5_1));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "Heal"),
-                data_5_2));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "CreateAccurateEdges"),
-                data_5_3));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ImportSolidBodies"),
-                data_5_4));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ImportSheetBodies"),
-                data_5_5));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ImportWireBodies"),
-                data_5_6));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ImportMeshBodies"),
-                data_5_7));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ImportHideBodies"),
-                data_5_8));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ImportAnotations"),
-                data_5_9));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ImportOnlyFromActiveFilter"),
-                data_5_A));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "Sewing"),
-                data_5_B));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "SewTolerance"),
-                data_5_C));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "CheckImportGeomerty"),
-                data_5_D));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "UpdateProductStructure"),
-                data_5_E));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "AddBodyRecordsInProductStructure"),
-                data_5_F));
-
-            PMode = ProcessingMode.Export;
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            base.LoadParameter(element);
-
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
-            {
-                case "ExportMode":
-                    exportMode = int.Parse(a.Value);
-                    data_4_1 = a;
-                    break;
-                case "ColorSource":
-                    colorSource = int.Parse(a.Value);
-                    data_4_2 = a;
-                    break;
-                case "ExportSolidBodies":
-                    exportSolidBodies = a.Value == "1";
-                    data_4_3 = a;
-                    break;
-                case "ExportSheetBodies":
-                    exportSheetBodies = a.Value == "1";
-                    data_4_4 = a;
-                    break;
-                case "ExportWireBodies":
-                    exportWireBodies = a.Value == "1";
-                    data_4_5 = a;
-                    break;
-                case "Export3DPictures":
-                    export3DPictures = a.Value == "1";
-                    data_4_6 = a;
-                    break;
-                case "ExportAnotation":
-                    exportAnotation = a.Value == "1";
-                    data_4_7 = a;
-                    break;
-                case "ExportWelds":
-                    exportWelds = a.Value == "1";
-                    data_4_8 = a;
-                    break;
-                case "ExportCurves":
-                    exportCurves = a.Value == "1";
-                    data_4_9 = a;
-                    break;
-                case "ExportContours":
-                    exportContours = a.Value == "1";
-                    data_4_A = a;
-                    break;
-                case "SimplifyGeometry":
-                    simplifyGeometry = a.Value == "1";
-                    data_4_B = a;
-                    break;
-                case "ImportMode":
-                    importMode = int.Parse(a.Value);
-                    data_5_1 = a;
-                    break;
-                case "Heal":
-                    heal = int.Parse(a.Value);
-                    data_5_2 = a;
-                    break;
-                case "CreateAccurateEdges":
-                    createAccurateEdges = int.Parse(a.Value);
-                    data_5_3 = a;
-                    break;
-                case "ImportSolidBodies":
-                    importSolidBodies = a.Value == "1";
-                    data_5_4 = a;
-                    break;
-                case "ImportSheetBodies":
-                    importSheetBodies = a.Value == "1";
-                    data_5_5 = a;
-                    break;
-                case "ImportWireBodies":
-                    importWireBodies = a.Value == "1";
-                    data_5_6 = a;
-                    break;
-                case "ImportMeshBodies":
-                    importMeshBodies = a.Value == "1";
-                    data_5_7 = a;
-                    break;
-                case "ImportHideBodies":
-                    importHideBodies = a.Value == "1";
-                    data_5_8 = a;
-                    break;
-                case "ImportAnotations":
-                    importAnotations = a.Value == "1";
-                    data_5_9 = a;
-                    break;
-                case "ImportOnlyFromActiveFilter":
-                    importOnlyFromActiveFilter = a.Value == "1";
-                    data_5_A = a;
-                    break;
-                case "Sewing":
-                    sewing = a.Value == "1";
-                    data_5_B = a;
-                    break;
-                case "SewTolerance":
-                    sewTolerance = double
-                        .Parse(a.Value, NumberStyles.Float,
-                        CultureInfo.InvariantCulture);
-                    data_5_C = a;
-                    break;
-                case "CheckImportGeomerty":
-                    checkImportGeomerty = a.Value == "1";
-                    data_5_D = a;
-                    break;
-                case "UpdateProductStructure":
-                    updateProductStructure = a.Value == "1";
-                    data_5_E = a;
-                    break;
-                case "AddBodyRecordsInProductStructure":
-                    addBodyRecordsInProductStructure = a.Value == "1";
-                    data_5_F = a;
-                    break;
             }
         }
         #endregion

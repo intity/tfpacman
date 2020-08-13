@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Xml.Serialization;
 using TFlex.PackageManager.Common;
 
 namespace TFlex.PackageManager.Configuration
@@ -13,8 +15,8 @@ namespace TFlex.PackageManager.Configuration
     public class ConfigurationCollection
     {
         #region private fields
-        private readonly List<string> changedCofigurations;
-        private string directory;
+        readonly List<string> changedCofigurations;
+        string directory;
         #endregion
 
         public ConfigurationCollection()
@@ -51,10 +53,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// Has changes configurations.
         /// </summary>
-        internal bool HasChanged
-        {
-            get => changedCofigurations.Count > 0;
-        }
+        internal bool HasChanged => changedCofigurations.Count > 0;
         #endregion
 
         #region internal methods
@@ -68,17 +67,49 @@ namespace TFlex.PackageManager.Configuration
 
             foreach (var i in Directory.GetFiles(directory, "*.config"))
             {
-                string name = Path.GetFileNameWithoutExtension(i);
-                Header cfg = new Header
+                var name = Path.GetFileNameWithoutExtension(i);
+                var cfg = GetConfiguration(name);
+                if (cfg != null)
                 {
-                    UserDirectory = directory,
-                    ConfigurationName = name
-                };
-                Configurations.Add(name, cfg);
+                    Configurations.Add(name, cfg);
+                }
             }
 
             //Debug.WriteLine(string.Format("GetConfigurations [count: {0}]",
             //    configurations.Count));
+        }
+
+        /// <summary>
+        /// Get configuration object.
+        /// </summary>
+        /// <param name="name">Configuration name.</param>
+        /// <returns></returns>
+        internal Header GetConfiguration(string name)
+        {
+            Header cfg = null;
+            var data = new XmlSerializer(typeof(Header));
+            var path = Path.Combine(directory, name + ".config");
+            using (var fs = new FileStream(path, FileMode.Open))
+            {
+                cfg = data.Deserialize(fs) as Header;
+                fs.Close();
+            }
+            return cfg;
+        }
+
+        /// <summary>
+        /// Create new configuration file.
+        /// </summary>
+        /// <param name="name">Configuration name.</param>
+        internal void SetConfiguration(string name)
+        {
+            var data = new XmlSerializer(typeof(Header));
+            var path = Path.Combine(directory, name + ".config");
+            using (var fs = new FileStream(path, FileMode.Create))
+            {
+                data.Serialize(fs, Configurations[name]);
+                fs.Close();
+            }
         }
 
         /// <summary>
@@ -89,7 +120,9 @@ namespace TFlex.PackageManager.Configuration
             foreach (var i in Configurations)
             {
                 if (i.Value.IsChanged)
-                    i.Value.ConfigurationTask(1);
+                {
+                    SetConfiguration(i.Key);
+                }
             }
 
             changedCofigurations.Clear();
@@ -105,13 +138,13 @@ namespace TFlex.PackageManager.Configuration
             {
                 case NotifyCollectionChangedAction.Add:
                     cfg = ((KeyValuePair<string, Header>)e.NewItems[0]).Value;
-                    cfg.ConfigurationTask(0);
                     cfg.PropertyChanged += Header_PropertyChanged;
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     cfg = ((KeyValuePair<string, Header>)e.OldItems[0]).Value;
-                    cfg.ConfigurationTask(2);
-                    changedCofigurations.Remove(cfg.ConfigurationName);
+                    changedCofigurations.Remove(cfg.ConfigName);
+                    var path = Path.Combine(directory, cfg.ConfigName + ".config");
+                    File.Delete(path);
                     break;
             }
         }
@@ -122,12 +155,12 @@ namespace TFlex.PackageManager.Configuration
             {
                 if (cfg.IsChanged && !cfg.IsInvalid)
                 {
-                    if (changedCofigurations.Contains(cfg.ConfigurationName) == false)
-                        changedCofigurations.Add(cfg.ConfigurationName);
+                    if (changedCofigurations.Contains(cfg.ConfigName) == false)
+                        changedCofigurations.Add(cfg.ConfigName);
                 }
                 else
                 {
-                    changedCofigurations.Remove(cfg.ConfigurationName);
+                    changedCofigurations.Remove(cfg.ConfigName);
                 }
 
                 //Debug.WriteLine(string.Format("Header_PropertyChanged [name: {0}, value: {1}, total changes: {2}]", 

@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Properties;
 
@@ -24,7 +26,8 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The VariableModel class.
     /// </summary>
-    public class VariableModel : IEditableObject, INotifyPropertyChanged, ICloneable
+    [Serializable, XmlRoot(ElementName = "variable")]
+    public class VariableModel : IXmlSerializable, IEditableObject, INotifyPropertyChanged, ICloneable
     {
         #region private fields
         int action;
@@ -33,101 +36,16 @@ namespace TFlex.PackageManager.Configuration
         string group;
         string expression;
         bool external;
-        XAttribute data_0;
-        XAttribute data_1;
-        XAttribute data_2;
-        XAttribute data_3;
-        XAttribute data_4;
-        XAttribute data_5;
         #endregion
 
         /// <summary>
         /// The default constructor.
         /// </summary>
-        public VariableModel()
-        {
-            data_0 = new XAttribute("action", Action);
-            data_1 = new XAttribute("name", Name);
-            data_2 = new XAttribute("oldname", OldName);
-            data_3 = new XAttribute("group", Group);
-            data_4 = new XAttribute("expression", Expression);
-            data_5 = new XAttribute("external", External ? "1" : "0");
-
-            Data.Add(data_0, data_1, data_2, data_3, data_4, data_5);
-        }
-
-        /// <summary>
-        /// The constructor for preload data.
-        /// </summary>
-        /// <param name="data"></param>
-        public VariableModel(XElement data)
-        {
-            Data = data;
-            LoadData();
-        }
-
-        #region methods
-        /// <summary>
-        /// Load data.
-        /// </summary>
-        private void LoadData()
-        {
-            foreach (var a in Data.Attributes())
-            {
-                switch (a.Name.ToString())
-                {
-                    case "action":
-                        action = int.Parse(a.Value);
-                        data_0 = a;
-                        break;
-                    case "name":
-                        name = a.Value;
-                        data_1 = a;
-                        break;
-                    case "oldname":
-                        oldname = a.Value;
-                        data_2 = a;
-                        break;
-                    case "group":
-                        group = a.Value;
-                        data_3 = a;
-                        break;
-                    case "expression":
-                        expression = a.Value;
-                        data_4 = a;
-                        break;
-                    case "external":
-                        external = a.Value == "1";
-                        data_5 = a;
-                        break;
-                }
-            }
-        }
-
-        public override string ToString()
-        {
-            VariableAction mode = VariableAction.Add;
-            switch (action)
-            {
-                case 1: mode = VariableAction.Edit;   break;
-                case 2: mode = VariableAction.Rename; break;
-                case 3: mode = VariableAction.Remove; break;
-            }
-
-            return string.Format(
-                "Action: {0}, Name: {1}, OldName: {2}, Expression: {3}, External: {4}", 
-                mode, Name, OldName, Expression, External);
-        }
-        #endregion
+        public VariableModel() { }
 
         #region public properties
         /// <summary>
-        /// Variable data.
-        /// </summary>
-        public XElement Data { get; } = new XElement("variable");
-
-        /// <summary>
-        /// Processing mode for variable.
+        /// Action when processing a variable.
         /// </summary>
         public int Action
         {
@@ -137,7 +55,6 @@ namespace TFlex.PackageManager.Configuration
                 if (action != value)
                 {
                     action = value;
-                    data_0.Value = value.ToString();
                     OnPropertyChanged("Action");
                 }
             }
@@ -154,7 +71,6 @@ namespace TFlex.PackageManager.Configuration
                 if (name != value)
                 {
                     name = value;
-                    data_1.Value = value;
                     OnPropertyChanged("Name");
                 }
             }
@@ -171,7 +87,6 @@ namespace TFlex.PackageManager.Configuration
                 if (oldname != value)
                 {
                     oldname = value;
-                    data_2.Value = value;
                     OnPropertyChanged("OldName");
                 }
             }
@@ -188,7 +103,6 @@ namespace TFlex.PackageManager.Configuration
                 if (group != value)
                 {
                     group = value;
-                    data_3.Value = value;
                     OnPropertyChanged("Group");
                 }
             }
@@ -205,7 +119,6 @@ namespace TFlex.PackageManager.Configuration
                 if (expression != value)
                 {
                     expression = value;
-                    data_4.Value = value;
                     OnPropertyChanged("Expression");
                 }
             }
@@ -222,10 +135,56 @@ namespace TFlex.PackageManager.Configuration
                 if (external != value)
                 {
                     external = value;
-                    data_5.Value = value ? "1" : "0";
                     OnPropertyChanged("External");
                 }
             }
+        }
+        #endregion
+
+        #region IXmlSerializable Members
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            for (int i = 0; i < reader.AttributeCount; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        action = int.Parse(reader.GetAttribute(i));
+                        break;
+                    case 1:
+                        name = reader.GetAttribute(i);
+                        break;
+                    case 2:
+                        oldname = reader.GetAttribute(i);
+                        break;
+                    case 3:
+                        group = reader.GetAttribute(i);
+                        break;
+                    case 4:
+                        expression = reader.GetAttribute(i);
+                        break;
+                    case 5:
+                        external = reader.GetAttribute(i) == "1";
+                        break;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("variable");
+            writer.WriteAttributeString("action", Action.ToString());
+            writer.WriteAttributeString("name", Name);
+            writer.WriteAttributeString("oldname", OldName);
+            writer.WriteAttributeString("group", Group);
+            writer.WriteAttributeString("expression", Expression);
+            writer.WriteAttributeString("external", External ? "1" : "0");
+            writer.WriteEndElement();
         }
         #endregion
 
@@ -282,7 +241,15 @@ namespace TFlex.PackageManager.Configuration
         #region ICloneable Members
         public object Clone()
         {
-            return new VariableModel(new XElement(Data));
+            return new VariableModel
+            {
+                Action     = Action,
+                Name       = Name,
+                OldName    = OldName,
+                Group      = Group,
+                Expression = Expression,
+                External   = External
+            };
         }
         #endregion
     }

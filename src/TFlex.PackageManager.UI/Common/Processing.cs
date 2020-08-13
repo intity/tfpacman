@@ -159,10 +159,10 @@ namespace TFlex.PackageManager.Common
             var document = Application.OpenDocument(item.IPath, false);
             if (document == null)
                 return null;
-            var md_4 = cfg.Translator as Files;
-            if (md_4.PMode == ProcessingMode.SaveAs)
+            var md_0 = cfg.Translator as Files;
+            if (md_0.PMode == ProcessingMode.SaveAs)
             {
-                item.FName = md_4.GetFileName(document, null);
+                item.FName = md_0.GetFileName(document, null);
                 item.OPath = Path.Combine(GetDirectory(item), item.FName + ".grb");
             }
             if (item.OPath != null && File.Exists(item.OPath))
@@ -209,10 +209,10 @@ namespace TFlex.PackageManager.Common
         /// <param name="item">The Processing Item.</param>
         private void ProcessingStart(Document document, ProcItem item)
         {
-            var md_4 = cfg.Translator as Files;
+            var tr = cfg.Translator as Translator;
             string[] aPath = item.IPath.Split('\\');
 
-            switch (md_4.TMode)
+            switch (tr.TMode)
             {
                 case TranslatorType.Document:
                     DocumentSaveAs(document, item);
@@ -224,10 +224,10 @@ namespace TFlex.PackageManager.Common
                     ProcessingItems(document, item);
                     break;
                 case TranslatorType.Acis:
-                    switch (md_4.PMode)
+                    switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = md_4.GetFileName(document, null);
+                            item.FName = tr_2.GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + tr_2.OExtension);
                             tr_2.Export(document, item.OPath, logging);
                             break;
@@ -246,10 +246,10 @@ namespace TFlex.PackageManager.Common
                     }
                     break;
                 case TranslatorType.Iges:
-                    switch (md_4.PMode)
+                    switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = md_4.GetFileName(document, null);
+                            item.FName = tr_6.GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + tr_6.OExtension);
                             tr_6.Export(document, item.OPath, logging);
                             break;
@@ -268,10 +268,10 @@ namespace TFlex.PackageManager.Common
                     }
                     break;
                 case TranslatorType.Jt:
-                    switch (md_4.PMode)
+                    switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = md_4.GetFileName(document, null);
+                            item.FName = tr_7.GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + tr_7.OExtension);
                             tr_7.Export(document, item.OPath, logging);
                             break;
@@ -290,10 +290,10 @@ namespace TFlex.PackageManager.Common
                     }
                     break;
                 case TranslatorType.Step:
-                    switch (md_4.PMode)
+                    switch (tr.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = md_4.GetFileName(document, null);
+                            item.FName = tr_10.GetFileName(document, null);
                             item.OPath = Path.Combine(item.Directory, item.FName + tr_10.OExtension);
                             tr_10.Export(document, item.OPath, logging);
                             break;

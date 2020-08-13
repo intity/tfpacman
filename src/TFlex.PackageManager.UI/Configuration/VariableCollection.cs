@@ -1,74 +1,80 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace TFlex.PackageManager.Configuration
 {
     /// <summary>
     /// The Variable collection.
     /// </summary>
-    public class VariableCollection : ObservableCollection<VariableModel>, ICloneable
+    [Serializable, XmlRoot(ElementName = "parameter")]
+    public class VariableCollection : ObservableCollection<VariableModel>, IXmlSerializable, ICloneable
     {
-        readonly string name;
-
+        public VariableCollection() { }
         public VariableCollection(string name)
         {
-            this.name = name;
-            Data = new XElement("parameter", new XAttribute("name", name));
+            Name = name;
         }
 
-        #region methods
         /// <summary>
-        /// Load the variables to collection.
+        /// Variable collection name.
         /// </summary>
-        /// <param name="element">Parent element.</param>
-        internal void LoadData(XElement element)
-        {
-            Data = element;
+        public string Name { get; }
 
-            foreach (var e in element.Elements())
+        #region IXmlSerializable Members
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            if (!reader.ReadToDescendant("variable"))
+                return;
+            do
             {
-                Add(new VariableModel(e));
+                var obj = new XmlSerializer(typeof(VariableModel)).Deserialize(reader);
+                if (obj != null)
+                {
+                    var variable = obj as VariableModel;
+                    variable.PropertyChanged += Variable_PropertyChanged;
+                    Add(variable);
+                }
+            } while (reader.ReadToNextSibling("variable"));
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            foreach (var i in this)
+            {
+                i.WriteXml(writer);
+                i.PropertyChanged += Variable_PropertyChanged;
             }
         }
+        #endregion
 
-        /// <summary>
-        /// Clone object.
-        /// </summary>
-        /// <returns></returns>
+        #region ICloneable Members
         public object Clone()
         {
-            var variables = new VariableCollection(name);
-            variables.LoadData(new XElement(Data));
+            var variables = new VariableCollection(Name);
+            foreach (var i in this)
+            {
+                variables.Add((VariableModel)i.Clone());
+            }
             return variables;
         }
         #endregion
 
-        public XElement Data { get; private set; }
-
-        #region Collection Members
-        protected override void InsertItem(int index, VariableModel item)
+        private void Variable_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (Data.Elements().Contains(item.Data) == false)
-                Data.Add(item.Data);
-            base.InsertItem(index, item);
-            //Debug.WriteLine(string.Format("InsertItem: [index: {0}]", index));
-        }
+            if (e.PropertyName != "EndEdit")
+                return;
 
-        protected override void RemoveItem(int index)
-        {
-            Data.Elements().ElementAt(index).Remove();
-            base.RemoveItem(index);
-            //Debug.WriteLine(string.Format("RemoveItem: [index: {0}]", index));
+            OnPropertyChanged(e);
         }
-
-        protected override void ClearItems()
-        {
-            Data.Elements().Remove();
-            base.ClearItems();
-        }
-        #endregion
     }
 }

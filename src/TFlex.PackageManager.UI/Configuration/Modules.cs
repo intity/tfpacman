@@ -1,5 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Properties;
@@ -10,7 +13,8 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The Modules base class definition.
     /// </summary>
-    public class Modules : INotifyPropertyChanged
+    [Serializable, XmlRoot(ElementName = "parameter")]
+    public class Modules : IXmlSerializable, INotifyPropertyChanged
     {
         #region private fields
         bool pages;
@@ -19,6 +23,7 @@ namespace TFlex.PackageManager.Configuration
         bool links;
         #endregion
 
+        public Modules() { }
         public Modules(int index)
         {
             Index = index;
@@ -29,7 +34,7 @@ namespace TFlex.PackageManager.Configuration
         /// Modules Index.
         /// </summary>
         [Browsable(false)]
-        public int Index { get; }
+        public int Index { get; private set; }
 
         /// <summary>
         /// Module for processing document links.
@@ -108,33 +113,37 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region methods
-        public void SetValue(string value)
+        #region IXmlSerializable Members
+        public XmlSchema GetSchema()
         {
-            string[] values = value.Split(' ');
-
-            links       = values[0] == "1";
-            pages       = values[1] == "1";
-            projections = values[2] == "1";
-            variables   = values[3] == "1";
+            return null;
         }
 
-        public override string ToString()
+        public void ReadXml(XmlReader reader)
         {
-            string[] values = new string[8];
+            string[] values;
+            var data = reader.GetAttribute("value");
+            if (data != null && (values = data.Split(' ')).Length >= 4)
+            {
+                links       = values[0] == "1";
+                pages       = values[1] == "1";
+                projections = values[2] == "1";
+                variables   = values[3] == "1";
+            }
+            Index = int.Parse(reader.GetAttribute("index"));
+        }
 
-            values[0] = links       ? "1" : "0";
-            values[1] = pages       ? "1" : "0";
-            values[2] = projections ? "1" : "0";
-            values[3] = variables   ? "1" : "0";
-
-            // reserved
-            values[4] = "0";
-            values[5] = "0";
-            values[6] = "0";
-            values[7] = "0";
-
-            return values.ToString(" ");
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("name", "Modules");
+            string[] values = new string[] {
+                Links       ? "1" : "0",
+                Pages       ? "1" : "0",
+                Projections ? "1" : "0",
+                Variables   ? "1" : "0"
+            };
+            writer.WriteAttributeString("value", values.ToString(" "));
+            writer.WriteAttributeString("index", Index.ToString());
         }
         #endregion
 

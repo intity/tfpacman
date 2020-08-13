@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
 using System.Globalization;
-using System.Xml.Linq;
+using System.Xml;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Editors;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using TFlex.PackageManager.Properties;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #pragma warning disable CA1707
 
@@ -18,8 +19,7 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The Acad translator class.
     /// </summary>
-    [CustomCategoryOrder(Resources.TRANSLATOR_1, 4)]
-    [CustomCategoryOrder(Resources.TRANSLATOR_1, 5)]
+    [CustomCategoryOrder(Resources.TRANSLATOR_1, 5), Serializable]
     public class Translator_1 : Translator_0
     {
         #region private fields
@@ -32,21 +32,11 @@ namespace TFlex.PackageManager.Configuration
         int convertMultitext;
         int biarcInterpolationForSplines;
         decimal biarcInterpolationAccuracyForSplines;
-
-        XAttribute data_3_2;
-        XAttribute data_4_1;
-        XAttribute data_4_2;
-        XAttribute data_4_3;
-        XAttribute data_4_4;
-        XAttribute data_4_5;
-        XAttribute data_4_6;
-        XAttribute data_4_7;
         #endregion
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ext">Target extension the file.</param>
         public Translator_1()
         {
             autocadExportFileVersion             = 3;
@@ -57,6 +47,9 @@ namespace TFlex.PackageManager.Configuration
             convertMultitext                     = 0;
             biarcInterpolationForSplines         = 0;
             biarcInterpolationAccuracyForSplines = 0.1m;
+
+            IExtension = ".grb";
+            OExtension = ".dwg";
         }
 
         #region public properties
@@ -113,8 +106,6 @@ namespace TFlex.PackageManager.Configuration
                 if (autocadExportFileVersion != value)
                 {
                     autocadExportFileVersion = value;
-                    data_3_2.Value = value.ToString();
-
                     OnPropertyChanged("AutocadExportFileVersion");
                 }
             }
@@ -138,8 +129,6 @@ namespace TFlex.PackageManager.Configuration
                 if (convertAreas != value)
                 {
                     convertAreas = value;
-                    data_4_1.Value = value.ToString();
-
                     OnPropertyChanged("ConvertAreas");
                 }
             }
@@ -163,8 +152,6 @@ namespace TFlex.PackageManager.Configuration
                 if (convertToLines != value)
                 {
                     convertToLines = value;
-                    data_4_2.Value = value.ToString();
-
                     OnPropertyChanged("ConvertToLines");
                 }
             }
@@ -189,8 +176,6 @@ namespace TFlex.PackageManager.Configuration
                 if (convertDimensions != value)
                 {
                     convertDimensions = value;
-                    data_4_3.Value = value.ToString();
-
                     OnPropertyChanged("ConvertDimensions");
                 }
             }
@@ -214,8 +199,6 @@ namespace TFlex.PackageManager.Configuration
                 if (convertLineText != value)
                 {
                     convertLineText = value;
-                    data_4_4.Value = value.ToString();
-
                     OnPropertyChanged("ConvertLineText");
                 }
             }
@@ -240,8 +223,6 @@ namespace TFlex.PackageManager.Configuration
                 if (convertMultitext != value)
                 {
                     convertMultitext = value;
-                    data_4_5.Value = value.ToString();
-
                     OnPropertyChanged("ConvertMultitext");
                 }
             }
@@ -265,8 +246,6 @@ namespace TFlex.PackageManager.Configuration
                 if (biarcInterpolationForSplines != value)
                 {
                     biarcInterpolationForSplines = value;
-                    data_4_6.Value = value.ToString();
-
                     OnPropertyChanged("BiarcInterpolationForSplines");
                 }
             }
@@ -288,9 +267,6 @@ namespace TFlex.PackageManager.Configuration
                 if (biarcInterpolationAccuracyForSplines != value)
                 {
                     biarcInterpolationAccuracyForSplines = value;
-                    data_4_7.Value = value
-                        .ToString(CultureInfo.InvariantCulture);
-
                     OnPropertyChanged("BiarcInterpolationAccuracyForSplines");
                 }
             }
@@ -299,6 +275,91 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Acad;
+        internal override ProcessingMode PMode => ProcessingMode.Export;
+        #endregion
+
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
+        {
+            base.ReadXml(reader);
+            for (int i = 0; i < 8 && reader.Read(); i++)
+            {
+                switch (reader.GetAttribute(0))
+                {
+                    case "AutocadExportFileVersion":
+                        autocadExportFileVersion = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "ConvertAreas":
+                        convertAreas = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "ConvertToLines":
+                        convertToLines = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "ConvertDimensions":
+                        convertDimensions = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "ConvertLineText":
+                        convertLineText = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "ConvertMultitext":
+                        convertMultitext = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "BiarcInterpolationForSplines":
+                        biarcInterpolationForSplines = int.Parse(reader.GetAttribute(1));
+                        break;
+                    case "BiarcInterpolationAccuracyForSplines":
+                        biarcInterpolationAccuracyForSplines = decimal
+                            .Parse(reader.GetAttribute(1), CultureInfo.InvariantCulture);
+                        break;
+                }
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "AutocadExportFileVersion");
+            writer.WriteAttributeString("value", AutocadExportFileVersion.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ConvertAreas");
+            writer.WriteAttributeString("value", ConvertAreas.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ConvertToLines");
+            writer.WriteAttributeString("value", ConvertToLines.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ConvertDimensions");
+            writer.WriteAttributeString("value", ConvertDimensions.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ConvertLineText");
+            writer.WriteAttributeString("value", ConvertLineText.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ConvertMultitext");
+            writer.WriteAttributeString("value", ConvertMultitext.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "BiarcInterpolationForSplines");
+            writer.WriteAttributeString("value", BiarcInterpolationForSplines.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "BiarcInterpolationAccuracyForSplines");
+            writer.WriteAttributeString("value", BiarcInterpolationAccuracyForSplines
+                .ToString(CultureInfo.InvariantCulture));
+            writer.WriteEndElement();
+        }
         #endregion
 
         #region internal methods
@@ -334,102 +395,6 @@ namespace TFlex.PackageManager.Configuration
                 {
                     logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", p.Value));
                 }
-            }
-        }
-
-        internal override XElement NewTranslator()
-        {
-            XElement data = base.NewTranslator();
-
-            data_3_2 = new XAttribute("value", AutocadExportFileVersion.ToString());
-            data_4_1 = new XAttribute("value", ConvertAreas.ToString());
-            data_4_2 = new XAttribute("value", ConvertToLines.ToString());
-            data_4_3 = new XAttribute("value", ConvertDimensions.ToString());
-            data_4_4 = new XAttribute("value", ConvertLineText.ToString());
-            data_4_5 = new XAttribute("value", ConvertMultitext.ToString());
-            data_4_6 = new XAttribute("value", BiarcInterpolationForSplines.ToString());
-            data_4_7 = new XAttribute("value", BiarcInterpolationAccuracyForSplines
-                .ToString(CultureInfo.InvariantCulture));
-
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "AutocadExportFileVersion"),
-                data_3_2));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ConvertAreas"),
-                data_4_1));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ConvertToLines"),
-                data_4_2));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ConvertDimensions"),
-                data_4_3));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ConvertLineText"),
-                data_4_4));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ConvertMultitext"),
-                data_4_5));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "BiarcInterpolationForSplines"),
-                data_4_6));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "BiarcInterpolationAccuracyForSplines"),
-                data_4_7));
-
-            PMode = ProcessingMode.Export;
-            OExtension = ".dwg";
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            base.LoadParameter(element);
-
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
-            {
-                case "TargetExtension":
-                    switch (a.Value)
-                    {
-                        case ".dwg": extension = 0; break;
-                        case ".dxf": extension = 1; break;
-                        case ".dxb": extension = 2; break;
-                    }
-                    break;
-                case "AutocadExportFileVersion":
-                    autocadExportFileVersion = int.Parse(a.Value);
-                    data_3_2 = a;
-                    break;
-                case "ConvertAreas":
-                    convertAreas = int.Parse(a.Value);
-                    data_4_1 = a;
-                    break;
-                case "ConvertToLines":
-                    convertToLines = int.Parse(a.Value);
-                    data_4_2 = a;
-                    break;
-                case "ConvertDimensions":
-                    convertDimensions = int.Parse(a.Value);
-                    data_4_3 = a;
-                    break;
-                case "ConvertLineText":
-                    convertLineText = int.Parse(a.Value);
-                    data_4_4 = a;
-                    break;
-                case "ConvertMultitext":
-                    convertMultitext = int.Parse(a.Value);
-                    data_4_5 = a;
-                    break;
-                case "BiarcInterpolationForSplines":
-                    biarcInterpolationForSplines = int.Parse(a.Value);
-                    data_4_6 = a;
-                    break;
-                case "BiarcInterpolationAccuracyForSplines":
-                    biarcInterpolationAccuracyForSplines = decimal
-                        .Parse(a.Value, NumberStyles.Float, 
-                        CultureInfo.InvariantCulture);
-                    data_4_7 = a;
-                    break;
             }
         }
         #endregion

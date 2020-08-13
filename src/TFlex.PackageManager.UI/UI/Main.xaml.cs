@@ -133,7 +133,7 @@ namespace TFlex.PackageManager.UI
             {
                 TargetProperties = new[]
                 {
-                    "ConfigurationName",
+                    "ConfigName",
                     "TargetDirectory",
                     "Modules"
                 },
@@ -144,7 +144,7 @@ namespace TFlex.PackageManager.UI
             {
                 TargetProperties = new[]
                 {
-                    "ConfigurationName",
+                    "ConfigName",
                     "InitialCatalog",
                     "Modules"
                 },
@@ -440,12 +440,7 @@ namespace TFlex.PackageManager.UI
                     return;
             }
 
-            Header header = new Header()
-            {
-                UserDirectory = directory,
-                ConfigurationName = newKey
-            };
-
+            Header header = new Header(newKey);
             header.PropertyChanged += Header_PropertyChanged;
 
             if (key1 != newKey)
@@ -453,7 +448,7 @@ namespace TFlex.PackageManager.UI
                 key1 = newKey;
 
                 conf.Configurations.Add(key1, header);
-                conf.Configurations[key1].ConfigurationTask(1);
+                conf.SetConfiguration(key1);
 
                 comboBox1.Items.Add(key1);
                 index = comboBox1.Items.Count - 1;
@@ -461,7 +456,8 @@ namespace TFlex.PackageManager.UI
             else
             {
                 conf.Configurations[key1] = header;
-                conf.Configurations[key1].ConfigurationTask(1);
+                conf.SetConfiguration(key1);
+
                 comboBox1.SelectedIndex = -1;
             }
 
@@ -517,7 +513,7 @@ namespace TFlex.PackageManager.UI
 
         private void Event1_4_Click(object sender, RoutedEventArgs e)
         {
-            conf.Configurations[key1].ConfigurationTask(1);
+            conf.SetConfiguration(key1);
             UpdateStateToControls();
         } // Save configuration
 

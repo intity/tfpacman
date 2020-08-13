@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using TFlex.Model;
 using TFlex.PackageManager.Common;
 
@@ -36,42 +39,24 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The translator base class.
     /// </summary>
-    public class Translator : INotifyPropertyChanged
+    [Serializable, XmlRoot(ElementName = "translator")]
+    public class Translator : IXmlSerializable, INotifyDataErrorInfo, INotifyPropertyChanged
     {
-        #region private fields
-        XElement data;
-        TranslatorType type;
-        ProcessingMode mode;
-        #endregion
+        public Translator()
+        {
+            Errors = new Dictionary<string, List<string>>();
+        }
 
         #region internal properties
         /// <summary>
         /// Translator type.
         /// </summary>
-        internal virtual TranslatorType TMode
-        {
-            get => type;
-            private set
-            {
-                type = value;
-            }
-        }
+        internal virtual TranslatorType TMode { get; private set; }
 
         /// <summary>
         /// Processing mode.
         /// </summary>
-        internal virtual ProcessingMode PMode
-        {
-            get => mode;
-            set
-            {
-                if (mode != value)
-                {
-                    mode = value;
-                    data.Attribute("mode").Value = ((int)value).ToString();
-                }
-            }
-        }
+        internal virtual ProcessingMode PMode { get; set; }
         #endregion
 
         #region internal methods
@@ -99,45 +84,112 @@ namespace TFlex.PackageManager.Configuration
         /// <param name="path"></param>
         /// <param name="logging"></param>
         internal virtual void Import(Document document, string targetDirectory, string path, Logging logging) { }
-
-        /// <summary>
-        /// The method to loaded translator.
-        /// </summary>
-        /// <param name="data">The translator element.</param>
-        internal void LoadTranslator(XElement data)
-        {
-            this.data = data;
-
-            type = (TranslatorType)int.Parse(data.Attribute("type").Value);
-            mode = (ProcessingMode)int.Parse(data.Attribute("mode").Value);
-
-            foreach (var i in data.Elements())
-            {
-                LoadParameter(i);
-            }
-        }
-
-        /// <summary>
-        /// Create XML-data for new translator.
-        /// </summary>
-        /// <returns></returns>
-        internal virtual XElement NewTranslator()
-        {
-            data = new XElement("translator");
-            data.Add(new XAttribute("type", (int)TMode));
-            data.Add(new XAttribute("mode", (int)PMode));
-
-            return data;
-        }
-
-        /// <summary>
-        /// Virtual method for processing translator parameters.
-        /// </summary>
-        /// <param name="element">Parent element.</param>
-        internal virtual void LoadParameter(XElement element) { }
         #endregion
 
-        #region INotifyPropertyChanged members
+        #region IXmlSerializable Members
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public virtual void ReadXml(XmlReader reader)
+        {
+            TMode = (TranslatorType)int.Parse(reader.GetAttribute("type"));
+            PMode = (ProcessingMode)int.Parse(reader.GetAttribute("mode"));
+        }
+
+        public virtual void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("type", ((int)TMode).ToString());
+            writer.WriteAttributeString("mode", ((int)PMode).ToString());
+        }
+        #endregion
+
+        #region INotifyDataErrorInfo Members
+        /// <summary>
+        /// Occurs when the validation errors have changed for a property or for the entire entity.
+        /// </summary>
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        /// <summary>
+        /// The RaiseErrorChanged event handler.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        protected void OnRaiseErrorChanged(string name)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(name));
+        }
+
+        /// <summary>
+        /// Error messages container.
+        /// </summary>
+        protected Dictionary<string, List<string>> Errors { get; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the entity has validation errors.
+        /// </summary>
+        [Browsable(false)]
+        public bool HasErrors => Errors.Count > 0;
+
+        /// <summary>
+        /// Gets the validation errors for a specified property or for the entire entity.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <returns>The validation errors for the property or entity.</returns>
+        public IEnumerable GetErrors(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Errors.Values;
+
+            Errors.TryGetValue(name, out List<string> errors);
+            return errors;
+        }
+
+        /// <summary>
+        /// Add error to dictionary.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <param name="error">Error message.</param>
+        internal void AddError(string name, string error)
+        {
+            if (Errors.TryGetValue(name, out List<string> errors) == false)
+            {
+                errors = new List<string>();
+                Errors.Add(name, errors);
+            }
+
+            if (errors.Contains(error) == false)
+            {
+                errors.Add(error);
+            }
+
+            OnRaiseErrorChanged(name);
+        }
+
+        /// <summary>
+        /// Remove error from dictionary.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <param name="error">Error message.</param>
+        internal void RemoveError(string name, string error)
+        {
+            if (Errors.TryGetValue(name, out List<string> errors))
+            {
+                errors.Remove(error);
+            }
+
+            if (errors == null)
+                return;
+
+            if (errors.Count == 0)
+            {
+                Errors.Remove(name);
+                OnRaiseErrorChanged(name);
+            }
+        }
+        #endregion
+
+        #region INotifyPropertyChanged Members
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>

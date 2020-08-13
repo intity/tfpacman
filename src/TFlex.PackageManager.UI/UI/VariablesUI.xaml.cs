@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows;
-using System.Xml.Linq;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
-using System.ComponentModel;
 using TFlex.PackageManager.Configuration;
 
 namespace TFlex.PackageManager.UI
@@ -26,18 +26,18 @@ namespace TFlex.PackageManager.UI
             this.action = action;
 
             #region initialize resources
-            button1.Content = Properties.Resources.Strings["ui_1:btn_1"][0];
-            button2.Content = Properties.Resources.Strings["ui_1:btn_2"][0];
-            column1.Header  = Properties.Resources.Strings["ui_1:col_1"][0];
-            column2.Header  = Properties.Resources.Strings["ui_1:col_2"][0];
-            column3.Header  = Properties.Resources.Strings["ui_1:col_3"][0];
-            column4.Header  = Properties.Resources.Strings["ui_1:col_4"][0];
+            button1.Content = Properties.Resources.Strings["ui_3:btn_1"][0];
+            button2.Content = Properties.Resources.Strings["ui_3:btn_2"][0];
+            column1.Header  = Properties.Resources.Strings["ui_3:col_1"][0];
+            column2.Header  = Properties.Resources.Strings["ui_3:col_2"][0];
+            column3.Header  = Properties.Resources.Strings["ui_3:col_3"][0];
+            column4.Header  = Properties.Resources.Strings["ui_3:col_4"][0];
 
-            column1.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_1:col_1"][1]);
-            column2.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_1:col_2"][1]);
-            column3.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_1:col_3"][1]);
-            column4.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_1:col_4"][1]);
-            column5.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_1:col_5"][1]);
+            column1.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_3:col_1"][1]);
+            column2.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_3:col_2"][1]);
+            column3.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_3:col_3"][1]);
+            column4.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_3:col_4"][1]);
+            column5.HeaderStyle = GetHeaderStyle(Properties.Resources.Strings["ui_3:col_5"][1]);
             #endregion
 
             switch (action)
@@ -100,7 +100,7 @@ namespace TFlex.PackageManager.UI
                     item.PropertyChanged += Variable_PropertyChanged;
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    button1.IsEnabled = !XNode.DeepEquals(variables.Data, DataSource.Data);
+                    button1.IsEnabled = !Enumerable.SequenceEqual(variables, DataSource);
                     break;
             }
         }
@@ -110,7 +110,7 @@ namespace TFlex.PackageManager.UI
             if (e.PropertyName != "EndEdit")
                 return;
 
-            button1.IsEnabled = IsValid && !XNode.DeepEquals(variables.Data, DataSource.Data);
+            button1.IsEnabled = IsValid && !Enumerable.SequenceEqual(variables, DataSource);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
 using System.Linq;
-using System.Xml.Linq;
+using System.Xml;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -18,23 +19,23 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The PDF translator class.
     /// </summary>
-    [CustomCategoryOrder(Resources.TRANSLATOR_9, 5)]
+    [CustomCategoryOrder(Resources.TRANSLATOR_9, 5), Serializable]
     public class Translator_9 : Translator_0
     {
         #region private field
         bool export3dModel;
         bool layers;
         bool combinePages;
-
-        XAttribute data_4_1;
-        XAttribute data_4_2;
-        XAttribute data_4_3;
         #endregion
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public Translator_9() { }
+        public Translator_9()
+        {
+            IExtension = ".grb";
+            OExtension = ".pdf";
+        }
 
         #region public properies
         /// <summary>
@@ -53,8 +54,6 @@ namespace TFlex.PackageManager.Configuration
                 if (export3dModel != value)
                 {
                     export3dModel = value;
-                    data_4_1.Value = value ? "1" : "0";
-
                     OnPropertyChanged("Export3dModel");
                 }
             }
@@ -76,8 +75,6 @@ namespace TFlex.PackageManager.Configuration
                 if (layers != value)
                 {
                     layers = value;
-                    data_4_2.Value = value ? "1" : "0";
-
                     OnPropertyChanged("Layers");
                 }
             }
@@ -99,8 +96,6 @@ namespace TFlex.PackageManager.Configuration
                 if (combinePages != value)
                 {
                     combinePages = value;
-                    data_4_3.Value = value ? "1" : "0";
-
                     OnPropertyChanged("CombinePages");
                 }
             }
@@ -109,6 +104,49 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Pdf;
+        internal override ProcessingMode PMode => ProcessingMode.Export;
+        #endregion
+
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
+        {
+            base.ReadXml(reader);
+            for (int i = 0; i < 3 && reader.Read(); i++)
+            {
+                switch (reader.GetAttribute(0))
+                {
+                    case "Export3dModel":
+                        export3dModel = reader.GetAttribute(1) == "1";
+                        break;
+                    case "Layers":
+                        layers = reader.GetAttribute(1) == "1";
+                        break;
+                    case "CombinePages":
+                        combinePages = reader.GetAttribute(1) == "1";
+                        break;
+                }
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "Export3dModel");
+            writer.WriteAttributeString("value", Export3dModel ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "Layers");
+            writer.WriteAttributeString("value", Layers ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "CombinePages");
+            writer.WriteAttributeString("value", CombinePages ? "1" : "0");
+            writer.WriteEndElement();
+        }
         #endregion
 
         #region internals methods
@@ -151,51 +189,6 @@ namespace TFlex.PackageManager.Configuration
 
                     export.ExportPages.Clear();
                 }
-            }
-        }
-
-        internal override XElement NewTranslator()
-        {
-            XElement data = base.NewTranslator();
-
-            data_4_1 = new XAttribute("value", Export3dModel ? "1" : "0");
-            data_4_2 = new XAttribute("value", Layers        ? "1" : "0");
-            data_4_3 = new XAttribute("value", CombinePages  ? "1" : "0");
-
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "Export3dModel"),
-                data_4_1));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "Layers"),
-                data_4_2));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "CombinePages"),
-                data_4_3));
-
-            PMode = ProcessingMode.Export;
-            OExtension = ".pdf";
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            base.LoadParameter(element);
-
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
-            {
-                case "Export3dModel":
-                    export3dModel = a.Value == "1";
-                    data_4_1 = a;
-                    break;
-                case "Layers":
-                    layers = a.Value == "1";
-                    data_4_2 = a;
-                    break;
-                case "CombinePages":
-                    combinePages = a.Value == "1";
-                    data_4_3 = a;
-                    break;
             }
         }
         #endregion

@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Globalization;
 using System.Linq;
-using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -17,19 +19,14 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// Pages extension modules.
     /// </summary>
-    [CustomCategoryOrder(Resources.PAGES, 1)]
-    public class Pages : Projections
+    [CustomCategoryOrder(Resources.PAGES, 1), Serializable]
+    public class Pages : Links
     {
         #region private fields
         string[] pageNames;
         bool excludePage;
         decimal pageScale;
         bool checkDrawingTemplate;
-        XAttribute data_1_1;
-        XAttribute data_1_2;
-        XAttribute data_1_3;
-        XAttribute data_1_4;
-        XAttribute data_1_5;
         #endregion
 
         public Pages()
@@ -59,7 +56,6 @@ namespace TFlex.PackageManager.Configuration
                 if (pageNames != value)
                 {
                     pageNames = value;
-                    data_1_1.Value = value.ToString("\r\n");
                     OnPropertyChanged("PageNames");
                 }
             }
@@ -77,7 +73,6 @@ namespace TFlex.PackageManager.Configuration
                 if (excludePage != value)
                 {
                     excludePage = value;
-                    data_1_2.Value = value ? "1" : "0";
                     OnPropertyChanged("ExcludePage");
                 }
             }
@@ -99,8 +94,6 @@ namespace TFlex.PackageManager.Configuration
                 if (pageScale != value)
                 {
                     pageScale = value;
-                    data_1_3.Value = value
-                        .ToString(CultureInfo.InvariantCulture);
                     OnPropertyChanged("PageScale");
                 }
             }
@@ -115,7 +108,7 @@ namespace TFlex.PackageManager.Configuration
         [CustomDescription(Resources.PAGES, "dn1_4")]
         [ExpandableObject]
         [Editor(typeof(PageTypesEditor), typeof(UITypeEditor))]
-        public PageTypes PageTypes { get; }
+        public PageTypes PageTypes { get; set; }
 
         /// <summary>
         /// Check the drawing template.
@@ -133,73 +126,76 @@ namespace TFlex.PackageManager.Configuration
                 if (checkDrawingTemplate != value)
                 {
                     checkDrawingTemplate = value;
-                    data_1_5.Value = value ? "1" : "0";
                     OnPropertyChanged("CheckDrawingTemplate");
                 }
             }
         }
         #endregion
 
-        #region internal methods
-        internal override XElement NewTranslator()
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
         {
-            XElement data = base.NewTranslator();
-            data_1_1 = new XAttribute("value", PageNames.ToString("\r\n"));
-            data_1_2 = new XAttribute("value", ExcludePage ? "1" : "0");
-            data_1_3 = new XAttribute("value", PageScale.ToString(CultureInfo.InvariantCulture));
-            data_1_4 = new XAttribute("value", PageTypes.ToString());
-            data_1_5 = new XAttribute("value", CheckDrawingTemplate ? "1" : "0");
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "PageNames"),
-                data_1_1));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ExcludePage"),
-                data_1_2));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "PageScale"),
-                data_1_3));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "PageTypes"),
-                data_1_4));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "CheckDrawingTemplate"),
-                data_1_5));
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            base.LoadParameter(element);
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
+            base.ReadXml(reader);
+            for (int i = 0; i < 5 && reader.Read(); i++)
             {
-                case "PageNames":
-                    pageNames = a.Value.Length > 0
-                        ? a.Value.Replace("\r", "").Split('\n')
-                        : new string[] { };
-                    data_1_1 = a;
-                    break;
-                case "ExcludePage":
-                    excludePage = a.Value == "1";
-                    data_1_2 = a;
-                    break;
-                case "PageScale":
-                    pageScale = decimal.Parse(a.Value,
-                        NumberStyles.Float,
-                        CultureInfo.InvariantCulture);
-                    data_1_3 = a;
-                    break;
-                case "PageTypes":
-                    PageTypes.SetValue(a.Value);
-                    data_1_4 = a;
-                    break;
-                case "CheckDrawingTemplate":
-                    checkDrawingTemplate = a.Value == "1";
-                    data_1_5 = a;
-                    break;
+                switch (reader.GetAttribute(0))
+                {
+                    case "PageNames":
+                        var value = reader.GetAttribute(1);
+                        pageNames = value.Length > 0 
+                            ? value.Replace("\r", "").Split('\n') 
+                            : new string[] { };
+                        break;
+                    case "ExcludePage":
+                        excludePage = reader.GetAttribute(1) == "1";
+                        break;
+                    case "PageScale":
+                        pageScale = decimal.Parse(reader.GetAttribute(1), 
+                            CultureInfo.InvariantCulture);
+                        break;
+                    case "PageTypes":
+                        PageTypes.ReadXml(reader);
+                        break;
+                    case "CheckDrawingTemplate":
+                        checkDrawingTemplate = reader.GetAttribute(1) == "1";
+                        break;
+                }
             }
         }
 
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "PageNames");
+            writer.WriteAttributeString("value", PageNames.ToString("\r\n"));
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ExcludePage");
+            writer.WriteAttributeString("value", ExcludePage ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "PageScale");
+            writer.WriteAttributeString("value", PageScale
+                .ToString(CultureInfo.InvariantCulture));
+            writer.WriteEndElement();
+
+
+            writer.WriteStartElement("parameter");
+            PageTypes.WriteXml(writer);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "CheckDrawingTemplate");
+            writer.WriteAttributeString("value", CheckDrawingTemplate ? "1" : "0");
+            writer.WriteEndElement();
+        }
+        #endregion
+
+        #region internal methods
         /// <summary>
         /// The Page type exists.
         /// </summary>
@@ -236,7 +232,7 @@ namespace TFlex.PackageManager.Configuration
         #region events
         void PageTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            data_1_4.Value = (sender as PageTypes).ToString();
+            //data_1_4.Value = (sender as PageTypes).ToString();
         }
         #endregion
     }
@@ -244,7 +240,8 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The page types class.
     /// </summary>
-    public class PageTypes : INotifyPropertyChanged
+    [Serializable, XmlRoot(ElementName = "parameter")]
+    public class PageTypes : IXmlSerializable, INotifyPropertyChanged
     {
         #region private fields
         bool normal;
@@ -259,8 +256,6 @@ namespace TFlex.PackageManager.Configuration
         {
             normal = true;
         }
-
-        internal bool IsChanged { get; private set; }
 
         #region public properties
         [PropertyOrder(1)]
@@ -366,31 +361,40 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region methods
-        public void SetValue(string value)
+        #region IXmlSerializable Members
+        public XmlSchema GetSchema()
         {
-            string[] values = value.Split(' ');
-
-            normal          = values[0] == "1";
-            workplane       = values[1] == "1";
-            auxiliary       = values[2] == "1";
-            text            = values[3] == "1";
-            billOfMaterials = values[4] == "1";
-            circuit         = values[5] == "1";
+            return null;
         }
 
-        public override string ToString()
+        public void ReadXml(XmlReader reader)
         {
-            string[] values = new string[6];
+            string[] values;
+            var data = reader.GetAttribute("value");
+            if (data != null && (values = data.Split(' ')).Length == 6)
+            {
+                normal          = values[0] == "1";
+                workplane       = values[1] == "1";
+                auxiliary       = values[2] == "1";
+                text            = values[3] == "1";
+                billOfMaterials = values[4] == "1";
+                circuit         = values[5] == "1";
+            }
+        }
 
-            values[0] = normal          ? "1" : "0";
-            values[1] = workplane       ? "1" : "0";
-            values[2] = auxiliary       ? "1" : "0";
-            values[3] = text            ? "1" : "0";
-            values[4] = billOfMaterials ? "1" : "0";
-            values[5] = circuit         ? "1" : "0";
-
-            return values.ToString(" ");
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("name", "PageTypes");
+            string[] values = new string[]
+            {
+                Normal          ? "1" : "0",
+                Workplane       ? "1" : "0",
+                Auxiliary       ? "1" : "0",
+                Text            ? "1" : "0",
+                BillOfMaterials ? "1" : "0",
+                Circuit         ? "1" : "0"
+            };
+            writer.WriteAttributeString("value", values.ToString(" "));
         }
         #endregion
 

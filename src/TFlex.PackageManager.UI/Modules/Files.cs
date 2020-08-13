@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -21,18 +20,14 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// Files extension modules.
     /// </summary>
-    [CustomCategoryOrder(Resources.FILES, 4)]
-    public class Files : Translator, INotifyDataErrorInfo
+    [CustomCategoryOrder(Resources.FILES, 4), Serializable]
+    public class Files : Translator
     {
         #region private fields
         string iExtension;
         string oExtension;
         string fileNameSuffix;
         string templateFileName;
-        XAttribute data_4_0;
-        XAttribute data_4_1;
-        XAttribute data_4_2;
-        XAttribute data_4_3;
         #endregion
 
         /// <summary>
@@ -44,15 +39,13 @@ namespace TFlex.PackageManager.Configuration
             oExtension       = ".grb";
             fileNameSuffix   = string.Empty;
             templateFileName = string.Empty;
-
-            Errors = new Dictionary<string, List<string>>();
         }
 
         #region internal properties
         /// <summary>
         /// The input file extension.
         /// </summary>
-        internal virtual string IExtension
+        internal string IExtension
         {
             get => iExtension;
             set
@@ -60,7 +53,6 @@ namespace TFlex.PackageManager.Configuration
                 if (iExtension != value)
                 {
                     iExtension = value;
-                    data_4_0.Value = value;
                     OnPropertyChanged("IExtension");
                 }
             }
@@ -69,7 +61,7 @@ namespace TFlex.PackageManager.Configuration
         /// <summary>
         /// The output file extension.
         /// </summary>
-        internal virtual string OExtension
+        internal string OExtension
         {
             get => oExtension;
             set
@@ -77,7 +69,6 @@ namespace TFlex.PackageManager.Configuration
                 if (oExtension != value)
                 {
                     oExtension = value;
-                    data_4_1.Value = value;
                     OnPropertyChanged("OExtension");
                 }
             }
@@ -102,7 +93,6 @@ namespace TFlex.PackageManager.Configuration
                     return;
 
                 fileNameSuffix = value;
-                data_4_2.Value = value;
 
                 string name = "FileNameSuffix";
                 char[] pattern = Path.GetInvalidFileNameChars();
@@ -138,7 +128,6 @@ namespace TFlex.PackageManager.Configuration
                     return;
 
                 templateFileName = value;
-                data_4_3.Value = value;
 
                 string name = "TemplateFileName";
                 string path = value;
@@ -163,53 +152,57 @@ namespace TFlex.PackageManager.Configuration
         }
         #endregion
 
-        #region internal methods
-        internal override XElement NewTranslator()
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
         {
-            XElement data = base.NewTranslator();
-            data_4_0 = new XAttribute("value", IExtension);
-            data_4_1 = new XAttribute("value", OExtension);
-            data_4_2 = new XAttribute("value", FileNameSuffix);
-            data_4_3 = new XAttribute("value", TemplateFileName);
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "IExtension"),
-                data_4_0));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "OExtension"),
-                data_4_1));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "FileNameSuffix"),
-                data_4_2));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "TemplateFileName"),
-                data_4_3));
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
+            base.ReadXml(reader);
+            for (int i = 0; i < 4 && reader.Read(); i++)
             {
-                case "IExtension":
-                    iExtension = a.Value;
-                    data_4_0 = a;
-                    break;
-                case "OExtension":
-                    oExtension = a.Value;
-                    data_4_1 = a;
-                    break;
-                case "FileNameSuffix":
-                    fileNameSuffix = a.Value;
-                    data_4_2 = a;
-                    break;
-                case "TemplateFileName":
-                    templateFileName = a.Value;
-                    data_4_3 = a;
-                    break;
+                switch (reader.GetAttribute(0))
+                {
+                    case "IExtension":
+                        iExtension = reader.GetAttribute(1);
+                        break;
+                    case "OExtension":
+                        oExtension = reader.GetAttribute(1);
+                        break;
+                    case "FileNameSuffix":
+                        fileNameSuffix = reader.GetAttribute(1);
+                        break;
+                    case "TemplateFileName":
+                        templateFileName = reader.GetAttribute(1);
+                        break;
+                }
             }
         }
 
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "IExtension");
+            writer.WriteAttributeString("value", IExtension);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "OExtension");
+            writer.WriteAttributeString("value", OExtension);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "FileNameSuffix");
+            writer.WriteAttributeString("value", FileNameSuffix);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "TemplateFileName");
+            writer.WriteAttributeString("value", TemplateFileName);
+            writer.WriteEndElement();
+        }
+        #endregion
+
+        #region internal methods
         /// <summary>
         /// Get output file name.
         /// </summary>
@@ -365,90 +358,6 @@ namespace TFlex.PackageManager.Configuration
                 result = GetValue(document, page, expression);
 
             return result ?? string.Empty;
-        }
-        #endregion
-
-        #region INotifyDataErrorInfo Members
-        /// <summary>
-        /// Occurs when the validation errors have changed for a property or for the entire entity.
-        /// </summary>
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-        /// <summary>
-        /// The RaiseErrorChanged event handler.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        protected void OnRaiseErrorChanged(string name)
-        {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(name));
-        }
-
-        /// <summary>
-        /// Error messages container.
-        /// </summary>
-        protected Dictionary<string, List<string>> Errors { get; }
-
-        /// <summary>
-        /// Gets a value that indicates whether the entity has validation errors.
-        /// </summary>
-        [Browsable(false)]
-        public bool HasErrors => Errors.Count > 0;
-
-        /// <summary>
-        /// Gets the validation errors for a specified property or for the entire entity.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <returns>The validation errors for the property or entity.</returns>
-        public IEnumerable GetErrors(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                return Errors.Values;
-
-            Errors.TryGetValue(name, out List<string> errors);
-            return errors;
-        }
-
-        /// <summary>
-        /// Add error to dictionary.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <param name="error">Error message.</param>
-        internal void AddError(string name, string error)
-        {
-            if (Errors.TryGetValue(name, out List<string> errors) == false)
-            {
-                errors = new List<string>();
-                Errors.Add(name, errors);
-            }
-
-            if (errors.Contains(error) == false)
-            {
-                errors.Add(error);
-            }
-
-            OnRaiseErrorChanged(name);
-        }
-
-        /// <summary>
-        /// Remove error from dictionary.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <param name="error">Error message.</param>
-        internal void RemoveError(string name, string error)
-        {
-            if (Errors.TryGetValue(name, out List<string> errors))
-            {
-                errors.Remove(error);
-            }
-
-            if (errors == null)
-                return;
-
-            if (errors.Count == 0)
-            {
-                Errors.Remove(name);
-                OnRaiseErrorChanged(name);
-            }
         }
         #endregion
     }

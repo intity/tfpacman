@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing.Design;
-using System.Xml.Linq;
+using System.Xml;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Editors;
 using TFlex.PackageManager.Properties;
@@ -13,8 +14,8 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// Variables extension module.
     /// </summary>
-    [CustomCategoryOrder(Resources.VARIABLES, 3)]
-    public class Variables : Files
+    [CustomCategoryOrder(Resources.VARIABLES, 3), Serializable]
+    public class Variables : Projections
     {
         public Variables()
         {
@@ -22,6 +23,16 @@ namespace TFlex.PackageManager.Configuration
             EditVariables   = new VariableCollection("EditVariables");
             RenameVariables = new VariableCollection("RenameVariables");
             RemoveVariables = new VariableCollection("RemoveVariables");
+
+            AddVariables.CollectionChanged    += Variables_CollectionChanged;
+            EditVariables.CollectionChanged   += Variables_CollectionChanged;
+            RenameVariables.CollectionChanged += Variables_CollectionChanged;
+            RemoveVariables.CollectionChanged += Variables_CollectionChanged;
+        }
+
+        private void Variables_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("Variables");
         }
 
         #region public properties
@@ -66,37 +77,57 @@ namespace TFlex.PackageManager.Configuration
         public VariableCollection RemoveVariables { get; }
         #endregion
 
-        #region internal methods
-        internal override XElement NewTranslator()
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
         {
-            XElement data = base.NewTranslator();
-            data.Add(AddVariables.Data);
-            data.Add(EditVariables.Data);
-            data.Add(RenameVariables.Data);
-            data.Add(RemoveVariables.Data);
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            base.LoadParameter(element);
-            switch (element.Attribute("name").Value)
+            base.ReadXml(reader);
+            for (int i = 0; i < 4 && reader.Read(); i++)
             {
-                case "AddVariables":
-                    AddVariables.LoadData(element);
-                    break;
-                case "EditVariables":
-                    EditVariables.LoadData(element);
-                    break;
-                case "RenameVariables":
-                    RenameVariables.LoadData(element);
-                    break;
-                case "RemoveVariables":
-                    RemoveVariables.LoadData(element);
-                    break;
+                switch (reader.GetAttribute(0))
+                {
+                    case "AddVariables":
+                        AddVariables.ReadXml(reader);
+                        break;
+                    case "EditVariables":
+                        EditVariables.ReadXml(reader);
+                        break;
+                    case "RenameVariables":
+                        RenameVariables.ReadXml(reader);
+                        break;
+                    case "RemoveVariables":
+                        RemoveVariables.ReadXml(reader);
+                        break;
+                }
             }
         }
 
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "AddVariables");
+            AddVariables.WriteXml(writer);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "EditVariables");
+            EditVariables.WriteXml(writer);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "RenameVariables");
+            RenameVariables.WriteXml(writer);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "RemoveVariables");
+            RemoveVariables.WriteXml(writer);
+            writer.WriteEndElement();
+        }
+        #endregion
+
+        #region internal methods
         /// <summary>
         /// The VariablesCount helper method.
         /// </summary>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
-using System.Xml.Linq;
+using System.Xml;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -27,15 +27,16 @@ namespace TFlex.PackageManager.Configuration
         int extension;
         bool screenLayers;
         bool constructions;
-
-        XAttribute data_4_1;
-        XAttribute data_4_2;
         #endregion
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public Translator_3() { }
+        public Translator_3()
+        {
+            IExtension = ".grb";
+            OExtension = ".bmp";
+        }
 
         #region public properties
         /// <summary>
@@ -87,8 +88,6 @@ namespace TFlex.PackageManager.Configuration
                 if (screenLayers != value)
                 {
                     screenLayers = value;
-                    data_4_1.Value = value ? "1" : "0";
-
                     OnPropertyChanged("ScreenLayers");
                 }
             }
@@ -110,8 +109,6 @@ namespace TFlex.PackageManager.Configuration
                 if (constructions != value)
                 {
                     constructions = value;
-                    data_4_2.Value = value ? "1" : "0";
-
                     OnPropertyChanged("Constructions");
                 }
             }
@@ -120,6 +117,41 @@ namespace TFlex.PackageManager.Configuration
 
         #region internal properties
         internal override TranslatorType TMode => TranslatorType.Bitmap;
+        internal override ProcessingMode PMode => ProcessingMode.Export;
+        #endregion
+
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
+        {
+            base.ReadXml(reader);
+            for (int i = 0; i < 2 && reader.Read(); i++)
+            {
+                switch (reader.GetAttribute(0))
+                {
+                    case "ScreenLayers":
+                        screenLayers = reader.GetAttribute(1) == "1";
+                        break;
+                    case "Constructions":
+                        constructions = reader.GetAttribute(1) == "1";
+                        break;
+                }
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "ScreenLayers");
+            writer.WriteAttributeString("value", ScreenLayers ? "1" : "0");
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "Constructions");
+            writer.WriteAttributeString("value", Constructions ? "1" : "0");
+            writer.WriteEndElement();
+        }
         #endregion
 
         #region internal methods
@@ -160,53 +192,6 @@ namespace TFlex.PackageManager.Configuration
                 {
                     logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", p.Value));
                 }
-            }
-        }
-
-        internal override XElement NewTranslator()
-        {
-            XElement data = base.NewTranslator();
-
-            data_4_1 = new XAttribute("value", ScreenLayers ? "1" : "0");
-            data_4_2 = new XAttribute("value", Constructions ? "1" : "0");
-
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "ScreenLayers"),
-                data_4_1));
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "Constructions"),
-                data_4_2));
-
-            PMode = ProcessingMode.Export;
-            OExtension = ".bmp";
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            base.LoadParameter(element);
-
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
-            {
-                case "TargetExtension":
-                    switch (a.Value)
-                    {
-                        case ".bmp" : extension = 0; break;
-                        case ".jpeg": extension = 1; break;
-                        case ".gif" : extension = 2; break;
-                        case ".tiff": extension = 3; break;
-                        case ".png" : extension = 4; break;
-                    }
-                    break;
-                case "ScreenLayers":
-                    screenLayers = a.Value == "1";
-                    data_4_1 = a;
-                    break;
-                case "Constructions":
-                    constructions = a.Value == "1";
-                    data_4_2 = a;
-                    break;
             }
         }
         #endregion

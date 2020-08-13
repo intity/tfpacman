@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing.Design;
-using System.Xml.Linq;
+using System.Xml;
 using TFlex.Model;
 using TFlex.PackageManager.Attributes;
 using TFlex.PackageManager.Common;
@@ -15,18 +16,20 @@ namespace TFlex.PackageManager.Configuration
     /// <summary>
     /// The JT-translator class.
     /// </summary>
+    [Serializable]
     public class Translator_7 : Translator3D
     {
         #region private fields
         int version;
-
-        XAttribute data_4_0;
         #endregion
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public Translator_7() { }
+        public Translator_7()
+        {
+            PMode = ProcessingMode.Export;
+        }
 
         #region public properties
         /// <summary>
@@ -47,8 +50,6 @@ namespace TFlex.PackageManager.Configuration
                 if (version != value)
                 {
                     version = value;
-                    data_4_0.Value = value.ToString();
-
                     OnPropertyChanged("Version");
                 }
             }
@@ -75,6 +76,32 @@ namespace TFlex.PackageManager.Configuration
                         break;
                 }
             }
+        }
+        #endregion
+
+        #region IXmlSerializable Members
+        public override void ReadXml(XmlReader reader)
+        {
+            base.ReadXml(reader);
+            for (int i = 0; i < 1 && reader.Read(); i++)
+            {
+                switch (reader.GetAttribute(0))
+                {
+                    case "Version":
+                        version = int.Parse(reader.GetAttribute(1));
+                        break;
+                }
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteStartElement("parameter");
+            writer.WriteAttributeString("name", "Version");
+            writer.WriteAttributeString("value", Version.ToString());
+            writer.WriteEndElement();
         }
         #endregion
 
@@ -116,31 +143,6 @@ namespace TFlex.PackageManager.Configuration
             if (export.Export(path))
             {
                 logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", path));
-            }
-        }
-
-        internal override XElement NewTranslator()
-        {
-            XElement data = base.NewTranslator();
-            data_4_0 = new XAttribute("value", Version.ToString());
-            data.Add(new XElement("parameter",
-                new XAttribute("name", "Version"),
-                data_4_0));
-            OExtension = ".jt";
-            return data;
-        }
-
-        internal override void LoadParameter(XElement element)
-        {
-            base.LoadParameter(element);
-
-            var a = element.Attribute("value");
-            switch (element.Attribute("name").Value)
-            {
-                case "Version":
-                    version = int.Parse(a.Value);
-                    data_4_0 = a;
-                    break;
             }
         }
         #endregion
