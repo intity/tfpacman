@@ -22,7 +22,7 @@ namespace TFlex
         /// </summary>
         public static void Initialize()
         {
-            version = new Version("16.0.73.0"); // minimum supported version
+            version = new Version("17.0.21.0"); // minimum supported version
 
             if ((folder = GetFolder()) == null)
             {
@@ -75,10 +75,10 @@ namespace TFlex
                 {
                     switch (product)
                     {
-                        case "T-FLEX CAD 3D 16":
-                        case "T-FLEX CAD SE 16":
-                        case "TENADO CAD 3D 16":
-                        case "TENADO CAD SE 16":
+                        case "T-FLEX CAD 3D 17":
+                        case "T-FLEX CAD SE 17":
+                        case "TENADO CAD 3D 17":
+                        case "TENADO CAD SE 17":
                             if (result == null)
                                 result = GetPath_1(rootKey, product);
                             break;
