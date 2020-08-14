@@ -133,6 +133,7 @@ namespace TFlex.PackageManager.Configuration
                 if (initialCatalog != value)
                 {
                     initialCatalog = value;
+                    IsChanged = true;
                     OnPropertyChanged("InitialCatalog");
                 }
             }
@@ -153,6 +154,7 @@ namespace TFlex.PackageManager.Configuration
                 if (targetDirectory != value)
                 {
                     targetDirectory = value;
+                    IsChanged = true;
                     OnPropertyChanged("TargetDirectory");
                 }
             }
