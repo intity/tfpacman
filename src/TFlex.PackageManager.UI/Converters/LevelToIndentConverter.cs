@@ -2,9 +2,9 @@ using System;
 using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
-using TFlex.PackageManager.Controls;
+using TFlex.PackageManager.UI.Controls;
 
-namespace TFlex.PackageManager.Converters
+namespace TFlex.PackageManager.UI.Converters
 {
     /// <summary>
     /// Convert Level to left margin

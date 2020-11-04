@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using TFlex.PackageManager.Properties;
+using TFlex.PackageManager.UI.Properties;
 
 namespace TFlex.PackageManager.Plugin
 {

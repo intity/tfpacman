@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using TFlex.PackageManager.Model;
+using TFlex.PackageManager.UI.Model;
 
-namespace TFlex.PackageManager.Configuration
+namespace TFlex.PackageManager.UI.Configuration
 {
     /// <summary>
     /// The Package class.

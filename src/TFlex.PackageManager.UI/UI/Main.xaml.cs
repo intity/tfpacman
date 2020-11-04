@@ -10,9 +10,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
-using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Configuration;
-using TFlex.PackageManager.Controls;
+using TFlex.PackageManager.UI.Common;
+using TFlex.PackageManager.UI.Configuration;
+using TFlex.PackageManager.UI.Controls;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using UndoRedoFramework;
 

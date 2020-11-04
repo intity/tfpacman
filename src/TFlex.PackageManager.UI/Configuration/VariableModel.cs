@@ -7,10 +7,10 @@ using System.Windows.Data;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Properties;
+using TFlex.PackageManager.UI.Common;
+using TFlex.PackageManager.UI.Properties;
 
-namespace TFlex.PackageManager.Configuration
+namespace TFlex.PackageManager.UI.Configuration
 {
     /// <summary>
     /// The action definition to processing variables.

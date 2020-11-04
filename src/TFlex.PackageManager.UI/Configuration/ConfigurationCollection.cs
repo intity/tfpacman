@@ -5,9 +5,9 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
-using TFlex.PackageManager.Common;
+using TFlex.PackageManager.UI.Common;
 
-namespace TFlex.PackageManager.Configuration
+namespace TFlex.PackageManager.UI.Configuration
 {
     /// <summary>
     /// The ConfigurationCollection class.

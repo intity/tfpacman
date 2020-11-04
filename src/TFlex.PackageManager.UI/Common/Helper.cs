@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace TFlex.PackageManager.Common
+namespace TFlex.PackageManager.UI.Common
 {
     internal static class Helper
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TFlex.PackageManager.Configuration
+namespace TFlex.PackageManager.UI.Configuration
 {
     /// <summary>
     /// The Document translator class.

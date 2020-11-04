@@ -6,10 +6,10 @@ using System.IO;
 using System.Linq;
 using TFlex.Model;
 using TFlex.Model.Model3D;
-using TFlex.PackageManager.Configuration;
-using TFlex.PackageManager.Model;
+using TFlex.PackageManager.UI.Configuration;
+using TFlex.PackageManager.UI.Model;
 
-namespace TFlex.PackageManager.Common
+namespace TFlex.PackageManager.UI.Common
 {
     /// <summary>
     /// Document processing class.

@@ -4,14 +4,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using TFlex.PackageManager.Common;
+using TFlex.PackageManager.UI.Common;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using UndoRedoFramework;
 
 #pragma warning disable CA1721
 
-namespace TFlex.PackageManager.Editors
+namespace TFlex.PackageManager.UI.Editors
 {
     /// <summary>
     /// Interaction logic for PathEditor.xaml

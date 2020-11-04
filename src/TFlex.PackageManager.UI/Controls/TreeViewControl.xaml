@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="TFlex.PackageManager.Controls.TreeViewControl"
+﻿<UserControl x:Class="TFlex.PackageManager.UI.Controls.TreeViewControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:l="clr-namespace:TFlex.PackageManager.Controls"
-             xmlns:c="clr-namespace:TFlex.PackageManager.Converters"
+             xmlns:l="clr-namespace:TFlex.PackageManager.UI.Controls"
+             xmlns:c="clr-namespace:TFlex.PackageManager.UI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="400" 
              d:DesignWidth="500">

@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace TFlex.PackageManager.Configuration
+namespace TFlex.PackageManager.UI.Configuration
 {
     /// <summary>
     /// The Variable collection.

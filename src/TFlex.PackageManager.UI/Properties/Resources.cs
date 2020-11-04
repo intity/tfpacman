@@ -9,7 +9,7 @@ using System.Windows;
 
 #pragma warning disable CA1707
 
-namespace TFlex.PackageManager.Properties
+namespace TFlex.PackageManager.UI.Properties
 {
     public class Resources
     {

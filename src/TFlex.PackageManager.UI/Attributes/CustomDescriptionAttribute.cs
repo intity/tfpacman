@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using TFlex.PackageManager.Properties;
+using TFlex.PackageManager.UI.Properties;
 
-namespace TFlex.PackageManager.Attributes
+namespace TFlex.PackageManager.UI.Attributes
 {
     [AttributeUsage(AttributeTargets.All)]
     internal class CustomDescriptionAttribute : DescriptionAttribute

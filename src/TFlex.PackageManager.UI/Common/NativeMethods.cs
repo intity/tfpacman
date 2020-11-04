@@ -6,7 +6,7 @@ using System.Drawing;
 #pragma warning disable CA1049
 #pragma warning disable CA1400
 
-namespace TFlex.PackageManager.Common
+namespace TFlex.PackageManager.UI.Common
 {
     internal static class NativeMethods
 	{

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace TFlex.PackageManager.Common
+namespace TFlex.PackageManager.UI.Common
 {
     /// <summary>
     /// Custom folder browser dialog.

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using TFlex.Model;
-using TFlex.PackageManager.Common;
+using TFlex.PackageManager.UI.Common;
 
 #pragma warning disable CA1707
 
-namespace TFlex.PackageManager.Configuration
+namespace TFlex.PackageManager.UI.Configuration
 {
     /// <summary>
     /// The ACIS-translator class.

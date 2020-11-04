@@ -4,14 +4,14 @@ using System.Drawing.Design;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
-using TFlex.PackageManager.Attributes;
-using TFlex.PackageManager.Common;
-using TFlex.PackageManager.Editors;
-using TFlex.PackageManager.Model;
-using TFlex.PackageManager.Properties;
+using TFlex.PackageManager.UI.Attributes;
+using TFlex.PackageManager.UI.Common;
+using TFlex.PackageManager.UI.Editors;
+using TFlex.PackageManager.UI.Model;
+using TFlex.PackageManager.UI.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace TFlex.PackageManager.Configuration
+namespace TFlex.PackageManager.UI.Configuration
 {
     /// <summary>
     /// Links extension module.

@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
-namespace TFlex.PackageManager.Common
+namespace TFlex.PackageManager.UI.Common
 {
     /// <summary>
     /// Provides a thread-safe dictionary for use with data binding.

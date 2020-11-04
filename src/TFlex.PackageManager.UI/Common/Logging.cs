@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace TFlex.PackageManager.Common
+namespace TFlex.PackageManager.UI.Common
 {
     internal enum LogLevel
     {

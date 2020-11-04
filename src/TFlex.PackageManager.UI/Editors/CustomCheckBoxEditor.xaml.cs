@@ -6,7 +6,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using UndoRedoFramework;
 
-namespace TFlex.PackageManager.Editors
+namespace TFlex.PackageManager.UI.Editors
 {
     public partial class CustomCheckBoxEditor : UserControl, ITypeEditor
     {

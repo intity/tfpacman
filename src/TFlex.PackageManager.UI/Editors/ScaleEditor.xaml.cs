@@ -10,7 +10,7 @@ using UndoRedoFramework;
 
 #pragma warning disable CA1721
 
-namespace TFlex.PackageManager.Editors
+namespace TFlex.PackageManager.UI.Editors
 {
     /// <summary>
     /// Interaction logic for InputScaleControl.xaml

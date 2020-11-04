@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace TFlex.PackageManager.Controls
+namespace TFlex.PackageManager.UI.Controls
 {
     /// <summary>
     /// Interaction logic for TreeViewControl.xaml

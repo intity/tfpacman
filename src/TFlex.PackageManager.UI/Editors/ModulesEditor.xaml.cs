@@ -3,11 +3,11 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using TFlex.PackageManager.Configuration;
+using TFlex.PackageManager.UI.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 
-namespace TFlex.PackageManager.Editors
+namespace TFlex.PackageManager.UI.Editors
 {
     /// <summary>
     /// Interaction logic for ModulesEditor.xaml

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
-using TFlex.PackageManager.Configuration;
+using TFlex.PackageManager.UI.Configuration;
 
 namespace TFlex.PackageManager.UI
 {

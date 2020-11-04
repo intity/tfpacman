@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TFlex.Model;
 
-namespace TFlex.PackageManager.Model
+namespace TFlex.PackageManager.UI.Model
 {
     /// <summary>
     /// The Processing Item class.

@@ -7,7 +7,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using UndoRedoFramework;
 
-namespace TFlex.PackageManager.Editors
+namespace TFlex.PackageManager.UI.Editors
 {
     /// <summary>
     /// Interaction logic for CustomTextBoxEditor.xaml

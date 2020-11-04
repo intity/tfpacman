@@ -7,9 +7,9 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using TFlex.Model;
-using TFlex.PackageManager.Common;
+using TFlex.PackageManager.UI.Common;
 
-namespace TFlex.PackageManager.Configuration
+namespace TFlex.PackageManager.UI.Configuration
 {
     /// <summary>
     /// The Translator type enumeration.

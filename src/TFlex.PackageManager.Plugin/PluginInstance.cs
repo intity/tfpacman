@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using TFlex.Model;
-using TFlex.PackageManager.Properties;
 using TFlex.PackageManager.UI;
+using TFlex.PackageManager.UI.Properties;
 
 namespace TFlex.PackageManager.Plugin
 {

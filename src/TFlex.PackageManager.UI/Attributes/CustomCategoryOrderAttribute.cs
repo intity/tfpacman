@@ -1,8 +1,8 @@
 ﻿using System;
-using TFlex.PackageManager.Properties;
+using TFlex.PackageManager.UI.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace TFlex.PackageManager.Attributes
+namespace TFlex.PackageManager.UI.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     internal class CustomCategoryOrderAttribute : CategoryOrderAttribute
