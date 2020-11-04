@@ -142,7 +142,7 @@ namespace TFlex
             try
             {
                 string name = args.Name;
-                int index = name.IndexOf(",");
+                int index = name.IndexOf(",", StringComparison.InvariantCulture);
                 if (index > 0)
                 {
                     name = name.Substring(0, index);
