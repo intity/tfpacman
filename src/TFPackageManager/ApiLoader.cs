@@ -22,7 +22,7 @@ namespace TFlex
         /// </summary>
         public static void Initialize()
         {
-            version = new Version("17.0.21.0"); // minimum supported version
+            version = new Version("17.0.27.0"); // minimum supported version
 
             if ((folder = GetFolder()) == null)
             {
