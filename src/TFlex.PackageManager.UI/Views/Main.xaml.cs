@@ -16,7 +16,7 @@ using TFlex.PackageManager.UI.Controls;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using UndoRedoFramework;
 
-namespace TFlex.PackageManager.UI
+namespace TFlex.PackageManager.UI.Views
 {
     /// <summary>
     /// Interaction logic for Main.xaml

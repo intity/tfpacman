@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using TFlex.Model;
-using TFlex.PackageManager.UI;
+using TFlex.PackageManager.UI.Views;
 using TFlex.PackageManager.UI.Properties;
 
 namespace TFlex.PackageManager.Plugin

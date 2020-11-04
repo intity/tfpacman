@@ -97,7 +97,7 @@ namespace TFlex.PackageManager.UI.Editors
                     break;
             }
 
-            VariablesUI vui = new VariablesUI(action)
+            Views.Variables vui = new Views.Variables(action)
             {
                 Title = pi.DisplayName,
                 Owner = Window.GetWindow(Parent),

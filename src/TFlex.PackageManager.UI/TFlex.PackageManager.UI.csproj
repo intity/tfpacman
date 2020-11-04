@@ -196,19 +196,19 @@
     </Compile>
     <Compile Include="Model\ProcItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\VariablesUI.xaml.cs">
-      <DependentUpon>VariablesUI.xaml</DependentUpon>
+    <Compile Include="Views\Variables.xaml.cs">
+      <DependentUpon>Variables.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\PropertiesUI.xaml.cs">
+    <Compile Include="Views\PropertiesUI.xaml.cs">
       <DependentUpon>PropertiesUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\AboutUs.xaml.cs">
+    <Compile Include="Views\AboutUs.xaml.cs">
       <DependentUpon>AboutUs.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ListValues.xaml.cs">
+    <Compile Include="Views\ListValues.xaml.cs">
       <DependentUpon>ListValues.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Main.xaml.cs">
+    <Compile Include="Views\Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>
     </Compile>
     <None Include="packages.config" />
@@ -281,23 +281,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\VariablesUI.xaml">
+    <Page Include="Views\Variables.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\PropertiesUI.xaml">
+    <Page Include="Views\PropertiesUI.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\AboutUs.xaml">
+    <Page Include="Views\AboutUs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ListValues.xaml">
+    <Page Include="Views\ListValues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Main.xaml">
+    <Page Include="Views\Main.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

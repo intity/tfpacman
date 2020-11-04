@@ -8,19 +8,19 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using TFlex.PackageManager.UI.Configuration;
 
-namespace TFlex.PackageManager.UI
+namespace TFlex.PackageManager.UI.Views
 {
     /// <summary>
-    /// Interaction logic for VariablesUI.xaml
+    /// Interaction logic for Variables.xaml
     /// </summary>
-    public partial class VariablesUI : Window
+    public partial class Variables : Window
     {
         #region private fields
         VariableCollection variables;
         readonly VariableAction action;
         #endregion
 
-        public VariablesUI(VariableAction action)
+        public Variables(VariableAction action)
         {
             InitializeComponent();
             this.action = action;

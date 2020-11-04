@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace TFlex.PackageManager.UI
+namespace TFlex.PackageManager.UI.Views
 {
     /// <summary>
     /// Interaction logic for ListValues.xaml

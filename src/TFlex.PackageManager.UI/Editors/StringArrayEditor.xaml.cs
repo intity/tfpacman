@@ -126,7 +126,7 @@ namespace TFlex.PackageManager.UI.Editors
                     break;
             }
 
-            ListValues imt = new ListValues
+            Views.ListValues imt = new Views.ListValues
             {
                 Owner = Window.GetWindow(Parent),
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,

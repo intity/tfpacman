@@ -1,5 +1,5 @@
 using System.Windows;
-using TFlex.PackageManager.UI;
+using TFlex.PackageManager.UI.Views;
 
 namespace TFlex.PackageManager
 {

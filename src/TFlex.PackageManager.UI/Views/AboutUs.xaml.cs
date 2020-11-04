@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
 
-namespace TFlex.PackageManager.UI
+namespace TFlex.PackageManager.UI.Views
 {
     /// <summary>
     /// Interaction logic for AboutUs.xaml

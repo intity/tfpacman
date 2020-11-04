@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace TFlex.PackageManager.UI
+namespace TFlex.PackageManager.UI.Views
 {
     /// <summary>
     /// Interaction logic for PropertiesUI.xaml
