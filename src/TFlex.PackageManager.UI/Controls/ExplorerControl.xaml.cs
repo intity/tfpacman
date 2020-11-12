@@ -152,7 +152,7 @@ namespace TFlex.PackageManager.UI.Controls
                 };
 
                 subitem.Items.Add(dummyNode);
-                subitem.Expanded += Folder_Expanded;
+                subitem.Expanded += Node_Expanded;
 
                 if (item != null)
                     item.Items.Add(subitem);
@@ -288,7 +288,7 @@ namespace TFlex.PackageManager.UI.Controls
             }
         }
 
-        private void Folder_Expanded(object sender, RoutedEventArgs e)
+        private void Node_Expanded(object sender, RoutedEventArgs e)
         {
             if (sender is CustomTreeViewItem item && e.OriginalSource == sender)
             {
