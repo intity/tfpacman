@@ -147,6 +147,7 @@ namespace TFlex.PackageManager.UI.Controls
                 {
                     Header = i.Substring(i.LastIndexOf("\\") + 1),
                     NodeParent = item,
+                    IsNode = true,
                     Tag = i
                 };
 

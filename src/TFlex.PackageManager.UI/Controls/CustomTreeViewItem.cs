@@ -29,10 +29,8 @@ namespace TFlex.PackageManager.UI.Controls
         /// </summary>
         public bool IsNode
         {
-            get
-            {
-                return File.GetAttributes(Tag.ToString()) == FileAttributes.Directory;
-            }
+            get => (bool)GetValue(IsNodeProperty);
+            set => SetValue(IsNodeProperty, value);
         }
 
         /// <summary>
@@ -81,6 +79,12 @@ namespace TFlex.PackageManager.UI.Controls
                 typeof(bool?),
                 typeof(CustomTreeViewItem),
                 new FrameworkPropertyMetadata((bool?)false));
+
+        public static readonly DependencyProperty IsNodeProperty =
+            DependencyProperty.Register("IsNode",
+                typeof(bool),
+                typeof(CustomTreeViewItem), 
+                new PropertyMetadata(false));
 
         public static readonly DependencyProperty ExtensionProperty =
             DependencyProperty.Register("Extension",
