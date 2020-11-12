@@ -18,7 +18,7 @@ namespace TFlex.PackageManager.UI.Controls
         #region private fields
         readonly object dummyNode;
         string searchPattern;
-        string targetDirectory;
+        string rootDirectory;
         ImageSource tempImage;
         CustomTreeView treeView;
         #endregion
@@ -27,9 +27,9 @@ namespace TFlex.PackageManager.UI.Controls
         {
             InitializeComponent();
 
-            dummyNode       = null;
-            targetDirectory = null;
-            SelectedItems   = new ObservableCollection<object>();
+            dummyNode     = null;
+            rootDirectory = null;
+            SelectedItems = new ObservableCollection<object>();
         }
 
         #region public properties
@@ -55,16 +55,16 @@ namespace TFlex.PackageManager.UI.Controls
         }
 
         /// <summary>
-        /// Target directory.
+        /// Root directory.
         /// </summary>
-        public string TargetDirectory
+        public string RootDirectory
         {
-            get => targetDirectory;
+            get => rootDirectory;
             set
             {
-                if (targetDirectory != value)
+                if (rootDirectory != value)
                 {
-                    targetDirectory = value;
+                    rootDirectory = value;
                     UpdateControl();
                 }
             }
@@ -85,7 +85,7 @@ namespace TFlex.PackageManager.UI.Controls
             if (treeView == null)
                 treeView = Content as CustomTreeView;
 
-            if (treeView == null || targetDirectory == null)
+            if (treeView == null || rootDirectory == null)
                 return;
 
             if (treeView.Items.Count > 0)
@@ -94,11 +94,11 @@ namespace TFlex.PackageManager.UI.Controls
             if (SelectedItems.Count > 0)
                 SelectedItems.Clear();
 
-            if (Directory.Exists(targetDirectory))
+            if (Directory.Exists(rootDirectory))
             {
                 GetDirectories();
                 GetFiles();
-                CountFiles = Directory.GetFiles(targetDirectory, 
+                CountFiles = Directory.GetFiles(rootDirectory, 
                     SearchPattern,
                     SearchOption.AllDirectories).Length;
             }
@@ -114,10 +114,10 @@ namespace TFlex.PackageManager.UI.Controls
         /// </summary>
         public void CleanTargetDirectory()
         {
-            if (!Directory.Exists(targetDirectory))
+            if (!Directory.Exists(rootDirectory))
                 return;
 
-            DirectoryInfo di = new DirectoryInfo(targetDirectory);
+            DirectoryInfo di = new DirectoryInfo(rootDirectory);
 
             foreach (var i in di.GetFiles()) i.Delete();
             foreach (var i in di.GetDirectories()) i.Delete(true);
@@ -137,7 +137,7 @@ namespace TFlex.PackageManager.UI.Controls
                 directory = item.Tag.ToString();
             }
             else
-                directory = targetDirectory;
+                directory = rootDirectory;
 
             if (directory == null || treeView == null)
                 return;
@@ -166,7 +166,7 @@ namespace TFlex.PackageManager.UI.Controls
         {
             var directory = item != null 
                 ? item.Tag.ToString() 
-                : targetDirectory;
+                : rootDirectory;
 
             if (directory == null || treeView == null)
                 return;

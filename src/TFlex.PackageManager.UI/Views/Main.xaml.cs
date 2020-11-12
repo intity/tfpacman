@@ -363,10 +363,10 @@ namespace TFlex.PackageManager.UI.Views
             switch (e.PropertyName)
             {
                 case "InitialCatalog":
-                    tvControl1.TargetDirectory = cfg.InitialCatalog;
+                    tvControl1.RootDirectory = cfg.InitialCatalog;
                     break;
                 case "TargetDirectory":
-                    tvControl2.TargetDirectory = cfg.TargetDirectory;
+                    tvControl2.RootDirectory = cfg.TargetDirectory;
                     break;
                 case "Translator":
                     propertyGrid.SelectedObject = cfg.Translator;
@@ -651,8 +651,8 @@ namespace TFlex.PackageManager.UI.Views
                 key1 = comboBox1.SelectedValue.ToString();
                 var cfg = conf.Configurations[key1];
 
-                tvControl1.TargetDirectory  = cfg.InitialCatalog;
-                tvControl2.TargetDirectory  = cfg.TargetDirectory;
+                tvControl1.RootDirectory  = cfg.InitialCatalog;
+                tvControl2.RootDirectory  = cfg.TargetDirectory;
                 inputPath1.SelectedObject   = cfg;
                 inputPath2.SelectedObject   = cfg;
                 propertyGrid.SelectedObject = cfg.Translator;
@@ -661,8 +661,8 @@ namespace TFlex.PackageManager.UI.Views
             }
             else
             {
-                tvControl1.TargetDirectory  = string.Empty;
-                tvControl2.TargetDirectory  = string.Empty;
+                tvControl1.RootDirectory  = string.Empty;
+                tvControl2.RootDirectory  = string.Empty;
                 inputPath1.SelectedObject   = null;
                 inputPath2.SelectedObject   = null;
                 propertyGrid.SelectedObject = null;
@@ -724,8 +724,8 @@ namespace TFlex.PackageManager.UI.Views
         private void SelectedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (tvControl1.SelectedItems.Count > 0 &&
-                tvControl1.TargetDirectory.Length > 0 &&
-                tvControl2.TargetDirectory.Length > 0)
+                tvControl1.RootDirectory.Length > 0 &&
+                tvControl2.RootDirectory.Length > 0)
             {
                 menuItem3_1.IsEnabled = true;
                 button3_1.IsEnabled = true;
