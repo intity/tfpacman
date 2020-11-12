@@ -13,7 +13,7 @@ namespace TFlex.PackageManager.UI.Controls
     /// <summary>
     /// Interaction logic for TreeViewControl.xaml
     /// </summary>
-    public partial class TreeViewControl : UserControl
+    public partial class ExplorerControl : UserControl
     {
         #region private fields
         readonly object dummyNode;
@@ -23,7 +23,7 @@ namespace TFlex.PackageManager.UI.Controls
         CustomTreeView treeView;
         #endregion
 
-        public TreeViewControl()
+        public ExplorerControl()
         {
             InitializeComponent();
 

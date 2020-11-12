@@ -144,8 +144,8 @@
     <Compile Include="Editors\SewingEditor.xaml.cs">
       <DependentUpon>SewingEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TreeViewControl.xaml.cs">
-      <DependentUpon>TreeViewControl.xaml</DependentUpon>
+    <Compile Include="Controls\ExplorerControl.xaml.cs">
+      <DependentUpon>ExplorerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\CustomCheckBoxEditor.xaml.cs">
       <DependentUpon>CustomCheckBoxEditor.xaml</DependentUpon>
@@ -271,7 +271,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\TreeViewControl.xaml">
+    <Page Include="Controls\ExplorerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
