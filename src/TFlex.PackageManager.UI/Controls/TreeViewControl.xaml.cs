@@ -98,8 +98,9 @@ namespace TFlex.PackageManager.UI.Controls
             {
                 GetDirectories();
                 GetFiles();
-                CountFiles = GetFiles(targetDirectory,
-                    SearchOption.AllDirectories).Count;
+                CountFiles = Directory.GetFiles(targetDirectory, 
+                    SearchPattern,
+                    SearchOption.AllDirectories).Length;
             }
             else
                 CountFiles = 0;
@@ -161,15 +162,6 @@ namespace TFlex.PackageManager.UI.Controls
             }
         }
 
-        private IList<string> GetFiles(string path, SearchOption option)
-        {
-            string[] patterns = SearchPattern.Split('|');
-            List<string> files = new List<string>();
-            foreach (var i in patterns)
-                files.AddRange(Directory.GetFiles(path, i, option));
-            return files;
-        }
-
         private void GetFiles(CustomTreeViewItem item = null)
         {
             var directory = item != null 
@@ -180,7 +172,7 @@ namespace TFlex.PackageManager.UI.Controls
                 return;
 
             SearchOption option = SearchOption.TopDirectoryOnly;
-            foreach (var i in GetFiles(directory, option))
+            foreach (var i in Directory.GetFiles(directory, SearchPattern, option))
             {
                 CustomTreeViewItem subitem = new CustomTreeViewItem
                 {

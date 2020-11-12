@@ -56,7 +56,7 @@ namespace TFlex.PackageManager.UI.Views
             tvControl1.SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
 
             tvControl2.Content = new CustomTreeView();
-            tvControl2.SearchPattern = "*.grb|*.dwg|*.dxf|*.dxb|*.sat|*.bmp|*.jpeg|*.gif|*.tiff|*.png|*.igs|*.jt|*.pdf|*.stp";
+            tvControl2.SearchPattern = "*.grb";
 
             options = new Common.Options();
 
