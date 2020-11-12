@@ -113,6 +113,8 @@
     <Compile Include="Configuration\Modules.cs" />
     <Compile Include="Configuration\Package.cs" />
     <Compile Include="Configuration\Translator.cs" />
+    <Compile Include="Controls\CustomTreeView.cs" />
+    <Compile Include="Controls\CustomTreeViewItem.cs" />
     <Compile Include="Modules\Files.cs" />
     <Compile Include="Configuration\Translator3D.cs" />
     <Compile Include="Configuration\Header.cs" />
