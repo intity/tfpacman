@@ -615,7 +615,7 @@ namespace TFlex.PackageManager.UI.Views
 
         private void Event3_3_Click(object sender, RoutedEventArgs e)
         {
-            tvControl2.CleanTargetDirectory();
+            tvControl2.CleanRootDirectory();
             UpdateStateToControls();
         } // Clear target directory
 

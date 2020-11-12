@@ -110,9 +110,9 @@ namespace TFlex.PackageManager.UI.Controls
         }
 
         /// <summary>
-        /// Clean target directory.
+        /// Clean the root directory.
         /// </summary>
-        public void CleanTargetDirectory()
+        public void CleanRootDirectory()
         {
             if (!Directory.Exists(rootDirectory))
                 return;
