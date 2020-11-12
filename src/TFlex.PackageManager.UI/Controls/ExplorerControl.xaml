@@ -145,7 +145,7 @@
                         <ControlTemplate.Triggers>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
-                                    <Condition Property="Extension" Value="{x:Null}"/>
+                                    <Condition Property="IsNode" Value="True"/>
                                     <Condition Property="IsExpanded" Value="False"/>
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>
@@ -154,7 +154,7 @@
                             </MultiTrigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
-                                    <Condition Property="Extension" Value="{x:Null}"/>
+                                    <Condition Property="IsNode" Value="True"/>
                                     <Condition Property="IsExpanded" Value="True"/>
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>

@@ -144,10 +144,9 @@ namespace TFlex.PackageManager.UI.Controls
 
             foreach (var i in Directory.GetDirectories(directory))
             {
-                CustomTreeViewItem subitem = new CustomTreeViewItem
+                var subitem = new CustomTreeViewItem
                 {
                     Header = i.Substring(i.LastIndexOf("\\") + 1),
-                    NodeParent = item,
                     IsNode = true,
                     Tag = i
                 };
@@ -174,11 +173,10 @@ namespace TFlex.PackageManager.UI.Controls
             SearchOption option = SearchOption.TopDirectoryOnly;
             foreach (var i in Directory.GetFiles(directory, SearchPattern, option))
             {
-                CustomTreeViewItem subitem = new CustomTreeViewItem
+                var subitem = new CustomTreeViewItem
                 {
                     Header = Path.GetFileName(i),
                     Extension = Path.GetExtension(i),
-                    NodeParent = item,
                     Tag = i
                 };
 
@@ -194,7 +192,7 @@ namespace TFlex.PackageManager.UI.Controls
 
         private void IsChecked(CustomTreeViewItem item)
         {
-            bool? i_value = item.IsChecked;
+            bool? value = item.IsChecked;
 
             if (item.IsNode)
             {
@@ -207,7 +205,7 @@ namespace TFlex.PackageManager.UI.Controls
 
                 foreach (CustomTreeViewItem i in item.Items)
                 {
-                    i.IsChecked = i_value;
+                    i.IsChecked = value;
                 }
             }
             else
@@ -222,23 +220,17 @@ namespace TFlex.PackageManager.UI.Controls
                 }
             }
 
-            if (item.NodeParent != null)
+            if (item.Parent != null && item.Parent is CustomTreeViewItem parent)
             {
-                bool? n_value = false;
-
-                foreach (CustomTreeViewItem j in item.NodeParent.Items)
+                foreach (CustomTreeViewItem i in parent.Items)
                 {
-                    if (j.IsChecked != i_value)
+                    if (i.IsChecked != value)
                     {
-                        n_value = null;
+                        value = null;
                         break;
                     }
                 }
-
-                if (n_value == null)
-                    item.NodeParent.IsChecked = null;
-                else
-                    item.NodeParent.IsChecked = i_value;
+                parent.IsChecked = value;
             }
         }
         #endregion

@@ -34,11 +34,6 @@ namespace TFlex.PackageManager.UI.Controls
         }
 
         /// <summary>
-        /// The tree node parent object.
-        /// </summary>
-        public CustomTreeViewItem NodeParent { get; set; }
-
-        /// <summary>
         /// Item's hierarchy in the tree
         /// </summary>
         public int Level
