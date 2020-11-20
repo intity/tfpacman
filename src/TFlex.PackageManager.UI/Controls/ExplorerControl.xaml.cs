@@ -248,6 +248,8 @@ namespace TFlex.PackageManager.UI.Controls
                 item.Items.Add(subItem);
                 GetLinks(subItem);
             }
+
+            Application.IdleSession();
         }
 
         private void CheckingToParent(CustomTreeViewItem item)
