@@ -185,6 +185,10 @@
     <value>Опции</value>
     <comment>Настройки приложения</comment>
   </data>
+  <data name="menuItem4_2" xml:space="preserve">
+    <value>Вид дерева сборки</value>
+    <comment>Вид дерева сборки</comment>
+  </data>
   <data name="menuItem5_1" xml:space="preserve">
     <value>О программе</value>
   </data>

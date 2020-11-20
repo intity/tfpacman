@@ -118,12 +118,11 @@
                                         x:Name="Cb" 
                                         Focusable="False" 
                                         IsChecked="{
-                                            Binding Path=IsChecked, 
-                                            RelativeSource={RelativeSource AncestorType=l:CustomTreeViewItem}
-                                        }" 
-                                        VerticalAlignment="Center" Padding="2"
-                                        Checked="CheckBox_Checked" 
-                                        Unchecked="CheckBox_Unchecked">
+                                            Binding IsChecked, 
+                                            RelativeSource={RelativeSource TemplatedParent}}" 
+                                        VerticalAlignment="Center" 
+                                        Padding="2" 
+                                        Checked="Item_Checked" Unchecked="Item_Unchecked">
                                         <CheckBox.LayoutTransform>
                                             <ScaleTransform ScaleX="1" ScaleY="1.08" />
                                         </CheckBox.LayoutTransform>
@@ -145,8 +144,9 @@
                         <ControlTemplate.Triggers>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
-                                    <Condition Property="IsNode" Value="True"/>
+                                    <Condition Property="HasItems" Value="True"/>
                                     <Condition Property="IsExpanded" Value="False"/>
+                                    <Condition Property="Extension" Value="{x:Null}"/>
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>
                                     <Setter Property="ImageSource" Value="{StaticResource icon_1}"/>
@@ -154,8 +154,9 @@
                             </MultiTrigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
-                                    <Condition Property="IsNode" Value="True"/>
+                                    <Condition Property="HasItems" Value="True"/>
                                     <Condition Property="IsExpanded" Value="True"/>
+                                    <Condition Property="Extension" Value="{x:Null}"/>
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>
                                     <Setter Property="ImageSource" Value="{StaticResource icon_2}"/>
@@ -227,4 +228,9 @@
             </Setter>
         </Style>
     </UserControl.Resources>
+
+    <Grid>
+        <l:CustomTreeView x:Name="ctv1"/>
+        <l:CustomTreeView x:Name="ctv2" Visibility="Collapsed"/>
+    </Grid>
 </UserControl>

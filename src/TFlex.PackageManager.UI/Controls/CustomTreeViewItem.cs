@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -16,21 +15,12 @@ namespace TFlex.PackageManager.UI.Controls
 
         #region properties
         /// <summary>
-        /// The IsChecked property to checkbox.
+        /// The IsChecked property to CheckBox control.
         /// </summary>
         public bool? IsChecked
         {
             get => GetValue(IsCheckedProperty) as bool?;
             set => SetValue(IsCheckedProperty, value);
-        }
-
-        /// <summary>
-        /// Is the item a node.
-        /// </summary>
-        public bool IsNode
-        {
-            get => (bool)GetValue(IsNodeProperty);
-            set => SetValue(IsNodeProperty, value);
         }
 
         /// <summary>
@@ -70,16 +60,10 @@ namespace TFlex.PackageManager.UI.Controls
 
         #region public fields
         public static readonly DependencyProperty IsCheckedProperty =
-            DependencyProperty.RegisterAttached("IsChecked",
+            DependencyProperty.Register("IsChecked",
                 typeof(bool?),
                 typeof(CustomTreeViewItem),
                 new FrameworkPropertyMetadata((bool?)false));
-
-        public static readonly DependencyProperty IsNodeProperty =
-            DependencyProperty.Register("IsNode",
-                typeof(bool),
-                typeof(CustomTreeViewItem), 
-                new PropertyMetadata(false));
 
         public static readonly DependencyProperty ExtensionProperty =
             DependencyProperty.Register("Extension",

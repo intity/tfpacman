@@ -71,8 +71,11 @@ namespace TFlex.PackageManager.UI.Common
         /// <param name="item">The Processing Item Object.</param>
         internal void ProcessingFile(ProcItem item)
         {
-            var tr = cfg.Translator as Translator;
             Document document = null;
+            var tr = cfg.Translator as Translator;
+            var td = item.Directory
+                .Replace(cfg.InitialCatalog, cfg.TargetDirectory);
+            item.Directory = td;
 
             switch (tr.PMode)
             {

@@ -185,6 +185,10 @@
     <value>Options</value>
     <comment>Application settings</comment>
   </data>
+  <data name="menuItem4_2" xml:space="preserve">
+    <value>Assembly tree view</value>
+    <comment>Assembly tree view</comment>
+  </data>
   <data name="menuItem5_1" xml:space="preserve">
     <value>About Us</value>
   </data>

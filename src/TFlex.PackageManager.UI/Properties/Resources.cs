@@ -131,6 +131,7 @@ namespace TFlex.PackageManager.UI.Properties
             { "ui_0:c_3_2", GetString(MAIN_WINDOW, "menuItem3_2") },
             { "ui_0:c_3_3", GetString(MAIN_WINDOW, "menuItem3_3") },
             { "ui_0:c_4_1", GetString(MAIN_WINDOW, "menuItem4_1") },
+            { "ui_0:c_4_2", GetString(MAIN_WINDOW, "menuItem4_2") },
             { "ui_0:c_5_1", GetString(MAIN_WINDOW, "menuItem5_1") },
             { "ui_0:c_5_2", GetString(MAIN_WINDOW, "menuItem5_2") },
             // AboutUs

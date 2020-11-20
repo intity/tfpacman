@@ -185,6 +185,10 @@
     <value>Optionen</value>
     <comment>Anwendungseinstellungen</comment>
   </data>
+  <data name="menuItem4_2" xml:space="preserve">
+    <value>Baugruppen Baumansicht</value>
+    <comment>Baugruppen Baumansicht</comment>
+  </data>
   <data name="menuItem5_1" xml:space="preserve">
     <value>Über uns</value>
   </data>

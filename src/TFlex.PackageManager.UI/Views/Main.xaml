@@ -29,6 +29,7 @@
         <BitmapImage x:Key="icon_3_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/stop.ico"/>
         <BitmapImage x:Key="icon_3_3" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/clear_target_directory.ico"/>
         <BitmapImage x:Key="icon_4_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/options.ico"/>
+        <BitmapImage x:Key="icon_4_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/asm_tree.ico"/>
     </Window.Resources>
 
     <DockPanel TextOptions.TextFormattingMode="Display" 
@@ -143,6 +144,14 @@
                         <c:CustomImage Source="{StaticResource icon_4_1}" Width="16" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Name="menuItem4_2" 
+                          Header="Assembly tree view" 
+                          IsCheckable="True" 
+                          Click="Event4_2_Click">
+                    <MenuItem.Icon>
+                        <c:CustomImage Source="{StaticResource icon_4_2}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Name="menuItem5" 
                       Header="?">
@@ -242,6 +251,11 @@
                         ToolTip="Options">
                     <c:CustomImage Source="{StaticResource icon_4_1}" Width="16" Height="16"/>
                 </Button>
+                <ToggleButton Name="button4_2"
+                              Click="Event4_2_Click" 
+                              ToolTip="Assembly tree view">
+                    <c:CustomImage Source="{StaticResource icon_4_2}" Width="16" Height="16"/>
+                </ToggleButton>
             </ToolBar>
         </ToolBarTray>
 

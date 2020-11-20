@@ -435,6 +435,7 @@
     <Resource Include="Resources\stp.ico" />
     <Resource Include="Resources\jt.ico" />
     <Resource Include="Resources\undo.ico" />
+    <Resource Include="Resources\asm_tree.ico" />
     <Content Include="Resources\refresh.ico" />
     <Resource Include="Resources\save.ico" />
     <Resource Include="Resources\options.ico" />
