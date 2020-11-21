@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using TFlex.PackageManager.UI.Common;
+using TFlex.PackageManager.UI.Configuration;
 using TFlex.PackageManager.UI.Model;
 
 namespace TFlex.PackageManager.UI.Controls
@@ -162,18 +163,19 @@ namespace TFlex.PackageManager.UI.Controls
         #region private methods
         private CustomTreeViewItem CreateItem(string path)
         {
-            var obj = new ProcItem()
-            {
-                Directory = Path.GetDirectoryName(path)
-            };
+            var obj = new ProcItem();
+            var cfg = DataContext as Header;
+            var dir = Path.GetDirectoryName(path);
 
             if (Flags == 0)
             {
                 obj.IPath = path;
+                obj.Directory = dir.Replace(cfg.InitialCatalog, cfg.TargetDirectory);
             }
             else
             {
                 obj.OPath = path;
+                obj.Directory = dir;
             }
 
             var item = new CustomTreeViewItem

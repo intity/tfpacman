@@ -49,8 +49,6 @@ namespace TFlex.PackageManager.UI.Views
             options = new Common.Options();
 
             #region initialize controls
-            tvControl1.SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
-
             using (UndoRedoManager.Start("Init"))
             {
                 conf = new ConfigurationCollection
@@ -334,6 +332,7 @@ namespace TFlex.PackageManager.UI.Views
             button3_2.IsEnabled = false;
 
             propertyGrid.PropertyValueChanged += Translator_PropertyValueChanged;
+            tvControl1.SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -669,6 +668,8 @@ namespace TFlex.PackageManager.UI.Views
                 key1 = comboBox1.SelectedValue.ToString();
                 var cfg = conf.Configurations[key1];
 
+                tvControl1.DataContext      = cfg;
+                tvControl2.DataContext      = cfg;
                 tvControl1.RootDirectory    = cfg.InitialCatalog;
                 tvControl2.RootDirectory    = cfg.TargetDirectory;
                 inputPath1.SelectedObject   = cfg;
@@ -679,6 +680,8 @@ namespace TFlex.PackageManager.UI.Views
             }
             else
             {
+                tvControl1.DataContext      = null;
+                tvControl2.DataContext      = null;
                 tvControl1.RootDirectory    = string.Empty;
                 tvControl2.RootDirectory    = string.Empty;
                 inputPath1.SelectedObject   = null;
