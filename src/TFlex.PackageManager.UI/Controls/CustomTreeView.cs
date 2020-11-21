@@ -8,12 +8,22 @@ namespace TFlex.PackageManager.UI.Controls
     /// </summary>
     public class CustomTreeView : TreeView
     {
-        #region properties
-        /// <summary>
-        /// Enables check boxes for items in a tree-view control.
-        /// </summary>
-        public bool CheckboxesVisible { get; set; }
+        #region public fields
+        public static readonly DependencyProperty FlagsProperty =
+            DependencyProperty.Register("Flags",
+                typeof(int),
+                typeof(CustomTreeView),
+                new FrameworkPropertyMetadata(0));
         #endregion
+
+        /// <summary>
+        /// Checkboxes Flags: Visible(0), Collapsed(1)
+        /// </summary>
+        public int Flags
+        {
+            get => (int)GetValue(FlagsProperty);
+            set => SetValue(FlagsProperty, value);
+        }
 
         protected override DependencyObject GetContainerForItemOverride()
         {

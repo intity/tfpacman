@@ -45,8 +45,9 @@ namespace TFlex.PackageManager.UI.Configuration
                 int flags = 0x0;
                 if (items.Contains(p))
                     flags |= 0x1;
-                var item = new ProcItem(p)
+                var item = new ProcItem
                 {
+                    IPath     = p,
                     Flags     = flags,
                     Directory = GetDirectory(cfg, p)
                 };
@@ -81,8 +82,9 @@ namespace TFlex.PackageManager.UI.Configuration
                 int flags = 0x0;
                 if (items.Contains(p))
                     flags |= 0x1;
-                var subItem = new ProcItem(p)
+                var subItem = new ProcItem
                 {
+                    IPath     = p,
                     Flags     = flags,
                     Directory = GetDirectory(cfg, p),
                     Parent    = item

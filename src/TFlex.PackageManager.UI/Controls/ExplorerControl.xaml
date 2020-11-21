@@ -218,8 +218,8 @@
                                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                             </Trigger>
                             <DataTrigger Binding="{
-                                Binding Path=CheckboxesVisible, 
-                                RelativeSource={RelativeSource AncestorType=l:CustomTreeView}}" Value="False">
+                                Binding Path=Flags, 
+                                RelativeSource={RelativeSource AncestorType=l:CustomTreeView}}" Value="1">
                                 <Setter TargetName="Cb" Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </ControlTemplate.Triggers>
@@ -230,7 +230,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <l:CustomTreeView x:Name="ctv1"/>
-        <l:CustomTreeView x:Name="ctv2" Visibility="Collapsed"/>
+        <l:CustomTreeView x:Name="ctv1" Flags="{Binding Path=Flags, RelativeSource={RelativeSource AncestorType=l:ExplorerControl}}"/>
+        <l:CustomTreeView x:Name="ctv2" Flags="1" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

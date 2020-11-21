@@ -9,12 +9,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using TFlex.PackageManager.UI.Common;
 using TFlex.PackageManager.UI.Configuration;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using UndoRedoFramework;
-using System.Windows.Controls.Primitives;
 
 namespace TFlex.PackageManager.UI.Views
 {
@@ -45,13 +45,11 @@ namespace TFlex.PackageManager.UI.Views
         public Main()
         {
             InitializeComponent();
-            Title = Properties.Resources.AppName;
+            Title   = Properties.Resources.AppName;
+            options = new Common.Options();
 
             #region initialize controls
-            tvControl1.CbVisible = true;
             tvControl1.SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
-
-            options = new Common.Options();
 
             using (UndoRedoManager.Start("Init"))
             {

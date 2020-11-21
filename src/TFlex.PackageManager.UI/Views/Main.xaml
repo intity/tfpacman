@@ -336,7 +336,7 @@
                                    ShowSearchBox="False" 
                                    ShowSortOptions="False" 
                                    ShowSummary="False" Grid.Row="0"/>
-                <l:ExplorerControl x:Name="tvControl2" Grid.Row="1"/>
+                <l:ExplorerControl x:Name="tvControl2" Grid.Row="1" Flags="1"/>
             </Grid>
             <GridSplitter Grid.Column="3" 
                           Grid.Row="0"

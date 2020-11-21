@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TFlex.Model;
 
 namespace TFlex.PackageManager.UI.Model
@@ -12,10 +11,8 @@ namespace TFlex.PackageManager.UI.Model
         /// <summary>
         /// The Processing Item Constructor.
         /// </summary>
-        /// <param name="path">Input path.</param>
-        public ProcItem(string path)
+        public ProcItem()
         {
-            IPath = path;
             Items = new List<ProcItem>();
             Links = new List<FileLink>();
             Pages = new Dictionary<Page, string>();
@@ -56,7 +53,7 @@ namespace TFlex.PackageManager.UI.Model
         /// <summary>
         /// Input Path the File.
         /// </summary>
-        public string IPath { get; }
+        public string IPath { get; set; }
 
         /// <summary>
         /// Output Path the File.

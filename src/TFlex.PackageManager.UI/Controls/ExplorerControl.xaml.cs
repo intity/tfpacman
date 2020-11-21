@@ -11,14 +11,13 @@ using TFlex.PackageManager.UI.Model;
 namespace TFlex.PackageManager.UI.Controls
 {
     /// <summary>
-    /// Interaction logic for TreeViewControl.xaml
+    /// Interaction logic for ExplorerControl.xaml
     /// </summary>
     public partial class ExplorerControl : UserControl
     {
         #region private fields
         string searchPattern;
         string rootDirectory;
-        bool cbVisible;
         bool enableAsmTree;
         ImageSource tempImage;
         #endregion
@@ -32,18 +31,22 @@ namespace TFlex.PackageManager.UI.Controls
             SelectedItems = new ObservableDictionary<string, ProcItem>();
         }
 
+        #region public fields
+        public static readonly DependencyProperty FlagsProperty =
+            DependencyProperty.Register("Flags",
+                typeof(int),
+                typeof(ExplorerControl),
+                new FrameworkPropertyMetadata(0));
+        #endregion
+
         #region public properties
-        public bool CbVisible
+        /// <summary>
+        /// Explorer Flags: Input(0), Output(1)
+        /// </summary>
+        public int Flags
         {
-            get => cbVisible;
-            set
-            {
-                if (cbVisible != value)
-                {
-                    cbVisible = value;
-                    ctv1.CheckboxesVisible = value;
-                }
-            }
+            get => (int)GetValue(FlagsProperty);
+            set => SetValue(FlagsProperty, value);
         }
 
         /// <summary>
@@ -124,7 +127,7 @@ namespace TFlex.PackageManager.UI.Controls
             ctv1.Items.Clear();
             ctv2.Items.Clear();
 
-            if (cbVisible)
+            if (Flags == 0)
             {
                 SelectedItems.Clear();
             }
@@ -159,10 +162,19 @@ namespace TFlex.PackageManager.UI.Controls
         #region private methods
         private CustomTreeViewItem CreateItem(string path)
         {
-            var obj = new ProcItem(path)
+            var obj = new ProcItem()
             {
                 Directory = Path.GetDirectoryName(path)
             };
+
+            if (Flags == 0)
+            {
+                obj.IPath = path;
+            }
+            else
+            {
+                obj.OPath = path;
+            }
 
             var item = new CustomTreeViewItem
             {
@@ -236,8 +248,9 @@ namespace TFlex.PackageManager.UI.Controls
         private void GetLinks(CustomTreeViewItem item)
         {
             var obj   = item.Tag as ProcItem;
+            var path  = Flags > 0 ? obj.OPath : obj.IPath;
             var links = Application
-                .GetDocumentExternalFileLinks(obj.IPath, true, false, false);
+                .GetDocumentExternalFileLinks(path, true, false, false);
 
             foreach (var link in links.OrderBy(i => i))
             {
