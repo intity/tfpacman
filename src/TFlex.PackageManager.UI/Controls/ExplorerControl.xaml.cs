@@ -284,6 +284,21 @@ namespace TFlex.PackageManager.UI.Controls
             }
         }
 
+        private void SelectedItemTask(ProcItem item, string path, ref bool res)
+        {
+            if (item.IPath == path)
+            {
+                item.Flags |= 0x1;
+                res = true;
+                return;
+            }
+
+            foreach (var i in item.Items)
+            {
+                SelectedItemTask(i, path, ref res);
+            }
+        }
+
         private void SelectedItemTask(CustomTreeViewItem item, int flag)
         {
             if (!(item.Tag is ProcItem obj1))
@@ -296,6 +311,20 @@ namespace TFlex.PackageManager.UI.Controls
                     var obj2 = GetItem(item);
                     if (obj2 != null)
                         obj1 = obj2;
+
+                    foreach (var i in SelectedItems)
+                    {
+                        bool result = false;
+
+                        // selection sequence: asm -> part
+                        SelectedItemTask(i.Value, obj1.IPath, ref result);
+
+                        if (result)
+                            break;
+
+                        // selection sequence: part -> asm
+                        SelectedItemTask(obj1, i.Value.IPath, ref result);
+                    }
                 }
 
                 obj1.Flags |= 0x1;
