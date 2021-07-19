@@ -390,17 +390,22 @@ namespace TFlex.PackageManager.UI.Views
 
         private void Translator_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
         {
-            var obj = conf.Configurations[key1].Translator as Translator;
+            var obj = conf.Configurations[key1].Translator as Files;
             var item = e.OriginalSource as PropertyItem;
-            if (item.PropertyName == "ImportMode")
+            switch (item.PropertyName)
             {
-                importMode = (int)e.NewValue;
-                UpdateModules((int)obj.TMode, 2);
+                case "Extension":
+                    tvControl2.SearchPattern = "*" + obj.OExtension;
+                    break;
+                case "ImportMode":
+                    importMode = (int)e.NewValue;
+                    UpdateModules((int)obj.TMode, 2);
+                    break;
             }
 
             UpdateStateToControls();
 
-            //Debug.WriteLine(string.Format("Translator_PropertyValueChanged: [name: {0}, value: {1}]", 
+            //Debug.WriteLine(string.Format("Translator_PropertyValueChanged: [name: {0}, value: {1}]",
             //    item.PropertyName, item.Value));
         }
         #endregion

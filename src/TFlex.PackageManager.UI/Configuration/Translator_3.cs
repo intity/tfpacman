@@ -35,7 +35,6 @@ namespace TFlex.PackageManager.UI.Configuration
         public Translator_3()
         {
             IExtension = ".grb";
-            OExtension = ".bmp";
         }
 
         #region public properties
@@ -54,7 +53,21 @@ namespace TFlex.PackageManager.UI.Configuration
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Extension
         {
-            get => extension;
+            get
+            {
+                switch (OExtension)
+                {
+                    case ".bmp" : extension = 0; break;
+                    case ".jpeg": extension = 1; break;
+                    case ".gif" : extension = 2; break;
+                    case ".tiff": extension = 3; break;
+                    case ".png" : extension = 4; break;
+                    default:
+                        OExtension = ".bmp";
+                        break;
+                }
+                return extension;
+            }
             set
             {
                 if (extension != value)
