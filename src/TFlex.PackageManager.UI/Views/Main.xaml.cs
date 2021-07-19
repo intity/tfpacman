@@ -1038,8 +1038,9 @@ namespace TFlex.PackageManager.UI.Views
         private void ProcessingTask(StreamWriter logger)
         {
             Header cfg = conf.Configurations[key1];
+            var items = tvControl1.SelectedItems.OrderBy(i => i.Key);
             double[] counter = { 0.0 };
-            double increment = 100.0 / tvControl1.SelectedItems.Count;
+            double increment = 100.0 / items.Count();
             var size = Marshal.SizeOf(counter[0]) * counter.Length;
             IntPtr value = Marshal.AllocHGlobal(size);
 
@@ -1055,7 +1056,7 @@ namespace TFlex.PackageManager.UI.Views
                 (cfg.Translator as Translator).TMode, 
                 (cfg.Translator as Translator).PMode));
 
-            foreach (var item in tvControl1.SelectedItems.OrderBy(i => i.Key))
+            foreach (var item in items)
             {
                 if ((item.Value.Flags & 0x1) != 0x1)
                     continue;
