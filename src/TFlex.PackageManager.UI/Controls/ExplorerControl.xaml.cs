@@ -216,11 +216,15 @@ namespace TFlex.PackageManager.UI.Controls
 
         private void GetFiles(CustomTreeViewItem item)
         {
-            var dir   = item != null ? item.Tag.ToString() : rootDirectory;
-            var opt   = SearchOption.TopDirectoryOnly;
-            var files = Directory.GetFiles(dir, searchPattern, opt);
+            var dir = item != null ? item.Tag.ToString() : rootDirectory;
+            var cfg = DataContext as Header;
+            var obj = cfg.Translator as Files;
+            var ext = Flags > 0 ? obj.OExtension : obj.IExtension;
+            var opt = SearchOption.TopDirectoryOnly;
 
-            foreach (var i in files)
+            searchPattern = "*" + ext;
+
+            foreach (var i in Directory.GetFiles(dir, searchPattern, opt))
             {
                 CountFiles++;
                 var subItem = CreateItem(i);
