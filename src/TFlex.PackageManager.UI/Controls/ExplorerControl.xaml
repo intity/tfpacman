@@ -144,7 +144,6 @@
                         <ControlTemplate.Triggers>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
-                                    <Condition Property="HasItems" Value="True"/>
                                     <Condition Property="IsExpanded" Value="False"/>
                                     <Condition Property="Extension" Value="{x:Null}"/>
                                 </MultiTrigger.Conditions>
