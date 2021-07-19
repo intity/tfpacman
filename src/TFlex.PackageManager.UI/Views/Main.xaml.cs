@@ -682,40 +682,26 @@ namespace TFlex.PackageManager.UI.Views
             {
                 key2 = comboBox2.SelectedValue.ToString();
                 var cfg = conf.Configurations[key1];
-                var obj = cfg.Translator as Translator;
+                var obj = cfg.Translator as Files;
 
                 switch (key2)
                 {
                     case "SaveAs":
                         obj.PMode = ProcessingMode.SaveAs;
                         UpdateModules((int)obj.TMode, 0);
-                        tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Export":
                         obj.PMode = ProcessingMode.Export;
                         UpdateModules((int)obj.TMode, 1);
-                        tvControl1.SearchPattern = "*.grb";
                         break;
                     case "Import":
                         obj.PMode = ProcessingMode.Import;
                         UpdateModules((int)obj.TMode, 2);
-                        switch (obj.TMode)
-                        {
-                            case TranslatorType.Acis:
-                                tvControl1.SearchPattern = "*.sat";
-                                break;
-                            case TranslatorType.Iges:
-                                tvControl1.SearchPattern = "*.igs";
-                                break;
-                            case TranslatorType.Jt:
-                                tvControl1.SearchPattern = "*.jt";
-                                break;
-                            case TranslatorType.Step:
-                                tvControl1.SearchPattern = "*.stp";
-                                break;
-                        }
                         break;
                 }
+
+                tvControl1.SearchPattern = "*" + obj.IExtension;
+                tvControl2.SearchPattern = "*" + obj.OExtension;
             }
         } // processing mode
         #endregion
