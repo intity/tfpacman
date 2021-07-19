@@ -49,7 +49,6 @@ namespace TFlex.PackageManager.UI.Configuration
             biarcInterpolationAccuracyForSplines = 0.1m;
 
             IExtension = ".grb";
-            OExtension = ".dwg";
         }
 
         #region public properties
@@ -66,7 +65,19 @@ namespace TFlex.PackageManager.UI.Configuration
         [Editor(typeof(CustomComboBoxEditor), typeof(UITypeEditor))]
         public int Extension
         {
-            get => extension;
+            get
+            {
+                switch (OExtension)
+                {
+                    case ".dwg": extension = 0; break;
+                    case ".dxf": extension = 1; break;
+                    case ".dxb": extension = 2; break;
+                    default:
+                        OExtension = ".dwg";
+                        break;
+                }
+                return extension;
+            }
             set
             {
                 if (extension != value)
