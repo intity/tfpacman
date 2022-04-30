@@ -166,6 +166,10 @@
     <value>Электрическая схема</value>
     <comment>Включает данный тип страницы в пул обработки.</comment>
   </data>
+  <data name="dn1_4_7" xml:space="preserve">
+    <value>Проекция</value>
+    <comment>Включает данный тип страницы в пул обработки.</comment>
+  </data>
   <data name="dn1_5" xml:space="preserve">
     <value>Проверить шаблон чертежа</value>
     <comment>Включает проверку наличия форматки на странице.</comment>

@@ -469,7 +469,8 @@ namespace TFlex.PackageManager.UI.Common
                 { PageType.Auxiliary,       0 },
                 { PageType.Text,            0 },
                 { PageType.BillOfMaterials, 0 },
-                { PageType.Circuit,         0 }
+                { PageType.Circuit,         0 },
+                { PageType.Projection,      0 }
             };
 
             foreach (var p in document.GetPages())

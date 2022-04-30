@@ -210,7 +210,8 @@ namespace TFlex.PackageManager.UI.Configuration
                 { PageType.Auxiliary,       PageTypes.Auxiliary },
                 { PageType.Text,            PageTypes.Text },
                 { PageType.BillOfMaterials, PageTypes.BillOfMaterials },
-                { PageType.Circuit,         PageTypes.Circuit }
+                { PageType.Circuit,         PageTypes.Circuit },
+                { PageType.Projection,      PageTypes.Projection }
             };
             return page.PageType != PageType.Dialog && types[page.PageType];
         }
@@ -250,6 +251,7 @@ namespace TFlex.PackageManager.UI.Configuration
         bool text;
         bool billOfMaterials;
         bool circuit;
+        bool projection;
         #endregion
 
         public PageTypes()
@@ -359,6 +361,23 @@ namespace TFlex.PackageManager.UI.Configuration
                 }
             }
         }
+
+        [PropertyOrder(7)]
+        [CustomDisplayName(Resources.PAGES, "dn1_4_7")]
+        [CustomDescription(Resources.PAGES, "dn1_4_7")]
+        [Editor(typeof(CustomCheckBoxEditor), typeof(UITypeEditor))]
+        public bool Projection
+        {
+            get => projection;
+            set
+            {
+                if (projection != value)
+                {
+                    projection = value;
+                    OnPropertyChanged("Projection");
+                }
+            }
+        }
         #endregion
 
         #region IXmlSerializable Members
@@ -371,7 +390,7 @@ namespace TFlex.PackageManager.UI.Configuration
         {
             string[] values;
             var data = reader.GetAttribute("value");
-            if (data != null && (values = data.Split(' ')).Length == 6)
+            if (data != null && (values = data.Split(' ')).Length == 7)
             {
                 normal          = values[0] == "1";
                 workplane       = values[1] == "1";
@@ -379,6 +398,7 @@ namespace TFlex.PackageManager.UI.Configuration
                 text            = values[3] == "1";
                 billOfMaterials = values[4] == "1";
                 circuit         = values[5] == "1";
+                projection      = values[6] == "1";
             }
         }
 
@@ -392,7 +412,8 @@ namespace TFlex.PackageManager.UI.Configuration
                 Auxiliary       ? "1" : "0",
                 Text            ? "1" : "0",
                 BillOfMaterials ? "1" : "0",
-                Circuit         ? "1" : "0"
+                Circuit         ? "1" : "0",
+                Projection      ? "1" : "0"
             };
             writer.WriteAttributeString("value", values.ToString(" "));
         }

@@ -32,13 +32,14 @@ namespace TFlex.PackageManager.UI.Editors
         {
             var pageTypes = propertyItem.Value as PageTypes;
 
-            textBox.Text = string.Format("[{0}, {1}, {2}, {3}, {4}, {5}]",
+            textBox.Text = string.Format("[{0}, {1}, {2}, {3}, {4}, {5}, {6}]",
                 pageTypes.Normal          ? 1 : 0,
                 pageTypes.Workplane       ? 1 : 0,
                 pageTypes.Auxiliary       ? 1 : 0,
                 pageTypes.Text            ? 1 : 0,
                 pageTypes.BillOfMaterials ? 1 : 0,
-                pageTypes.Circuit         ? 1 : 0);
+                pageTypes.Circuit         ? 1 : 0,
+                pageTypes.Projection      ? 1 : 0);
 
             return textBox;
         }

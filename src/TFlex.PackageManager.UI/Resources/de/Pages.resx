@@ -166,6 +166,10 @@
     <value>Elektrischer Kreislauf</value>
     <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
   </data>
+  <data name="dn1_4_7" xml:space="preserve">
+    <value>Projektion</value>
+    <comment>Schließt diesen seitentyp in den verarbeitungs pool ein.</comment>
+  </data>
   <data name="dn1_5" xml:space="preserve">
     <value>Überprüfen sie die zeichnungsvorlage</value>
     <comment>Aktiviert die überprüfung, ob eine formatierte seite auf der seite vorhanden ist.</comment>
