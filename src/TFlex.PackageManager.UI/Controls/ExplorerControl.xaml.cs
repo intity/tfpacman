@@ -280,8 +280,7 @@ namespace TFlex.PackageManager.UI.Controls
         {
             bool? value = item.IsChecked;
 
-            if (item.Parent != null &&
-                item.Parent is CustomTreeViewItem parent)
+            if (item.Parent is CustomTreeViewItem parent)
             {
                 foreach (CustomTreeViewItem i in parent.Items)
                 {
@@ -292,6 +291,7 @@ namespace TFlex.PackageManager.UI.Controls
                     }
                 }
                 parent.IsChecked = value;
+                CheckingToParent(parent); // recursive call
             }
         }
 
