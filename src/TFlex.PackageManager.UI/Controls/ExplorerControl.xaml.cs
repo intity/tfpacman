@@ -245,17 +245,21 @@ namespace TFlex.PackageManager.UI.Controls
             if (searchPattern != "*.grb")
                 return;
 
-            var opt   = SearchOption.TopDirectoryOnly;
+            var opt = SearchOption.AllDirectories;
             var files = Directory.GetFiles(rootDirectory, searchPattern, opt);
+
             foreach (var i in files)
             {
                 var item = CreateItem(i);
-                ctv2.Items.Add(item);
-                GetLinks(item);
+                var deep = false;
+
+                GetLinks(item, files, ref deep);
+
+                if (deep) ctv2.Items.Add(item);
             }
         }
 
-        private void GetLinks(CustomTreeViewItem item)
+        private void GetLinks(CustomTreeViewItem item, string[] files, ref bool deep)
         {
             var data  = item.Tag as ProcItem;
             var path  = Flags > 0 ? data.OPath : data.IPath;
@@ -265,12 +269,23 @@ namespace TFlex.PackageManager.UI.Controls
 
             foreach (var i in links)
             {
+                foreach (var j in files)
+                {
+                    if (i == j)
+                    {
+                        //Debug.WriteLine($"GetLinks [path: {path}]");
+                        deep = true;
+                        break;
+                    }
+                }
+
                 var subItem = CreateItem(i);
                 var subData = subItem.Tag as ProcItem;
                 subData.Parent = data;
                 data.Items.Add(subData);
                 item.Items.Add(subItem);
-                GetLinks(subItem); // recursive call
+
+                GetLinks(subItem, files, ref deep); // recursive call
             }
 
             Application.IdleSession();
