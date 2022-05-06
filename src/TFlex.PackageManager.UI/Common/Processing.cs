@@ -186,8 +186,6 @@ namespace TFlex.PackageManager.UI.Common
         /// <param name="item"></param>
         private void DocumentSaveAs(Document document, ProcItem item)
         {
-            if ((item.Flags & 0x4) == 0x4)
-                return;
             if (item.OPath != null && File.Exists(item.OPath))
                 return;
 
@@ -352,14 +350,12 @@ namespace TFlex.PackageManager.UI.Common
         private void ProcessingItems(Document document, ProcItem item)
         {
             var tr = cfg.Translator as Translator;
-            if ((item.Flags & 0x4) != 0x4)
-            {
-                ProcessingLinks(document);
-                ProcessingPages(document, item);
-                ProcessingProjections(document, item);
-                ProcessingVariables(document);
-                ProcessingExport(document, item);
-            }
+
+            ProcessingLinks(document);
+            ProcessingPages(document, item);
+            ProcessingProjections(document, item);
+            ProcessingVariables(document);
+            ProcessingExport(document, item);
 
             foreach (var i in item.Items)
             {
@@ -386,7 +382,7 @@ namespace TFlex.PackageManager.UI.Common
                 i.Flags |= 0x2;
             }
 
-            if (item.Links.Count > 0 && (item.Flags & 0x4) != 0x4)
+            if (item.Links.Count > 0)
             {
                 document.BeginChanges("Regenerate Links");
                 document.Regenerate(new RegenerateOptions
@@ -432,8 +428,6 @@ namespace TFlex.PackageManager.UI.Common
         private void ProcessingLinks(Document parent, Document child, ProcItem item)
         {
             if (!(cfg.Modules as Modules).Links)
-                return;
-            if ((item.Flags & 0x4) == 0x4)
                 return;
 
             foreach (var link in parent.FileLinks)

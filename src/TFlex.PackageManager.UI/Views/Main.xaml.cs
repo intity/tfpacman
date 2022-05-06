@@ -332,7 +332,7 @@ namespace TFlex.PackageManager.UI.Views
             button3_2.IsEnabled = false;
 
             propertyGrid.PropertyValueChanged += Translator_PropertyValueChanged;
-            tvControl1.SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
+            tvControl1.PropertyChanged += TvControl1_PropertyChanged;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -734,9 +734,9 @@ namespace TFlex.PackageManager.UI.Views
         #endregion
 
         #region statusbar
-        private void SelectedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void TvControl1_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (tvControl1.SelectedItems.Count > 0 &&
+            if (tvControl1.Items.Count > 0 &&
                 tvControl1.RootDirectory.Length > 0 &&
                 tvControl2.RootDirectory.Length > 0)
             {
@@ -749,7 +749,7 @@ namespace TFlex.PackageManager.UI.Views
                 button3_1.IsEnabled = false;
             }
             var str = Properties.Resources.Strings["ui_0:sbl_3"][0];
-            sb_label3.Content = string.Format(str, tvControl1.SelectedItems.Count);
+            sb_label3.Content = string.Format(str, tvControl1.CountItems);
         }
         #endregion
 
@@ -1030,7 +1030,7 @@ namespace TFlex.PackageManager.UI.Views
         private void ProcessingTask(StreamWriter logger)
         {
             Header cfg = conf.Configurations[key1];
-            var items = tvControl1.SelectedItems.OrderBy(i => i.Key);
+            var items = tvControl1.Items.OrderBy(i => i.Key);
             double[] counter = { 0.0 };
             double increment = 100.0 / items.Count();
             var size = Marshal.SizeOf(counter[0]) * counter.Length;

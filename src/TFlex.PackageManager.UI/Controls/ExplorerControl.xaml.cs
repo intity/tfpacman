@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using TFlex.PackageManager.UI.Common;
 using TFlex.PackageManager.UI.Configuration;
 using TFlex.PackageManager.UI.Model;
 
@@ -14,13 +15,14 @@ namespace TFlex.PackageManager.UI.Controls
     /// <summary>
     /// Interaction logic for ExplorerControl.xaml
     /// </summary>
-    public partial class ExplorerControl : UserControl
+    public partial class ExplorerControl : UserControl, INotifyPropertyChanged
     {
         #region private fields
         string searchPattern;
         string rootDirectory;
         bool enableAsmTree;
-        ImageSource tempImage;
+        int countItems;
+        ImageSource tmpImage;
         #endregion
 
         public ExplorerControl()
@@ -29,7 +31,7 @@ namespace TFlex.PackageManager.UI.Controls
 
             rootDirectory = null;
             searchPattern = "*.grb";
-            SelectedItems = new ObservableDictionary<string, ProcItem>();
+            Items = new Dictionary<string, ProcItem>();
         }
 
         #region public fields
@@ -54,6 +56,22 @@ namespace TFlex.PackageManager.UI.Controls
         /// Total count files.
         /// </summary>
         public int CountFiles { get; private set; }
+        
+        /// <summary>
+        /// Total count selected items.
+        /// </summary>
+        public int CountItems
+        {
+            get => countItems;
+            private set
+            {
+                if (countItems != value)
+                {
+                    countItems = value;
+                    OnPropertyChanged("CountItems");
+                }
+            }
+        }
 
         /// <summary>
         /// Search pattern to in GetFile method use.
@@ -112,9 +130,9 @@ namespace TFlex.PackageManager.UI.Controls
         }
 
         /// <summary>
-        /// Selected items.
+        /// Data items.
         /// </summary>
-        public ObservableDictionary<string, ProcItem> SelectedItems { get; }
+        public Dictionary<string, ProcItem> Items { get; }
         #endregion
 
         #region public methods
@@ -124,19 +142,16 @@ namespace TFlex.PackageManager.UI.Controls
         public void UpdateControl()
         {
             CountFiles = 0;
+            CountItems = 0;
+
+            Items.Clear();
 
             ctv1.Items.Clear();
             ctv2.Items.Clear();
 
-            if (Flags == 0)
-            {
-                SelectedItems.Clear();
-            }
-
             if (Directory.Exists(rootDirectory))
             {
-                InitTreeItems_1();
-                InitTreeItems_2();
+                InitTreeItems();
             }
 
             ctv1.UpdateLayout();
@@ -161,11 +176,11 @@ namespace TFlex.PackageManager.UI.Controls
         #endregion
 
         #region private methods
-        private CustomTreeViewItem CreateItem(string path)
+        private ProcItem CreateData(string path)
         {
             var obj = new ProcItem();
-            var cfg = DataContext as Header;
             var dir = Path.GetDirectoryName(path);
+            var cfg = DataContext as Header;
 
             if (Flags == 0)
             {
@@ -178,11 +193,15 @@ namespace TFlex.PackageManager.UI.Controls
                 obj.Directory = dir;
             }
 
+            return obj;
+        }
+
+        private CustomTreeViewItem CreateItem(string path)
+        {
             var item = new CustomTreeViewItem
             {
                 Header    = Path.GetFileName(path),
-                Extension = Path.GetExtension(path),
-                Tag       = obj
+                Extension = Path.GetExtension(path)
             };
 
             item.Selected   += Item_Selected;
@@ -191,7 +210,7 @@ namespace TFlex.PackageManager.UI.Controls
             return item;
         }
 
-        private void InitTreeItems_1(CustomTreeViewItem item = null)
+        private void InitTreeItems(CustomTreeViewItem item = null)
         {
             var dir = item != null ? item.Tag.ToString() : rootDirectory;
 
@@ -208,7 +227,7 @@ namespace TFlex.PackageManager.UI.Controls
                 else
                     ctv1.Items.Add(subItem);
 
-                InitTreeItems_1(subItem); // recursive call
+                InitTreeItems(subItem); // recursive call
             }
 
             GetFiles(item);
@@ -228,6 +247,12 @@ namespace TFlex.PackageManager.UI.Controls
             {
                 CountFiles++;
                 var subItem = CreateItem(i);
+                var subData = CreateData(i);
+                subItem.Tag = subData;
+                Items.Add(i, subData);
+
+                if (searchPattern == "*.grb")
+                    GetLinks(subData);
 
                 if (item != null)
                     item.Items.Add(subItem);
@@ -236,59 +261,151 @@ namespace TFlex.PackageManager.UI.Controls
             }
         }
 
-        private void InitTreeItems_2()
+        private void GetItems(CustomTreeViewItem item)
         {
             //
-            // Initializing a tree structure of assembly units and related 
-            // documents.
+            // get subitems from data
             //
-            if (searchPattern != "*.grb")
+            if (!(item.Tag is ProcItem data))
                 return;
 
-            var opt = SearchOption.AllDirectories;
-            var files = Directory.GetFiles(rootDirectory, searchPattern, opt);
-
-            foreach (var i in files)
+            foreach (var i in data.Items)
             {
-                var item = CreateItem(i);
-                var deep = false;
-
-                GetLinks(item, files, ref deep);
-
-                if (deep) ctv2.Items.Add(item);
+                if ((i.Flags & 0x1) != 0x1)
+                    continue;
+                
+                var subItem = CreateItem(Flags > 0 ? i.OPath : i.IPath);
+                subItem.Tag = i;
+                item.Items.Add(subItem);
+                GetItems(subItem); // recursive call
             }
         }
 
-        private void GetLinks(CustomTreeViewItem item, string[] files, ref bool deep)
+        private void GetLinks(ProcItem item)
         {
-            var data  = item.Tag as ProcItem;
-            var path  = Flags > 0 ? data.OPath : data.IPath;
+            var path = Flags > 0 ? item.OPath : item.IPath;
             var links = Application
                 .GetDocumentExternalFileLinks(path, true, false, false)
                 .OrderBy(i => i);
 
             foreach (var i in links)
             {
-                foreach (var j in files)
-                {
-                    if (i == j)
-                    {
-                        //Debug.WriteLine($"GetLinks [path: {path}]");
-                        deep = true;
-                        break;
-                    }
-                }
-
-                var subItem = CreateItem(i);
-                var subData = subItem.Tag as ProcItem;
-                subData.Parent = data;
-                data.Items.Add(subData);
+                var subItem = CreateData(i);
+                subItem.Parent = item;
                 item.Items.Add(subItem);
-
-                GetLinks(subItem, files, ref deep); // recursive call
+                GetLinks(subItem); // recursive call
             }
 
             Application.IdleSession();
+        }
+
+        private void CfgItems(ProcItem item, int flag)
+        {
+            //
+            // configure items
+            //
+            var path = Flags > 0 ? item.OPath : item.IPath;
+
+            if ((Items[path].Flags & 0x1) == 0x1)
+            {
+                if (item.Parent != null && (item.Parent.Flags & 0x1) == 0x1)
+                {
+                    item.Flags |= 0x1;
+                    Items[path].Flags ^= 0x1;
+                }
+            }
+            else if (item.Level == 0 && flag == 0)
+            {
+                //
+                // reselect item from marked
+                //
+                if ((item.Flags & 0x4) == 0x4)
+                {
+                    item.Flags |= 0x1;
+                }
+                //
+                // configure subitems for selection item
+                //
+                foreach (var i in Items)
+                {
+                    CfgItems(i.Value, path);
+                }
+                //
+                // configure subitems for no selection items
+                //
+                foreach (var i in Items)
+                {
+                    foreach (var j in i.Value.Items)
+                    {
+                        if ((i.Value.Flags & 0x1) != 0x1)
+                            continue;
+                            
+                        CfgItems(j);
+                    }
+                }
+            }
+
+            foreach (var i in item.Items)
+            {
+                CfgItems(i, flag); // recursive call
+            }
+        }
+
+        private void CfgItems(ProcItem item, string target)
+        {
+            var path = Flags > 0 ? item.OPath : item.IPath;
+
+            if (item.Level > 0 && path == target)
+            {
+                item.Flags ^= 0x1;
+                return;
+            }
+
+            foreach (var i in item.Items)
+            {
+                CfgItems(i, target); // recursive call
+            }
+        }
+
+        private void CfgItems(ProcItem item)
+        {
+            if ((item.Flags & 0x1) == 0x1)
+            {
+                item.Flags ^= 0x1;
+            }
+
+            foreach (var i in item.Items)
+            {
+                CfgItems(i); // recursive call
+            }
+        }
+
+        private void UpdateItems(int flag)
+        {
+            if (searchPattern != "*.grb")
+                return;
+
+            ctv2.Items.Clear();
+            //
+            // configure items
+            //
+            foreach (var i in Items)
+            {
+                CfgItems(i.Value, flag);
+            }
+            //
+            // initialize the tree view
+            //
+            foreach (var i in Items)
+            {
+                if ((i.Value.Flags & 0x1) != 0x1)
+                    continue;
+
+                var item = CreateItem(i.Key);
+                item.Tag = i.Value;
+                GetItems(item);
+                ctv2.Items.Add(item);
+            }
         }
 
         private void CheckingToParent(CustomTreeViewItem item)
@@ -310,145 +427,23 @@ namespace TFlex.PackageManager.UI.Controls
             }
         }
 
-        private void SelectedItemTask(ProcItem item)
-        {
-            foreach (var i in item.Items)
-            {
-                if (item.Flags == 0)
-                {
-                    int result = 0;
-                    var parent = item.Parent;
-                    while (parent != null)
-                    {
-                        result = parent.Flags;
-                        parent = parent.Parent;
-                    }
-                    i.Flags = result;
-                }
-                SelectedItemTask(i); // recursive call
-            }
-        }
-
-        private void SelectedItemTask(ProcItem src, ProcItem dst, ref int res)
-        {
-            if (dst.IPath == src.IPath && dst.Level != src.Level)
-            {
-                if (res > 0)
-                {
-                    if (dst.Parent == null || dst.Parent.Flags > 0)
-                    {
-                        dst.Flags = res;
-                        res = 0; // inverted result (1 -> 0)
-                    }
-                }
-                else
-                {
-                    dst.Flags = res;
-                    res |= 0x1; // (0 -> 1)
-                }
-            }
-
-            foreach (var i in dst.Items)
-            {
-                SelectedItemTask(src, i, ref res); // recursive call
-            }
-        }
-
-        private void SelectedItemTask(ProcItem data, int value)
-        {
-            int result = value;
-            data.Flags = value;
-            //
-            // pre-processing the flags
-            //
-            foreach (var item in SelectedItems.Values)
-            {
-                SelectedItemTask(data, item, ref result);
-                if (result != value)
-                {
-                    //
-                    // selection sequence: asm -> part
-                    //
-                    data.Flags = result;
-                    result = value;
-                }
-
-                SelectedItemTask(item, data, ref result);
-                if (result != value)
-                {
-                    //
-                    // selection sequence: part -> asm
-                    //
-                    item.Flags = result;
-                    result = value;
-                }
-            }
-        }
-
         private void SelectedItemTask(CustomTreeViewItem item, int flag)
         {
             if (!(item.Tag is ProcItem data))
                 return;
 
-            ProcItem d;
             if (flag > 0)
             {
-                int value = 0x1;
-                if (searchPattern == "*.grb" && (d = GetData(item)) != null)
-                {
-                    data = d;
-                    SelectedItemTask(data, value);
-                }
-                else
-                    data.Flags = value;
-
-                SelectedItems.Add(data.IPath, data);
+                data.Flags |= 0x1 | 0x4;
+                CountItems++;
             }
             else
             {
-                SelectedItems.Remove(data.IPath);
-
-                if (searchPattern == "*.grb" && (d = GetData(item)) != null)
-                {
-                    data = d;
-                    SelectedItemTask(data, 0);
-                }
-            }
-        }
-
-        private ProcItem GetData(CustomTreeViewItem item)
-        {
-            //
-            // Getting data by a selected Item from the assembly tree.
-            //
-            foreach (CustomTreeViewItem i in ctv2.Items)
-            {
-                var value = Compare(item, i);
-                if (value != null)
-                    return value;
+                data.Flags = 0;
+                CountItems--;
             }
 
-            return null;
-        }
-
-        private ProcItem Compare(CustomTreeViewItem src, CustomTreeViewItem dst)
-        {
-            var data1 = src.Tag as ProcItem;
-            var data2 = dst.Tag as ProcItem;
-
-            if (data1.IPath == data2.IPath && data1.Level == data2.Level)
-            {
-                return data2;
-            }
-
-            foreach (CustomTreeViewItem i in dst.Items)
-            {
-                var value = Compare(src, i); // recursive call
-                if (value != null)
-                    return value;
-            }
-
-            return null;
+            UpdateItems(flag);
         }
         #endregion
 
@@ -503,7 +498,7 @@ namespace TFlex.PackageManager.UI.Controls
                 return;
 
             e.Handled = true;
-            tempImage = item.ImageSource;
+            tmpImage = item.ImageSource;
             var image = item.ImageSource as BitmapImage;
             int stride = (image.PixelWidth * image.Format.BitsPerPixel + 7) / 8;
             int length = stride * image.PixelHeight;
@@ -532,7 +527,16 @@ namespace TFlex.PackageManager.UI.Controls
                 return;
 
             e.Handled = true;
-            item.ImageSource = tempImage;
+            item.ImageSource = tmpImage;
+        }
+        #endregion
+
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
         #endregion
     }

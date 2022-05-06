@@ -27,7 +27,7 @@ namespace TFlex.PackageManager.UI.Model
             {
                 int level = 0;
                 var parent = Parent;
-                while(parent != null)
+                while (parent != null)
                 {
                     parent = parent.Parent;
                     level++;
@@ -41,7 +41,7 @@ namespace TFlex.PackageManager.UI.Model
         ///   0x0 None
         ///   0x1 Is selected Item
         ///   0x2 Is processed Item
-        ///   0x4 Processing the subitem only, if no parent item is selected
+        ///   0x4 Marked as an Item to change the tree
         /// </summary>
         public int Flags { get; set; }
 
