@@ -152,6 +152,18 @@ namespace TFlex.PackageManager.UI.Controls
             if (Directory.Exists(rootDirectory))
             {
                 InitTreeItems();
+
+                if (Flags > 0)
+                {
+                    //
+                    // select all output items for tree configure
+                    //
+                    foreach (var item in Items)
+                    {
+                        item.Value.Flags = 0x1 | 0x4;
+                        UpdateItems(1);
+                    }
+                }
             }
 
             ctv1.UpdateLayout();
@@ -434,7 +446,7 @@ namespace TFlex.PackageManager.UI.Controls
 
             if (flag > 0)
             {
-                data.Flags |= 0x1 | 0x4;
+                data.Flags = 0x1 | 0x4;
                 CountItems++;
             }
             else
