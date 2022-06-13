@@ -112,8 +112,12 @@
     <Compile Include="Common\Processing.cs" />
     <Compile Include="Configuration\Modules.cs" />
     <Compile Include="Configuration\Translator.cs" />
-    <Compile Include="Controls\CustomTreeView.cs" />
-    <Compile Include="Controls\CustomTreeViewItem.cs" />
+    <Compile Include="Controls\CustomTreeView.xaml.cs">
+      <DependentUpon>CustomTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CustomTreeViewItem.xaml.cs">
+      <DependentUpon>CustomTreeViewItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Files.cs" />
     <Compile Include="Configuration\Translator3D.cs" />
     <Compile Include="Configuration\Header.cs" />
@@ -159,6 +163,14 @@
     <Compile Include="Modules\Projections.cs" />
     <Compile Include="Modules\Variables.cs" />
     <Compile Include="Properties\Resources.cs" />
+    <Page Include="Controls\CustomTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\CustomTreeViewItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Editors\BiarcInterpolationEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

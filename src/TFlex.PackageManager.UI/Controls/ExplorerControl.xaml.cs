@@ -216,6 +216,8 @@ namespace TFlex.PackageManager.UI.Controls
                 Extension = Path.GetExtension(path)
             };
 
+            item.Checked    += Item_Checked;
+            item.Unchecked  += Item_Unchecked;
             item.Selected   += Item_Selected;
             item.Unselected += Item_Unselected;
 
@@ -318,6 +320,8 @@ namespace TFlex.PackageManager.UI.Controls
             //
             var path = Flags > 0 ? item.OPath : item.IPath;
 
+            //Debug.WriteLine($"CfgItems: [flags:{Items[path].Flags}, path:{path}]");
+
             if ((Items[path].Flags & 0x1) == 0x1)
             {
                 if (item.Parent != null && (item.Parent.Flags & 0x1) == 0x1)
@@ -419,89 +423,29 @@ namespace TFlex.PackageManager.UI.Controls
                 ctv2.Items.Add(item);
             }
         }
-
-        private void CheckingToParent(CustomTreeViewItem item)
-        {
-            bool? value = item.IsChecked;
-
-            if (item.Parent is CustomTreeViewItem parent)
-            {
-                foreach (CustomTreeViewItem i in parent.Items)
-                {
-                    if (i.IsChecked != item.IsChecked)
-                    {
-                        value = null;
-                        break;
-                    }
-                }
-                parent.IsChecked = value;
-                CheckingToParent(parent); // recursive call
-            }
-        }
-
-        private void SelectedItemTask(CustomTreeViewItem item, int flag)
-        {
-            if (!(item.Tag is ProcItem data))
-                return;
-
-            if (flag > 0)
-            {
-                data.Flags = 0x1 | 0x4;
-                CountItems++;
-            }
-            else
-            {
-                data.Flags = 0;
-                CountItems--;
-            }
-
-            UpdateItems(flag);
-        }
         #endregion
 
         #region event handlers
         private void Item_Checked(object sender, RoutedEventArgs e)
         {
-            if (!(sender is CheckBox cb && 
-                cb.TemplatedParent is CustomTreeViewItem item))
+            if (!(sender is CustomTreeViewItem item && 
+                item.Tag is ProcItem data))
                 return;
 
-            if (item.HasItems)
-            {
-                foreach (CustomTreeViewItem i in item.Items)
-                {
-                    i.IsChecked = true;
-                    if (item.IsExpanded)
-                        continue;
-                    SelectedItemTask(i, 1);
-                }
-                return;
-            }
-
-            CheckingToParent(item);
-            SelectedItemTask(item, 1);
+            data.Flags = 0x1 | 0x4;
+            CountItems++;
+            UpdateItems(1);
         }
 
         private void Item_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (!(sender is CheckBox cb && 
-                cb.TemplatedParent is CustomTreeViewItem item))
+            if (!(sender is CustomTreeViewItem item && 
+                item.Tag is ProcItem data))
                 return;
 
-            if (item.HasItems)
-            {
-                foreach (CustomTreeViewItem i in item.Items)
-                {
-                    i.IsChecked = false;
-                    if (item.IsExpanded)
-                        continue;
-                    SelectedItemTask(i, 0);
-                }
-                return;
-            }
-
-            CheckingToParent(item);
-            SelectedItemTask(item, 0);
+            data.Flags = 0;
+            CountItems--;
+            UpdateItems(0);
         }
 
         private void Item_Selected(object sender, RoutedEventArgs e)
