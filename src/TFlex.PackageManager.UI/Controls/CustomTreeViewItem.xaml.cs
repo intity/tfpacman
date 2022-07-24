@@ -132,8 +132,6 @@ namespace TFlex.PackageManager.UI.Controls
 
             bool? value = (bool?)e.NewValue;
 
-            Debug.WriteLine($"OnChecked [item:{item}, value:{value}]");
-
             RoutedEventArgs args = new RoutedEventArgs();
 
             if (value == true)

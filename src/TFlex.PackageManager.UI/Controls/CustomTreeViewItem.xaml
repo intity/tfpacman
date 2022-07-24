@@ -111,8 +111,8 @@
                                     </CheckBox>
                                     <Image 
                                         Source="{
-                                            Binding Path=ImageSource, 
-                                            RelativeSource={RelativeSource AncestorType=l:CustomTreeViewItem}}" 
+                                            Binding ImageSource, 
+                                            RelativeSource={RelativeSource TemplatedParent}}" 
                                         Width="16" 
                                         Margin="0,0,4,0"/>
                                     <ContentPresenter 
