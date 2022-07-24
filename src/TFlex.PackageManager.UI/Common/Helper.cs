@@ -79,7 +79,7 @@ namespace TFlex.PackageManager.UI.Common
         public static bool IsDigit(this string value, int index)
         {
             char[] chars = value.ToCharArray();
-            return chars.Length > 0 ? char.IsDigit(chars[index]) : false;
+            return chars.Length > 0 && char.IsDigit(chars[index]);
         }
 
         /// <summary>
