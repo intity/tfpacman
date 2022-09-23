@@ -906,7 +906,9 @@ namespace TFlex.PackageManager.UI.Configuration
 
             if (import.Import(path))
             {
-                logging.WriteLine(LogLevel.INFO, string.Format(">>> Import from [path: {0}]", path));
+                logging.WriteLine(LogLevel.INFO, 
+                    string.Format("IMP Processing [path: {0}]", 
+                    path));
             }
         }
         

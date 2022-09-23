@@ -173,7 +173,9 @@ namespace TFlex.PackageManager.UI.Configuration
 
                 if (export.Export(path))
                 {
-                    logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", path));
+                    logging.WriteLine(LogLevel.INFO, 
+                        string.Format("EXP Processing [path: {0}]", 
+                        path));
                 }
             }
             else
@@ -184,7 +186,9 @@ namespace TFlex.PackageManager.UI.Configuration
 
                     if (export.Export(p.Value))
                     {
-                        logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", p.Value));
+                        logging.WriteLine(LogLevel.INFO, 
+                            string.Format("EXP Processing [path: {0}]", 
+                            p.Value));
                     }
 
                     export.ExportPages.Clear();

@@ -404,7 +404,9 @@ namespace TFlex.PackageManager.UI.Configuration
 
                 if (result)
                 {
-                    logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", p.Value));
+                    logging.WriteLine(LogLevel.INFO, 
+                        string.Format("EXP Processing [path: {0}]", 
+                        p.Value));
                 }
             }
         }

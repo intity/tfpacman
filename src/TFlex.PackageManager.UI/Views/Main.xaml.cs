@@ -1042,9 +1042,9 @@ namespace TFlex.PackageManager.UI.Views
             Processing proc = new Processing(cfg, logging);
 
             logging.PrintHelper();
-            logging.WriteLine(LogLevel.INFO, "Started processing");
+            logging.WriteLine(LogLevel.INFO, "--- Started processing");
             logging.WriteLine(LogLevel.INFO, 
-                string.Format("Translator [type: {0}, mode: {1}]", 
+                string.Format("--- Translator [type: {0}, mode: {1}]", 
                 (cfg.Translator as Translator).TMode, 
                 (cfg.Translator as Translator).PMode));
 
@@ -1057,12 +1057,10 @@ namespace TFlex.PackageManager.UI.Views
                 {
                     NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, 
                         IntPtr.Zero, IntPtr.Zero);
-                    logging.WriteLine(LogLevel.INFO, "Processing stopped");
+                    logging.WriteLine(LogLevel.INFO, "--- Processing stopped");
                     break;
                 }
 
-                logging.WriteLine(LogLevel.INFO, 
-                    string.Format("Processing [path: {0}]", item.Value.IPath));
                 proc.ProcessingFile(item.Value);
 
                 counter[0] += increment;
@@ -1078,7 +1076,7 @@ namespace TFlex.PackageManager.UI.Views
             NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING, 
                 IntPtr.Zero, IntPtr.Zero);
 
-            logging.WriteLine(LogLevel.INFO, "Processing ending");
+            logging.WriteLine(LogLevel.INFO, "--- Processing ending");
         }
         #endregion
     }

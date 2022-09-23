@@ -203,7 +203,9 @@ namespace TFlex.PackageManager.UI.Configuration
 
                 if (export.Export(p.Value, options, format))
                 {
-                    logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", p.Value));
+                    logging.WriteLine(LogLevel.INFO, 
+                        string.Format("EXP Processing [path: {0}]", 
+                        p.Value));
                 }
             }
         }
