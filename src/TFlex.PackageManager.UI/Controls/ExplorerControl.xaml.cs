@@ -191,18 +191,14 @@ namespace TFlex.PackageManager.UI.Controls
         private ProcItem CreateData(string path)
         {
             var obj = new ProcItem();
-            var dir = Path.GetDirectoryName(path);
-            var cfg = DataContext as Header;
 
             if (Flags == 0)
             {
                 obj.IPath = path;
-                obj.Directory = dir.Replace(cfg.InitialCatalog, cfg.TargetDirectory);
             }
             else
             {
                 obj.OPath = path;
-                obj.Directory = dir;
             }
 
             return obj;

@@ -909,6 +909,20 @@ namespace TFlex.PackageManager.UI.Configuration
                 logging.WriteLine(LogLevel.INFO, string.Format(">>> Import from [path: {0}]", path));
             }
         }
+        
+        internal string GetPrototypePath()
+        {
+            string path = null;
+            
+            using (TFlex.Configuration.Files files = new TFlex.Configuration.Files())
+            {
+                path = ImportMode == 2 
+                    ? files.Prototype3DName 
+                    : files.Prototype3DAssemblyName;
+            }
+
+            return path;
+        }
         #endregion
     }
 }
