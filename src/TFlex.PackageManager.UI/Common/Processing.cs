@@ -318,14 +318,13 @@ namespace TFlex.PackageManager.UI.Common
             {
                 if ((i.Flags & 0x1) != 0x1)
                     continue;
-                if ((i.Flags & 0x2) == 0x2)
-                    continue;
+
                 var ch_d = Application.OpenDocument(i.IPath, false);
                 if (ch_d == null)
                     continue;
 
                 log.WriteLine(LogLevel.INFO,
-                    string.Format(">>> Document [action: 0, path: {0}]", 
+                    string.Format(">>> Document [action: 0, path: {0}]",
                     i.IPath));
 
                 if (tr.TMode == TranslatorType.Document)
@@ -335,8 +334,6 @@ namespace TFlex.PackageManager.UI.Common
 
                 ProcessingItems(ch_d, i); // recursive call
                 End(ch_d);
-
-                i.Flags |= 0x2;
             }
 
             if (item.Links.Count > 0)
@@ -347,8 +344,8 @@ namespace TFlex.PackageManager.UI.Common
                     UpdateAllLinks = true
                 });
                 document.EndChanges();
-                log.WriteLine(LogLevel.INFO, 
-                    string.Format(">>> Document [action: 2, path: {0}, mode: UpdateAllLinks]", 
+                log.WriteLine(LogLevel.INFO,
+                    string.Format(">>> Document [action: 2, path: {0}, mode: UpdateAllLinks]",
                     item.OPath));
             }
         }
