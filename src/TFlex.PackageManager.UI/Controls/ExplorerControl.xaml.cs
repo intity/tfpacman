@@ -317,16 +317,29 @@ namespace TFlex.PackageManager.UI.Controls
             var path = Flags > 0 ? item.OPath : item.IPath;
             var dest = Items[path];
 
-            if (dest.Flags == 1 && flag == 1)
+            if (flag == 1)
             {
-                if (item.Parent != null && (item.Parent.Flags & 0x1) == 0x1)
+                if (dest.Flags == 1 && item.Flags == 0)
                 {
-                    dest.Flags ^= 0x5;
-                    item.Flags |= 0x1;
-
-                    foreach (var i in dest.Items)
+                    if (item.Parent != null && (item.Parent.Flags & 0x1) == 0x1)
                     {
-                        CfgItems(i, 0); // recursive call
+                        dest.Flags ^= 0x5;
+                        item.Flags |= 0x1;
+                        dest.ERefs.Add(item);
+
+                        foreach (var i in dest.Items)
+                        {
+                            CfgItems(i, 0); // recursive call
+                        }
+                    }
+                }
+
+                if (dest.Flags == 4 && item.Flags == 0)
+                {
+                    if (item.Parent != null && (item.Parent.Flags & 0x1) == 0x1)
+                    {
+                        item.Flags |= 0x1;
+                        dest.ERefs.Add(item);
                     }
                 }
             }
@@ -337,8 +350,11 @@ namespace TFlex.PackageManager.UI.Controls
                     if (item.Parent.Flags == 0 ||
                         item.Parent.Flags == 4)
                     {
-                        dest.Flags ^= 0x5;
                         item.Flags ^= 0x1;
+                        dest.ERefs.Remove(item);
+
+                        if (dest.ERefs.Count == 0)
+                            dest.Flags ^= 0x5;
                     }
 
                     foreach (var i in item.Items)

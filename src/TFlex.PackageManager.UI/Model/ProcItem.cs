@@ -14,6 +14,7 @@ namespace TFlex.PackageManager.UI.Model
         public ProcItem()
         {
             Items = new List<ProcItem>();
+            ERefs = new List<ProcItem>();
             Links = new List<FileLink>();
             Pages = new Dictionary<Page, string>();
         }
@@ -37,11 +38,10 @@ namespace TFlex.PackageManager.UI.Model
         }
 
         /// <summary>
-        /// Flags definition:
-        ///   0x0 None
-        ///   0x1 Is selected Item
-        ///   0x2 Is processed Item
-        ///   0x4 Marked as an Item to change the tree
+        /// <term>0x0</term> None<br/>
+        /// <term>0x1</term> Is selected Item<br/>
+        /// <term>0x2</term> Reserved<br/>
+        /// <term>0x4</term> Marked as selected item from links
         /// </summary>
         public int Flags { get; set; }
 
@@ -61,7 +61,7 @@ namespace TFlex.PackageManager.UI.Model
         public string OPath { get; set; }
 
         /// <summary>
-        /// Target directory to Item.
+        /// Target directory.
         /// </summary>
         public string Directory { get; set; }
 
@@ -69,6 +69,11 @@ namespace TFlex.PackageManager.UI.Model
         /// Items to processing.
         /// </summary>
         public List<ProcItem> Items { get; }
+
+        /// <summary>
+        /// External references.
+        /// </summary>
+        public List<ProcItem> ERefs { get; }
 
         /// <summary>
         /// Processed Links.
