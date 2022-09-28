@@ -100,7 +100,7 @@ namespace TFlex.PackageManager.UI.Common
             }
 
             Start(document, item);
-            End(document);
+            End(document, item);
 
             if (Directory.GetFiles(item.Directory).Length == 0 &&
                 Directory.GetDirectories(item.Directory).Length == 0)
@@ -274,7 +274,7 @@ namespace TFlex.PackageManager.UI.Common
             }
         }
 
-        private void End(Document document)
+        private void End(Document document, ProcItem item)
         {
             string path = document.FileName;
             //
@@ -297,6 +297,8 @@ namespace TFlex.PackageManager.UI.Common
                         path));
                 }
             }
+            item.Pages.Clear();
+            item.Links.Clear();
             document.Close();
             log.WriteLine(LogLevel.INFO, 
                 string.Format("0-6 Processing [path: {0}]", 
@@ -334,7 +336,7 @@ namespace TFlex.PackageManager.UI.Common
                 }
 
                 ProcessingItems(ch_d, i); // recursive call
-                End(ch_d);
+                End(ch_d, i);
             }
 
             if (item.Links.Count > 0)
