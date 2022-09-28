@@ -95,7 +95,6 @@ namespace TFlex.PackageManager.UI.Common
         BFFM_SETSTATUSTEXTW  = (WM_USER + 104),
         BFFM_SETOKTEXT       = (WM_USER + 105), // Unicode only
         BFFM_SETEXPANDED     = (WM_USER + 106); // Unicode only
-        
 
         /// <summary>
         /// Displays a dialog box that enables the user to select a Shell folder.
@@ -127,6 +126,102 @@ namespace TFlex.PackageManager.UI.Common
             IntPtr hwndOwner, 
             int nFolder, 
             ref IntPtr ppidl);
+
+        [Flags]
+        public enum FILE_ATTRIBUTE : uint
+        {
+            READONLY              = 0x000001,
+            HIDDEN                = 0x000002,
+            SYSTEM                = 0x000004,
+            DIRECTORY             = 0x000010,
+            ARCHIVE               = 0x000020,
+            DEVICE                = 0x000040,
+            NORMAL                = 0x000080,
+            TEMPORARY             = 0x000100,
+            SPARSE_FILE           = 0x000200,
+            REPARSE_POINT         = 0x000400,
+            COMPRESSED            = 0x000800,
+            OFFLINE               = 0x001000,
+            NOT_CONTENT_INDEXED   = 0x002000,
+            ENCRYPTED             = 0x004000,
+            INTEGRITY_STREAM      = 0x008000,
+            VIRTUAL               = 0x010000,
+            NO_SCRUB_DATA         = 0x020000,
+            RECALL_ON_OPEN        = 0x040000,
+            PINNED                = 0x080000,
+            UNPINNED              = 0x100000,
+            RECALL_ON_DATA_ACCESS = 0x400000
+        };
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct SHFILEINFO
+        {
+            public IntPtr hIcon;
+            public int iIcon;
+            public uint dwAttributes;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szDisplayName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+            public string szTypeName;
+        }
+
+        [Flags]
+        public enum SHGFI
+        {
+            LARGEICON         = 0x000000000,
+            SMALLICON         = 0x000000001,
+            OPENICON          = 0x000000002,
+            SHELLICONSIZE     = 0x000000004,
+            PIDL              = 0x000000008,
+            USEFILEATTRIBUTES = 0x000000010,
+            ADDOVERLAYS       = 0x000000020,
+            OVERLAYINDEX      = 0x000000040,
+            ICON              = 0x000000100,
+            DISPLAYNAME       = 0x000000200,
+            TYPENAME          = 0x000000400,
+            ATTRIBUTES        = 0x000000800,
+            ICONLOCATION      = 0x000001000,
+            EXETYPE           = 0x000002000,
+            SYSICONINDEX      = 0x000004000,
+            LINKOVERLAY       = 0x000008000,
+            SELECTED          = 0x000010000,
+            ATTR_SPECIFIED    = 0x000020000
+        };
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SHGetFileInfo(
+            string pszPath,
+            uint dwFileAttributes,
+            out SHFILEINFO psfi,
+            uint cbFileInfo,
+            SHGFI uFlags);
+
+        public static Icon GetIcon(string path, bool small)
+        {
+            Icon icon = null;
+            SHFILEINFO info = new SHFILEINFO();
+            uint cbFileInfo = (uint)Marshal.SizeOf(info);
+            uint dwFileAttr = (uint)FILE_ATTRIBUTE.TEMPORARY;
+            SHGFI flags;
+
+            if (small)
+            {
+                flags = SHGFI.ICON | SHGFI.SMALLICON | SHGFI.USEFILEATTRIBUTES;
+            }
+            else
+            {
+                flags = SHGFI.ICON | SHGFI.LARGEICON | SHGFI.USEFILEATTRIBUTES;
+            }
+
+            var result = SHGetFileInfo(path, dwFileAttr, out info, cbFileInfo, flags);
+            if (result != IntPtr.Zero)
+            {
+                icon = Icon.FromHandle(info.hIcon);
+                DeleteObject(info.hIcon);
+            }
+            
+            return icon;
+        }
         #endregion
 
         [DllImport("user32.dll", EntryPoint = "CallWindowProc", CharSet = CharSet.Auto)]
@@ -256,5 +351,8 @@ namespace TFlex.PackageManager.UI.Common
 				return new POINT(p.X, p.Y);
 			}
 		}
+
+        [DllImport("gdi32.dll", SetLastError = true)]
+        public static extern bool DeleteObject(IntPtr hObject);
     }
 }

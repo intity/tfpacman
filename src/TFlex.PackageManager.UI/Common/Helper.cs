@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Interop;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.ComponentModel;
 
 namespace TFlex.PackageManager.UI.Common
 {
@@ -50,6 +56,28 @@ namespace TFlex.PackageManager.UI.Common
                     result += pattern[i];
             }
             return result;
+        }
+
+        /// <summary>
+        /// Convert Icon to ImageSource.
+        /// </summary>
+        /// <param name="icon"></param>
+        /// <returns></returns>
+        public static ImageSource ToImageSource(this Icon icon)
+        {
+            Bitmap bitmap = icon.ToBitmap();
+            IntPtr hbitmap = bitmap.GetHbitmap();
+            ImageSource image = Imaging
+                .CreateBitmapSourceFromHBitmap(
+                hbitmap, 
+                IntPtr.Zero, 
+                Int32Rect.Empty, 
+                BitmapSizeOptions.FromEmptyOptions());
+
+            if (!NativeMethods.DeleteObject(hbitmap))
+                throw new Win32Exception();
+
+            return image;
         }
 
         /// <summary>

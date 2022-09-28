@@ -46,12 +46,12 @@ namespace TFlex.PackageManager.UI.Controls
         }
 
         /// <summary>
-        /// File extension.
+        /// The IsNode prorety.
         /// </summary>
-        public string Extension
+        public bool IsNode
         {
-            get => GetValue(ExtensionProperty) as string;
-            set => SetValue(ExtensionProperty, value);
+            get => (bool)GetValue(IsNodeProperty);
+            set => SetValue(IsNodeProperty, value);
         }
 
         /// <summary>
@@ -72,11 +72,11 @@ namespace TFlex.PackageManager.UI.Controls
                 new FrameworkPropertyMetadata(false, 
                     new PropertyChangedCallback(OnChecked)));
 
-        public static readonly DependencyProperty ExtensionProperty =
-            DependencyProperty.Register("Extension",
-                typeof(string),
+        public static readonly DependencyProperty IsNodeProperty =
+            DependencyProperty.Register("IsNode",
+                typeof(bool),
                 typeof(CustomTreeViewItem),
-                new PropertyMetadata(null));
+                new PropertyMetadata(false));
 
         public static readonly DependencyProperty ImageSourceProperty =
             DependencyProperty.Register("ImageSource",

@@ -13,20 +13,6 @@
     <TreeViewItem.Resources>
         <BitmapImage x:Key="icon_1" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/collapsed_folder.ico"/>
         <BitmapImage x:Key="icon_2" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/expanded_folder.ico"/>
-        <BitmapImage x:Key="icon_3" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/grb.ico"/>
-        <BitmapImage x:Key="icon_4" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/dwg.ico"/>
-        <BitmapImage x:Key="icon_5" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/dxf.ico"/>
-        <BitmapImage x:Key="icon_6" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/dxb.ico"/>
-        <BitmapImage x:Key="icon_7" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/sat.ico"/>
-        <BitmapImage x:Key="icon_8" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/bmp.ico"/>
-        <BitmapImage x:Key="icon_9" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/jpg.ico"/>
-        <BitmapImage x:Key="icon10" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/gif.ico"/>
-        <BitmapImage x:Key="icon11" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/tif.ico"/>
-        <BitmapImage x:Key="icon12" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/png.ico"/>
-        <BitmapImage x:Key="icon13" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/igs.ico"/>
-        <BitmapImage x:Key="icon14" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/jt.ico"/>
-        <BitmapImage x:Key="icon15" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/pdf.ico"/>
-        <BitmapImage x:Key="icon16" UriSource="pack://application:,,,/TFlex.PackageManager.UI;component/Resources/stp.ico"/>
 
         <c:LevelToIndentConverter x:Key="LevelToIndentConverter"/>
 
@@ -128,7 +114,7 @@
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsExpanded" Value="False"/>
-                                    <Condition Property="Extension" Value="{x:Null}"/>
+                                    <Condition Property="IsNode" Value="True"/>
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>
                                     <Setter Property="ImageSource" Value="{StaticResource icon_1}"/>
@@ -137,54 +123,12 @@
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsExpanded" Value="True"/>
-                                    <Condition Property="Extension" Value="{x:Null}"/>
+                                    <Condition Property="IsNode" Value="True"/>
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>
                                     <Setter Property="ImageSource" Value="{StaticResource icon_2}"/>
                                 </MultiTrigger.Setters>
                             </MultiTrigger>
-                            <Trigger Property="Extension" Value=".grb">
-                                <Setter Property="ImageSource" Value="{StaticResource icon_3}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".dwg">
-                                <Setter Property="ImageSource" Value="{StaticResource icon_4}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".dxf">
-                                <Setter Property="ImageSource" Value="{StaticResource icon_5}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".dxb">
-                                <Setter Property="ImageSource" Value="{StaticResource icon_6}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".sat">
-                                <Setter Property="ImageSource" Value="{StaticResource icon_7}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".bmp">
-                                <Setter Property="ImageSource" Value="{StaticResource icon_8}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".jpeg">
-                                <Setter Property="ImageSource" Value="{StaticResource icon_9}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".gif">
-                                <Setter Property="ImageSource" Value="{StaticResource icon10}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".tiff">
-                                <Setter Property="ImageSource" Value="{StaticResource icon11}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".png">
-                                <Setter Property="ImageSource" Value="{StaticResource icon12}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".igs">
-                                <Setter Property="ImageSource" Value="{StaticResource icon13}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".jt">
-                                <Setter Property="ImageSource" Value="{StaticResource icon14}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".pdf">
-                                <Setter Property="ImageSource" Value="{StaticResource icon15}"/>
-                            </Trigger>
-                            <Trigger Property="Extension" Value=".stp">
-                                <Setter Property="ImageSource" Value="{StaticResource icon16}"/>
-                            </Trigger>
                             <Trigger Property="HasItems" Value="False">
                                 <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
                             </Trigger>

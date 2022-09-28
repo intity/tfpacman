@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using TFlex.PackageManager.UI.Configuration;
+using TFlex.PackageManager.UI.Common;
 using TFlex.PackageManager.UI.Model;
 
 namespace TFlex.PackageManager.UI.Controls
@@ -22,7 +21,6 @@ namespace TFlex.PackageManager.UI.Controls
         string rootDirectory;
         bool enableAsmTree;
         int countItems;
-        ImageSource tmpImage;
         #endregion
 
         public ExplorerControl()
@@ -206,16 +204,28 @@ namespace TFlex.PackageManager.UI.Controls
 
         private CustomTreeViewItem CreateItem(string path)
         {
+            Icon icon = NativeMethods.GetIcon(path, true);
+
+            if (Path.GetExtension(path) == ".lnk")
+            {
+                path = path.Replace(".lnk", "");
+            }
+
             var item = new CustomTreeViewItem
             {
-                Header    = Path.GetFileName(path),
-                Extension = Path.GetExtension(path)
+                Header = Path.GetFileName(path)
             };
 
-            item.Checked    += Item_Checked;
-            item.Unchecked  += Item_Unchecked;
-            item.Selected   += Item_Selected;
-            item.Unselected += Item_Unselected;
+            if (icon != null)
+            {
+                item.ImageSource = icon.ToImageSource();
+            }
+
+            if (Flags == 0)
+            {
+                item.Checked   += Item_Checked;
+                item.Unchecked += Item_Unchecked;
+            }
 
             return item;
         }
@@ -228,6 +238,7 @@ namespace TFlex.PackageManager.UI.Controls
             {
                 var subItem = new CustomTreeViewItem
                 {
+                    IsNode = true,
                     Header = i.Substring(i.LastIndexOf("\\") + 1),
                     Tag    = i
                 };
@@ -246,12 +257,7 @@ namespace TFlex.PackageManager.UI.Controls
         private void GetFiles(CustomTreeViewItem item)
         {
             var dir = item != null ? item.Tag.ToString() : rootDirectory;
-            var cfg = DataContext as Header;
-            var obj = cfg.Translator as Files;
-            var ext = Flags > 0 ? obj.OExtension : obj.IExtension;
             var opt = SearchOption.TopDirectoryOnly;
-
-            searchPattern = "*" + ext;
 
             foreach (var i in Directory.GetFiles(dir, searchPattern, opt))
             {
@@ -265,6 +271,17 @@ namespace TFlex.PackageManager.UI.Controls
                 {
                     GetLinks(subData);
                 }
+
+                if (item != null)
+                    item.Items.Add(subItem);
+                else
+                    ctv1.Items.Add(subItem);
+            }
+
+            foreach (var i in Directory.GetFiles(dir, "*.lnk", opt))
+            {
+                var subItem = CreateItem(i);
+                subItem.Tag = i;
 
                 if (item != null)
                     item.Items.Add(subItem);
@@ -442,44 +459,6 @@ namespace TFlex.PackageManager.UI.Controls
             data.Flags ^= 0x1;
             CountItems--;
             UpdateItems(0);
-        }
-
-        private void Item_Selected(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is CustomTreeViewItem item))
-                return;
-
-            e.Handled = true;
-            tmpImage = item.ImageSource;
-            var image = item.ImageSource as BitmapImage;
-            int stride = (image.PixelWidth * image.Format.BitsPerPixel + 7) / 8;
-            int length = stride * image.PixelHeight;
-            byte[] data = new byte[length];
-
-            image.CopyPixels(data, stride, 0);
-
-            for (int i = 0; i < length; i += 4)
-            {
-                data[i + 0] = 255; // R
-                data[i + 1] = 255; // G
-                data[i + 2] = 255; // B
-            }
-
-            item.ImageSource = BitmapSource.Create(
-                image.PixelWidth,
-                image.PixelHeight,
-                image.DpiX,
-                image.DpiY,
-                image.Format, null, data, stride);
-        }
-
-        private void Item_Unselected(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is CustomTreeViewItem item))
-                return;
-
-            e.Handled = true;
-            item.ImageSource = tmpImage;
         }
         #endregion
 
