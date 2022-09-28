@@ -388,7 +388,13 @@ namespace TFlex.PackageManager.UI.Controls
                 if (dest.Flags == 5 && item.Flags == 1)
                 {
                     dest.Flags ^= 0x5;
-                    item.Flags ^= 0x1;
+
+                    foreach (var i in dest.ERefs)
+                    {
+                        i.Flags ^= 0x1;
+                    }
+
+                    dest.ERefs.Clear();
 
                     foreach (var i in dest.Items)
                     {
