@@ -116,7 +116,8 @@ namespace TFlex.PackageManager.UI.Common
             // get output directory
             //
             var md_0 = cfg.Translator as Links;
-            if (md_0.LinkTemplate.Length > 0 && item.Parent != null)
+            if (md_0 != null && 
+                md_0.LinkTemplate.Length > 0 && item.Parent != null)
             {
                 var link = md_0.GetLink(item);
                 if (link != null)
@@ -187,17 +188,17 @@ namespace TFlex.PackageManager.UI.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = tr_2.GetFileName(document, null);
-                            item.OPath = Path.Combine(item.Directory, item.FName + tr_2.OExtension);
+                            item.OPath = Path.Combine(GetDirectory(item), item.FName + tr_2.OExtension);
                             tr_2.Export(document, item.OPath, log);
                             break;
                         case ProcessingMode.Import:
                             if (tr_2.ImportMode > 0)
                             {
                                 item.FName = aPath[aPath.Length - 1].Replace(".sat", ".grb");
-                                item.OPath = Path.Combine(item.Directory, item.FName);
+                                item.OPath = Path.Combine(GetDirectory(item), item.FName);
                                 document.SaveAs(item.OPath);
                             }
-                            tr_2.Import(document, item.Directory, item.IPath, log);
+                            tr_2.Import(document, GetDirectory(item), item.IPath, log);
                             log.WriteLine(LogLevel.INFO,
                                 string.Format("0-3 Processing [path: {0}]",
                                 document.FileName));
@@ -209,17 +210,17 @@ namespace TFlex.PackageManager.UI.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = tr_6.GetFileName(document, null);
-                            item.OPath = Path.Combine(item.Directory, item.FName + tr_6.OExtension);
+                            item.OPath = Path.Combine(GetDirectory(item), item.FName + tr_6.OExtension);
                             tr_6.Export(document, item.OPath, log);
                             break;
                         case ProcessingMode.Import:
                             if (tr_6.ImportMode > 0)
                             {
                                 item.FName = aPath[aPath.Length - 1].Replace(".igs", ".grb");
-                                item.OPath = Path.Combine(item.Directory, item.FName);
+                                item.OPath = Path.Combine(GetDirectory(item), item.FName);
                                 document.SaveAs(item.OPath);
                             }
-                            tr_6.Import(document, item.Directory, item.IPath, log);
+                            tr_6.Import(document, GetDirectory(item), item.IPath, log);
                             log.WriteLine(LogLevel.INFO,
                                 string.Format("0-3 Processing [path: {0}]",
                                 document.FileName));
@@ -231,17 +232,17 @@ namespace TFlex.PackageManager.UI.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = tr_7.GetFileName(document, null);
-                            item.OPath = Path.Combine(item.Directory, item.FName + tr_7.OExtension);
+                            item.OPath = Path.Combine(GetDirectory(item), item.FName + tr_7.OExtension);
                             tr_7.Export(document, item.OPath, log);
                             break;
                         case ProcessingMode.Import:
                             if (tr_7.ImportMode > 0)
                             {
                                 item.FName = aPath[aPath.Length - 1].Replace(".jt", ".grb");
-                                item.OPath = Path.Combine(item.Directory, item.FName);
+                                item.OPath = Path.Combine(GetDirectory(item), item.FName);
                                 document.SaveAs(item.OPath);
                             }
-                            tr_7.Import(document, item.Directory, item.IPath, log);
+                            tr_7.Import(document, GetDirectory(item), item.IPath, log);
                             log.WriteLine(LogLevel.INFO,
                                 string.Format("0-3 Processing [path: {0}]",
                                 document.FileName));
@@ -253,17 +254,17 @@ namespace TFlex.PackageManager.UI.Common
                     {
                         case ProcessingMode.Export:
                             item.FName = tr_10.GetFileName(document, null);
-                            item.OPath = Path.Combine(item.Directory, item.FName + tr_10.OExtension);
+                            item.OPath = Path.Combine(GetDirectory(item), item.FName + tr_10.OExtension);
                             tr_10.Export(document, item.OPath, log);
                             break;
                         case ProcessingMode.Import:
                             if (tr_10.ImportMode > 0)
                             {
                                 item.FName = aPath[aPath.Length - 1].Replace(".stp", ".grb");
-                                item.OPath = Path.Combine(item.Directory, item.FName);
+                                item.OPath = Path.Combine(GetDirectory(item), item.FName);
                                 document.SaveAs(item.OPath);
                             }
-                            tr_10.Import(document, item.Directory, item.IPath, log);
+                            tr_10.Import(document, GetDirectory(item), item.IPath, log);
                             log.WriteLine(LogLevel.INFO, 
                                 string.Format("0-3 Processing [path: {0}]", 
                                 document.FileName));
