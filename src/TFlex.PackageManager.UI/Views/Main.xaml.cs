@@ -630,25 +630,39 @@ namespace TFlex.PackageManager.UI.Views
         private void Event4_2_Click(object sender, RoutedEventArgs e)
         {
             var cfg = conf.Configurations[key1];
-            var obj = cfg.Translator as Translator;
+            var obj = cfg.Translator as Files;
+            var ext = ".grb";
+            bool value = false;
 
-            if (obj.TMode == TranslatorType.Document)
+            if (obj.IExtension == ext)
             {
-                var value = tvControl1.EnableAsmTree;
+                value = tvControl1.EnableAsmTree;
+            }
+            if (obj.OExtension == ext)
+            {
+                value = tvControl2.EnableAsmTree;
+            }
+            if (obj.IExtension == ext ||
+                obj.OExtension == ext)
+            {
                 if (sender is MenuItem mi && mi.IsChecked != value)
                 {
                     value = mi.IsChecked;
-                    tvControl1.EnableAsmTree = value;
-                    tvControl2.EnableAsmTree = value;
-                    button4_2.IsChecked      = value;
+                    button4_2.IsChecked = value;
                 }
                 else if (sender is ToggleButton tb && tb.IsChecked != value)
                 {
                     value = (bool)tb.IsChecked;
-                    tvControl1.EnableAsmTree = value;
-                    tvControl2.EnableAsmTree = value;
-                    menuItem4_2.IsChecked    = value;
+                    menuItem4_2.IsChecked = value;
                 }
+            }
+            if (obj.IExtension == ext)
+            {
+                tvControl1.EnableAsmTree = value;
+            }
+            if (obj.OExtension == ext)
+            {
+                tvControl2.EnableAsmTree = value;
             }
         } // Assembly tree view enable/disable
 
@@ -953,10 +967,13 @@ namespace TFlex.PackageManager.UI.Views
                     menuItem3_3.IsEnabled = false;
                     button3_3.IsEnabled   = false;
                 }
+
+                menuItem4_2.IsEnabled = true;
+                button4_2.IsEnabled   = true;
             }
 
             var cfg = conf.Configurations[key1];
-            var obj = cfg.Translator as Translator;
+            var obj = cfg.Translator as Files;
 
             if (cfg.IsChanged && !cfg.IsInvalid)
             {
@@ -980,19 +997,14 @@ namespace TFlex.PackageManager.UI.Views
                 button1_5.IsEnabled   = false;
             }
 
-            if (obj.TMode == TranslatorType.Document)
-            {
-                menuItem4_2.IsEnabled = true;
-                button4_2.IsEnabled   = true;
-            }
-            else
+            if (obj.IExtension != ".grb")
             {
                 tvControl1.EnableAsmTree = false;
+            }
+
+            if (obj.OExtension != ".grb")
+            {
                 tvControl2.EnableAsmTree = false;
-                button4_2.IsChecked      = false;
-                button4_2.IsEnabled      = false;
-                menuItem4_2.IsChecked    = false;
-                menuItem4_2.IsEnabled    = false;
             }
 
             var str1 = Properties.Resources.Strings["ui_0:sbl_1"][0];
