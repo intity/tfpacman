@@ -8,6 +8,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using TFlex.Model;
 using TFlex.PackageManager.UI.Common;
+using TFlex.PackageManager.UI.Model;
 
 namespace TFlex.PackageManager.UI.Configuration
 {
@@ -64,17 +65,9 @@ namespace TFlex.PackageManager.UI.Configuration
         /// The Export virtual method.
         /// </summary>
         /// <param name="document"></param>
-        /// <param name="path"></param>
+        /// <param name="item"></param>
         /// <param name="logging"></param>
-        internal virtual void Export(Document document, string path, Logging logging) { }
-
-        /// <summary>
-        /// The Export virtual method.
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="pages"></param>
-        /// <param name="logging"></param>
-        internal virtual void Export(Document document, Dictionary<Page, string> pages, Logging logging) { }
+        internal virtual void Export(Document document, ProcItem item, Logging logging) { }
 
         /// <summary>
         /// The Import virtual method.
@@ -83,7 +76,7 @@ namespace TFlex.PackageManager.UI.Configuration
         /// <param name="targetDirectory"></param>
         /// <param name="path"></param>
         /// <param name="logging"></param>
-        internal virtual void Import(Document document, string targetDirectory, string path, Logging logging) { }
+        internal virtual void Import(Document document, ProcItem item, Logging logging) { }
         #endregion
 
         #region IXmlSerializable Members

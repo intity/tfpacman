@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
@@ -9,6 +8,7 @@ using TFlex.Model;
 using TFlex.PackageManager.UI.Attributes;
 using TFlex.PackageManager.UI.Common;
 using TFlex.PackageManager.UI.Editors;
+using TFlex.PackageManager.UI.Model;
 using TFlex.PackageManager.UI.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -150,7 +150,7 @@ namespace TFlex.PackageManager.UI.Configuration
         #endregion
 
         #region internals methods
-        internal override void Export(Document document, Dictionary<Page, string> pages, Logging logging)
+        internal override void Export(Document document, ProcItem item, Logging logging)
         {
             ExportToPDF export = new ExportToPDF(document)
             {
@@ -162,14 +162,14 @@ namespace TFlex.PackageManager.UI.Configuration
 
             if (CombinePages)
             {
-                string path = pages.Values.First();
+                string path = item.Pages.Values.First();
 
                 if (path.Contains("_1.pdf"))
                 {
                     path = path.Replace("_1.pdf", ".pdf");
                 }
 
-                export.ExportPages.AddRange(pages.Keys);
+                export.ExportPages.AddRange(item.Pages.Keys);
 
                 if (export.Export(path))
                 {
@@ -180,7 +180,7 @@ namespace TFlex.PackageManager.UI.Configuration
             }
             else
             {
-                foreach (var p in pages)
+                foreach (var p in item.Pages)
                 {
                     export.ExportPages.Add(p.Key);
 

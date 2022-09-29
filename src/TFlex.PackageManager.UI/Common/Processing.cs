@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -19,13 +18,6 @@ namespace TFlex.PackageManager.UI.Common
         #region private fields
         readonly Header cfg;
         readonly Logging log;
-        readonly Translator_1 tr_1;
-        readonly Translator_2 tr_2;
-        readonly Translator_3 tr_3;
-        readonly Translator_6 tr_6;
-        readonly Translator_7 tr_7;
-        readonly Translator_9 tr_9;
-        readonly Translator_10 tr_10;
         #endregion
 
         /// <summary>
@@ -37,31 +29,6 @@ namespace TFlex.PackageManager.UI.Common
         {
             this.cfg = cfg;
             this.log = log;
-
-            switch ((cfg.Translator as Translator).TMode)
-            {
-                case TranslatorType.Acad:
-                    tr_1 = cfg.Translator as Translator_1;
-                    break;
-                case TranslatorType.Acis:
-                    tr_2 = cfg.Translator as Translator_2;
-                    break;
-                case TranslatorType.Bitmap:
-                    tr_3 = cfg.Translator as Translator_3;
-                    break;
-                case TranslatorType.Iges:
-                    tr_6 = cfg.Translator as Translator_6;
-                    break;
-                case TranslatorType.Jt:
-                    tr_7 = cfg.Translator as Translator_7;
-                    break;
-                case TranslatorType.Pdf:
-                    tr_9 = cfg.Translator as Translator_9;
-                    break;
-                case TranslatorType.Step:
-                    tr_10 = cfg.Translator as Translator_10;
-                    break;
-            }
         }
 
         #region internal methods
@@ -111,10 +78,13 @@ namespace TFlex.PackageManager.UI.Common
         #region private methods
         private string GetDirectory(ProcItem item)
         {
-            item.Directory = cfg.TargetDirectory;
             //
             // get output directory
             //
+            var name = Path.GetFileName(item.IPath);
+            var path = item.IPath.Replace(name, "");
+            item.Directory = path.Replace(cfg.InitialCatalog, cfg.TargetDirectory);
+
             var md_0 = cfg.Translator as Links;
             if (md_0 != null && 
                 md_0.LinkTemplate.Length > 0 && item.Parent != null)
@@ -133,31 +103,11 @@ namespace TFlex.PackageManager.UI.Common
             return item.Directory;
         }
 
-        private void ReplaceLink(FileLink link, ProcItem item)
-        {
-            //
-            // replace link method
-            //
-            var path = item.Parent == null 
-                ? cfg.TargetDirectory 
-                : item.Parent.Directory;
-
-            link.FilePath = item.OPath.Replace(path + "\\", "");
-            log.WriteLine(LogLevel.INFO,
-                string.Format("1-1 Processing [path: {0}, link: {1}]", 
-                link.Document.FileName, 
-                link.FilePath));
-        }
-
         private void SaveAs(Document document, ProcItem item)
         {
             //
             // save copy document to output directory
             //
-            var md_4   = cfg.Translator as Files;
-            item.FName = md_4.GetFileName(document, null);
-            item.OPath = Path.Combine(GetDirectory(item), item.FName + ".grb");
-
             if (document.SaveAs(item.OPath))
                 log.WriteLine(LogLevel.INFO,
                     string.Format("0-4 Processing [path: {0}]", 
@@ -169,10 +119,32 @@ namespace TFlex.PackageManager.UI.Common
             //
             // start processing
             //
-            var tr = cfg.Translator as Files;
-            string[] aPath = item.IPath.Split('\\');
+            var md_4 = cfg.Translator as Files;
+            var tr3d = cfg.Translator as Translator3D;
 
-            switch (tr.TMode)
+            switch (md_4.PMode)
+            {
+                case ProcessingMode.SaveAs:
+                case ProcessingMode.Export:
+                    if (md_4.TMode == TranslatorType.Document || tr3d != null)
+                    {
+                        item.FName = md_4.GetFileName(document);
+                        item.OPath = Path.Combine(GetDirectory(item), 
+                            item.FName + md_4.OExtension);
+                    }
+                    break;
+                case ProcessingMode.Import:
+                    item.FName = Path.GetFileNameWithoutExtension(item.IPath);
+                    item.OPath = Path.Combine(GetDirectory(item), 
+                        item.FName + md_4.OExtension);
+                    if (tr3d.ImportMode > 0)
+                    {
+                        SaveAs(document, item);
+                    }
+                    break;
+            }
+
+            switch (md_4.TMode)
             {
                 case TranslatorType.Document:
                     SaveAs(document, item);
@@ -184,93 +156,60 @@ namespace TFlex.PackageManager.UI.Common
                     ProcessingItems(document, item);
                     break;
                 case TranslatorType.Acis:
-                    switch (tr.PMode)
+                    var tr_02 = cfg.Translator as Translator_2;
+                    switch (md_4.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = tr_2.GetFileName(document, null);
-                            item.OPath = Path.Combine(GetDirectory(item), item.FName + tr_2.OExtension);
-                            tr_2.Export(document, item.OPath, log);
+                            tr_02.Export(document, item, log);
                             break;
                         case ProcessingMode.Import:
-                            if (tr_2.ImportMode > 0)
-                            {
-                                item.FName = aPath[aPath.Length - 1].Replace(".sat", ".grb");
-                                item.OPath = Path.Combine(GetDirectory(item), item.FName);
-                                document.SaveAs(item.OPath);
-                            }
-                            tr_2.Import(document, GetDirectory(item), item.IPath, log);
-                            log.WriteLine(LogLevel.INFO,
-                                string.Format("0-3 Processing [path: {0}]",
-                                document.FileName));
+                            tr_02.Import(document, item, log);
                             break;
                     }
                     break;
                 case TranslatorType.Iges:
-                    switch (tr.PMode)
+                    var tr_06 = cfg.Translator as Translator_6;
+                    switch (md_4.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = tr_6.GetFileName(document, null);
-                            item.OPath = Path.Combine(GetDirectory(item), item.FName + tr_6.OExtension);
-                            tr_6.Export(document, item.OPath, log);
+                            tr_06.Export(document, item, log);
                             break;
                         case ProcessingMode.Import:
-                            if (tr_6.ImportMode > 0)
-                            {
-                                item.FName = aPath[aPath.Length - 1].Replace(".igs", ".grb");
-                                item.OPath = Path.Combine(GetDirectory(item), item.FName);
-                                document.SaveAs(item.OPath);
-                            }
-                            tr_6.Import(document, GetDirectory(item), item.IPath, log);
-                            log.WriteLine(LogLevel.INFO,
-                                string.Format("0-3 Processing [path: {0}]",
-                                document.FileName));
+                            tr_06.Import(document, item, log);
                             break;
                     }
                     break;
                 case TranslatorType.Jt:
-                    switch (tr.PMode)
+                    var tr_07 = cfg.Translator as Translator_7;
+                    switch (md_4.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = tr_7.GetFileName(document, null);
-                            item.OPath = Path.Combine(GetDirectory(item), item.FName + tr_7.OExtension);
-                            tr_7.Export(document, item.OPath, log);
+                            tr_07.Export(document, item, log);
                             break;
                         case ProcessingMode.Import:
-                            if (tr_7.ImportMode > 0)
-                            {
-                                item.FName = aPath[aPath.Length - 1].Replace(".jt", ".grb");
-                                item.OPath = Path.Combine(GetDirectory(item), item.FName);
-                                document.SaveAs(item.OPath);
-                            }
-                            tr_7.Import(document, GetDirectory(item), item.IPath, log);
-                            log.WriteLine(LogLevel.INFO,
-                                string.Format("0-3 Processing [path: {0}]",
-                                document.FileName));
+                            tr_07.Import(document, item, log);
                             break;
                     }
                     break;
                 case TranslatorType.Step:
-                    switch (tr.PMode)
+                    var tr_10 = cfg.Translator as Translator_10;
+                    switch (md_4.PMode)
                     {
                         case ProcessingMode.Export:
-                            item.FName = tr_10.GetFileName(document, null);
-                            item.OPath = Path.Combine(GetDirectory(item), item.FName + tr_10.OExtension);
-                            tr_10.Export(document, item.OPath, log);
+                            tr_10.Export(document, item, log);
                             break;
                         case ProcessingMode.Import:
-                            if (tr_10.ImportMode > 0)
-                            {
-                                item.FName = aPath[aPath.Length - 1].Replace(".stp", ".grb");
-                                item.OPath = Path.Combine(GetDirectory(item), item.FName);
-                                document.SaveAs(item.OPath);
-                            }
-                            tr_10.Import(document, GetDirectory(item), item.IPath, log);
-                            log.WriteLine(LogLevel.INFO, 
-                                string.Format("0-3 Processing [path: {0}]", 
-                                document.FileName));
+                            tr_10.Import(document, item, log);
                             break;
                     }
                     break;
+            }
+
+            if (md_4.PMode == ProcessingMode.Import)
+            {
+                log.WriteLine(LogLevel.INFO, 
+                    string.Format("0-3 Processing [path: {0}]", 
+                    document.FileName));
             }
         }
 
@@ -310,7 +249,7 @@ namespace TFlex.PackageManager.UI.Common
             //
             // processing items (recursive method)
             //
-            var tr = cfg.Translator as Translator;
+            var md_4 = cfg.Translator as Files;
 
             ProcessingPages(document, item);
             ProcessingProjections(document, item);
@@ -330,8 +269,11 @@ namespace TFlex.PackageManager.UI.Common
                     string.Format("0-0 Processing [path: {0}]",
                     i.IPath));
 
-                if (tr.TMode == TranslatorType.Document)
+                if (md_4.TMode == TranslatorType.Document)
                 {
+                    i.FName = md_4.GetFileName(ch_d);
+                    i.OPath = Path.Combine(GetDirectory(i), 
+                        i.FName + md_4.OExtension);
                     ProcessingLinks(document, ch_d, i);
                 }
 
@@ -374,7 +316,15 @@ namespace TFlex.PackageManager.UI.Common
                     link.FilePath));
 
                 parent.BeginChanges("Replace Link");
-                ReplaceLink(link, item);
+                var path = item.Parent == null 
+                    ? cfg.TargetDirectory 
+                    : item.Parent.Directory;
+
+                link.FilePath = item.OPath.Replace(path + "\\", "");
+                log.WriteLine(LogLevel.INFO,
+                    string.Format("1-1 Processing [path: {0}, link: {1}]",
+                    link.Document.FileName,
+                    link.FilePath));
                 parent.EndChanges();
                 item.Parent.Links.Add(link);
                 break;
@@ -673,20 +623,23 @@ namespace TFlex.PackageManager.UI.Common
         private void ProcessingExport(Document document, ProcItem item)
         {
             //
-            // export
+            // export pages
             //
             var tr = cfg.Translator as Translator;
 
             switch (tr.TMode)
             {
                 case TranslatorType.Acad:
-                    tr_1.Export(document, item.Pages, log);
+                    var tr_1 = cfg.Translator as Translator_1;
+                    tr_1.Export(document, item, log);
                     break;
                 case TranslatorType.Bitmap:
-                    tr_3.Export(document, item.Pages, log);
+                    var tr_3 = cfg.Translator as Translator_3;
+                    tr_3.Export(document, item, log);
                     break;
                 case TranslatorType.Pdf:
-                    tr_9.Export(document, item.Pages, log);
+                    var tr_9 = cfg.Translator as Translator_9;
+                    tr_9.Export(document, item, log);
                     break;
             }
         }
