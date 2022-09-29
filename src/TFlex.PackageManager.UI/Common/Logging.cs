@@ -37,6 +37,8 @@ namespace TFlex.PackageManager.UI.Common
             sw.WriteLine("0-4 : Saved As");
             sw.WriteLine("0-5 : Canceled Changes");
             sw.WriteLine("0-6 : Closed");
+            sw.WriteLine("0-7 : Removed");
+            sw.WriteLine("0-8 : Created Shortcut");
             sw.WriteLine("Action enums for Links:");
             sw.WriteLine("1-0 : Read");
             sw.WriteLine("1-1 : Replaced");

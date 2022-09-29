@@ -73,6 +73,51 @@ namespace TFlex.PackageManager.UI.Common
                 Directory.GetDirectories(item.Directory).Length == 0)
                 Directory.Delete(item.Directory, false);
         }
+
+        /// <summary>
+        /// Parents processing.
+        /// </summary>
+        /// <param name="item"></param>
+        internal void ProcessingParent(ProcItem item)
+        {
+            var parent = item.Parent;
+            if (parent == null)
+                return;
+
+            var path = parent.OPath;
+            var document = Application.OpenDocument(path, false);
+            if (document == null)
+            {
+                log.WriteLine(LogLevel.ERROR, "--- The document object has a null value");
+                return;
+            }
+
+            log.WriteLine(LogLevel.INFO, 
+                string.Format("0-0 Processing [path: {0}]",
+                path));
+
+            document.Regenerate(new RegenerateOptions
+            {
+                UpdateAllLinks = true
+            });
+            log.WriteLine(LogLevel.INFO, 
+                string.Format("0-2 Processing [path: {0}]", 
+                path));
+
+            if (document.Save())
+            {
+                log.WriteLine(LogLevel.INFO, 
+                    string.Format("0-3 Processing [path: {0}]", 
+                    path));
+            }
+
+            document.Close();
+            log.WriteLine(LogLevel.INFO,
+                string.Format("0-6 Processing [path: {0}]",
+                path));
+
+            ProcessingParent(parent); // recursive call
+        }
         #endregion
 
         #region private methods
@@ -228,9 +273,8 @@ namespace TFlex.PackageManager.UI.Common
                         string.Format("0-5 Processing [path: {0}]",
                         path));
                 }
-                else
+                else if (document.Save())
                 {
-                    document.Save();
                     log.WriteLine(LogLevel.INFO,
                         string.Format("0-3 Processing [path: {0}]",
                         path));

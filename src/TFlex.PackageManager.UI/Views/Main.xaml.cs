@@ -1062,7 +1062,10 @@ namespace TFlex.PackageManager.UI.Views
 
             foreach (var item in items)
             {
-                if ((item.Value.Flags & 0x1) != 0x1)
+                //
+                // processing the selection items
+                //
+                if (item.Value.Flags != 1)
                     continue;
 
                 if (stoped)
@@ -1078,6 +1081,52 @@ namespace TFlex.PackageManager.UI.Views
                 counter[0] += increment;
                 Marshal.Copy(counter, 0, value, counter.Length);
                 NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS, 
+                    IntPtr.Zero, value);
+            }
+
+            foreach (var item in items)
+            {
+                //
+                // processing the shortcut items
+                //
+                if (item.Value.Flags != 4)
+                    continue;
+
+                if (item.Value.ERefs.Count < 2)
+                    continue;
+
+                if (stoped)
+                {
+                    NativeMethods.SendMessage(handle, WM_STOPPED_PROCESSING,
+                        IntPtr.Zero, IntPtr.Zero);
+                    logging.WriteLine(LogLevel.INFO, "--- Processing stopped");
+                    break;
+                }
+
+                logging.WriteLine(LogLevel.INFO, "--- Processing the shortcut items");
+
+                item.Value.Flags ^= 0x5;
+                proc.ProcessingFile(item.Value);
+
+                foreach (var i in item.Value.ERefs)
+                {
+                    i.Flags ^= 0x1;
+                    File.Delete(i.OPath);
+                    logging.WriteLine(LogLevel.INFO, 
+                        string.Format("0-7 Processing [path: {0}]", 
+                        i.OPath));
+                    Helper.CreateShortcut(i.OPath, item.Value.OPath);
+                    logging.WriteLine(LogLevel.INFO,
+                        string.Format("0-8 Processing [path: {0}]",
+                        i.OPath));
+                    proc.ProcessingParent(i);
+                }
+
+                item.Value.ERefs.Clear();
+
+                counter[0] += increment;
+                Marshal.Copy(counter, 0, value, counter.Length);
+                NativeMethods.SendMessage(handle, WM_INCREMENT_PROGRESS,
                     IntPtr.Zero, value);
             }
 
