@@ -317,6 +317,14 @@ namespace TFlex.PackageManager.UI.Controls
 
             foreach (var i in links)
             {
+                if (!i.Contains(rootDirectory))
+                {
+                    //
+                    // the link points outside the root directory
+                    //
+                    continue;
+                }
+                
                 var subData = CreateData(i);
                 subData.Parent = data;
                 data.Items.Add(subData);
