@@ -186,8 +186,8 @@
     <comment>Anwendungseinstellungen</comment>
   </data>
   <data name="menuItem4_2" xml:space="preserve">
-    <value>Baugruppen Baumansicht</value>
-    <comment>Baugruppen Baumansicht</comment>
+    <value>Montagestruktur</value>
+    <comment>Montagestruktur</comment>
   </data>
   <data name="menuItem5_1" xml:space="preserve">
     <value>Über uns</value>

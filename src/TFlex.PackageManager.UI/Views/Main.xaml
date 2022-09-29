@@ -145,7 +145,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Name="menuItem4_2" 
-                          Header="Assembly tree view" 
+                          Header="Assembly structure" 
                           IsCheckable="True" 
                           Click="Event4_2_Click">
                     <MenuItem.Icon>
