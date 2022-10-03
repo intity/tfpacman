@@ -78,45 +78,40 @@ namespace TFlex.PackageManager.UI.Common
         /// Parents processing.
         /// </summary>
         /// <param name="item"></param>
-        internal void ProcessingParent(ProcItem item)
+        /// <param name="path"></param>
+        internal void ProcessingParent(ProcItem item, string path)
         {
             var parent = item.Parent;
             if (parent == null)
                 return;
 
-            var path = parent.OPath;
-            var document = Application.OpenDocument(path, false);
+            var document = Application.OpenDocument(parent.OPath, false);
             if (document == null)
             {
                 log.WriteLine(LogLevel.ERROR, "--- The document object has a null value");
                 return;
             }
 
-            log.WriteLine(LogLevel.INFO, 
+            log.WriteLine(LogLevel.INFO,
                 string.Format("0-0 Processing [path: {0}]",
-                path));
+                document.FileName));
 
-            document.Regenerate(new RegenerateOptions
+            if (path != null)
             {
-                UpdateAllLinks = true
-            });
-            log.WriteLine(LogLevel.INFO, 
-                string.Format("0-2 Processing [path: {0}]", 
-                path));
+                foreach (var link in document.FileLinks)
+                {
+                    if (link.FullFilePath != item.OPath)
+                        continue;
 
-            if (document.Save())
-            {
-                log.WriteLine(LogLevel.INFO, 
-                    string.Format("0-3 Processing [path: {0}]", 
-                    path));
+                    ReplaceLink(document, link, path, parent.Directory);
+                    item.OPath     = path;
+                    item.Directory = path;
+                }
             }
 
-            document.Close();
-            log.WriteLine(LogLevel.INFO,
-                string.Format("0-6 Processing [path: {0}]",
-                path));
-
-            ProcessingParent(parent); // recursive call
+            UpdateLinks(document);
+            End(document, parent);
+            ProcessingParent(parent, null); // recursive call
         }
         #endregion
 
@@ -288,6 +283,35 @@ namespace TFlex.PackageManager.UI.Common
                 path));
         }
 
+        private void UpdateLinks(Document document)
+        {
+            document.BeginChanges("Update Links");
+            document.Regenerate(new RegenerateOptions
+            {
+                UpdateAllLinks = true
+            });
+            document.EndChanges();
+            log.WriteLine(LogLevel.INFO,
+                string.Format("0-2 Processing [path: {0}]",
+                document.FileName));
+        }
+
+        private void ReplaceLink(Document document, FileLink link, string path, string target)
+        {
+            log.WriteLine(LogLevel.INFO, 
+                string.Format("1-0 Processing [path: {0}, link: {1}]", 
+                link.Document.FileName, 
+                link.FilePath));
+
+            document.BeginChanges("Replace Link");
+            link.FilePath = path.Replace(target + "\\", "");
+            log.WriteLine(LogLevel.INFO,
+                string.Format("1-1 Processing [path: {0}, link: {1}]",
+                link.Document.FileName,
+                link.FilePath));
+            document.EndChanges();
+        }
+
         private void ProcessingItems(Document document, ProcItem item)
         {
             //
@@ -316,7 +340,7 @@ namespace TFlex.PackageManager.UI.Common
                 if (md_4.TMode == TranslatorType.Document)
                 {
                     i.FName = md_4.GetFileName(ch_d);
-                    i.OPath = Path.Combine(GetDirectory(i), 
+                    i.OPath = Path.Combine(GetDirectory(i),
                         i.FName + md_4.OExtension);
                     ProcessingLinks(document, ch_d, i);
                 }
@@ -326,17 +350,7 @@ namespace TFlex.PackageManager.UI.Common
             }
 
             if (item.Links.Count > 0)
-            {
-                document.BeginChanges("Regenerate Links");
-                document.Regenerate(new RegenerateOptions
-                {
-                    UpdateAllLinks = true
-                });
-                document.EndChanges();
-                log.WriteLine(LogLevel.INFO,
-                    string.Format("0-2 Processing [path: {0}]",
-                    item.OPath));
-            }
+                UpdateLinks(document);
         }
 
         private void ProcessingLinks(Document parent, Document child, ProcItem item)
@@ -353,23 +367,7 @@ namespace TFlex.PackageManager.UI.Common
                     continue;
 
                 SaveAs(child, item);
-
-                log.WriteLine(LogLevel.INFO,
-                    string.Format("1-0 Processing [path: {0}, link: {1}]",
-                    link.Document.FileName,
-                    link.FilePath));
-
-                parent.BeginChanges("Replace Link");
-                var path = item.Parent == null 
-                    ? cfg.TargetDirectory 
-                    : item.Parent.Directory;
-
-                link.FilePath = item.OPath.Replace(path + "\\", "");
-                log.WriteLine(LogLevel.INFO,
-                    string.Format("1-1 Processing [path: {0}, link: {1}]",
-                    link.Document.FileName,
-                    link.FilePath));
-                parent.EndChanges();
+                ReplaceLink(parent, link, item.OPath, item.Parent.Directory);
                 item.Parent.Links.Add(link);
                 break;
             }
