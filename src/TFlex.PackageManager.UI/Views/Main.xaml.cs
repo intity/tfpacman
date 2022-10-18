@@ -82,8 +82,9 @@ namespace TFlex.PackageManager.UI.Views
 
             menuItem1.Header = Properties.Resources.Strings["ui_0:ctl_1"][0]; // File
             menuItem2.Header = Properties.Resources.Strings["ui_0:ctl_2"][0]; // Edit
-            menuItem3.Header = Properties.Resources.Strings["ui_0:ctl_3"][0]; // Processing
-            menuItem4.Header = Properties.Resources.Strings["ui_0:ctl_4"][0]; // Settings
+            menuItem3.Header = Properties.Resources.Strings["ui_0:ctl_3"][0]; // View
+            menuItem4.Header = Properties.Resources.Strings["ui_0:ctl_4"][0]; // Processing
+            menuItem5.Header = Properties.Resources.Strings["ui_0:ctl_5"][0]; // Settings
 
             menuItem1_1.Header = Properties.Resources.Strings["ui_0:c_1_1"][0];
             menuItem1_2.Header = Properties.Resources.Strings["ui_0:c_1_2"][0];
@@ -96,12 +97,12 @@ namespace TFlex.PackageManager.UI.Views
             menuItem2_1.Header = Properties.Resources.Strings["ui_0:c_2_1"][0];
             menuItem2_2.Header = Properties.Resources.Strings["ui_0:c_2_2"][0];
             menuItem3_1.Header = Properties.Resources.Strings["ui_0:c_3_1"][0];
-            menuItem3_2.Header = Properties.Resources.Strings["ui_0:c_3_2"][0];
-            menuItem3_3.Header = Properties.Resources.Strings["ui_0:c_3_3"][0];
             menuItem4_1.Header = Properties.Resources.Strings["ui_0:c_4_1"][0];
             menuItem4_2.Header = Properties.Resources.Strings["ui_0:c_4_2"][0];
+            menuItem4_3.Header = Properties.Resources.Strings["ui_0:c_4_3"][0];
             menuItem5_1.Header = Properties.Resources.Strings["ui_0:c_5_1"][0];
-            menuItem5_2.Header = Properties.Resources.Strings["ui_0:c_5_2"][0];
+            menuItem6_1.Header = Properties.Resources.Strings["ui_0:c_6_1"][0];
+            menuItem6_2.Header = Properties.Resources.Strings["ui_0:c_6_2"][0];
 
             button1_1.ToolTip = Properties.Resources.Strings["ui_0:c_1_1"][1];
             button1_2.ToolTip = Properties.Resources.Strings["ui_0:c_1_2"][1];
@@ -113,10 +114,10 @@ namespace TFlex.PackageManager.UI.Views
             button2_1.ToolTip = Properties.Resources.Strings["ui_0:c_2_1"][1];
             button2_2.ToolTip = Properties.Resources.Strings["ui_0:c_2_2"][1];
             button3_1.ToolTip = Properties.Resources.Strings["ui_0:c_3_1"][1];
-            button3_2.ToolTip = Properties.Resources.Strings["ui_0:c_3_2"][1];
-            button3_3.ToolTip = Properties.Resources.Strings["ui_0:c_3_3"][1];
             button4_1.ToolTip = Properties.Resources.Strings["ui_0:c_4_1"][1];
             button4_2.ToolTip = Properties.Resources.Strings["ui_0:c_4_2"][1];
+            button4_3.ToolTip = Properties.Resources.Strings["ui_0:c_4_3"][1];
+            button5_1.ToolTip = Properties.Resources.Strings["ui_0:c_5_1"][1];
             #endregion
 
             #region initialize property definitions
@@ -267,8 +268,8 @@ namespace TFlex.PackageManager.UI.Views
             switch (uMsg)
             {
                 case WM_STOPPED_PROCESSING:
-                    button3_2.IsEnabled = false;
-                    menuItem3_2.IsEnabled = false;
+                    button4_2.IsEnabled = false;
+                    menuItem4_2.IsEnabled = false;
                     tvControl2.UpdateControl();
                     sb_label2.Content = string.Format(Properties.Resources.Strings["ui_0:sbl_2"][0],
                         tvControl2.CountFiles);
@@ -323,13 +324,13 @@ namespace TFlex.PackageManager.UI.Views
 
             menuItem2_1.IsEnabled = false;
             menuItem2_2.IsEnabled = false;
-            menuItem3_1.IsEnabled = false;
-            menuItem3_2.IsEnabled = false;
+            menuItem4_1.IsEnabled = false;
+            menuItem4_2.IsEnabled = false;
 
             button2_1.IsEnabled = false;
             button2_2.IsEnabled = false;
-            button3_1.IsEnabled = false;
-            button3_2.IsEnabled = false;
+            button4_1.IsEnabled = false;
+            button4_2.IsEnabled = false;
 
             propertyGrid.PropertyValueChanged += Translator_PropertyValueChanged;
             tvControl1.PropertyChanged += TvControl1_PropertyChanged;
@@ -464,7 +465,7 @@ namespace TFlex.PackageManager.UI.Views
 
         private void Event1_2_Click(object sender, RoutedEventArgs e)
         {
-
+            // reserved
         } // Open configuration
 
         private void Event1_3_Click(object sender, RoutedEventArgs e)
@@ -598,37 +599,6 @@ namespace TFlex.PackageManager.UI.Views
 
         private void Event3_1_Click(object sender, RoutedEventArgs e)
         {
-            stoped = false;
-            thread = new System.Threading.Thread(StartProcessing);
-            thread.Start();
-            button3_2.IsEnabled = true;
-            menuItem3_2.IsEnabled = true;
-            progressBar.Visibility = Visibility.Visible;
-        } // Start processing
-
-        private void Event3_2_Click(object sender, RoutedEventArgs e)
-        {
-            stoped = true;
-        } // Stop processing
-
-        private void Event3_3_Click(object sender, RoutedEventArgs e)
-        {
-            tvControl2.CleanRootDirectory();
-            UpdateStateToControls();
-        } // Clear target directory
-
-        private void Event4_1_Click(object sender, RoutedEventArgs e)
-        {
-            PropertiesUI optionsUI = new PropertiesUI(options)
-            {
-                Title = Properties.Resources.Strings["ui_0:c_4_1"][0],
-                Owner = this
-            };
-            optionsUI.ShowDialog();
-        } // Options
-
-        private void Event4_2_Click(object sender, RoutedEventArgs e)
-        {
             var cfg = conf.Configurations[key1];
             var obj = cfg.Translator as Files;
             var ext = ".grb";
@@ -648,12 +618,12 @@ namespace TFlex.PackageManager.UI.Views
                 if (sender is MenuItem mi && mi.IsChecked != value)
                 {
                     value = mi.IsChecked;
-                    button4_2.IsChecked = value;
+                    button3_1.IsChecked = value;
                 }
                 else if (sender is ToggleButton tb && tb.IsChecked != value)
                 {
                     value = (bool)tb.IsChecked;
-                    menuItem4_2.IsChecked = value;
+                    menuItem3_1.IsChecked = value;
                 }
             }
             if (obj.IExtension == ext)
@@ -664,9 +634,40 @@ namespace TFlex.PackageManager.UI.Views
             {
                 tvControl2.EnableAsmTree = value;
             }
-        } // Assembly tree view enable/disable
+        } // Assembly structure [ enable | disable ]
+
+        private void Event4_1_Click(object sender, RoutedEventArgs e)
+        {
+            stoped = false;
+            thread = new System.Threading.Thread(StartProcessing);
+            thread.Start();
+            button4_2.IsEnabled = true;
+            menuItem4_2.IsEnabled = true;
+            progressBar.Visibility = Visibility.Visible;
+        } // Start processing
+
+        private void Event4_2_Click(object sender, RoutedEventArgs e)
+        {
+            stoped = true;
+        } // Stop processing
+
+        private void Event4_3_Click(object sender, RoutedEventArgs e)
+        {
+            tvControl2.CleanRootDirectory();
+            UpdateStateToControls();
+        } // Clear target directory
 
         private void Event5_1_Click(object sender, RoutedEventArgs e)
+        {
+            PropertiesUI optionsUI = new PropertiesUI(options)
+            {
+                Title = Properties.Resources.Strings["ui_0:c_4_1"][0],
+                Owner = this
+            };
+            optionsUI.ShowDialog();
+        } // Options
+
+        private void Event6_1_Click(object sender, RoutedEventArgs e)
         {
             AboutUs aboutUs = new AboutUs
             {
@@ -675,7 +676,7 @@ namespace TFlex.PackageManager.UI.Views
             aboutUs.ShowDialog();
         } // About Us
 
-        private void Event5_2_Click(object sender, RoutedEventArgs e)
+        private void Event6_2_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.Help.ShowHelp(null,
                 Path.Combine(Properties.Resources.AppDirectory, "TFPackageManager.chm"));
@@ -754,13 +755,13 @@ namespace TFlex.PackageManager.UI.Views
                 tvControl1.RootDirectory.Length > 0 &&
                 tvControl2.RootDirectory.Length > 0)
             {
-                menuItem3_1.IsEnabled = true;
-                button3_1.IsEnabled = true;
+                menuItem4_1.IsEnabled = true;
+                button4_1.IsEnabled = true;
             }
             else
             {
-                menuItem3_1.IsEnabled = false;
-                button3_1.IsEnabled = false;
+                menuItem4_1.IsEnabled = false;
+                button4_1.IsEnabled = false;
             }
             var str = Properties.Resources.Strings["ui_0:sbl_3"][0];
             sb_label3.Content = string.Format(str, tvControl1.CountItems);
@@ -932,9 +933,9 @@ namespace TFlex.PackageManager.UI.Views
                 menuItem1_7.IsEnabled = false; // properties
                 menuItem2_1.IsEnabled = false; // undo
                 menuItem2_2.IsEnabled = false; // redo
-                menuItem3_1.IsEnabled = false; // start
-                menuItem3_3.IsEnabled = false; // clear target directory
-                menuItem4_2.IsEnabled = false; // assembly tree view
+                menuItem3_1.IsEnabled = false; // assembly structure
+                menuItem4_1.IsEnabled = false; // start
+                menuItem4_3.IsEnabled = false; // clear target directory
 
                 button1_4.IsEnabled = false;
                 button1_5.IsEnabled = false;
@@ -943,8 +944,8 @@ namespace TFlex.PackageManager.UI.Views
                 button2_1.IsEnabled = false;
                 button2_2.IsEnabled = false;
                 button3_1.IsEnabled = false;
-                button3_3.IsEnabled = false;
-                button4_2.IsEnabled = false;
+                button4_1.IsEnabled = false;
+                button4_3.IsEnabled = false;
                 return;
             }
             else
@@ -959,17 +960,17 @@ namespace TFlex.PackageManager.UI.Views
 
                 if (tvControl2.CountFiles > 0)
                 {
-                    menuItem3_3.IsEnabled = true;
-                    button3_3.IsEnabled   = true;
+                    menuItem4_3.IsEnabled = true;
+                    button4_3.IsEnabled   = true;
                 }
                 else
                 {
-                    menuItem3_3.IsEnabled = false;
-                    button3_3.IsEnabled   = false;
+                    menuItem4_3.IsEnabled = false;
+                    button4_3.IsEnabled   = false;
                 }
 
-                menuItem4_2.IsEnabled = true;
-                button4_2.IsEnabled   = true;
+                menuItem3_1.IsEnabled = true;
+                button3_1.IsEnabled   = true;
             }
 
             var cfg = conf.Configurations[key1];
