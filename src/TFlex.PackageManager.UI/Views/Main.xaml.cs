@@ -566,6 +566,8 @@ namespace TFlex.PackageManager.UI.Views
                     propertyGrid.PropertyDefinitions.Clear();
                 else
                     comboBox1.SelectedIndex = index;
+
+                UpdateStateToControls();
             }
         } // Delete configuration
 
@@ -925,6 +927,9 @@ namespace TFlex.PackageManager.UI.Views
         /// </summary>
         private void UpdateStateToControls()
         {
+            var str1 = Properties.Resources.Strings["ui_0:sbl_1"][0];
+            var str2 = Properties.Resources.Strings["ui_0:sbl_2"][0];
+
             if (conf.Configurations.Count() == 0)
             {
                 menuItem1_4.IsEnabled = false; // save
@@ -946,6 +951,9 @@ namespace TFlex.PackageManager.UI.Views
                 button3_1.IsEnabled = false;
                 button4_1.IsEnabled = false;
                 button4_3.IsEnabled = false;
+
+                sb_label1.Content = string.Format(str1, 0);
+                sb_label2.Content = string.Format(str2, 0);
                 return;
             }
             else
@@ -1007,9 +1015,6 @@ namespace TFlex.PackageManager.UI.Views
             {
                 tvControl2.EnableAsmTree = false;
             }
-
-            var str1 = Properties.Resources.Strings["ui_0:sbl_1"][0];
-            var str2 = Properties.Resources.Strings["ui_0:sbl_2"][0];
 
             sb_label1.Content = string.Format(str1, tvControl1.CountFiles);
             sb_label2.Content = string.Format(str2, tvControl2.CountFiles);
