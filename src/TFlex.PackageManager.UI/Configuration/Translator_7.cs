@@ -6,6 +6,7 @@ using TFlex.Model;
 using TFlex.PackageManager.UI.Attributes;
 using TFlex.PackageManager.UI.Common;
 using TFlex.PackageManager.UI.Editors;
+using TFlex.PackageManager.UI.Model;
 using TFlex.PackageManager.UI.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -106,7 +107,7 @@ namespace TFlex.PackageManager.UI.Configuration
         #endregion
 
         #region internal methods
-        internal override void Export(Document document, string path, Logging logging)
+        internal override void Export(Document document, ProcItem item, Logging logging)
         {
             ExportToJtVersion jtVersion = ExportToJtVersion.JT81;
             ExportTo3dMode exportMode = ExportMode == 0
@@ -140,9 +141,11 @@ namespace TFlex.PackageManager.UI.Configuration
                 ShowDialog        = false
             };
 
-            if (export.Export(path))
+            if (export.Export(item.OPath))
             {
-                logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", path));
+                logging.WriteLine(LogLevel.INFO, 
+                    string.Format("EXP Processing [path: {0}]", 
+                    item.OPath));
             }
         }
         #endregion

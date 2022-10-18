@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TFlex.PackageManager.UI</RootNamespace>
     <AssemblyName>TFlex.PackageManager.UI</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -111,10 +111,13 @@
     <Compile Include="Common\Options.cs" />
     <Compile Include="Common\Processing.cs" />
     <Compile Include="Configuration\Modules.cs" />
-    <Compile Include="Configuration\Package.cs" />
     <Compile Include="Configuration\Translator.cs" />
-    <Compile Include="Controls\CustomTreeView.cs" />
-    <Compile Include="Controls\CustomTreeViewItem.cs" />
+    <Compile Include="Controls\CustomTreeView.xaml.cs">
+      <DependentUpon>CustomTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CustomTreeViewItem.xaml.cs">
+      <DependentUpon>CustomTreeViewItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Files.cs" />
     <Compile Include="Configuration\Translator3D.cs" />
     <Compile Include="Configuration\Header.cs" />
@@ -144,8 +147,8 @@
     <Compile Include="Editors\SewingEditor.xaml.cs">
       <DependentUpon>SewingEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TreeViewControl.xaml.cs">
-      <DependentUpon>TreeViewControl.xaml</DependentUpon>
+    <Compile Include="Controls\ExplorerControl.xaml.cs">
+      <DependentUpon>ExplorerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\CustomCheckBoxEditor.xaml.cs">
       <DependentUpon>CustomCheckBoxEditor.xaml</DependentUpon>
@@ -160,6 +163,14 @@
     <Compile Include="Modules\Projections.cs" />
     <Compile Include="Modules\Variables.cs" />
     <Compile Include="Properties\Resources.cs" />
+    <Page Include="Controls\CustomTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\CustomTreeViewItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Editors\BiarcInterpolationEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -271,7 +282,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\TreeViewControl.xaml">
+    <Page Include="Controls\ExplorerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -404,37 +415,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\redo.ico" />
-    <Resource Include="Resources\igs.ico" />
-    <Resource Include="Resources\sat.ico" />
     <Resource Include="Resources\save_all.ico" />
     <Resource Include="Resources\start.ico" />
     <Resource Include="Resources\stop.ico" />
     <Resource Include="Resources\collapsed_folder.ico" />
     <Resource Include="Resources\delete.ico" />
     <Resource Include="Resources\document.ico" />
-    <Resource Include="Resources\png.ico" />
     <Resource Include="Resources\expanded_folder.ico" />
-    <Resource Include="Resources\dwg.ico" />
-    <Resource Include="Resources\grb.ico" />
-    <Resource Include="Resources\tif.ico" />
     <Resource Include="Resources\open_initial_catalog.ico" />
     <Resource Include="Resources\open_target_directory.ico" />
     <Resource Include="Resources\package_manager.ico" />
-    <Resource Include="Resources\bmp.ico" />
-    <Resource Include="Resources\gif.ico" />
-    <Resource Include="Resources\jpg.ico" />
     <Resource Include="Resources\property.ico" />
     <Resource Include="Resources\new_configuration.ico" />
     <Resource Include="Resources\import.ico" />
     <Resource Include="Resources\export.ico" />
-    <Resource Include="Resources\dxf.ico" />
-    <Resource Include="Resources\dxb.ico" />
-    <Resource Include="Resources\pdf.ico" />
     <Resource Include="Resources\open_configurations.ico" />
     <Resource Include="Resources\clear_target_directory.ico" />
-    <Resource Include="Resources\stp.ico" />
-    <Resource Include="Resources\jt.ico" />
     <Resource Include="Resources\undo.ico" />
+    <Resource Include="Resources\asm_tree.ico" />
     <Content Include="Resources\refresh.ico" />
     <Resource Include="Resources\save.ico" />
     <Resource Include="Resources\options.ico" />
@@ -494,6 +492,17 @@
     <None Include="Resources\de\Projections.resx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

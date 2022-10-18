@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Design;
@@ -11,6 +10,7 @@ using TFlex.PackageManager.UI.Attributes;
 using TFlex.PackageManager.UI.Editors;
 using TFlex.PackageManager.UI.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+using TFlex.PackageManager.UI.Model;
 
 #pragma warning disable CA1707
 
@@ -374,14 +374,14 @@ namespace TFlex.PackageManager.UI.Configuration
         #endregion
 
         #region internal methods
-        internal override void Export(Document document, Dictionary<Page, string> pages, Logging logging)
+        internal override void Export(Document document, ProcItem item, Logging logging)
         {
             ExportToDWG export1;
             ExportToDXF export2;
             ExportToDXB export3;
             bool result = false;
 
-            foreach (var p in pages)
+            foreach (var p in item.Pages)
             {
                 switch (extension)
                 {
@@ -404,7 +404,9 @@ namespace TFlex.PackageManager.UI.Configuration
 
                 if (result)
                 {
-                    logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", p.Value));
+                    logging.WriteLine(LogLevel.INFO, 
+                        string.Format("EXP Processing [path: {0}]", 
+                        p.Value));
                 }
             }
         }

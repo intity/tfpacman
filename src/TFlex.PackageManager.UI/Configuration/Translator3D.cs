@@ -7,6 +7,7 @@ using TFlex.Model;
 using TFlex.PackageManager.UI.Attributes;
 using TFlex.PackageManager.UI.Common;
 using TFlex.PackageManager.UI.Editors;
+using TFlex.PackageManager.UI.Model;
 using TFlex.PackageManager.UI.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -853,7 +854,7 @@ namespace TFlex.PackageManager.UI.Configuration
         #endregion
 
         #region internal methods
-        internal override void Import(Document document, string targetDirectory, string path, Logging logging)
+        internal override void Import(Document document, ProcItem item, Logging logging)
         {
             ImportFrom3dOption option = ImportFrom3dOption.Auto;
 
@@ -868,7 +869,7 @@ namespace TFlex.PackageManager.UI.Configuration
                 CreateAccurateEdges        = option,
                 CheckImportGeomerty        = CheckImportGeomerty,
                 ImportOnlyFromActiveFilter = ImportOnlyFromActiveFilter,
-                PathToAssemblyFolder       = targetDirectory,
+                PathToAssemblyFolder       = item.Directory,
                 ShowDialog                 = false
             };
 
@@ -904,10 +905,26 @@ namespace TFlex.PackageManager.UI.Configuration
                 import.AddBodyRecordsInProductStructure = AddBodyRecordsInProductStructure;
             }
 
-            if (import.Import(path))
+            if (import.Import(item.IPath))
             {
-                logging.WriteLine(LogLevel.INFO, string.Format(">>> Import from [path: {0}]", path));
+                logging.WriteLine(LogLevel.INFO, 
+                    string.Format("IMP Processing [path: {0}]", 
+                    item.IPath));
             }
+        }
+        
+        internal string GetPrototypePath()
+        {
+            string path = null;
+            
+            using (TFlex.Configuration.Files files = new TFlex.Configuration.Files())
+            {
+                path = ImportMode == 2 
+                    ? files.Prototype3DName 
+                    : files.Prototype3DAssemblyName;
+            }
+
+            return path;
         }
         #endregion
     }

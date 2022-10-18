@@ -164,31 +164,38 @@
     <comment>Redo</comment>
   </data>
   <data name="menuItem3" xml:space="preserve">
-    <value>Processing</value>
+    <value>View</value>
   </data>
   <data name="menuItem3_1" xml:space="preserve">
+    <value>Assembly structure</value>
+    <comment>Assembly structure</comment>
+  </data>
+  <data name="menuItem4" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="menuItem4_1" xml:space="preserve">
     <value>Start</value>
     <comment>Start processing</comment>
   </data>
-  <data name="menuItem3_2" xml:space="preserve">
+  <data name="menuItem4_2" xml:space="preserve">
     <value>Stop</value>
     <comment>Stop processing</comment>
   </data>
-  <data name="menuItem3_3" xml:space="preserve">
+  <data name="menuItem4_3" xml:space="preserve">
     <value>Clean up target directory</value>
     <comment>Clean target directory</comment>
   </data>
-  <data name="menuItem4" xml:space="preserve">
+  <data name="menuItem5" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="menuItem4_1" xml:space="preserve">
+  <data name="menuItem5_1" xml:space="preserve">
     <value>Options</value>
     <comment>Application settings</comment>
   </data>
-  <data name="menuItem5_1" xml:space="preserve">
+  <data name="menuItem6_1" xml:space="preserve">
     <value>About Us</value>
   </data>
-  <data name="menuItem5_2" xml:space="preserve">
+  <data name="menuItem6_2" xml:space="preserve">
     <value>Help</value>
   </data>
   <data name="message1" xml:space="preserve">

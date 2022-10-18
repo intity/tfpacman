@@ -1,6 +1,14 @@
-﻿using System;
+﻿using IWshRuntimeLibrary;
+using System;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Interop;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.ComponentModel;
+using System.IO;
 
 namespace TFlex.PackageManager.UI.Common
 {
@@ -53,6 +61,28 @@ namespace TFlex.PackageManager.UI.Common
         }
 
         /// <summary>
+        /// Convert Icon to ImageSource.
+        /// </summary>
+        /// <param name="icon"></param>
+        /// <returns></returns>
+        public static ImageSource ToImageSource(this Icon icon)
+        {
+            Bitmap bitmap = icon.ToBitmap();
+            IntPtr hbitmap = bitmap.GetHbitmap();
+            ImageSource image = Imaging
+                .CreateBitmapSourceFromHBitmap(
+                hbitmap, 
+                IntPtr.Zero, 
+                Int32Rect.Empty, 
+                BitmapSizeOptions.FromEmptyOptions());
+
+            if (!NativeMethods.DeleteObject(hbitmap))
+                throw new Win32Exception();
+
+            return image;
+        }
+
+        /// <summary>
         /// Validating string on chars pattern.
         /// </summary>
         /// <param name="text"></param>
@@ -79,7 +109,7 @@ namespace TFlex.PackageManager.UI.Common
         public static bool IsDigit(this string value, int index)
         {
             char[] chars = value.ToCharArray();
-            return chars.Length > 0 ? char.IsDigit(chars[index]) : false;
+            return chars.Length > 0 && char.IsDigit(chars[index]);
         }
 
         /// <summary>
@@ -94,6 +124,20 @@ namespace TFlex.PackageManager.UI.Common
                 byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(path));
                 return new Guid(hash).ToString("D").ToUpper();
             }
+        }
+
+        /// <summary>
+        /// Create shortcut.
+        /// </summary>
+        /// <param name="path">Shortcut path.</param>
+        /// <param name="target">Target path.</param>
+        public static void CreateShortcut(string path, string target)
+        {
+            WshShell shell = new WshShell();
+            var shortcut = shell.CreateShortcut(path + ".lnk") as IWshShortcut;
+            shortcut.TargetPath = target;
+            shortcut.WorkingDirectory = Path.GetDirectoryName(target);
+            shortcut.Save();
         }
     }
 }

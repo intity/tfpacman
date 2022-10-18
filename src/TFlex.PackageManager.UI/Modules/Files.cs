@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Serialization;
 using TFlex.Model;
 using TFlex.PackageManager.UI.Attributes;
 using TFlex.PackageManager.UI.Common;
@@ -209,29 +208,42 @@ namespace TFlex.PackageManager.UI.Configuration
         /// <param name="document"></param>
         /// <param name="page"></param>
         /// <returns>Returns Output File name.</returns>
-        internal string GetFileName(Document document, Page page)
+        internal string GetFileName(Document document, Page page = null)
         {
-            string fileName, expVal, pattern = @"\{(.*?)\}";
+            var filename = Path.GetFileNameWithoutExtension(document.FileName);
 
             if (TemplateFileName.Length > 0)
-                fileName = TemplateFileName.Replace(Environment.NewLine, "");
-            else
             {
-                fileName = Path.GetFileNameWithoutExtension(document.FileName);
-                if (FileNameSuffix.Length > 0)
-                    fileName += ParseExpression(document, page, FileNameSuffix);
-                return fileName;
+                //
+                // parse a filename pattern
+                //
+                var result = TemplateFileName;
+
+                foreach (Match i in Regex.Matches(TemplateFileName, @"\{(.*?)\}"))
+                {
+                    var value1 = i.Groups[1].Value;
+                    var value2 = ParseExpression(document, page, value1);
+                    if (value2.Length == 0)
+                        continue;
+
+                    result = result.Replace(i.Groups[0].Value, value2);
+                }
+
+                if (result == TemplateFileName)
+                    result = filename;
+
+                return result;
+            }
+            else if (FileNameSuffix.Length > 0)
+            {
+                //
+                // adds a suffix to the filename
+                //
+                filename += ParseExpression(document, page, FileNameSuffix);
+                return filename;
             }
 
-            foreach (Match i in Regex.Matches(fileName, pattern))
-            {
-                if ((expVal = ParseExpression(document, page, i.Groups[1].Value)) == null)
-                    continue;
-
-                fileName = fileName.Replace(i.Groups[0].Value, expVal);
-            }
-
-            return fileName;
+            return filename;
         }
         #endregion
 

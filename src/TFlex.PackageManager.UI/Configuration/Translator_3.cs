@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing.Design;
 using System.Xml;
 using TFlex.Model;
 using TFlex.PackageManager.UI.Attributes;
 using TFlex.PackageManager.UI.Common;
 using TFlex.PackageManager.UI.Editors;
+using TFlex.PackageManager.UI.Model;
 using TFlex.PackageManager.UI.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -168,7 +169,7 @@ namespace TFlex.PackageManager.UI.Configuration
         #endregion
 
         #region internal methods
-        internal override void Export(Document document, Dictionary<Page, string> pages, Logging logging)
+        internal override void Export(Document document, ProcItem item, Logging logging)
         {
             ExportToBitmap export    = new ExportToBitmap(document);
             ImageExport options      =
@@ -176,7 +177,7 @@ namespace TFlex.PackageManager.UI.Configuration
                     (Constructions ? ImageExport.Constructions : ImageExport.None);
             ImageExportFormat format = ImageExportFormat.Bmp;
 
-            foreach (var p in pages)
+            foreach (var p in item.Pages)
             {
                 switch (extension)
                 {
@@ -203,7 +204,9 @@ namespace TFlex.PackageManager.UI.Configuration
 
                 if (export.Export(p.Value, options, format))
                 {
-                    logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", p.Value));
+                    logging.WriteLine(LogLevel.INFO, 
+                        string.Format("EXP Processing [path: {0}]", 
+                        p.Value));
                 }
             }
         }

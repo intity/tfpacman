@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using TFlex.Model;
 using TFlex.PackageManager.UI.Common;
+using TFlex.PackageManager.UI.Model;
 
 #pragma warning disable CA1707
 
@@ -45,7 +46,7 @@ namespace TFlex.PackageManager.UI.Configuration
         #endregion
 
         #region internal methods
-        internal override void Export(Document document, string path, Logging logging)
+        internal override void Export(Document document, ProcItem item, Logging logging)
         {
             ExportTo3dMode exportMode = ExportMode == 0
                 ? ExportTo3dMode.Assembly
@@ -71,9 +72,11 @@ namespace TFlex.PackageManager.UI.Configuration
                 ShowDialog        = false
             };
 
-            if (export.Export(path))
+            if (export.Export(item.OPath))
             {
-                logging.WriteLine(LogLevel.INFO, string.Format(">>> Export to [path: {0}]", path));
+                logging.WriteLine(LogLevel.INFO, 
+                    string.Format("EXP Processing [path: {0}]", 
+                    item.OPath));
             }
         }
         #endregion
