@@ -206,11 +206,6 @@ namespace TFlex.PackageManager.UI.Controls
         {
             Icon icon = NativeMethods.GetIcon(path, true);
 
-            if (Path.GetExtension(path) == ".lnk")
-            {
-                path = path.Replace(".lnk", "");
-            }
-
             var item = new CustomTreeViewItem
             {
                 Header = Path.GetFileName(path)
@@ -271,17 +266,6 @@ namespace TFlex.PackageManager.UI.Controls
                 {
                     GetLinks(subData);
                 }
-
-                if (item != null)
-                    item.Items.Add(subItem);
-                else
-                    ctv1.Items.Add(subItem);
-            }
-
-            foreach (var i in Directory.GetFiles(dir, "*.lnk", opt))
-            {
-                var subItem = CreateItem(i);
-                subItem.Tag = i;
 
                 if (item != null)
                     item.Items.Add(subItem);

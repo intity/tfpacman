@@ -1,5 +1,4 @@
-﻿using IWshRuntimeLibrary;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,7 +7,6 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
-using System.IO;
 
 namespace TFlex.PackageManager.UI.Common
 {
@@ -124,20 +122,6 @@ namespace TFlex.PackageManager.UI.Common
                 byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(path));
                 return new Guid(hash).ToString("D").ToUpper();
             }
-        }
-
-        /// <summary>
-        /// Create shortcut.
-        /// </summary>
-        /// <param name="path">Shortcut path.</param>
-        /// <param name="target">Target path.</param>
-        public static void CreateShortcut(string path, string target)
-        {
-            WshShell shell = new WshShell();
-            var shortcut = shell.CreateShortcut(path + ".lnk") as IWshShortcut;
-            shortcut.TargetPath = target;
-            shortcut.WorkingDirectory = Path.GetDirectoryName(target);
-            shortcut.Save();
         }
     }
 }
