@@ -162,7 +162,7 @@ namespace TFlex.PackageManager.UI.Controls
 
             CheckingToParent(item);
 
-            tmp = null;
+            tmp = value;
         }
 
         private static void CheckingToParent(CustomTreeViewItem item)
