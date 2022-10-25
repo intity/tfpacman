@@ -30,7 +30,7 @@ namespace TFlex.PackageManager.UI.Controls
         }
 
         /// <summary>
-        /// Item's hierarchy in the tree
+        /// Item's hierarchy in the tree.
         /// </summary>
         public int Level
         {
@@ -147,6 +147,8 @@ namespace TFlex.PackageManager.UI.Controls
 
             bool? value = (bool?)e.NewValue;
 
+            tmp = item; // save item
+
             RoutedEventArgs args = new RoutedEventArgs();
 
             if (value == true)
@@ -169,38 +171,37 @@ namespace TFlex.PackageManager.UI.Controls
 
             foreach (CustomTreeViewItem i in item.Items)
             {
-                if (tmp == null)
-                    tmp = item;
-                
-                i.IsChecked = value;
+                if (i.IsChecked != value)
+                    i.IsChecked = value;
             }
 
-            CheckingToParent(item);
+            CheckingParents(item);
 
             item.IsThreeState = value.HasValue && value.Value;
-            tmp = value;
         }
 
-        private static void CheckingToParent(CustomTreeViewItem item)
+        private static void CheckingParents(CustomTreeViewItem item)
         {
+            if (!(item.Parent is CustomTreeViewItem parent))
+                return;
+
             bool? value = item.IsChecked;
 
-            if (item.Parent is CustomTreeViewItem parent)
+            if (!parent.Equals(tmp))
             {
-                if (!parent.Equals(tmp))
+                foreach (CustomTreeViewItem i in parent.Items)
                 {
-                    foreach (CustomTreeViewItem i in parent.Items)
+                    if (i.IsChecked != item.IsChecked)
                     {
-                        if (i.IsChecked != item.IsChecked)
-                        {
-                            value = null;
-                            break;
-                        }
+                        value = null;
+                        break;
                     }
-                    parent.IsChecked = value;
                 }
-                CheckingToParent(parent); // recursive call
+
+                if (parent.IsChecked != value)
+                    parent.IsChecked = value;
             }
+            CheckingParents(parent); // recursive call
         }
         #endregion
 
