@@ -139,15 +139,13 @@ namespace TFlex.PackageManager.UI.Controls
         #endregion
 
         #region private methods
-        private static object tmp;
         private static void OnChecked(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (!(d is CustomTreeViewItem item))
                 return;
 
             bool? value = (bool?)e.NewValue;
-
-            tmp = item; // save item
+            item.IsThreeState = value.HasValue && value.Value;
 
             RoutedEventArgs args = new RoutedEventArgs();
 
@@ -165,6 +163,7 @@ namespace TFlex.PackageManager.UI.Controls
             }
 
             item.RaiseEvent(args);
+            CheckingParents(item);
 
             if (value == null)
                 return;
@@ -174,10 +173,6 @@ namespace TFlex.PackageManager.UI.Controls
                 if (i.IsChecked != value)
                     i.IsChecked = value;
             }
-
-            CheckingParents(item);
-
-            item.IsThreeState = value.HasValue && value.Value;
         }
 
         private static void CheckingParents(CustomTreeViewItem item)
@@ -187,21 +182,17 @@ namespace TFlex.PackageManager.UI.Controls
 
             bool? value = item.IsChecked;
 
-            if (!parent.Equals(tmp))
+            foreach (CustomTreeViewItem i in parent.Items)
             {
-                foreach (CustomTreeViewItem i in parent.Items)
+                if (i.IsChecked != item.IsChecked)
                 {
-                    if (i.IsChecked != item.IsChecked)
-                    {
-                        value = null;
-                        break;
-                    }
+                    value = null;
+                    break;
                 }
-
-                if (parent.IsChecked != value)
-                    parent.IsChecked = value;
             }
-            CheckingParents(parent); // recursive call
+
+            if (parent.IsChecked != value)
+                parent.IsChecked = value;
         }
         #endregion
 
