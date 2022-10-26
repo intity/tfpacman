@@ -55,15 +55,6 @@ namespace TFlex.PackageManager.UI.Controls
         }
 
         /// <summary>
-        /// The IsThreeState property.
-        /// </summary>
-        public bool IsThreeState
-        {
-            get => (bool)GetValue(IsThreeStateProperty);
-            set => SetValue(IsThreeStateProperty, value);
-        }
-
-        /// <summary>
         /// The ImageSource property.
         /// </summary>
         public ImageSource ImageSource
@@ -86,12 +77,6 @@ namespace TFlex.PackageManager.UI.Controls
                 typeof(bool),
                 typeof(CustomTreeViewItem),
                 new PropertyMetadata(false));
-
-        public static readonly DependencyProperty IsThreeStateProperty =
-            DependencyProperty.Register("IsThreeState",
-                typeof(bool),
-                typeof(CustomTreeViewItem),
-                new FrameworkPropertyMetadata(false));
 
         public static readonly DependencyProperty ImageSourceProperty =
             DependencyProperty.Register("ImageSource",
@@ -145,8 +130,6 @@ namespace TFlex.PackageManager.UI.Controls
                 return;
 
             bool? value = (bool?)e.NewValue;
-            item.IsThreeState = value.HasValue && value.Value;
-
             RoutedEventArgs args = new RoutedEventArgs();
 
             if (value == true)
