@@ -146,7 +146,14 @@ namespace TFlex.PackageManager.UI.Controls
             }
 
             item.RaiseEvent(args);
-            CheckingParents(item);
+
+            if (item.Parent is CustomTreeViewItem parent)
+            {
+                if (parent.IsChecked != value)
+                {
+                    CheckingParent(item);
+                }
+            }
 
             if (value == null)
                 return;
@@ -158,11 +165,9 @@ namespace TFlex.PackageManager.UI.Controls
             }
         }
 
-        private static void CheckingParents(CustomTreeViewItem item)
+        private static void CheckingParent(CustomTreeViewItem item)
         {
-            if (!(item.Parent is CustomTreeViewItem parent))
-                return;
-
+            var parent  = item.Parent as CustomTreeViewItem;
             bool? value = item.IsChecked;
 
             foreach (CustomTreeViewItem i in parent.Items)
