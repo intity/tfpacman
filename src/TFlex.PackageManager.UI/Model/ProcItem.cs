@@ -8,6 +8,10 @@ namespace TFlex.PackageManager.UI.Model
     /// </summary>
     public class ProcItem
     {
+        #region private filelds
+        int flags;
+        #endregion
+
         /// <summary>
         /// The Processing Item Constructor.
         /// </summary>
@@ -15,7 +19,8 @@ namespace TFlex.PackageManager.UI.Model
         {
             Items = new List<ProcItem>();
             ERefs = new List<ProcItem>();
-            Links = new List<FileLink>();
+            Links = new List<ProcItem>();
+            Dests = new List<ProcItem>();
             Pages = new Dictionary<Page, string>();
         }
 
@@ -43,7 +48,18 @@ namespace TFlex.PackageManager.UI.Model
         /// <term>0x2</term> Reserved<br/>
         /// <term>0x4</term> Marked as selected item from links
         /// </summary>
-        public int Flags { get; set; }
+        public int Flags
+        {
+            get => flags;
+            set
+            {
+                if (flags != value)
+                {
+                    flags = value;
+                    CfgItems();
+                }
+            }
+        }
 
         /// <summary>
         /// The File Name.
@@ -61,10 +77,15 @@ namespace TFlex.PackageManager.UI.Model
         public string OPath { get; set; }
 
         /// <summary>
+        /// Unit Path.
+        /// </summary>
+        public string UPath => IPath ?? OPath;
+
+        /// <summary>
         /// Target directory.
         /// </summary>
         public string Directory { get; set; }
-
+        
         /// <summary>
         /// Items to processing.
         /// </summary>
@@ -76,9 +97,14 @@ namespace TFlex.PackageManager.UI.Model
         public List<ProcItem> ERefs { get; }
 
         /// <summary>
-        /// Processed Links.
+        /// External Links.
         /// </summary>
-        public List<FileLink> Links { get; }
+        public List<ProcItem> Links { get; }
+
+        /// <summary>
+        /// Destination Items.
+        /// </summary>
+        public List<ProcItem> Dests { get; }
 
         /// <summary>
         /// Processed Pages.
@@ -89,5 +115,124 @@ namespace TFlex.PackageManager.UI.Model
         /// Parent processing Item.
         /// </summary>
         public ProcItem Parent { get; set; }
+
+        #region private methods
+        private void CfgItems()
+        {
+            if (Level == 0 && flags == 0)
+            {
+                Items.ForEach(i => CfgItems(i));
+            }
+            else if (Level == 0 && flags == 1)
+            {
+                Items.ForEach(i => CfgDests(i));
+                Links.ForEach(i => CfgDests(i));
+            }
+            else if (Level == 0 && flags == 4)
+            {
+                foreach (var item in Items)
+                {
+                    if (item.Flags != 1)
+                        continue;
+
+                    foreach (var link in Links)
+                    {
+                        if (link.Flags == 0 && link.Parent.Flags == 1)
+                        {
+                            link.Flags |= 0x1;
+                            break;
+                        }
+                    }
+                    CfgLinks(item);
+                    break;
+                }
+            }
+            else if (Level == 0 && flags == 5)
+            {
+                bool exist = false;
+                
+                foreach (var link in Links)
+                {
+                    if (link.Flags == 1)
+                    {
+                        link.Flags ^= 0x1;
+                        exist = true;
+                    }
+                }
+
+                if (exist)
+                {
+                    Flags ^= 0x5;
+                }
+            }
+        }
+
+        private void CfgItems(ProcItem item)
+        {
+            //
+            // configure items
+            //
+            foreach (var dest in item.Dests)
+            {
+                if (dest.Flags == 4 && item.Flags == 1)
+                {
+                    dest.Flags ^= 0x5;
+                    item.Flags ^= 0x1;
+                    break;
+                }
+            }
+
+            foreach (var i in item.Items)
+            {
+                CfgItems(i); // recursive call
+            }
+        }
+
+        private void CfgLinks(ProcItem item)
+        {
+            //
+            // configure links
+            //
+            foreach (var dest in item.Dests)
+            {
+                if (dest.Flags != 4)
+                    continue;
+
+                foreach (var link in dest.Links)
+                {
+                    if (link.Flags == 0 && link.Parent.Flags == 1)
+                    {
+                        item.Flags ^= 0x1;
+                        link.Flags |= 0x1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void CfgDests(ProcItem link)
+        {
+            //
+            // configure destination
+            //
+            foreach (var dest in link.Dests)
+            {
+                if (!(link.Flags == 0 && link.Parent.Flags == 1))
+                    continue;
+                
+                if (dest.Flags == 1)
+                {
+                    dest.Flags ^= 0x5;
+                    link.Flags |= 0x1;
+                    break;
+                }
+                else if (dest.Flags == 4 && dest.ERefs.Count > 1)
+                {
+                    link.Flags |= 0x1;
+                    break;
+                }
+            }
+        }
+        #endregion
     }
 }

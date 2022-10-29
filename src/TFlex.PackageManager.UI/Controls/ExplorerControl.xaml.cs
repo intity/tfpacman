@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -151,6 +150,17 @@ namespace TFlex.PackageManager.UI.Controls
             {
                 InitTreeItems();
 
+                if (searchPattern == "*.grb")
+                {
+                    //
+                    // configure items
+                    //
+                    foreach (var i in Items.Values)
+                    {
+                        CfgItems(i);
+                    }
+                }
+
                 if (Flags > 0 && CountFiles > 0)
                 {
                     //
@@ -160,7 +170,7 @@ namespace TFlex.PackageManager.UI.Controls
                     {
                         i.Flags |= 0x1;
                     }
-                    UpdateItems(1);
+                    UpdateItems();
                 }
             }
 
@@ -204,13 +214,12 @@ namespace TFlex.PackageManager.UI.Controls
 
         private CustomTreeViewItem CreateItem(string path)
         {
-            Icon icon = NativeMethods.GetIcon(path, true);
-
             var item = new CustomTreeViewItem
             {
                 Header = Path.GetFileName(path)
             };
 
+            var icon = NativeMethods.GetIcon(path, true);
             if (icon != null)
             {
                 item.ImageSource = icon.ToImageSource();
@@ -284,9 +293,8 @@ namespace TFlex.PackageManager.UI.Controls
                 if ((i.Flags & 0x1) != 0x1)
                     continue;
 
-                var subPath = Flags > 0 ? i.OPath : i.IPath;
-                var subItem = CreateItem(subPath);
-                subItem.Tag = subPath;
+                var subItem = CreateItem(i.UPath);
+                subItem.Tag = i.UPath;
                 item.Items.Add(subItem);
                 GetItems(subItem, i); // recursive call
             }
@@ -294,9 +302,8 @@ namespace TFlex.PackageManager.UI.Controls
 
         private void GetLinks(ProcItem data)
         {
-            var path = Flags > 0 ? data.OPath : data.IPath;
             var links = Application
-                .GetDocumentExternalFileLinks(path, true, false, false)
+                .GetDocumentExternalFileLinks(data.UPath, true, false, false)
                 .OrderBy(i => i);
 
             foreach (var i in links)
@@ -308,7 +315,10 @@ namespace TFlex.PackageManager.UI.Controls
                     //
                     continue;
                 }
-                
+
+                if (!File.Exists(i))
+                    continue;
+
                 var subData = CreateData(i);
                 subData.Parent = data;
                 data.Items.Add(subData);
@@ -318,102 +328,35 @@ namespace TFlex.PackageManager.UI.Controls
             Application.IdleSession();
         }
 
-        private void CfgItems(ProcItem item, int flag)
+        private void CfgItems(ProcItem data)
         {
             //
-            // configure selector
+            // preconfigure items
             //
-            var path = Flags > 0 ? item.OPath : item.IPath;
-            var dest = Items[path];
-
-            if (flag == 1)
+            var dest = Items[data.UPath];
+            if (dest.Level != data.Level)
             {
-                if (dest.Flags == 1 && item.Flags == 0)
-                {
-                    if (item.Parent != null && (item.Parent.Flags & 0x1) == 0x1)
-                    {
-                        dest.Flags ^= 0x5;
-                        item.Flags |= 0x1;
-                        dest.ERefs.Add(item);
-
-                        foreach (var i in dest.Items)
-                        {
-                            CfgItems(i, 0); // recursive call
-                        }
-                    }
-                }
-
-                if (dest.Flags == 4 && item.Flags == 0)
-                {
-                    if (item.Parent != null && (item.Parent.Flags & 0x1) == 0x1)
-                    {
-                        item.Flags |= 0x1;
-                        dest.ERefs.Add(item);
-                    }
-                }
-            }
-            else if (flag == 0)
-            {
-                if (dest.Flags == 4 && item.Flags == 1)
-                {
-                    if (item.Parent.Flags == 0 ||
-                        item.Parent.Flags == 4)
-                    {
-                        item.Flags ^= 0x1;
-                        dest.ERefs.Remove(item);
-
-                        if (dest.ERefs.Count == 0)
-                            dest.Flags ^= 0x5;
-                    }
-
-                    foreach (var i in item.Items)
-                    {
-                        CfgItems(i, 0); // recursive call
-                    }
-
-                    foreach (var i in dest.Items)
-                    {
-                        CfgItems(i, 1); // recursive call
-                    }
-                }
-
-                if (dest.Flags == 5 && item.Flags == 1)
-                {
-                    dest.Flags ^= 0x5;
-
-                    foreach (var i in dest.ERefs)
-                    {
-                        i.Flags ^= 0x1;
-                    }
-
-                    dest.ERefs.Clear();
-
-                    foreach (var i in dest.Items)
-                    {
-                        CfgItems(i, 0); // recursive call
-                    }
-                }
+                dest.Links.Add(data);
+                data.Dests.Add(dest);
             }
 
-            foreach (var i in item.Items)
+            if (data.Parent != null && data.Parent.Level == 0)
             {
-                CfgItems(i, flag); // recursive call
+                dest.ERefs.Add(data.Parent);
+            }
+
+            foreach (var i in data.Items)
+            {
+                CfgItems(i); // recursive call
             }
         }
 
-        private void UpdateItems(int flag)
+        private void UpdateItems()
         {
             if (searchPattern != "*.grb")
                 return;
             
             ctv2.Items.Clear();
-            //
-            // configure items
-            //
-            foreach (var i in Items.Values)
-            {
-                CfgItems(i, flag);
-            }
             //
             // initialize the tree view
             //
@@ -421,7 +364,7 @@ namespace TFlex.PackageManager.UI.Controls
             {
                 if ((i.Value.Flags & 0x1) != 0x1)
                     continue;
-                
+
                 var item = CreateItem(i.Key);
                 item.Tag = i.Key;
                 GetItems(item, i.Value);
@@ -444,7 +387,7 @@ namespace TFlex.PackageManager.UI.Controls
             var data = Items[path];
             data.Flags |= 0x1;
             CountItems++;
-            UpdateItems(1);
+            UpdateItems();
         }
 
         private void Item_Unchecked(object sender, RoutedEventArgs e)
@@ -456,7 +399,7 @@ namespace TFlex.PackageManager.UI.Controls
             var data = Items[path];
             data.Flags ^= 0x1;
             CountItems--;
-            UpdateItems(0);
+            UpdateItems();
         }
         #endregion
 

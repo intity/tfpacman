@@ -276,7 +276,6 @@ namespace TFlex.PackageManager.UI.Common
                 }
             }
             item.Pages.Clear();
-            item.Links.Clear();
             document.Close();
             log.WriteLine(LogLevel.INFO, 
                 string.Format("0-6 Processing [path: {0}]", 
@@ -348,9 +347,6 @@ namespace TFlex.PackageManager.UI.Common
                 ProcessingItems(ch_d, i); // recursive call
                 End(ch_d, i);
             }
-
-            if (item.Links.Count > 0)
-                UpdateLinks(document);
         }
 
         private void ProcessingLinks(Document parent, Document child, ProcItem item)
@@ -361,6 +357,8 @@ namespace TFlex.PackageManager.UI.Common
             if (!(cfg.Modules as Modules).Links)
                 return;
 
+            bool exist = false;
+
             foreach (var link in parent.FileLinks)
             {
                 if (link.FullFilePath != item.IPath)
@@ -368,8 +366,13 @@ namespace TFlex.PackageManager.UI.Common
 
                 SaveAs(child, item);
                 ReplaceLink(parent, link, item.OPath, item.Parent.Directory);
-                item.Parent.Links.Add(link);
+                exist = true;
                 break;
+            }
+
+            if (exist)
+            {
+                UpdateLinks(parent);
             }
         }
 
