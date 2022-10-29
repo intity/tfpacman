@@ -115,6 +115,10 @@ namespace TFlex.PackageManager.UI.Controls
 
                 if (enableAsmTree)
                 {
+                    if (Flags == 0)
+                    {
+                        UpdateItems();
+                    }
                     ctv1.Visibility = Visibility.Collapsed;
                     ctv2.Visibility = Visibility.Visible;
                 }
@@ -387,7 +391,6 @@ namespace TFlex.PackageManager.UI.Controls
             var data = Items[path];
             data.Flags |= 0x1;
             CountItems++;
-            UpdateItems();
         }
 
         private void Item_Unchecked(object sender, RoutedEventArgs e)
@@ -399,7 +402,6 @@ namespace TFlex.PackageManager.UI.Controls
             var data = Items[path];
             data.Flags ^= 0x1;
             CountItems--;
-            UpdateItems();
         }
         #endregion
 
