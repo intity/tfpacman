@@ -1111,7 +1111,7 @@ namespace TFlex.PackageManager.UI.Views
                     break;
                 }
 
-                if (item.Value.ERefs.Count < 2)
+                if (item.Value.CountERefs < 2)
                     continue;
 
                 logging.WriteLine(LogLevel.INFO, "--- Processing unshared resources");
@@ -1119,8 +1119,11 @@ namespace TFlex.PackageManager.UI.Views
                 item.Value.Flags ^= 0x5;
                 proc.ProcessingFile(item.Value);
 
-                foreach (var i in item.Value.ERefs)
+                foreach (var i in item.Value.Links)
                 {
+                    if (i.Flags != 1)
+                        continue;
+                    
                     File.Delete(i.OPath);
                     logging.WriteLine(LogLevel.INFO, 
                         string.Format("0-7 Processing [path: {0}]", 
