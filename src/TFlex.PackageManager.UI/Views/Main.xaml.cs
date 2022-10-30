@@ -1111,7 +1111,7 @@ namespace TFlex.PackageManager.UI.Views
                     break;
                 }
 
-                if (item.Value.CountERefs < 2)
+                if (item.Value.CountERefs == 1)
                     continue;
 
                 logging.WriteLine(LogLevel.INFO, "--- Processing unshared resources");
