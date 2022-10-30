@@ -119,7 +119,7 @@ namespace TFlex.PackageManager.UI.Model
         #region private methods
         private void CfgItems()
         {
-            if (Level == 0 && flags == 0)
+            if (flags == 0)
             {
                 Items.ForEach(i => CfgItems(i));
             }
@@ -149,21 +149,14 @@ namespace TFlex.PackageManager.UI.Model
             }
             else if (Level == 0 && flags == 5)
             {
-                bool exist = false;
-                
                 foreach (var link in Links)
                 {
                     if (link.Flags == 1)
                     {
                         link.Flags ^= 0x1;
-                        exist = true;
                     }
                 }
-
-                if (exist)
-                {
-                    Flags ^= 0x5;
-                }
+                Flags ^= 0x5;
             }
         }
 
@@ -174,12 +167,34 @@ namespace TFlex.PackageManager.UI.Model
             //
             foreach (var dest in item.Dests)
             {
-                if (dest.Flags == 4 && item.Flags == 1)
+                if (!(dest.Flags == 4 && item.Flags == 1))
+                    continue;
+
+                if (dest.ERefs.Count == 1)
                 {
-                    dest.Flags ^= 0x5;
                     item.Flags ^= 0x1;
+                    dest.Flags ^= 0x5;
                     break;
                 }
+
+                int counter = 0;
+
+                foreach (var link in dest.Links)
+                {
+                    if (link.Flags == 1 && link.Parent.Flags == 0)
+                    {
+                        link.Flags ^= 0x1;
+                    }
+
+                    if (link.Flags == 0)
+                        counter++;
+
+                    if (dest.Links.Count == counter)
+                    {
+                        dest.Flags ^= 0x5;
+                    }
+                }
+                break;
             }
 
             foreach (var i in item.Items)
