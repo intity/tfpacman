@@ -165,36 +165,37 @@ namespace TFlex.PackageManager.UI.Model
             //
             // configure items
             //
-            foreach (var dest in item.Dests)
+            if (item.Dests.Count == 0)
+                return;
+
+            var dest = item.Dests[0];
+            if (!(dest.Flags == 4 && item.Flags == 1))
+                return;
+
+            if (dest.ERefs.Count == 1)
             {
-                if (!(dest.Flags == 4 && item.Flags == 1))
-                    continue;
+                item.Flags ^= 0x1;
+                dest.Flags ^= 0x5;
+                return;
+            }
 
-                if (dest.ERefs.Count == 1)
+            int counter = 0;
+
+            foreach (var link in dest.Links)
+            {
+                if (link.Flags == 1 && link.Parent.Flags == 0)
                 {
-                    item.Flags ^= 0x1;
-                    dest.Flags ^= 0x5;
-                    break;
+                    link.Flags ^= 0x1;
                 }
 
-                int counter = 0;
+                if (link.Flags == 0)
+                    counter++;
+            }
 
-                foreach (var link in dest.Links)
-                {
-                    if (link.Flags == 1 && link.Parent.Flags == 0)
-                    {
-                        link.Flags ^= 0x1;
-                    }
-
-                    if (link.Flags == 0)
-                        counter++;
-
-                    if (dest.Links.Count == counter)
-                    {
-                        dest.Flags ^= 0x5;
-                    }
-                }
-                break;
+            if (dest.Links.Count == counter)
+            {
+                dest.Flags ^= 0x5;
+                return;
             }
 
             foreach (var i in item.Items)
@@ -208,44 +209,44 @@ namespace TFlex.PackageManager.UI.Model
             //
             // configure links
             //
-            foreach (var dest in item.Dests)
-            {
-                if (dest.Flags != 4)
-                    continue;
+            if (item.Dests.Count == 0)
+                return;
 
-                foreach (var link in dest.Links)
+            var dest = item.Dests[0];
+            if (dest.Flags != 4)
+                return;
+
+            foreach (var link in dest.Links)
+            {
+                if (link.Flags == 0 && link.Parent.Flags == 1)
                 {
-                    if (link.Flags == 0 && link.Parent.Flags == 1)
-                    {
-                        item.Flags ^= 0x1;
-                        link.Flags |= 0x1;
-                        break;
-                    }
+                    item.Flags ^= 0x1;
+                    link.Flags |= 0x1;
+                    break;
                 }
             }
         }
 
-        private void CfgDests(ProcItem link)
+        private void CfgDests(ProcItem item)
         {
             //
             // configure destination
             //
-            foreach (var dest in link.Dests)
+            if (item.Dests.Count == 0)
+                return;
+
+            if (!(item.Flags == 0 && item.Parent.Flags == 1))
+                return;
+
+            var dest = item.Dests[0];
+            if (dest.Flags == 1)
             {
-                if (!(link.Flags == 0 && link.Parent.Flags == 1))
-                    continue;
-                
-                if (dest.Flags == 1)
-                {
-                    dest.Flags ^= 0x5;
-                    link.Flags |= 0x1;
-                    break;
-                }
-                else if (dest.Flags == 4 && dest.ERefs.Count > 1)
-                {
-                    link.Flags |= 0x1;
-                    break;
-                }
+                dest.Flags ^= 0x5;
+                item.Flags |= 0x1;
+            }
+            else if (dest.Flags == 4 && dest.ERefs.Count > 1)
+            {
+                item.Flags |= 0x1;
             }
         }
         #endregion
