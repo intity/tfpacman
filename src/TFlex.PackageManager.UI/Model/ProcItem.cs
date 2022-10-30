@@ -24,6 +24,7 @@ namespace TFlex.PackageManager.UI.Model
             Pages = new Dictionary<Page, string>();
         }
 
+        #region public properties
         /// <summary>
         /// Item level in the hierarchy.
         /// </summary>
@@ -62,6 +63,23 @@ namespace TFlex.PackageManager.UI.Model
         }
 
         /// <summary>
+        /// The count of external references used.
+        /// </summary>
+        public int CountERefs
+        {
+            get
+            {
+                int len = 0;
+                foreach (var i in ERefs)
+                {
+                    if (i.Flags == 1)
+                        len++;
+                }
+                return len;
+            }
+        }
+
+        /// <summary>
         /// The File Name.
         /// </summary>
         public string FName { get; set; }
@@ -92,12 +110,12 @@ namespace TFlex.PackageManager.UI.Model
         public List<ProcItem> Items { get; }
 
         /// <summary>
-        /// External references.
+        /// External references container.
         /// </summary>
         public List<ProcItem> ERefs { get; }
 
         /// <summary>
-        /// External Links.
+        /// External Links container.
         /// </summary>
         public List<ProcItem> Links { get; }
 
@@ -115,6 +133,7 @@ namespace TFlex.PackageManager.UI.Model
         /// Parent processing Item.
         /// </summary>
         public ProcItem Parent { get; set; }
+        #endregion
 
         #region private methods
         private void CfgItems()
