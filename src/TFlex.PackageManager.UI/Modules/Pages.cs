@@ -233,7 +233,7 @@ namespace TFlex.PackageManager.UI.Configuration
         #region events
         void PageTypes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //data_1_4.Value = (sender as PageTypes).ToString();
+            OnPropertyChanged(e.PropertyName);
         }
         #endregion
     }
