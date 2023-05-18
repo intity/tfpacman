@@ -108,7 +108,7 @@ namespace TFlex.PackageManager.UI.Configuration
         [CustomDescription(Resources.PAGES, "dn1_4")]
         [ExpandableObject]
         [Editor(typeof(PageTypesEditor), typeof(UITypeEditor))]
-        public PageTypes PageTypes { get; set; }
+        public PageTypes PageTypes { get; }
 
         /// <summary>
         /// Check the drawing template.
