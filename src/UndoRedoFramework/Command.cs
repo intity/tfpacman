@@ -1,7 +1,9 @@
-// Siarhei Arkhipenka (c) 2006-2007. email: sbs-arhipenko@yandex.ru
+//
+// Author: Siarhei Arkhipenka (c) 2006-2007
+// E-mail: sbs-arhipenko@yandex.ru
+//
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 
 namespace UndoRedoFramework
@@ -14,17 +16,17 @@ namespace UndoRedoFramework
             Caption = caption;
         }
 
-		#region IDisposable Members
-		void IDisposable.Dispose()
-		{
-			if (UndoRedoManager.CurrentCommand != null)
-			{
-				if (UndoRedoManager.CurrentCommand == this)
-					UndoRedoManager.Cancel();
-				else
-					Debug.Fail("There was another command within disposed command");
-			}
-		}
-		#endregion
-	}
+        #region IDisposable Members
+        void IDisposable.Dispose()
+        {
+            if (UndoRedoManager.CurrentCommand != null)
+            {
+                if (UndoRedoManager.CurrentCommand == this)
+                    UndoRedoManager.Cancel();
+                else
+                    Debug.Fail("There was another command within disposed command");
+            }
+        }
+        #endregion
+    }
 }

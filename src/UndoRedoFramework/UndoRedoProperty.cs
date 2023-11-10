@@ -1,7 +1,7 @@
-// Siarhei Arkhipenka (c) 2006-2007. email: sbs-arhipenko@yandex.ru
-using System;
-using System.Collections.Generic;
-using System.Text;
+//
+// Author: Siarhei Arkhipenka (c) 2006-2007
+// E-mail: sbs-arhipenko@yandex.ru
+//
 using System.Diagnostics;
 
 namespace UndoRedoFramework
@@ -13,6 +13,7 @@ namespace UndoRedoFramework
         {
             tValue = default;
         }
+
         public UndoRedo(TValue defaultValue)
         {
             tValue = defaultValue;
@@ -22,7 +23,7 @@ namespace UndoRedoFramework
         public TValue Value
         {
             get => tValue;
-            set 
+            set
             {
                 UndoRedoManager.AssertCommand();
                 if (!UndoRedoManager.CurrentCommand.ContainsKey(this))

@@ -1,7 +1,8 @@
-// Siarhei Arkhipenka (c) 2006-2007. email: sbs-arhipenko@yandex.ru
-using System;
+//
+// Author: Siarhei Arkhipenka (c) 2006-2007
+// E-mail: sbs-arhipenko@yandex.ru
+//
 using System.Collections.Generic;
-using System.Text;
 using System.Runtime.Serialization;
 
 namespace UndoRedoFramework.Collections.Generic
@@ -14,11 +15,11 @@ namespace UndoRedoFramework.Collections.Generic
         /// equality comparer for the key type.
         /// </summary>
         public UndoRedoDictionary() { }
-        
+
         /// <summary>
-        //     Initializes a new instance of the System.Collections.Generic.Dictionary<TKey,TValue>
-        //     class that contains elements copied from the specified System.Collections.Generic.IDictionary<TKey,TValue>
-        //     and uses the default equality comparer for the key type.
+        /// Initializes a new instance of the System.Collections.Generic.Dictionary<TKey,TValue>
+        /// class that contains elements copied from the specified System.Collections.Generic.IDictionary<TKey,TValue>
+        /// and uses the default equality comparer for the key type.
         /// </summary>
         /// <param name="dictionary">
         /// The System.Collections.Generic.IDictionary<TKey,TValue> whose elements are
@@ -28,8 +29,8 @@ namespace UndoRedoFramework.Collections.Generic
 
         /// <summary>
         /// Initializes a new instance of the System.Collections.Generic.Dictionary<TKey,TValue>
-        ///     class that is empty, has the default initial capacity, and uses the specified
-        ///     System.Collections.Generic.IEqualityComparer<T>.
+        /// class that is empty, has the default initial capacity, and uses the specified
+        /// System.Collections.Generic.IEqualityComparer<T>.
         /// </summary>
         /// <param name="comparer">
         /// The System.Collections.Generic.IEqualityComparer<T> implementation to use
@@ -37,6 +38,7 @@ namespace UndoRedoFramework.Collections.Generic
         /// for the type of the key.
         /// </param>
         public UndoRedoDictionary(IEqualityComparer<TKey> comparer) : base(comparer) { }
+
         /// <summary>
         /// Initializes a new instance of the System.Collections.Generic.Dictionary<TKey,TValue>
         /// class that is empty, has the specified initial capacity, and uses the default
@@ -76,7 +78,7 @@ namespace UndoRedoFramework.Collections.Generic
         /// The System.Collections.Generic.IEqualityComparer<T> implementation to use when comparing keys, 
         /// or null to use the default System.Collections.Generic.EqualityComparer<T> for the type of the key.
         /// </param>
-        public UndoRedoDictionary(int capacity, IEqualityComparer<TKey> comparer) 
+        public UndoRedoDictionary(int capacity, IEqualityComparer<TKey> comparer)
             : base(capacity, comparer) { }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace UndoRedoFramework.Collections.Generic
         /// source and destination of the serialized stream associated with the 
         /// System.Collections.Generic.Dictionary<TKey,TValue>.
         /// </param>
-        protected UndoRedoDictionary(SerializationInfo info, StreamingContext context) 
+        protected UndoRedoDictionary(SerializationInfo info, StreamingContext context)
             : base(info, context) { }
 
         /// <summary>
@@ -105,10 +107,10 @@ namespace UndoRedoFramework.Collections.Generic
         /// System.Collections.Generic.KeyNotFoundException, and a set operation 
         /// creates a new element with the specified key.
         /// </returns>
-        public new TValue this[TKey key] 
+        public new TValue this[TKey key]
         {
-            get { return base[key];  }
-            set 
+            get => base[key];
+            set
             {
                 if (key != null)
                 {
@@ -153,7 +155,7 @@ namespace UndoRedoFramework.Collections.Generic
         /// <summary>
         /// Removes all keys and values from the System.Collections.Generic.Dictionary<TKey,TValue>.
         /// </summary>
-        public new void Clear() 
+        public new void Clear()
         {
             ChangesList changes = Enlist();
             Dictionary<TKey, TValue> copy = new Dictionary<TKey, TValue>(this);
@@ -190,8 +192,8 @@ namespace UndoRedoFramework.Collections.Generic
         }
 
         delegate void OperationInvoker();
-        class ChangesList : List<Change<OperationInvoker>> 
-        { 
+        class ChangesList : List<Change<OperationInvoker>>
+        {
             public void Add(OperationInvoker doChange, OperationInvoker undoChange)
             {
                 Change<OperationInvoker> change = new Change<OperationInvoker>
@@ -200,11 +202,11 @@ namespace UndoRedoFramework.Collections.Generic
                     NewState = doChange
                 };
                 base.Add(change);
-            }            
+            }
         }
 
         ChangesList Enlist()
-        { 
+        {
             UndoRedoManager.AssertCommand();
 
             if (!UndoRedoManager.CurrentCommand.ContainsKey(this))
@@ -218,9 +220,7 @@ namespace UndoRedoFramework.Collections.Generic
         }
 
         #region IUndoRedoMember Members
-
-        void IUndoRedoMember.OnCommit(object change)
-        {}
+        void IUndoRedoMember.OnCommit(object change) { }
 
         void IUndoRedoMember.OnUndo(object change)
         {
@@ -231,11 +231,10 @@ namespace UndoRedoFramework.Collections.Generic
 
         void IUndoRedoMember.OnRedo(object change)
         {
-			ChangesList changesList = (ChangesList)change;
-			for (int i = 0; i <= changesList.Count - 1; i++)
-				changesList[i].NewState();
+            ChangesList changesList = (ChangesList)change;
+            for (int i = 0; i <= changesList.Count - 1; i++)
+                changesList[i].NewState();
         }
-
         #endregion
     }
 }

@@ -1,7 +1,9 @@
-// Siarhei Arkhipenka (c) 2006-2007. email: sbs-arhipenko@yandex.ru
+//
+// Author: Siarhei Arkhipenka (c) 2006-2007
+// E-mail: sbs-arhipenko@yandex.ru
+//
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace UndoRedoFramework
 {
@@ -14,20 +16,17 @@ namespace UndoRedoFramework
         private static int currentPosition = -1;
 
         internal static Command CurrentCommand { get; private set; } = null;
+
         /// <summary>
         /// Returns true if history has command that can be undone
         /// </summary>
-        public static bool CanUndo
-        {
-            get { return currentPosition >= 0; }
-        }
+        public static bool CanUndo => currentPosition >= 0;
+
         /// <summary>
         /// Returns true if history has command that can be redone
         /// </summary>
-        public static bool CanRedo
-        {
-            get { return currentPosition < history.Count - 1; }
-        }
+        public static bool CanRedo => currentPosition < history.Count - 1;
+
         /// <summary>
         /// Undo last command from history list
         /// </summary>
@@ -44,6 +43,7 @@ namespace UndoRedoFramework
                 OnCommandDone(CommandDoneType.Undo, command.Caption);
             }
         }
+
         /// <summary>
         /// Repeats command that was undone before
         /// </summary>
@@ -60,6 +60,7 @@ namespace UndoRedoFramework
                 OnCommandDone(CommandDoneType.Redo, command.Caption);
             }
         }
+
         /// <summary>
         /// Start command. Any data changes must be done within a command.
         /// </summary>
@@ -71,6 +72,7 @@ namespace UndoRedoFramework
             CurrentCommand = new Command(commandCaption);
             return CurrentCommand;
         }
+
         /// <summary>
         /// Commits current command and saves changes into history
         /// </summary>
@@ -91,6 +93,7 @@ namespace UndoRedoFramework
             CurrentCommand = null;
             OnCommandDone(CommandDoneType.Commit, caption);
         }
+
         /// <summary>
         /// Rollback current command. It does not saves any changes done in current command.
         /// </summary>
@@ -101,9 +104,11 @@ namespace UndoRedoFramework
                 member.OnUndo(CurrentCommand[member]);
             CurrentCommand = null;
         }
+
         /// <summary>
         /// Clears all history. It does not affect current data but history only. 
-        /// It is usefull after any data initialization if you want forbid user to undo this initialization.
+        /// It is usefull after any data initialization if you want forbid user to undo this 
+        /// initialization.
         /// </summary>
         public static void FlushHistory()
         {
@@ -111,27 +116,33 @@ namespace UndoRedoFramework
             currentPosition = -1;
             history.Clear();
         }
-        /// <summary>Checks there is no command started</summary>
+
+        /// <summary>
+        /// Checks there is no command started.
+        /// </summary>
         internal static void AssertNoCommand()
         {
             if (CurrentCommand != null)
                 throw new InvalidOperationException("Previous command is not completed. Use UndoRedoManager.Commit() to complete current command.");
         }
 
-        /// <summary>Checks that command had been started</summary>
+        /// <summary>
+        /// Checks that command had been started.
+        /// </summary>
         internal static void AssertCommand()
         {
             if (CurrentCommand == null)
                 throw new InvalidOperationException("Command is not started. Use method UndoRedoManager.Start().");
         }
 
-        public static bool IsCommandStarted
-        {
-            get { return CurrentCommand != null; }
-        }
+        public static bool IsCommandStarted => CurrentCommand != null;
 
-        /// <summary>Gets an enumeration of commands captions that can be undone.</summary>
-        /// <remarks>The first command in the enumeration will be undone first</remarks>
+        /// <summary>
+        /// Gets an enumeration of commands captions that can be undone.
+        /// </summary>
+        /// <remarks>
+        /// The first command in the enumeration will be undone first
+        /// </remarks>
         public static IEnumerable<string> UndoCommands
         {
             get
@@ -140,8 +151,13 @@ namespace UndoRedoFramework
                     yield return history[i].Caption;
             }
         }
-        /// <summary>Gets an enumeration of commands captions that can be redone.</summary>
-        /// <remarks>The first command in the enumeration will be redone first</remarks>
+
+        /// <summary>
+        /// Gets an enumeration of commands captions that can be redone.
+        /// </summary>
+        /// <remarks>
+        /// The first command in the enumeration will be redone first
+        /// </remarks>
         public static IEnumerable<string> RedoCommands
         {
             get
@@ -205,5 +221,4 @@ namespace UndoRedoFramework
             Caption = caption;
         }
     }
-
 }
