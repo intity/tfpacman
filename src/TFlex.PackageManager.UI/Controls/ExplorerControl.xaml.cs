@@ -20,6 +20,7 @@ namespace TFlex.PackageManager.UI.Controls
         string rootDirectory;
         bool enableAsmTree;
         int countItems;
+        int stateItems;
         #endregion
 
         public ExplorerControl()
@@ -65,6 +66,7 @@ namespace TFlex.PackageManager.UI.Controls
                 if (countItems != value)
                 {
                     countItems = value;
+                    stateItems = 0; // changed
                     OnPropertyChanged("CountItems");
                 }
             }
@@ -115,9 +117,10 @@ namespace TFlex.PackageManager.UI.Controls
 
                 if (enableAsmTree)
                 {
-                    if (Flags == 0)
+                    if (Flags == 0 && stateItems == 0)
                     {
                         UpdateItems();
+                        stateItems = 1; // updated
                     }
                     ctv1.Visibility = Visibility.Collapsed;
                     ctv2.Visibility = Visibility.Visible;
