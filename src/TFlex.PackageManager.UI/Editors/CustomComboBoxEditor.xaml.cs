@@ -167,6 +167,7 @@ namespace TFlex.PackageManager.UI.Editors
                 case "Version":
                     comboBox.Items.Add("JT 8.1");
                     comboBox.Items.Add("JT 9.5");
+                    comboBox.Items.Add("JT 10.0");
                     break;
                 #endregion
                 #region Translator_10

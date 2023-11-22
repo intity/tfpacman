@@ -34,9 +34,10 @@ namespace TFlex.PackageManager.UI.Configuration
 
         #region public properties
         /// <summary>
-        /// JT format version.
+        /// JT format version:
         /// (0) - JT 8.1
         /// (1) - JT 9.5
+        /// (2) - JT 10.0
         /// </summary>
         [PropertyOrder(16)]
         [CustomCategory(Resources.TRANSLATOR_3D, "category5")]
@@ -122,6 +123,7 @@ namespace TFlex.PackageManager.UI.Configuration
             {
                 case 0: jtVersion = ExportToJtVersion.JT81; break;
                 case 1: jtVersion = ExportToJtVersion.JT95; break;
+                case 2: jtVersion = ExportToJtVersion.JT100; break;
             }
 
             ExportToJt export = new ExportToJt(document)
