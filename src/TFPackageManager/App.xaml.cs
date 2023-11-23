@@ -8,12 +8,17 @@ namespace TFlex.PackageManager
     /// </summary>
     public partial class App : System.Windows.Application
     {
-        void AppStartup(object sender, StartupEventArgs args)
+        private void AppStartup(object sender, StartupEventArgs args)
         {
             APILoader.Initialize();
 
             MainWindow = new Main();
             MainWindow.Show();
+        }
+
+        private void AppExit(object sender, ExitEventArgs e)
+        {
+            APILoader.Terminate();
         }
     }
 }
