@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
@@ -14,14 +15,24 @@ namespace TFlex
         #region private fields
         private static string folder;
         private static Version version;
+        private static TextWriterTraceListener trace;
         #endregion
 
         #region public methods
         /// <summary>
         /// Initialize T-FLEX CAD API.
         /// </summary>
-        public static void Initialize()
+        public static void Initialize(bool debug)
         {
+            if (debug)
+            {
+                var s = new StreamWriter("api-loader.log");
+                trace = new TextWriterTraceListener(s)
+                {
+                    Name = "myListener"
+                };
+            }
+            
             version = new Version("17.1.0.0"); // minimum supported version
 
             if ((folder = GetFolder()) == null)
@@ -35,6 +46,9 @@ namespace TFlex
             {
                 throw new InvalidOperationException("Initialize API failed");
             }
+
+            trace?.Flush();
+            trace?.Close();
         }
 
         /// <summary>
@@ -53,12 +67,35 @@ namespace TFlex
         #region private methods
         private static bool InitializeAPI()
         {
+            bool result;
             var setup = new ApplicationSessionSetup
             {
                 ReadOnly = false
             };
 
-            return Application.InitSession(setup);
+            trace?.WriteLine("T-FLEX CAD APILoader Info\n");
+
+            if (result = Application.InitSession(setup))
+            {
+                trace?.WriteLine($"Culture              : {Application.Culture}");
+                trace?.WriteLine($"FileLinksAutoRefresh : {Application.FileLinksAutoRefresh}");
+                trace?.WriteLine($"IsDOCsEnabled        : {Application.IsDOCsEnabled}");
+                trace?.WriteLine($"IsMacrosEnabled      : {Application.IsMacrosEnabled}");
+                trace?.WriteLine($"IsSessionInitialized : {Application.IsSessionInitialized}");
+                trace?.WriteLine($"InterfaceLanguage    : {Application.InterfaceLanguage}");
+                trace?.WriteLine($"MeasuringSystem      : {Application.MeasuringSystem}");
+                trace?.WriteLine($"Product              : {Application.Product}");
+                trace?.WriteLine($"RegistryName         : {Application.RegistryName}");
+                trace?.WriteLine($"StudentVersion       : {Application.StudentVersion}");
+                trace?.WriteLine($"SystemPath           : {Application.SystemPath}");
+                trace?.WriteLine($"Version              : {Application.Version}");
+            }
+            else
+            {
+                trace?.WriteLine("Failed to initialize API...");
+            }
+
+            return result;
         }
 
         private static string GetFolder()

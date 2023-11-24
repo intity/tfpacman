@@ -8,10 +8,17 @@ namespace TFlex.PackageManager
     /// </summary>
     public partial class App : System.Windows.Application
     {
-        private void AppStartup(object sender, StartupEventArgs args)
+        private void AppStartup(object sender, StartupEventArgs e)
         {
-            APILoader.Initialize();
+            bool debug = false;
 
+            for (int i = 0; i < e.Args.Length; ++i)
+            {
+                if (e.Args[i] == "--api-info")
+                    debug = true;
+            }
+
+            APILoader.Initialize(debug);
             MainWindow = new Main();
             MainWindow.Show();
         }
