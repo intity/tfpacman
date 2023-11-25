@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -663,7 +662,7 @@ namespace TFlex.PackageManager.UI.Views
         {
             PropertiesUI optionsUI = new PropertiesUI(options)
             {
-                Title = Properties.Resources.Strings["ui_0:c_4_1"][0],
+                Title = Properties.Resources.Strings["ui_0:c_5_1"][0],
                 Owner = this
             };
             optionsUI.ShowDialog();
