@@ -32,7 +32,7 @@ namespace TFlex
                     Name = "myListener"
                 };
             }
-            
+
             version = new Version("17.1.0.0"); // minimum supported version
 
             if ((folder = GetFolder()) == null)
@@ -196,7 +196,7 @@ namespace TFlex
                     return null;
                 }
 
-                return Assembly.LoadFile(path);
+                return Assembly.LoadFrom(path);
             }
             catch (FileNotFoundException)
             {
