@@ -472,7 +472,7 @@ namespace TFlex.PackageManager.UI.Views
             string directory = null;
             using (var ofd = new CommonOpenFileDialog())
             {
-                ofd.Title = Properties.Resources.Strings["ui_0:c_1_2"][1];
+                ofd.Title = Properties.Resources.Strings["ui_0:c_1_3"][1];
                 ofd.Multiselect = false;
                 ofd.IsFolderPicker = true;
                 ofd.InitialDirectory = conf.UserDirectory;
