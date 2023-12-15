@@ -31,6 +31,7 @@ namespace TFlex
                 {
                     Name = "myListener"
                 };
+                trace.WriteLine("T-FLEX CAD APILoader Info\n");
             }
 
             version = new Version("17.1.0.0"); // minimum supported version
@@ -47,8 +48,11 @@ namespace TFlex
                 throw new InvalidOperationException("Initialize API failed");
             }
 
-            trace?.Flush();
-            trace?.Close();
+            if (trace != null)
+            {
+                trace.Flush();
+                trace.Close();
+            }
         }
 
         /// <summary>
@@ -73,26 +77,29 @@ namespace TFlex
                 ReadOnly = false
             };
 
-            trace?.WriteLine("T-FLEX CAD APILoader Info\n");
-
             if (result = Application.InitSession(setup))
             {
-                trace?.WriteLine($"Culture              : {Application.Culture}");
-                trace?.WriteLine($"FileLinksAutoRefresh : {Application.FileLinksAutoRefresh}");
-                trace?.WriteLine($"IsDOCsEnabled        : {Application.IsDOCsEnabled}");
-                trace?.WriteLine($"IsMacrosEnabled      : {Application.IsMacrosEnabled}");
-                trace?.WriteLine($"IsSessionInitialized : {Application.IsSessionInitialized}");
-                trace?.WriteLine($"InterfaceLanguage    : {Application.InterfaceLanguage}");
-                trace?.WriteLine($"MeasuringSystem      : {Application.MeasuringSystem}");
-                trace?.WriteLine($"Product              : {Application.Product}");
-                trace?.WriteLine($"RegistryName         : {Application.RegistryName}");
-                trace?.WriteLine($"StudentVersion       : {Application.StudentVersion}");
-                trace?.WriteLine($"SystemPath           : {Application.SystemPath}");
-                trace?.WriteLine($"Version              : {Application.Version}");
+                if (trace != null)
+                {
+                    trace.WriteLine($"Culture              : {Application.Culture}");
+                    trace.WriteLine($"FileLinksAutoRefresh : {Application.FileLinksAutoRefresh}");
+                    trace.WriteLine($"IsDOCsEnabled        : {Application.IsDOCsEnabled}");
+                    trace.WriteLine($"IsMacrosEnabled      : {Application.IsMacrosEnabled}");
+                    trace.WriteLine($"IsSessionInitialized : {Application.IsSessionInitialized}");
+                    trace.WriteLine($"InterfaceLanguage    : {Application.InterfaceLanguage}");
+                    trace.WriteLine($"MeasuringSystem      : {Application.MeasuringSystem}");
+                    trace.WriteLine($"Product              : {Application.Product}");
+                    trace.WriteLine($"RegistryName         : {Application.RegistryName}");
+                    trace.WriteLine($"StudentVersion       : {Application.StudentVersion}");
+                    trace.WriteLine($"SystemPath           : {Application.SystemPath}");
+                    trace.WriteLine($"Version              : {Application.Version}");
+                }
+
+                return result;
             }
-            else
+            else if (trace != null)
             {
-                trace?.WriteLine("Failed to initialize API...");
+                trace.WriteLine("Failed to initialize API...");
             }
 
             return result;
