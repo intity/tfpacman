@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing.Design;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -203,17 +205,8 @@ namespace TFlex.PackageManager.UI.Configuration
         /// <returns></returns>
         internal bool PageTypeExists(Page page)
         {
-            Dictionary<PageType, bool> types = new Dictionary<PageType, bool>
-            {
-                { PageType.Normal,          PageTypes.Normal },
-                { PageType.Workplane,       PageTypes.Workplane },
-                { PageType.Auxiliary,       PageTypes.Auxiliary },
-                { PageType.Text,            PageTypes.Text },
-                { PageType.BillOfMaterials, PageTypes.BillOfMaterials },
-                { PageType.Circuit,         PageTypes.Circuit },
-                { PageType.Projection,      PageTypes.Projection }
-            };
-            return page.PageType != PageType.Dialog && types[page.PageType];
+            string name = Enum.GetName(typeof(PageType), page.PageType);
+            return PageTypes[name];
         }
 
         /// <summary>
@@ -257,6 +250,30 @@ namespace TFlex.PackageManager.UI.Configuration
         public PageTypes()
         {
             normal = true;
+        }
+
+        /// <summary>
+        /// Get value by property name.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <returns>Property value.</returns>
+        internal bool this[string name]
+        {
+            get
+            {
+                if (name == "Dialog" || name == "BillOfMatrials")
+                {
+                    //
+                    // exclude property names
+                    //
+                    Debug.WriteLine($"PageTypes [name: {name}]");
+                    return false;
+                }
+                
+                Type type = typeof(PageTypes);
+                PropertyInfo pi = type.GetProperty(name);
+                return (bool)pi.GetValue(this);
+            }
         }
 
         #region public properties
