@@ -73,8 +73,7 @@ namespace TFlex.PackageManager.UI.Configuration
         /// The Import virtual method.
         /// </summary>
         /// <param name="document"></param>
-        /// <param name="targetDirectory"></param>
-        /// <param name="path"></param>
+        /// <param name="item"></param>
         /// <param name="logging"></param>
         internal virtual void Import(Document document, ProcItem item, Logging logging) { }
         #endregion
