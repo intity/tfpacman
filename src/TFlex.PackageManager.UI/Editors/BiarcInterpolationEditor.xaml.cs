@@ -15,7 +15,7 @@ namespace TFlex.PackageManager.UI.Editors
     /// </summary>
     public partial class BiarcInterpolationEditor : UserControl, ITypeEditor
     {
-        UndoRedo<decimal?> value;
+        private UndoRedo<decimal?> buffer;
 
         public BiarcInterpolationEditor()
         {
@@ -28,25 +28,14 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
+            if (e.Caption != p.PropertyName)
+                return;
+            
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (e.Caption == p.PropertyName)
-                    {
-                        decimalUpDown.Value = value.Value;
-
-                        //Debug.WriteLine(string.Format("Undo: [name: {0}, value: {1}]",
-                        //    p.PropertyName, p.Value));
-                    }
-                    break;
                 case CommandDoneType.Redo:
-                    if (e.Caption == p.PropertyName)
-                    {
-                        decimalUpDown.Value = value.Value;
-
-                        //Debug.WriteLine(string.Format("Redo: [name: {0}, value: {1}]",
-                        //    p.PropertyName, p.Value));
-                    }
+                    decimalUpDown.Value = buffer.Value;
                     break;
             }
         }
@@ -73,7 +62,7 @@ namespace TFlex.PackageManager.UI.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            value = new UndoRedo<decimal?>(Value);
+            buffer = new UndoRedo<decimal?>(Value);
             decimalUpDown.ValueChanged += DecimalUpDown_ValueChanged;
 
             return this;
@@ -84,15 +73,12 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
             
-            if (value.Value != decimalUpDown.Value)
+            if (buffer.Value != decimalUpDown.Value)
             {
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value.Value = decimalUpDown.Value;
+                    buffer.Value = decimalUpDown.Value;
                     UndoRedoManager.Commit();
-
-                    //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
-                    //    p.PropertyName, p.Value));
                 }
             }
         }
