@@ -14,21 +14,98 @@ namespace UndoRedoFramework
     {
         private static readonly List<Command> history = new List<Command>();
         private static int currentPosition = -1;
+        private static int maxHistorySize = 0;
 
         internal static Command CurrentCommand { get; private set; } = null;
 
+        public static event EventHandler<CommandDoneEventArgs> CommandDone;
+
         /// <summary>
-        /// Returns true if history has command that can be undone
+        /// Returns true if history has command that can be undone.
         /// </summary>
         public static bool CanUndo => currentPosition >= 0;
 
         /// <summary>
-        /// Returns true if history has command that can be redone
+        /// Returns true if history has command that can be redone.
         /// </summary>
         public static bool CanRedo => currentPosition < history.Count - 1;
 
         /// <summary>
-        /// Undo last command from history list
+        /// Check of the started command.
+        /// </summary>
+        public static bool IsCommandStarted => CurrentCommand != null;
+
+        /// <summary>
+        /// Gets/sets max commands stored in history. 
+        /// Zero value (default) sets unlimited history size.
+        /// </summary>
+        public static int MaxHistorySize
+        {
+            get => maxHistorySize;
+            set
+            {
+                if (IsCommandStarted)
+                {
+                    throw new InvalidOperationException("Max size may not be set while command is run.");
+                }
+                else if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException("Value may not be less than 0");
+                }
+
+                maxHistorySize = value;
+                TruncateHistory();
+            }
+        }
+
+        /// <summary>
+        /// Gets an enumeration of commands captions that can be undone.
+        /// </summary>
+        /// <remarks>
+        /// The first command in the enumeration will be undone first.
+        /// </remarks>
+        public static IEnumerable<string> UndoCommands
+        {
+            get
+            {
+                for (int i = currentPosition; i >= 0; i--)
+                {
+                    yield return history[i].Caption;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets an enumeration of commands captions that can be redone.
+        /// </summary>
+        /// <remarks>
+        /// The first command in the enumeration will be redone first.
+        /// </remarks>
+        public static IEnumerable<string> RedoCommands
+        {
+            get
+            {
+                for (int i = currentPosition + 1; i < history.Count; i++)
+                {
+                    yield return history[i].Caption;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Start command. Any data changes must be done within a command.
+        /// </summary>
+        /// <param name="caption">Command caption.</param>
+        /// <returns></returns>
+        public static IDisposable Start(string caption)
+        {
+            AssertNoCommand();
+            CurrentCommand = new Command(caption);
+            return CurrentCommand;
+        }
+
+        /// <summary>
+        /// Undo last command from history list.
         /// </summary>
         public static void Undo()
         {
@@ -45,7 +122,7 @@ namespace UndoRedoFramework
         }
 
         /// <summary>
-        /// Repeats command that was undone before
+        /// Repeats command that was undone before.
         /// </summary>
         public static void Redo()
         {
@@ -62,34 +139,25 @@ namespace UndoRedoFramework
         }
 
         /// <summary>
-        /// Start command. Any data changes must be done within a command.
-        /// </summary>
-        /// <param name="commandCaption"></param>
-        /// <returns></returns>
-        public static IDisposable Start(string commandCaption)
-        {
-            AssertNoCommand();
-            CurrentCommand = new Command(commandCaption);
-            return CurrentCommand;
-        }
-
-        /// <summary>
-        /// Commits current command and saves changes into history
+        /// Commits current command and saves changes into history.
         /// </summary>
         public static void Commit()
         {
             AssertCommand();
             foreach (IUndoRedoMember member in CurrentCommand.Keys)
+            {
                 member.OnCommit(CurrentCommand[member]);
-
+            }
+            //
             // add command to history (all redo records will be removed)
+            //
             int count = history.Count - currentPosition - 1;
             history.RemoveRange(currentPosition + 1, count);
 
             history.Add(CurrentCommand);
             currentPosition++;
             TruncateHistory();
-            var caption = CurrentCommand.Caption;
+            string caption = CurrentCommand.Caption;
             CurrentCommand = null;
             OnCommandDone(CommandDoneType.Commit, caption);
         }
@@ -101,7 +169,9 @@ namespace UndoRedoFramework
         {
             AssertCommand();
             foreach (IUndoRedoMember member in CurrentCommand.Keys)
+            {
                 member.OnUndo(CurrentCommand[member]);
+            }
             CurrentCommand = null;
         }
 
@@ -123,7 +193,9 @@ namespace UndoRedoFramework
         internal static void AssertNoCommand()
         {
             if (CurrentCommand != null)
+            {
                 throw new InvalidOperationException("Previous command is not completed. Use UndoRedoManager.Commit() to complete current command.");
+            }
         }
 
         /// <summary>
@@ -132,78 +204,28 @@ namespace UndoRedoFramework
         internal static void AssertCommand()
         {
             if (CurrentCommand == null)
+            {
                 throw new InvalidOperationException("Command is not started. Use method UndoRedoManager.Start().");
-        }
-
-        public static bool IsCommandStarted => CurrentCommand != null;
-
-        /// <summary>
-        /// Gets an enumeration of commands captions that can be undone.
-        /// </summary>
-        /// <remarks>
-        /// The first command in the enumeration will be undone first
-        /// </remarks>
-        public static IEnumerable<string> UndoCommands
-        {
-            get
-            {
-                for (int i = currentPosition; i >= 0; i--)
-                    yield return history[i].Caption;
             }
         }
 
-        /// <summary>
-        /// Gets an enumeration of commands captions that can be redone.
-        /// </summary>
-        /// <remarks>
-        /// The first command in the enumeration will be redone first
-        /// </remarks>
-        public static IEnumerable<string> RedoCommands
-        {
-            get
-            {
-                for (int i = currentPosition + 1; i < history.Count; i++)
-                    yield return history[i].Caption;
-            }
-        }
-
-        public static event EventHandler<CommandDoneEventArgs> CommandDone;
-        static void OnCommandDone(CommandDoneType type, string caption)
+        private static void OnCommandDone(CommandDoneType type, string caption)
         {
             CommandDone?.Invoke(null, new CommandDoneEventArgs(type, caption));
-        }
-
-        private static int maxHistorySize = 0;
-
-        /// <summary>
-        /// Gets/sets max commands stored in history. 
-        /// Zero value (default) sets unlimited history size.
-        /// </summary>
-        public static int MaxHistorySize
-        {
-            get { return maxHistorySize; }
-            set
-            {
-                if (IsCommandStarted)
-                    throw new InvalidOperationException("Max size may not be set while command is run.");
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException("Value may not be less than 0");
-                maxHistorySize = value;
-                TruncateHistory();
-            }
         }
 
         private static void TruncateHistory()
         {
             if (maxHistorySize > 0)
+            {
                 if (history.Count > maxHistorySize)
                 {
                     int count = history.Count - maxHistorySize;
                     history.RemoveRange(0, count);
                     currentPosition -= count;
                 }
+            }
         }
-
     }
 
     public enum CommandDoneType
