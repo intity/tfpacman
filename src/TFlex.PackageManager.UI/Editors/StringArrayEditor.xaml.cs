@@ -19,8 +19,8 @@ namespace TFlex.PackageManager.UI.Editors
     /// </summary>
     public partial class StringArrayEditor : UserControl, ITypeEditor
     {
-        UndoRedo<string[]> value;
-        UndoRedo<bool> excludeFS;
+        private UndoRedo<string[]> buffer1;
+        private UndoRedo<bool> buffer2;
 
         public StringArrayEditor()
         {
@@ -33,18 +33,16 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
+            if (e.Caption != p.PropertyName)
+                return;
+            
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (e.Caption == p.PropertyName) Do();
-                    break;
                 case CommandDoneType.Redo:
-                    if (e.Caption == p.PropertyName) Do();
+                    Do();
                     break;
             }
-
-            //Debug.WriteLine(string.Format("Action: [name: {0}, value: {1}, type: {2}]",
-            //    p.PropertyName, p.Value, e.CommandDoneType));
         }
 
         private void Do()
@@ -52,21 +50,21 @@ namespace TFlex.PackageManager.UI.Editors
             PropertyItem pi = DataContext as PropertyItem;
             Translator_0 tr = pi.Instance as Translator_0;
 
-            if (Value != value.Value)
+            if (Value != buffer1.Value)
             {
-                Value = value.Value;
+                Value = buffer1.Value;
                 textbox.Text = string.Format("[{0}]", Value.Length);
             }
 
             switch (pi.PropertyName)
             {
                 case "PageNames":
-                    if (tr.ExcludePage != excludeFS.Value)
-                        tr.ExcludePage = excludeFS.Value;
+                    if (tr.ExcludePage != buffer2.Value)
+                        tr.ExcludePage = buffer2.Value;
                     break;
                 case "ProjectionNames":
-                    if (tr.ExcludeProjection != excludeFS.Value)
-                        tr.ExcludeProjection = excludeFS.Value;
+                    if (tr.ExcludeProjection != buffer2.Value)
+                        tr.ExcludeProjection = buffer2.Value;
                     break;
             }
         }
@@ -95,15 +93,15 @@ namespace TFlex.PackageManager.UI.Editors
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
             textbox.Text = string.Format("[{0}]", Value.Length);
-            value = new UndoRedo<string[]>(Value);
+            buffer1 = new UndoRedo<string[]>(Value);
 
             switch (propertyItem.PropertyName)
             {
                 case "PageNames":
-                    excludeFS = new UndoRedo<bool>(tr.ExcludePage);
+                    buffer2 = new UndoRedo<bool>(tr.ExcludePage);
                     break;
                 case "ProjectionNames":
-                    excludeFS = new UndoRedo<bool>(tr.ExcludeProjection);
+                    buffer2 = new UndoRedo<bool>(tr.ExcludeProjection);
                     break;
             }
 
@@ -154,12 +152,9 @@ namespace TFlex.PackageManager.UI.Editors
 
                 using (UndoRedoManager.Start(pi.PropertyName))
                 {
-                    value.Value = Value;
-                    excludeFS.Value = imt.ExcludeFromSeach;
+                    buffer1.Value = Value;
+                    buffer2.Value = imt.ExcludeFromSeach;
                     UndoRedoManager.Commit();
-
-                    //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
-                    //    pi.PropertyName, pi.Value));
                 }
             }
         }
