@@ -14,7 +14,7 @@ namespace TFlex.PackageManager.UI.Editors
     /// </summary>
     public partial class CustomTextBoxEditor : UserControl, ITypeEditor
     {
-        UndoRedo<string> value;
+        private UndoRedo<string> buffer;
 
         public CustomTextBoxEditor()
         {
@@ -27,25 +27,14 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
+            if (e.Caption != p.PropertyName)
+                return;
+            
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (e.Caption == p.PropertyName)
-                    {
-                        Value = value.Value;
-
-                        //Debug.WriteLine(string.Format("Undo: [name: {0}, value: {1}]", 
-                        //    p.PropertyName, p.Value));
-                    }
-                    break;
                 case CommandDoneType.Redo:
-                    if (e.Caption == p.PropertyName)
-                    {
-                        Value = value.Value;
-
-                        //Debug.WriteLine(string.Format("Redo: [name: {0}, value: {1}]",
-                        //    p.PropertyName, p.Value));
-                    }
+                    Value = buffer.Value;
                     break;
             }
         }
@@ -72,7 +61,7 @@ namespace TFlex.PackageManager.UI.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            value = new UndoRedo<string>(Value);
+            buffer = new UndoRedo<string>(Value);
             LostKeyboardFocus += TextBox_LostKeyboardFocus;
             
             return this;
@@ -83,16 +72,13 @@ namespace TFlex.PackageManager.UI.Editors
             var p = DataContext as PropertyItem;
             Value = textBox.Text;
 
-            if (value.Value != textBox.Text)
+            if (buffer.Value != textBox.Text)
             {
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value.Value = textBox.Text;
+                    buffer.Value = textBox.Text;
                     UndoRedoManager.Commit();
                 }
-
-                //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
-                //    p.PropertyName, p.Value));
             }
         }
     }
