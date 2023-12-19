@@ -16,7 +16,7 @@ namespace TFlex.PackageManager.UI.Editors
     /// </summary>
     public partial class VariablesEditor : UserControl, ITypeEditor
     {
-        UndoRedo<VariableCollection> variables;
+        private UndoRedo<VariableCollection> buffer;
 
         public VariablesEditor()
         {
@@ -29,19 +29,14 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
+            if (e.Caption != p.PropertyName)
+                return;
+            
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (e.Caption == p.PropertyName) Do();
-
-                    //Debug.WriteLine(string.Format("Undo: [name: {0}, value: {1}]",
-                    //    p.PropertyName, Value.Data));
-                    break;
                 case CommandDoneType.Redo:
-                    if (e.Caption == p.PropertyName) Do();
-
-                    //Debug.WriteLine(string.Format("Redo: [name: {0}, value: {1}]",
-                    //    p.PropertyName, Value.Data));
+                    Do();
                     break;
             }
         }
@@ -49,7 +44,7 @@ namespace TFlex.PackageManager.UI.Editors
         private void Do()
         {
             Value.Clear();
-            foreach (var i in variables.Value)
+            foreach (var i in buffer.Value)
             {
                 Value.Add(i);
             }
@@ -74,7 +69,7 @@ namespace TFlex.PackageManager.UI.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
             
-            variables = new UndoRedo<VariableCollection>(Value.Clone() as VariableCollection);
+            buffer = new UndoRedo<VariableCollection>(Value.Clone() as VariableCollection);
             textbox.Text = string.Format("[{0}]", Value.Count());
 
             return this;
@@ -111,12 +106,9 @@ namespace TFlex.PackageManager.UI.Editors
 
                 using (UndoRedoManager.Start(pi.PropertyName))
                 {
-                    variables.Value = Value.Clone() as VariableCollection;
+                    buffer.Value = Value.Clone() as VariableCollection;
                     UndoRedoManager.Commit();
                 }
-
-                //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]",
-                //    pi.PropertyName, Value.Data));
             }
         }
     }
