@@ -16,8 +16,8 @@ namespace TFlex.PackageManager.UI.Editors
     /// </summary>
     public partial class SewingEditor : UserControl, ITypeEditor
     {
-        UndoRedo<bool> value1;
-        UndoRedo<double?> value2;
+        private UndoRedo<bool> buffer1;
+        private UndoRedo<double?> buffer2;
 
         public SewingEditor()
         {
@@ -30,32 +30,28 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
-            var tr = p.Instance as Translator3D;
+            if (e.Caption != p.PropertyName)
+                return;
 
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (e.Caption == p.PropertyName) Do(tr);
-                    break;
                 case CommandDoneType.Redo:
-                    if (e.Caption == p.PropertyName) Do(tr);
+                    Do(p.Instance as Translator3D);
                     break;
             }
-
-            //Debug.WriteLine(string.Format("Action: [name: {0}, value: {1}, type: {2}]",
-            //    p.PropertyName, p.Value, e.CommandDoneType));
         }
 
         private void Do(Translator3D tr)
         {
-            if (checkBox.IsChecked != value1.Value)
+            if (checkBox.IsChecked != buffer1.Value)
             {
-                checkBox.IsChecked = value1.Value;
-                tr.Sewing = value1.Value;
+                checkBox.IsChecked = buffer1.Value;
+                tr.Sewing = buffer1.Value;
             }
 
-            if (doubleUpDown.Value != value2.Value)
-                doubleUpDown.Value = value2.Value;
+            if (doubleUpDown.Value != buffer2.Value)
+                doubleUpDown.Value = buffer2.Value;
         }
 
         public double? Value
@@ -82,8 +78,8 @@ namespace TFlex.PackageManager.UI.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            value1 = new UndoRedo<bool>(tr.Sewing);
-            value2 = new UndoRedo<double?>(Value);
+            buffer1 = new UndoRedo<bool>(tr.Sewing);
+            buffer2 = new UndoRedo<double?>(Value);
 
             checkBox.IsChecked = tr.Sewing;
             checkBox.Checked += CheckBox_IsChecked;
@@ -98,15 +94,12 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
-            if (value2.Value != Value)
+            if (buffer2.Value != Value)
             {
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value2.Value = Value;
+                    buffer2.Value = Value;
                     UndoRedoManager.Commit();
-
-                    //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
-                    //    p.PropertyName, p.Value));
                 }
             }
         }
@@ -117,13 +110,13 @@ namespace TFlex.PackageManager.UI.Editors
             var p = DataContext as PropertyItem;
             var tr = p.Instance as Translator3D;
 
-            if (value1.Value != checkBox.IsChecked)
+            if (buffer1.Value != checkBox.IsChecked)
             {
                 tr.Sewing = checkBox.IsChecked.Value;
 
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value1.Value = tr.Sewing;
+                    buffer1.Value = tr.Sewing;
                     UndoRedoManager.Commit();
                 }
             }
