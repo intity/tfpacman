@@ -19,7 +19,7 @@ namespace TFlex.PackageManager.UI.Editors
     public partial class PathEditor : UserControl, ITypeEditor
     {
         #region private fields
-        UndoRedo<string> value;
+        private UndoRedo<string> buffer;
         #endregion
 
         public PathEditor()
@@ -33,19 +33,16 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
+            if (e.Caption != p.PropertyName)
+                return;
+            
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
                 case CommandDoneType.Redo:
-                    if (e.Caption == p.PropertyName)
-                    {
-                        Value = value.Value;
-                    }
+                    Value = buffer.Value;
                     break;
             }
-
-            //Debug.WriteLine(string.Format("Action: [name: {0}, value: {1}, type: {2}]",
-            //    p.PropertyName, p.Value, e.CommandDoneType));
         }
 
         public string Value
@@ -69,7 +66,7 @@ namespace TFlex.PackageManager.UI.Editors
                 Mode = propertyItem.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
-            value = new UndoRedo<string>(Value);
+            buffer = new UndoRedo<string>(Value);
 
             switch (propertyItem.PropertyName)
             {
@@ -105,7 +102,7 @@ namespace TFlex.PackageManager.UI.Editors
                 Value = fbd.SelectedPath;
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value.Value = Value;
+                    buffer.Value = Value;
                     UndoRedoManager.Commit();
                 }
             }
