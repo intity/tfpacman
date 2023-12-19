@@ -10,7 +10,7 @@ namespace TFlex.PackageManager.UI.Editors
 {
     public partial class CustomCheckBoxEditor : UserControl, ITypeEditor
     {
-        UndoRedo<bool?> value;
+        private UndoRedo<bool?> buffer;
 
         public CustomCheckBoxEditor()
         {
@@ -23,32 +23,21 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
+            if (e.Caption != p.PropertyName)
+                return;
+            
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (e.Caption == p.PropertyName)
-                    {
-                        checkBox.IsChecked = value.Value;
-
-                        //Debug.WriteLine(string.Format("Undo: [name: {0}, value: {1}]",
-                        //    p.PropertyName, p.Value));
-                    }
-                    break;
                 case CommandDoneType.Redo:
-                    if (e.Caption == p.PropertyName)
-                    {
-                        checkBox.IsChecked = value.Value;
-
-                        //Debug.WriteLine(string.Format("Redo: [name: {0}, value: {1}]", 
-                        //    p.PropertyName, p.Value));
-                    }
+                    checkBox.IsChecked = buffer.Value;
                     break;
             }
         }
 
         private static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(bool?), typeof(CustomCheckBoxEditor),
-                new FrameworkPropertyMetadata(null, 
+                new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public bool? Value
@@ -68,7 +57,7 @@ namespace TFlex.PackageManager.UI.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            value = new UndoRedo<bool?>(Value);
+            buffer = new UndoRedo<bool?>(Value);
             checkBox.Checked += CheckBox_IsChecked;
             checkBox.Unchecked += CheckBox_IsChecked;
 
@@ -80,15 +69,12 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
-            if (value.Value != Value)
+            if (buffer.Value != Value)
             {
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value.Value = Value;
+                    buffer.Value = Value;
                     UndoRedoManager.Commit();
-
-                    //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
-                    //    p.PropertyName, p.Value));
                 }
             }
         }
