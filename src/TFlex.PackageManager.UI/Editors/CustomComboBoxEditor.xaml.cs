@@ -14,7 +14,7 @@ namespace TFlex.PackageManager.UI.Editors
     /// </summary>
     public partial class CustomComboBoxEditor : UserControl, ITypeEditor
     {
-        UndoRedo<int> value;
+        private UndoRedo<int> buffer;
 
         public CustomComboBoxEditor()
         {
@@ -27,25 +27,14 @@ namespace TFlex.PackageManager.UI.Editors
             if (!(DataContext is PropertyItem p))
                 return;
 
+            if (e.Caption != p.PropertyName)
+                return;
+            
             switch (e.CommandDoneType)
             {
                 case CommandDoneType.Undo:
-                    if (e.Caption == p.PropertyName)
-                    {
-                        comboBox.SelectedIndex = value.Value;
-
-                        //Debug.WriteLine(string.Format("Undo: [name: {0}, value: {1}]", 
-                        //    p.PropertyName, p.Value));
-                    }
-                    break;
                 case CommandDoneType.Redo:
-                    if (e.Caption == p.PropertyName)
-                    {
-                        comboBox.SelectedIndex = value.Value;
-
-                        //Debug.WriteLine(string.Format("Redo: [name: {0}, value: {1}]",
-                        //    p.PropertyName, p.Value));
-                    }
+                    comboBox.SelectedIndex = buffer.Value;
                     break;
             }
         }
@@ -72,7 +61,7 @@ namespace TFlex.PackageManager.UI.Editors
             };
             BindingOperations.SetBinding(this, ValueProperty, binding);
 
-            value = new UndoRedo<int>(Value);
+            buffer = new UndoRedo<int>(Value);
             var tr = propertyItem.Instance as Translator;
             SetItems(propertyItem.PropertyName, tr);
             comboBox.SelectedIndex = Value;
@@ -86,16 +75,13 @@ namespace TFlex.PackageManager.UI.Editors
             var p = DataContext as PropertyItem;
             Value = comboBox.SelectedIndex;
 
-            if (value.Value != comboBox.SelectedIndex)
+            if (buffer.Value != comboBox.SelectedIndex)
             {
                 using (UndoRedoManager.Start(p.PropertyName))
                 {
-                    value.Value = comboBox.SelectedIndex;
+                    buffer.Value = comboBox.SelectedIndex;
                     UndoRedoManager.Commit();
                 }
-
-                //Debug.WriteLine(string.Format("Commit: [name: {0}, value: {1}]", 
-                //    p.PropertyName, p.Value));
             }
         }
 
