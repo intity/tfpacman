@@ -67,6 +67,7 @@
     <Compile Include="Collections\Generic\UndoRedoDictionary.cs" />
     <Compile Include="Collections\Generic\UndoRedoList.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="CommandDoneEventArgs.cs" />
     <Compile Include="IUndoRedoMember.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UndoRedoManager.cs" />
