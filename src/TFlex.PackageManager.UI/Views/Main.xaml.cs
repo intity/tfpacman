@@ -1122,6 +1122,9 @@ namespace TFlex.PackageManager.UI.Views
                 {
                     if (i.Flags != 1)
                         continue;
+
+                    if (i.OPath == null)
+                        continue;
                     
                     File.Delete(i.OPath);
                     logging.WriteLine(LogLevel.INFO, 
