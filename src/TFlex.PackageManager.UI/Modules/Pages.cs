@@ -206,6 +206,10 @@ namespace TFlex.PackageManager.UI.Configuration
         internal bool PageTypeExists(Page page)
         {
             string name = Enum.GetName(typeof(PageType), page.PageType);
+
+            if (name == "BillOfMatrials")
+                name = "BillOfMaterials";
+
             return PageTypes[name];
         }
 
@@ -266,11 +270,7 @@ namespace TFlex.PackageManager.UI.Configuration
                     //
                     // exclude property names
                     //
-                    Debug.WriteLine($"PageTypes [name: {name}]");
                     return false;
-                } else if (name == "BillOfMatrials")
-                {
-                    name = "BillOfMaterials";
                 }
                 
                 Type type = typeof(PageTypes);
