@@ -261,13 +261,16 @@ namespace TFlex.PackageManager.UI.Configuration
         {
             get
             {
-                if (name == "Dialog" || name == "BillOfMatrials")
+                if (name == "Dialog")
                 {
                     //
                     // exclude property names
                     //
                     Debug.WriteLine($"PageTypes [name: {name}]");
                     return false;
+                } else if (name == "BillOfMatrials")
+                {
+                    name = "BillOfMaterials";
                 }
                 
                 Type type = typeof(PageTypes);
